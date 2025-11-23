@@ -1,0 +1,916 @@
+{
+  "info": {
+    "name": "Portfolio CMS API",
+    "description": "Complete API collection for Portfolio CMS - Supabase Backend",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "portfolio-cms"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{JWT_TOKEN}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "BASE_URL",
+      "value": "https://your-project-id.supabase.co/rest/v1",
+      "type": "string",
+      "description": "Your Supabase project URL + /rest/v1. Get from Supabase Dashboard → Settings → API → Project URL"
+    },
+    {
+      "key": "ANON_KEY",
+      "value": "YOUR_SUPABASE_ANON_KEY",
+      "type": "string",
+      "description": "Your Supabase anon/public key. Get from Supabase Dashboard → Settings → API"
+    },
+    {
+      "key": "JWT_TOKEN",
+      "value": "",
+      "type": "string",
+      "description": "JWT token from admin login. Get from admin dashboard JWT Token Helper or Supabase Auth API"
+    }
+  ],
+  "item": [
+    {
+      "name": "Public Endpoints",
+      "item": [
+        {
+          "name": "Get Profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "apikey",
+                "value": "{{ANON_KEY}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/profiles",
+              "host": ["{{BASE_URL}}"],
+              "path": ["profiles"]
+            }
+          }
+        },
+        {
+          "name": "Get All Works",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "apikey",
+                "value": "{{ANON_KEY}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/works?is_active=eq.true&order=order_index.asc",
+              "host": ["{{BASE_URL}}"],
+              "path": ["works"],
+              "query": [
+                {
+                  "key": "is_active",
+                  "value": "eq.true"
+                },
+                {
+                  "key": "order",
+                  "value": "order_index.asc"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Work by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "apikey",
+                "value": "{{ANON_KEY}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/works?id=eq.{{WORK_ID}}",
+              "host": ["{{BASE_URL}}"],
+              "path": ["works"],
+              "query": [
+                {
+                  "key": "id",
+                  "value": "eq.{{WORK_ID}}"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get All Blogs",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "apikey",
+                "value": "{{ANON_KEY}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/blogs?is_published=eq.true&order=published_at.desc",
+              "host": ["{{BASE_URL}}"],
+              "path": ["blogs"],
+              "query": [
+                {
+                  "key": "is_published",
+                  "value": "eq.true"
+                },
+                {
+                  "key": "order",
+                  "value": "published_at.desc"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Blog by Slug",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "apikey",
+                "value": "{{ANON_KEY}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/blogs?slug=eq.{{BLOG_SLUG}}",
+              "host": ["{{BASE_URL}}"],
+              "path": ["blogs"],
+              "query": [
+                {
+                  "key": "slug",
+                  "value": "eq.{{BLOG_SLUG}}"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get All Services",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "apikey",
+                "value": "{{ANON_KEY}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/services?is_active=eq.true&order=order_index.asc",
+              "host": ["{{BASE_URL}}"],
+              "path": ["services"],
+              "query": [
+                {
+                  "key": "is_active",
+                  "value": "eq.true"
+                },
+                {
+                  "key": "order",
+                  "value": "order_index.asc"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get All Experiences",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "apikey",
+                "value": "{{ANON_KEY}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/experiences?order=order_index.asc,start_date.desc",
+              "host": ["{{BASE_URL}}"],
+              "path": ["experiences"],
+              "query": [
+                {
+                  "key": "order",
+                  "value": "order_index.asc,start_date.desc"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get All Testimonials",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "apikey",
+                "value": "{{ANON_KEY}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/testimonials?is_active=eq.true&order=order_index.asc",
+              "host": ["{{BASE_URL}}"],
+              "path": ["testimonials"],
+              "query": [
+                {
+                  "key": "is_active",
+                  "value": "eq.true"
+                },
+                {
+                  "key": "order",
+                  "value": "order_index.asc"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Social Links",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "apikey",
+                "value": "{{ANON_KEY}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/social_links?order=order_index.asc",
+              "host": ["{{BASE_URL}}"],
+              "path": ["social_links"],
+              "query": [
+                {
+                  "key": "order",
+                  "value": "order_index.asc"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Submit Contact Form",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "apikey",
+                "value": "{{ANON_KEY}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Prefer",
+                "value": "return=representation",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"message\": \"Hello, I am interested in your services.\"\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/contact_messages",
+              "host": ["{{BASE_URL}}"],
+              "path": ["contact_messages"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin Endpoints",
+      "item": [
+        {
+          "name": "Update Profile",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "apikey",
+                "value": "{{ANON_KEY}}",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{JWT_TOKEN}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Prefer",
+                "value": "return=representation",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated Name\",\n  \"title\": \"Updated Title\",\n  \"bio\": \"Updated bio\"\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/profiles?id=eq.{{PROFILE_ID}}",
+              "host": ["{{BASE_URL}}"],
+              "path": ["profiles"],
+              "query": [
+                {
+                  "key": "id",
+                  "value": "eq.{{PROFILE_ID}}"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Work",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "apikey",
+                "value": "{{ANON_KEY}}",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{JWT_TOKEN}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Prefer",
+                "value": "return=representation",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"New Project\",\n  \"category\": \"Web Design\",\n  \"description\": \"Project description\",\n  \"image_url\": \"https://example.com/image.jpg\",\n  \"is_active\": true,\n  \"is_featured\": false,\n  \"order_index\": 0\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/works",
+              "host": ["{{BASE_URL}}"],
+              "path": ["works"]
+            }
+          }
+        },
+        {
+          "name": "Update Work",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "apikey",
+                "value": "{{ANON_KEY}}",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{JWT_TOKEN}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Prefer",
+                "value": "return=representation",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Updated Title\",\n  \"is_featured\": true\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/works?id=eq.{{WORK_ID}}",
+              "host": ["{{BASE_URL}}"],
+              "path": ["works"],
+              "query": [
+                {
+                  "key": "id",
+                  "value": "eq.{{WORK_ID}}"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Work",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "apikey",
+                "value": "{{ANON_KEY}}",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{JWT_TOKEN}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/works?id=eq.{{WORK_ID}}",
+              "host": ["{{BASE_URL}}"],
+              "path": ["works"],
+              "query": [
+                {
+                  "key": "id",
+                  "value": "eq.{{WORK_ID}}"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Blog",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "apikey",
+                "value": "{{ANON_KEY}}",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{JWT_TOKEN}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Prefer",
+                "value": "return=representation",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"My Blog Post\",\n  \"slug\": \"my-blog-post\",\n  \"content\": \"Blog content here...\",\n  \"author\": \"Hasan Abbas Sorathiya\",\n  \"is_published\": true,\n  \"published_at\": \"2024-01-01T00:00:00Z\"\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/blogs",
+              "host": ["{{BASE_URL}}"],
+              "path": ["blogs"]
+            }
+          }
+        },
+        {
+          "name": "Update Blog",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "apikey",
+                "value": "{{ANON_KEY}}",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{JWT_TOKEN}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Prefer",
+                "value": "return=representation",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Updated Title\",\n  \"is_published\": true\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/blogs?id=eq.{{BLOG_ID}}",
+              "host": ["{{BASE_URL}}"],
+              "path": ["blogs"],
+              "query": [
+                {
+                  "key": "id",
+                  "value": "eq.{{BLOG_ID}}"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Blog",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "apikey",
+                "value": "{{ANON_KEY}}",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{JWT_TOKEN}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/blogs?id=eq.{{BLOG_ID}}",
+              "host": ["{{BASE_URL}}"],
+              "path": ["blogs"],
+              "query": [
+                {
+                  "key": "id",
+                  "value": "eq.{{BLOG_ID}}"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Service",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "apikey",
+                "value": "{{ANON_KEY}}",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{JWT_TOKEN}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Prefer",
+                "value": "return=representation",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"New Service\",\n  \"description\": \"Service description\",\n  \"icon_url\": \"https://example.com/icon.png\",\n  \"is_active\": true,\n  \"order_index\": 0\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/services",
+              "host": ["{{BASE_URL}}"],
+              "path": ["services"]
+            }
+          }
+        },
+        {
+          "name": "Create Experience",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "apikey",
+                "value": "{{ANON_KEY}}",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{JWT_TOKEN}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Prefer",
+                "value": "return=representation",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"company\": \"Company Name\",\n  \"position\": \"Job Title\",\n  \"description\": \"Job description\",\n  \"start_date\": \"2020-01-01\",\n  \"end_date\": \"2024-01-01\",\n  \"is_current\": false,\n  \"order_index\": 0\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/experiences",
+              "host": ["{{BASE_URL}}"],
+              "path": ["experiences"]
+            }
+          }
+        },
+        {
+          "name": "Create Testimonial",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "apikey",
+                "value": "{{ANON_KEY}}",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{JWT_TOKEN}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Prefer",
+                "value": "return=representation",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"client_name\": \"John Doe\",\n  \"client_role\": \"CEO\",\n  \"client_company\": \"Company Inc\",\n  \"quote\": \"Great work!\",\n  \"rating\": 5,\n  \"is_active\": true,\n  \"order_index\": 0\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/testimonials",
+              "host": ["{{BASE_URL}}"],
+              "path": ["testimonials"]
+            }
+          }
+        },
+        {
+          "name": "Create Social Link",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "apikey",
+                "value": "{{ANON_KEY}}",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{JWT_TOKEN}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Prefer",
+                "value": "return=representation",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"platform\": \"linkedin\",\n  \"url\": \"https://linkedin.com/in/username\",\n  \"order_index\": 0\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/social_links",
+              "host": ["{{BASE_URL}}"],
+              "path": ["social_links"]
+            }
+          }
+        },
+        {
+          "name": "Get Analytics - Page Views",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "apikey",
+                "value": "{{ANON_KEY}}",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{JWT_TOKEN}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/page_views?order=created_at.desc&limit=100",
+              "host": ["{{BASE_URL}}"],
+              "path": ["page_views"],
+              "query": [
+                {
+                  "key": "order",
+                  "value": "created_at.desc"
+                },
+                {
+                  "key": "limit",
+                  "value": "100"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Analytics - Custom Events",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "apikey",
+                "value": "{{ANON_KEY}}",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{JWT_TOKEN}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/custom_events?order=created_at.desc&limit=100",
+              "host": ["{{BASE_URL}}"],
+              "path": ["custom_events"],
+              "query": [
+                {
+                  "key": "order",
+                  "value": "created_at.desc"
+                },
+                {
+                  "key": "limit",
+                  "value": "100"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Contact Messages",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "apikey",
+                "value": "{{ANON_KEY}}",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{JWT_TOKEN}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/contact_messages?order=created_at.desc",
+              "host": ["{{BASE_URL}}"],
+              "path": ["contact_messages"],
+              "query": [
+                {
+                  "key": "order",
+                  "value": "created_at.desc"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Contact Message",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "apikey",
+                "value": "{{ANON_KEY}}",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{JWT_TOKEN}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Prefer",
+                "value": "return=representation",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"is_read\": true\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/contact_messages?id=eq.{{MESSAGE_ID}}",
+              "host": ["{{BASE_URL}}"],
+              "path": ["contact_messages"],
+              "query": [
+                {
+                  "key": "id",
+                  "value": "eq.{{MESSAGE_ID}}"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
+

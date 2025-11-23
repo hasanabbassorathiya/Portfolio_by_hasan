@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "538757616550",
+    "project_id": "hasan-abbas-portfolio",
+    "storage_bucket": "hasan-abbas-portfolio.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:538757616550:android:cb9c0c0928cc4b9baef567",
+        "android_client_info": {
+          "package_name": "hasanabbas.dev.portfolio"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "538757616550-ut2v23v9592rngjfcajtteifo8lpot1k.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "hasanabbas.dev.portfolio",
+            "certificate_hash": "5d3c30a290406173ce1eabbcb72e84bb02531b15"
+          }
+        },
+        {
+          "client_id": "538757616550-7vsf20cruj3jlo1odqtd3lr6j2n6eb11.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDK5j7JAXxxIdtsbzYbMZSPSjr6vUL48hs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "538757616550-7vsf20cruj3jlo1odqtd3lr6j2n6eb11.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "538757616550-70sh6itep3ravdeta37qg9ovip318v0l.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "hasanabbas.dev.portfolio"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,132 @@
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:portfolio/shared/utils/link_utils.dart';
+import 'package:portfolio/shared/widgets/modern_card.dart';
+import 'package:portfolio/shared/constants/design_tokens.dart';
+import 'package:portfolio/shared/constants/textstyles.dart';
+import 'package:portfolio/shared/constants/colors.dart';
+import 'package:portfolio/shared/constants/utils.dart';
+
+class WorkCard extends StatefulWidget {
+  final String imageAsset;
+  final String title;
+  final String description;
+  final List<String> tags;
+  final String? projectUrl;
+  final String category;
+  final String workId;
+
+  const WorkCard({
+    super.key,
+    required this.imageAsset,
+    required this.title,
+    required this.description,
+    required this.tags,
+    this.projectUrl,
+    required this.category,
+    required this.workId,
+  });
+
+  @override
+  State<WorkCard> createState() => _WorkCardState();
+}
+
+class _WorkCardState extends State<WorkCard> {
+  @override
+  Widget build(BuildContext context) {
+    return ModernCard(
+      onTap: () {
+        // Navigate to detail page if available, otherwise open URL
+        if (widget.projectUrl != null &&
+            widget.projectUrl!.isNotEmpty &&
+            !widget.projectUrl!.startsWith('YOUR_')) {
+          LinkUtils.launchUrl(widget.projectUrl!);
+        } else {
+          context.go('/works/${widget.workId}');
+        }
+      },
+      showGradientBorder: true,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(DesignTokens.borderRadius8),
+            child: Image.asset(
+              widget.imageAsset,
+              fit: BoxFit.cover,
+              height: 200.0,
+              width: double.infinity,
+              errorBuilder: (context, error, stackTrace) {
+                return Container(
+                  height: 200,
+                  color: AppColors.backgroundDark,
+                  child: const Icon(Icons.image, size: 48),
+                );
+              },
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(DesignTokens.space16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  widget.category.toUpperCase(),
+                  style: AppStyles.body(
+                    fontSize: DesignTokens.fontSize12,
+                    color: AppColors.textSecondary,
+                    context: context,
+                  ),
+                ),
+                AppUtils().vSpace(size: DesignTokens.space8),
+                Text(
+                  widget.title,
+                  style: AppStyles.titleLarge(context: context),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                AppUtils().vSpace(size: DesignTokens.space8),
+                Text(
+                  widget.description,
+                  style: AppStyles.body(context: context),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                if (widget.tags.isNotEmpty) ...[
+                  AppUtils().vSpace(size: DesignTokens.space12),
+                  Wrap(
+                    spacing: DesignTokens.space8,
+                    runSpacing: DesignTokens.space8,
+                    children:
+                        widget.tags.map((tag) {
+                          return Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: DesignTokens.space12,
+                              vertical: DesignTokens.space4,
+                            ),
+                            decoration: BoxDecoration(
+                              color: AppColors.primary.withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(
+                                DesignTokens.borderRadius4,
+                              ),
+                            ),
+                            child: Text(
+                              tag,
+                              style: AppStyles.body(
+                                fontSize: DesignTokens.fontSize12,
+                                color: AppColors.primary,
+                                context: context,
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                  ),
+                ],
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
