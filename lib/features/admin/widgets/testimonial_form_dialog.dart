@@ -82,12 +82,12 @@ class _TestimonialFormDialogState extends State<TestimonialFormDialog> {
       };
 
       if (widget.testimonial != null) {
-        await SupabaseService.client
+        await SupabaseService.requiredClient
             .from('testimonials')
             .update(data)
             .eq('id', widget.testimonial!.id);
       } else {
-        await SupabaseService.client.from('testimonials').insert(data);
+        await SupabaseService.requiredClient.from('testimonials').insert(data);
       }
 
       if (mounted) {

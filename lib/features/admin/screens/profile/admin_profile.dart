@@ -1,4 +1,5 @@
 /// Admin profile management screen
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:portfolio/core/repositories/profile_repository.dart';
 import 'package:portfolio/core/services/supabase_service.dart';
@@ -6,7 +7,7 @@ import 'package:portfolio/models/profile/profile_model.dart';
 import 'package:portfolio/shared/constants/colors.dart';
 import 'package:portfolio/shared/constants/textstyles.dart';
 import 'package:portfolio/shared/constants/utils.dart';
-import 'package:portfolio/features/admin/widgets/image_upload_widget.dart';
+import 'package:portfolio/shared/widgets/file_upload_widget.dart';
 
 class AdminProfileScreen extends StatefulWidget {
   const AdminProfileScreen({super.key});
@@ -109,19 +110,30 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
       };
 
       if (_profile != null) {
-        await SupabaseService.client
+        await SupabaseService.requiredClient
             .from('profiles')
             .update(profileData)
             .eq('id', _profile!.id);
       } else {
-        await SupabaseService.client.from('profiles').insert(profileData);
+        await SupabaseService.requiredClient.from('profiles').insert(profileData);
       }
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Profile saved successfully')),
+          const SnackBar(
+            content: Text('Profile saved successfully'),
+            backgroundColor: Colors.green,
+          ),
         );
-        _loadProfile();
+        await _loadProfile();
+        // Show a message that the image will update on other pages
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Profile image updated! Navigate to Home/About pages to see the change.'),
+            duration: Duration(seconds: 3),
+            backgroundColor: Colors.blue,
+          ),
+        );
       }
     } catch (e) {
       if (mounted) {
@@ -180,11 +192,13 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
                         ],
                       ),
                       AppUtils().vSpace(size: 32),
-                      ImageUploadWidget(
-                        initialImageUrl: _avatarUrl,
+                      FileUploadWidget(
+                        initialUrl: _avatarUrl,
                         bucket: 'avatars',
                         label: 'Profile Avatar',
-                        onImageUploaded: (url) {
+                        fileType: FileType.image,
+                        allowUrlInput: true,
+                        onFileUploaded: (url) {
                           setState(() {
                             _avatarUrl = url;
                           });

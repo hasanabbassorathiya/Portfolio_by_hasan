@@ -5,7 +5,15 @@ import '../services/supabase_service.dart';
 
 abstract class BaseRepository {
   /// Get Supabase client
-  SupabaseClient get client => SupabaseService.client;
+  SupabaseClient get client {
+    final client = SupabaseService.client;
+    if (client == null) {
+      throw Exception(
+        'Supabase not initialized. Please configure SUPABASE_URL and SUPABASE_ANON_KEY.',
+      );
+    }
+    return client;
+  }
 
   /// Get table reference
   RealtimeChannel getChannel(String channelName) {

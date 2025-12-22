@@ -1,11 +1,14 @@
 /// Admin social links management screen
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:portfolio/core/repositories/social_link_repository.dart';
 import 'package:portfolio/core/services/supabase_service.dart';
 import 'package:portfolio/models/social_link/social_link_model.dart';
 import 'package:portfolio/shared/constants/colors.dart';
 import 'package:portfolio/shared/constants/textstyles.dart';
 import 'package:portfolio/shared/constants/utils.dart';
+import 'package:portfolio/shared/utils/platform_icons.dart';
+import 'package:portfolio/shared/widgets/draggable_list_widget.dart';
 import 'package:portfolio/features/admin/widgets/social_link_form_dialog.dart';
 
 class AdminSocialLinksScreen extends StatefulWidget {
@@ -30,6 +33,8 @@ class _AdminSocialLinksScreenState extends State<AdminSocialLinksScreen> {
     try {
       setState(() => _isLoading = true);
       final links = await _socialLinkRepository.getAllSocialLinks();
+      // Sort by order_index
+      links.sort((a, b) => a.orderIndex.compareTo(b.orderIndex));
       setState(() {
         _socialLinks = links;
         _isLoading = false;
@@ -39,9 +44,25 @@ class _AdminSocialLinksScreenState extends State<AdminSocialLinksScreen> {
     }
   }
 
+  Future<void> _updateOrder(List<SocialLinkModel> reorderedItems) async {
+    try {
+      // Update order_index for each item
+      for (int i = 0; i < reorderedItems.length; i++) {
+        await SupabaseService.requiredClient
+            .from('social_links')
+            .update({'order_index': i})
+            .eq('id', reorderedItems[i].id);
+      }
+      // Reload to get updated list
+      await _loadSocialLinks();
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   Future<void> _deleteSocialLink(String id) async {
     try {
-      await SupabaseService.client.from('social_links').delete().eq('id', id);
+      await SupabaseService.requiredClient.from('social_links').delete().eq('id', id);
       _loadSocialLinks();
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -133,32 +154,69 @@ class _AdminSocialLinksScreenState extends State<AdminSocialLinksScreen> {
             )
           else
             Expanded(
-              child: ListView.builder(
-                itemCount: _socialLinks.length,
-                itemBuilder: (context, index) {
-                  final link = _socialLinks[index];
-                  return Card(
-                    margin: const EdgeInsets.only(bottom: 16),
-                    child: ListTile(
-                      leading: const Icon(Icons.link),
-                      title: Text(link.platform.toUpperCase()),
-                      subtitle: Text(link.url),
-                      trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text('Order: ${link.orderIndex}'),
-                          AppUtils().hSpace(size: 16),
-                          IconButton(
-                            icon: const Icon(Icons.edit),
-                            onPressed:
-                                () => _showAddEditSocialLinkDialog(link: link),
+              child: DraggableListWidget<SocialLinkModel>(
+                items: _socialLinks,
+                onReorder: _updateOrder,
+                emptyMessage: 'No social links yet. Add one to get started!',
+                itemBuilder: (context, link, index) {
+                  return ListTile(
+                    leading: const Icon(Icons.drag_handle, color: Colors.grey),
+                    title: Row(
+                      children: [
+                        FaIcon(
+                          PlatformIcons.getIcon(link.platform),
+                          size: 24,
+                          color: PlatformIcons.getColor(link.platform),
+                        ),
+                        AppUtils().hSpace(size: 16),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                PlatformIcons.getDisplayName(link.platform),
+                                style: AppStyles.body(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                ),
+                              ),
+                              AppUtils().vSpace(size: 4),
+                              Text(
+                                link.url,
+                                style: AppStyles.body(
+                                  fontSize: 12,
+                                  color: Colors.grey.shade600,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ],
                           ),
-                          IconButton(
-                            icon: const Icon(Icons.delete, color: Colors.red),
-                            onPressed: () => _confirmDelete(link),
+                        ),
+                      ],
+                    ),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          '#${index + 1}',
+                          style: AppStyles.body(
+                            fontSize: 12,
+                            color: Colors.grey.shade500,
                           ),
-                        ],
-                      ),
+                        ),
+                        AppUtils().hSpace(size: 8),
+                        IconButton(
+                          icon: const Icon(Icons.edit, size: 20),
+                          onPressed: () => _showAddEditSocialLinkDialog(link: link),
+                          tooltip: 'Edit',
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.delete, size: 20, color: Colors.red),
+                          onPressed: () => _confirmDelete(link),
+                          tooltip: 'Delete',
+                        ),
+                      ],
                     ),
                   );
                 },

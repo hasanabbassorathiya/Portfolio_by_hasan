@@ -1,10 +1,12 @@
 /// Social link form dialog for creating/editing social links
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:portfolio/core/services/supabase_service.dart';
 import 'package:portfolio/models/social_link/social_link_model.dart';
 import 'package:portfolio/shared/constants/colors.dart';
 import 'package:portfolio/shared/constants/textstyles.dart';
 import 'package:portfolio/shared/constants/utils.dart';
+import 'package:portfolio/shared/utils/platform_icons.dart';
 
 class SocialLinkFormDialog extends StatefulWidget {
   final SocialLinkModel? socialLink;
@@ -61,7 +63,7 @@ class _SocialLinkFormDialogState extends State<SocialLinkFormDialog> {
     try {
       // Get first profile ID if exists
       final profileResponse =
-          await SupabaseService.client
+          await SupabaseService.requiredClient
               .from('profiles')
               .select('id')
               .maybeSingle();
@@ -75,12 +77,12 @@ class _SocialLinkFormDialogState extends State<SocialLinkFormDialog> {
       };
 
       if (widget.socialLink != null) {
-        await SupabaseService.client
+        await SupabaseService.requiredClient
             .from('social_links')
             .update(data)
             .eq('id', widget.socialLink!.id);
       } else {
-        await SupabaseService.client.from('social_links').insert(data);
+        await SupabaseService.requiredClient.from('social_links').insert(data);
       }
 
       if (mounted) {
@@ -143,12 +145,23 @@ class _SocialLinkFormDialogState extends State<SocialLinkFormDialog> {
                         decoration: const InputDecoration(
                           labelText: 'Platform *',
                           border: OutlineInputBorder(),
+                          helperText: 'Select a social media platform',
                         ),
                         items:
                             _platforms.map((platform) {
                               return DropdownMenuItem(
                                 value: platform,
-                                child: Text(platform.toUpperCase()),
+                                child: Row(
+                                  children: [
+                                    FaIcon(
+                                      PlatformIcons.getIcon(platform),
+                                      size: 20,
+                                      color: PlatformIcons.getColor(platform),
+                                    ),
+                                    const SizedBox(width: 12),
+                                    Text(PlatformIcons.getDisplayName(platform)),
+                                  ],
+                                ),
                               );
                             }).toList(),
                         onChanged: (value) {

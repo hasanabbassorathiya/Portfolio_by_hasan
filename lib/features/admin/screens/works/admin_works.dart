@@ -27,7 +27,7 @@ class _AdminWorksScreenState extends State<AdminWorksScreen> {
   Future<void> _loadWorks() async {
     try {
       setState(() => _isLoading = true);
-      final response = await SupabaseService.client
+      final response = await SupabaseService.requiredClient
           .from('works')
           .select()
           .order('order_index', ascending: true);
@@ -46,7 +46,7 @@ class _AdminWorksScreenState extends State<AdminWorksScreen> {
 
   Future<void> _deleteWork(String id) async {
     try {
-      await SupabaseService.client.from('works').delete().eq('id', id);
+      await SupabaseService.requiredClient.from('works').delete().eq('id', id);
       _loadWorks();
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(

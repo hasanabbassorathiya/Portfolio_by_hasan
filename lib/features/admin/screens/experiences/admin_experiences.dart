@@ -40,7 +40,7 @@ class _AdminExperiencesScreenState extends State<AdminExperiencesScreen> {
 
   Future<void> _deleteExperience(String id) async {
     try {
-      await SupabaseService.client.from('experiences').delete().eq('id', id);
+      await SupabaseService.requiredClient.from('experiences').delete().eq('id', id);
       _loadExperiences();
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(

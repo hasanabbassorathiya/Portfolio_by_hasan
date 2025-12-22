@@ -37,11 +37,15 @@ class LocalizationService extends ChangeNotifier {
     required String fieldName,
     String? locale,
   }) async {
+    if (!SupabaseService.isInitialized) {
+      return null;
+    }
+    
     try {
       final targetLocale = locale ?? _currentLocale.languageCode;
       
       // Try to get translation
-      final response = await SupabaseService.client
+      final response = await SupabaseService.client!
           .from('localizations')
           .select()
           .eq('table_name', tableName)
@@ -56,7 +60,7 @@ class LocalizationService extends ChangeNotifier {
 
       // Fallback to default locale if not found
       if (targetLocale != AppConfig.defaultLocale) {
-        final defaultResponse = await SupabaseService.client
+        final defaultResponse = await SupabaseService.client!
             .from('localizations')
             .select()
             .eq('table_name', tableName)
@@ -82,10 +86,14 @@ class LocalizationService extends ChangeNotifier {
     required String recordId,
     String? locale,
   }) async {
+    if (!SupabaseService.isInitialized) {
+      return {};
+    }
+    
     try {
       final targetLocale = locale ?? _currentLocale.languageCode;
       
-      final response = await SupabaseService.client
+      final response = await SupabaseService.client!
           .from('localizations')
           .select()
           .eq('table_name', tableName)

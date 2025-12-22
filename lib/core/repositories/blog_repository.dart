@@ -1,7 +1,9 @@
 /// Blog repository
 /// Handles all blog-related database operations
+import 'package:flutter/foundation.dart';
 import '../../models/blog/blog_model.dart';
 import '../services/performance_service.dart';
+import '../services/supabase_service.dart';
 import 'base_repository.dart';
 
 class BlogRepository extends BaseRepository {
@@ -13,6 +15,11 @@ class BlogRepository extends BaseRepository {
     int? limit,
     int? offset,
   }) async {
+    // Return empty list if Supabase is not initialized
+    if (!SupabaseService.isInitialized) {
+      return [];
+    }
+
     return await PerformanceService.measureDatabaseQuery(
       _tableName,
       () async {
@@ -35,31 +42,80 @@ class BlogRepository extends BaseRepository {
               .map((json) => BlogModel.fromMap(json as Map<String, dynamic>))
               .toList();
         } catch (e) {
-          throw Exception('Failed to fetch blogs: $e');
+          // Log error but return empty list instead of throwing
+          debugPrint('Error fetching blogs: $e');
+          return [];
         }
       },
     );
   }
 
   /// Get blog by ID
+  /// Also tries to fetch by slug if ID lookup fails
   Future<BlogModel?> getBlogById(String id, {String? locale}) async {
+    if (!SupabaseService.isInitialized) {
+      debugPrint('BlogRepository: Supabase not initialized');
+      return null;
+    }
+
     try {
-      final response =
-          await client
+      debugPrint('BlogRepository: Fetching blog with ID: $id');
+      
+      // First try with is_published check
+      var response = await client
               .from(_tableName)
               .select()
               .eq('id', id)
               .eq('is_published', true)
-              .single();
+          .maybeSingle();
 
+      if (response != null) {
+        debugPrint('BlogRepository: Blog found (published)');
+        return BlogModel.fromMap(response);
+      }
+
+      // If not found as published, try without published check (for admin preview)
+      debugPrint('BlogRepository: Blog not found as published, trying without published check');
+      response = await client
+          .from(_tableName)
+          .select()
+          .eq('id', id)
+          .maybeSingle();
+
+      if (response != null) {
+        debugPrint('BlogRepository: Blog found (unpublished)');
+        return BlogModel.fromMap(response);
+      }
+
+      // If ID lookup fails, try slug as fallback (in case URL uses slug instead of ID)
+      debugPrint('BlogRepository: Blog not found with ID, trying slug: $id');
+      response = await client
+          .from(_tableName)
+          .select()
+          .eq('slug', id)
+          .eq('is_published', true)
+          .maybeSingle();
+
+      if (response != null) {
+        debugPrint('BlogRepository: Blog found by slug (published)');
       return BlogModel.fromMap(response);
-    } catch (e) {
+      }
+
+      debugPrint('BlogRepository: Blog not found with ID/slug: $id');
+      return null;
+    } catch (e, stackTrace) {
+      debugPrint('BlogRepository: Error fetching blog by ID: $e');
+      debugPrint('BlogRepository: Stack trace: $stackTrace');
       return null;
     }
   }
 
   /// Get blog by slug
   Future<BlogModel?> getBlogBySlug(String slug, {String? locale}) async {
+    if (!SupabaseService.isInitialized) {
+      return null;
+    }
+
     try {
       final response =
           await client
@@ -77,6 +133,10 @@ class BlogRepository extends BaseRepository {
 
   /// Get featured blogs
   Future<List<BlogModel>> getFeaturedBlogs({int limit = 3}) async {
+    if (!SupabaseService.isInitialized) {
+      return [];
+    }
+
     try {
       final response = await client
           .from(_tableName)
@@ -89,7 +149,9 @@ class BlogRepository extends BaseRepository {
           .map((json) => BlogModel.fromMap(json as Map<String, dynamic>))
           .toList();
     } catch (e) {
-      throw Exception('Failed to fetch featured blogs: $e');
+      // Log error but return empty list instead of throwing
+      debugPrint('Error fetching featured blogs: $e');
+      return [];
     }
   }
 

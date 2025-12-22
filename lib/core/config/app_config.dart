@@ -7,11 +7,46 @@ class AppConfig {
   AppConfig._();
 
   /// Supabase URL
-  static String get supabaseUrl =>
-      dotenv.env['SUPABASE_URL'] ?? (kIsWeb ? '' : '');
+  /// For web, also check for build-time environment variables
+  static String get supabaseUrl {
+    // Try dotenv first
+    final fromEnv = dotenv.env['SUPABASE_URL'];
+    if (fromEnv != null && fromEnv.isNotEmpty) {
+      return fromEnv;
+    }
+    
+    // For web, try build-time constants (set via --dart-define)
+    if (kIsWeb) {
+      // These are set at build time via --dart-define
+      const fromBuild = String.fromEnvironment('SUPABASE_URL', defaultValue: '');
+      if (fromBuild.isNotEmpty) {
+        return fromBuild;
+      }
+    }
+    
+    return '';
+  }
 
   /// Supabase Anon Key
-  static String get supabaseAnonKey => dotenv.env['SUPABASE_ANON_KEY'] ?? '';
+  /// For web, also check for build-time environment variables
+  static String get supabaseAnonKey {
+    // Try dotenv first
+    final fromEnv = dotenv.env['SUPABASE_ANON_KEY'];
+    if (fromEnv != null && fromEnv.isNotEmpty) {
+      return fromEnv;
+    }
+    
+    // For web, try build-time constants (set via --dart-define)
+    if (kIsWeb) {
+      // These are set at build time via --dart-define
+      const fromBuild = String.fromEnvironment('SUPABASE_ANON_KEY', defaultValue: '');
+      if (fromBuild.isNotEmpty) {
+        return fromBuild;
+      }
+    }
+    
+    return '';
+  }
 
   /// App Name
   static String get appName => dotenv.env['APP_NAME'] ?? 'Portfolio';

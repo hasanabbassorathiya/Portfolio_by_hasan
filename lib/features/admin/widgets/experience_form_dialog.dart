@@ -102,12 +102,12 @@ class _ExperienceFormDialogState extends State<ExperienceFormDialog> {
       };
 
       if (widget.experience != null) {
-        await SupabaseService.client
+        await SupabaseService.requiredClient
             .from('experiences')
             .update(data)
             .eq('id', widget.experience!.id);
       } else {
-        await SupabaseService.client.from('experiences').insert(data);
+        await SupabaseService.requiredClient.from('experiences').insert(data);
       }
 
       if (mounted) {

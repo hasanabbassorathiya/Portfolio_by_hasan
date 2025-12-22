@@ -1,5 +1,7 @@
 /// Testimonial repository
 /// Handles all testimonial-related database operations
+import 'package:flutter/foundation.dart';
+import '../services/supabase_service.dart';
 import 'base_repository.dart';
 
 class TestimonialModel {
@@ -45,6 +47,11 @@ class TestimonialRepository extends BaseRepository {
 
   /// Get all active testimonials
   Future<List<TestimonialModel>> getActiveTestimonials() async {
+    // Return empty list if Supabase is not initialized
+    if (!SupabaseService.isInitialized) {
+      return [];
+    }
+
     try {
       final response = await client
           .from(_tableName)
@@ -56,7 +63,9 @@ class TestimonialRepository extends BaseRepository {
           .map((json) => TestimonialModel.fromMap(json as Map<String, dynamic>))
           .toList();
     } catch (e) {
-      throw Exception('Failed to fetch testimonials: $e');
+      // Log error but return empty list instead of throwing
+      debugPrint('Error fetching testimonials: $e');
+      return [];
     }
   }
 }

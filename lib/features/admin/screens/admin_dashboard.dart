@@ -80,20 +80,22 @@ class _AdminDashboardState extends State<AdminDashboard> {
     ),
   ];
 
-  Future<void> _logout() async {
-    try {
-      await SupabaseService.auth.signOut();
-      if (mounted) {
-        context.go(AppRoutes.adminLogin);
-      }
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Logout failed: ${e.toString()}')),
-        );
-      }
-    }
-  }
+          Future<void> _logout() async {
+            try {
+              if (SupabaseService.isInitialized) {
+                await SupabaseService.auth!.signOut();
+              }
+              if (mounted) {
+                context.go(AppRoutes.adminLogin);
+              }
+            } catch (e) {
+              if (mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Logout failed: ${e.toString()}')),
+                );
+              }
+            }
+          }
 
   @override
   Widget build(BuildContext context) {

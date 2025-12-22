@@ -141,12 +141,12 @@ class _WorkFormDialogState extends State<WorkFormDialog> {
       };
 
       if (widget.work != null) {
-        await SupabaseService.client
+        await SupabaseService.requiredClient
             .from('works')
             .update(data)
             .eq('id', widget.work!.id);
       } else {
-        await SupabaseService.client.from('works').insert(data);
+        await SupabaseService.requiredClient.from('works').insert(data);
       }
 
       if (mounted) {

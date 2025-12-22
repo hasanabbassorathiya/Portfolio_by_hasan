@@ -1,6 +1,9 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:portfolio/models/blog/blog_model.dart';
+import 'package:flutter_html/flutter_html.dart';
+import 'package:portfolio/core/repositories/blog_repository.dart';
+import 'package:portfolio/models/blog/blog_model.dart' hide BlogRepository;
 import 'package:portfolio/shared/constants/colors.dart';
 import 'package:portfolio/shared/constants/design_tokens.dart';
 import 'package:portfolio/shared/constants/textstyles.dart';
@@ -10,6 +13,7 @@ import 'package:portfolio/shared/widgets/modern_card.dart';
 import 'package:portfolio/shared/widgets/smooth_scroll_wrapper.dart';
 import 'package:portfolio/shared/constants/utils.dart';
 import 'package:portfolio/core/services/analytics_service.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 /// Blog detail page
 /// Displays full blog post content with modern UI
@@ -29,20 +33,13 @@ class _BlogDetailState extends State<BlogDetail>
   late Animation<double> _fadeAnimation;
   BlogModel? _blog;
   final ScrollController _scrollController = ScrollController();
+  final BlogRepository _blogRepository = BlogRepository();
+  bool _isLoading = true;
+  bool _hasError = false;
 
   @override
   void initState() {
     super.initState();
-    _blog = BlogRepository.getBlogById(widget.blogId);
-    
-    // Track blog view
-    if (_blog != null) {
-      AnalyticsService.trackBlogView(_blog!.id);
-      AnalyticsService.trackPageView(
-        pagePath: '/blogs/${_blog!.id}',
-        pageTitle: _blog!.title,
-      );
-    }
 
     _controller = AnimationController(
       vsync: this,
@@ -54,7 +51,46 @@ class _BlogDetailState extends State<BlogDetail>
       curve: Curves.easeOut,
     );
 
+    _loadBlog();
+  }
+
+  Future<void> _loadBlog() async {
+    try {
+      setState(() {
+        _isLoading = true;
+        _hasError = false;
+      });
+
+      debugPrint('BlogDetail: Loading blog with ID: ${widget.blogId}');
+      final blog = await _blogRepository.getBlogById(widget.blogId);
+      
+      if (blog != null) {
+        debugPrint('BlogDetail: Blog loaded successfully: ${blog.title}');
+        // Track blog view
+        AnalyticsService.trackBlogView(blog.id);
+        AnalyticsService.trackPageView(
+          pagePath: '/blogs/${blog.id}',
+          pageTitle: blog.title,
+        );
+      } else {
+        debugPrint('BlogDetail: Blog not found for ID: ${widget.blogId}');
+      }
+
+      setState(() {
+        _blog = blog;
+        _isLoading = false;
+        _hasError = blog == null;
+      });
+
     _controller.forward();
+    } catch (e, stackTrace) {
+      debugPrint('BlogDetail: Error loading blog: $e');
+      debugPrint('BlogDetail: Stack trace: $stackTrace');
+      setState(() {
+        _isLoading = false;
+        _hasError = true;
+      });
+    }
   }
 
   @override
@@ -66,14 +102,42 @@ class _BlogDetailState extends State<BlogDetail>
 
   @override
   Widget build(BuildContext context) {
-    if (_blog == null) {
+    if (_isLoading) {
       return Scaffold(
+        backgroundColor: AppColors.bgColor,
+        body: const Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+
+    if (_hasError || _blog == null) {
+      return Scaffold(
+        backgroundColor: AppColors.bgColor,
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text('Blog not found'),
+              const Icon(
+                Icons.error_outline,
+                size: 64,
+                color: AppColors.textSecondary,
+              ),
               AppUtils().vSpace(size: DesignTokens.space16),
+              Text(
+                'Blog not found',
+                style: AppStyles.heading(context: context),
+              ),
+              AppUtils().vSpace(size: DesignTokens.space8),
+              Text(
+                'The blog you are looking for does not exist or has been removed.',
+                style: AppStyles.body(
+                  color: AppColors.textSecondary,
+                  context: context,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              AppUtils().vSpace(size: DesignTokens.space24),
               ModernButton(
                 title: 'Back to Blogs',
                 onTap: () => context.go('/blogs'),
@@ -134,14 +198,31 @@ class _BlogDetailState extends State<BlogDetail>
         child: Stack(
           fit: StackFit.expand,
           children: [
-            Image.asset(
+            // Try network image first, then asset, then fallback
+            _blog!.imageAsset.startsWith('http')
+                ? Image.network(
               _blog!.imageAsset,
               fit: BoxFit.cover,
               errorBuilder: (context, error, stackTrace) {
+                      return _buildFallbackImage();
+                    },
+                    loadingBuilder: (context, child, loadingProgress) {
+                      if (loadingProgress == null) return child;
                 return Container(
                   color: AppColors.backgroundDark,
-                  child: const Icon(Icons.image, size: 64, color: Colors.white),
-                );
+                        child: const Center(
+                          child: CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                          ),
+                        ),
+                      );
+                    },
+                  )
+                : Image.asset(
+                    _blog!.imageAsset,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return _buildFallbackImage();
               },
             ),
             Container(
@@ -156,6 +237,7 @@ class _BlogDetailState extends State<BlogDetail>
                 ),
               ),
             ),
+            // More visible back button
             Positioned(
               top: Responsive.value<double>(
                 context: context,
@@ -167,12 +249,46 @@ class _BlogDetailState extends State<BlogDetail>
               right: Responsive.horizontalPadding(context),
               child: Row(
                 children: [
-                  ModernButton(
-                    title: '',
-                    icon: Icons.arrow_back,
-                    variant: ButtonVariant.outline,
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.9),
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.2),
+                          blurRadius: 8,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: Material(
+                      color: Colors.transparent,
+                      child: InkWell(
                     onTap: () => context.go('/blogs'),
-                    padding: const EdgeInsets.all(DesignTokens.space12),
+                        borderRadius: BorderRadius.circular(12),
+                        child: Padding(
+                          padding: const EdgeInsets.all(12),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                Icons.arrow_back,
+                                color: AppColors.primaryColor,
+                                size: 20,
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                'Back to Blogs',
+                                style: AppStyles.body(
+                                  color: AppColors.primaryColor,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
                   const Spacer(),
                 ],
@@ -509,17 +625,114 @@ class _BlogDetailState extends State<BlogDetail>
     );
   }
 
+  Widget _buildFallbackImage() {
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            AppColors.primaryColor.withOpacity(0.8),
+            AppColors.primaryColor.withOpacity(0.4),
+          ],
+        ),
+      ),
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.image, size: 64, color: Colors.white70),
+            const SizedBox(height: 8),
+            Text(
+              'Image not available',
+              style: AppStyles.body(color: Colors.white70),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildContent(BuildContext context) {
     return AnimatedSection(
       delay: const Duration(milliseconds: 200),
       child: ModernCard(
         backgroundColor: AppColors.bgColor,
+        child: _blog!.content.trim().startsWith('<') ||
+                _blog!.content.contains('<html') ||
+                _blog!.content.contains('<p>') ||
+                _blog!.content.contains('<div>')
+            ? Padding(
+                padding: const EdgeInsets.all(16),
+                child: Html(
+                  data: _sanitizeHtmlContent(_blog!.content),
+                  style: {
+                    'body': Style(
+                      margin: Margins.zero,
+                      padding: HtmlPaddings.zero,
+                      fontSize: FontSize(16),
+                      lineHeight: LineHeight(1.6),
+                    ),
+                    'h1': Style(
+                      fontSize: FontSize(32),
+                      fontWeight: FontWeight.bold,
+                      margin: Margins.only(bottom: 16),
+                    ),
+                    'h2': Style(
+                      fontSize: FontSize(24),
+                      fontWeight: FontWeight.bold,
+                      margin: Margins.only(bottom: 12, top: 24),
+                    ),
+                    'h3': Style(
+                      fontSize: FontSize(20),
+                      fontWeight: FontWeight.bold,
+                      margin: Margins.only(bottom: 8, top: 16),
+                    ),
+                    'p': Style(
+                      margin: Margins.only(bottom: 16),
+                    ),
+                    'img': Style(
+                      width: Width(MediaQuery.of(context).size.width - 100),
+                    ),
+                  },
+                  extensions: [
+                    ImageExtension(),
+                  ],
+                ),
+              )
+            : Padding(
+                padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [..._parseContent(_blog!.content)],
+                ),
         ),
       ),
     );
+  }
+
+  /// Sanitize HTML content to fix image URLs
+  String _sanitizeHtmlContent(String content) {
+    // Fix URLs that were incorrectly prefixed with "assets/"
+    // Simple string replacement approach
+    String sanitized = content;
+    
+    // Remove "assets/" prefix from http/https URLs
+    sanitized = sanitized.replaceAll('src="assets/http', 'src="http');
+    sanitized = sanitized.replaceAll("src='assets/http", "src='http");
+    
+    // Decode double-encoded URLs (https%253A%2F%2F -> https://)
+    try {
+      sanitized = Uri.decodeComponent(sanitized);
+      // If still encoded, decode again
+      if (sanitized.contains('%')) {
+        sanitized = Uri.decodeComponent(sanitized);
+      }
+    } catch (e) {
+      // If decoding fails, continue with original
+    }
+    
+    return sanitized;
   }
 
   List<Widget> _parseContent(String content) {
@@ -627,6 +840,9 @@ class _BlogDetailState extends State<BlogDetail>
   }
 
   Widget _buildShareSection(BuildContext context) {
+    final blogUrl = '${Uri.base.origin}/blogs/${_blog!.id}';
+    final shareText = 'Check out this article: ${_blog!.title}';
+    
     return AnimatedSection(
       delay: const Duration(milliseconds: 400),
       child: ModernCard(
@@ -647,18 +863,28 @@ class _BlogDetailState extends State<BlogDetail>
                   'Twitter',
                   Icons.share,
                   AppColors.primary,
+                  'https://twitter.com/intent/tweet?text=${Uri.encodeComponent(shareText)}&url=${Uri.encodeComponent(blogUrl)}',
                 ),
                 _buildShareButton(
                   context,
                   'LinkedIn',
                   Icons.business,
                   AppColors.primary,
+                  'https://www.linkedin.com/sharing/share-offsite/?url=${Uri.encodeComponent(blogUrl)}',
                 ),
                 _buildShareButton(
                   context,
                   'Facebook',
                   Icons.facebook,
                   AppColors.primary,
+                  'https://www.facebook.com/sharer/sharer.php?u=${Uri.encodeComponent(blogUrl)}',
+                ),
+                _buildShareButton(
+                  context,
+                  'WhatsApp',
+                  Icons.chat,
+                  AppColors.primary,
+                  'https://wa.me/?text=${Uri.encodeComponent('$shareText $blogUrl')}',
                 ),
               ],
             ),
@@ -673,10 +899,20 @@ class _BlogDetailState extends State<BlogDetail>
     String label,
     IconData icon,
     Color color,
+    String shareUrl,
   ) {
     return InkWell(
-      onTap: () {
-        // Handle share
+      onTap: () async {
+        final uri = Uri.parse(shareUrl);
+        if (await canLaunchUrl(uri)) {
+          await launchUrl(uri, mode: LaunchMode.externalApplication);
+        } else {
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Could not launch $label')),
+            );
+          }
+        }
       },
       child: Container(
         padding: EdgeInsets.symmetric(
@@ -701,51 +937,9 @@ class _BlogDetailState extends State<BlogDetail>
   }
 
   Widget _buildRelatedBlogs(BuildContext context) {
-    final relatedBlogs =
-        BlogRepository.getAllBlogs()
-            .where((blog) => blog.id != _blog!.id)
-            .take(3)
-            .toList();
-
-    if (relatedBlogs.isEmpty) return const SizedBox.shrink();
-
-    return AnimatedSection(
-      delay: const Duration(milliseconds: 500),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Related Articles',
-            style: AppStyles.heading(
-              fontSize: Responsive.fontSize(context, DesignTokens.fontSize32),
-              fontWeight: FontWeight.bold,
-              context: context,
-            ),
-          ),
-          AppUtils().vSpace(size: DesignTokens.space24),
-          LayoutBuilder(
-            builder: (context, constraints) {
-              final columns = Responsive.gridColumnCount(context);
-              final gap = Responsive.gridGap(context);
-              final itemWidth =
-                  (constraints.maxWidth - (columns - 1) * gap) / columns;
-
-              return Wrap(
-                spacing: gap,
-                runSpacing: gap,
-                children:
-                    relatedBlogs.map((blog) {
-                      return SizedBox(
-                        width: itemWidth,
-                        child: _buildBlogCard(blog),
-                      );
-                    }).toList(),
-              );
-            },
-          ),
-        ],
-      ),
-    );
+    // For now, return empty since we need async loading
+    // TODO: Implement related blogs loading with async repository
+    return const SizedBox.shrink();
   }
 
   Widget _buildBlogCard(BlogModel blog) {

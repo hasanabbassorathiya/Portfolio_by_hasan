@@ -26,7 +26,7 @@ class _AdminContactsScreenState extends State<AdminContactsScreen> {
   Future<void> _loadMessages() async {
     try {
       setState(() => _isLoading = true);
-      final response = await SupabaseService.client
+      final response = await SupabaseService.requiredClient
           .from('contact_messages')
           .select()
           .order('created_at', ascending: false);
@@ -41,7 +41,7 @@ class _AdminContactsScreenState extends State<AdminContactsScreen> {
 
   Future<void> _markAsRead(String id, bool isRead) async {
     try {
-      await SupabaseService.client
+      await SupabaseService.requiredClient
           .from('contact_messages')
           .update({'is_read': !isRead})
           .eq('id', id);

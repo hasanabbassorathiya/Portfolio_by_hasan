@@ -29,7 +29,7 @@ class _AdminTestimonialsScreenState extends State<AdminTestimonialsScreen> {
     try {
       setState(() => _isLoading = true);
       // Get all testimonials (not just active)
-      final response = await SupabaseService.client
+      final response = await SupabaseService.requiredClient
           .from('testimonials')
           .select()
           .order('order_index', ascending: true);
@@ -51,7 +51,7 @@ class _AdminTestimonialsScreenState extends State<AdminTestimonialsScreen> {
 
   Future<void> _deleteTestimonial(String id) async {
     try {
-      await SupabaseService.client.from('testimonials').delete().eq('id', id);
+      await SupabaseService.requiredClient.from('testimonials').delete().eq('id', id);
       _loadTestimonials();
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(

@@ -46,14 +46,14 @@ class _AdminAnalyticsScreenState extends State<AdminAnalyticsScreen> {
       }
 
       // Load page views
-      final pageViewsResponse = await SupabaseService.client
+      final pageViewsResponse = await SupabaseService.requiredClient
           .from('page_views')
           .select()
           .gte('created_at', startDate.toIso8601String())
           .order('created_at', ascending: false);
 
       // Load custom events
-      final eventsResponse = await SupabaseService.client
+      final eventsResponse = await SupabaseService.requiredClient
           .from('custom_events')
           .select()
           .gte('created_at', startDate.toIso8601String())

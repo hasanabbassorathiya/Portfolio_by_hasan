@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:portfolio/shared/constants/assets.dart';
@@ -13,6 +12,7 @@ import 'package:portfolio/shared/utils/link_utils.dart';
 
 import 'package:portfolio/shared/widgets/button.dart';
 import 'package:portfolio/shared/widgets/social_buttons.dart';
+import 'package:portfolio/shared/widgets/profile_image_widget.dart';
 import 'package:portfolio/core/services/analytics_service.dart';
 
 class Home extends StatefulWidget {
@@ -99,16 +99,28 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     _controller.forward();
   }
 
+  // Key for ProfileImageWidget to force refresh
+  GlobalKey _profileImageKey = GlobalKey();
+
   @override
   void didUpdateWidget(covariant Home oldWidget) {
     super.didUpdateWidget(oldWidget);
     // Check if the page has become active
     if (widget.isActive && !oldWidget.isActive) {
       _activatePage();
+      // Refresh profile image when page becomes active
+      _refreshProfileImage();
     } else if (!widget.isActive && oldWidget.isActive) {
       // Optionally reset animations when page becomes inactive
       _controller.reset();
     }
+  }
+
+  void _refreshProfileImage() {
+    // Force ProfileImageWidget to reload by changing its key
+    setState(() {
+      _profileImageKey = GlobalKey();
+    });
   }
 
   @override
@@ -822,15 +834,11 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                             width: 2,
                                           ),
                                         ),
-                                        child: Image.asset(
-                                          AppAssets.user,
-
+                                        child: ProfileImageWidget(
+                                          key: _profileImageKey,
+                                          width: actualAvatarWidth,
+                                          height: actualAvatarHeight,
                                           fit: BoxFit.cover,
-
-                                          width:
-                                              actualAvatarWidth, // Use calculated avatar width
-                                          height:
-                                              actualAvatarHeight, // Use calculated avatar height
                                         ),
                                       ),
 

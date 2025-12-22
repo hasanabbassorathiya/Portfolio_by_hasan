@@ -21,22 +21,24 @@ class AnalyticsService {
       );
 
       // Store in Supabase for custom analytics
-      // Check if table exists first (gracefully handle missing tables)
-      try {
-        await SupabaseService.client.from('page_views').insert({
-          'page_path': pagePath,
-          'page_title': pageTitle,
-          'additional_data': additionalData,
-        });
-      } catch (e) {
-        // Table might not exist yet - this is okay during development
-        // Run migration 003_analytics_and_config.sql to create the table
-        if (e.toString().contains('page_views')) {
-          debugPrint(
-            'Analytics table not found. Run migration 003_analytics_and_config.sql',
-          );
-        } else {
-          rethrow;
+      // Check if Supabase is initialized first
+      if (SupabaseService.isInitialized) {
+        try {
+          await SupabaseService.client!.from('page_views').insert({
+            'page_path': pagePath,
+            'page_title': pageTitle,
+            'additional_data': additionalData,
+          });
+        } catch (e) {
+          // Table might not exist yet - this is okay during development
+          // Run migration 003_analytics_and_config.sql to create the table
+          if (e.toString().contains('page_views')) {
+            debugPrint(
+              'Analytics table not found. Run migration 003_analytics_and_config.sql',
+            );
+          } else {
+            debugPrint('Analytics error: $e');
+          }
         }
       }
     } catch (e) {
@@ -60,20 +62,22 @@ class AnalyticsService {
       );
 
       // Store in Supabase
-      // Check if table exists first (gracefully handle missing tables)
-      try {
-        await SupabaseService.client.from('custom_events').insert({
-          'event_name': eventName,
-          'event_data': eventData,
-        });
-      } catch (e) {
-        // Table might not exist yet - this is okay during development
-        if (e.toString().contains('custom_events')) {
-          debugPrint(
-            'Analytics table not found. Run migration 003_analytics_and_config.sql',
-          );
-        } else {
-          rethrow;
+      // Check if Supabase is initialized first
+      if (SupabaseService.isInitialized) {
+        try {
+          await SupabaseService.client!.from('custom_events').insert({
+            'event_name': eventName,
+            'event_data': eventData,
+          });
+        } catch (e) {
+          // Table might not exist yet - this is okay during development
+          if (e.toString().contains('custom_events')) {
+            debugPrint(
+              'Analytics table not found. Run migration 003_analytics_and_config.sql',
+            );
+          } else {
+            debugPrint('Analytics error: $e');
+          }
         }
       }
     } catch (e) {

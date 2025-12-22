@@ -1,6 +1,8 @@
 /// Work repository
 /// Handles all work/project-related database operations
+import 'package:flutter/foundation.dart';
 import '../../models/work/work_model.dart';
+import '../services/supabase_service.dart';
 import 'base_repository.dart';
 
 class WorkRepository extends BaseRepository {
@@ -13,6 +15,11 @@ class WorkRepository extends BaseRepository {
     int? limit,
     int? offset,
   }) async {
+    // Return empty list if Supabase is not initialized
+    if (!SupabaseService.isInitialized) {
+      return [];
+    }
+
     try {
       // Build query: select first, then filters, then transforms
       // Use dynamic to handle type changes in the chain
@@ -36,12 +43,18 @@ class WorkRepository extends BaseRepository {
           .map((json) => WorkModel.fromMap(json as Map<String, dynamic>))
           .toList();
     } catch (e) {
-      throw Exception('Failed to fetch works: $e');
+      // Log error but return empty list instead of throwing
+      debugPrint('Error fetching works: $e');
+      return [];
     }
   }
 
   /// Get work by ID
   Future<WorkModel?> getWorkById(String id, {String? locale}) async {
+    if (!SupabaseService.isInitialized) {
+      return null;
+    }
+
     try {
       final response =
           await client
@@ -59,6 +72,10 @@ class WorkRepository extends BaseRepository {
 
   /// Get featured works
   Future<List<WorkModel>> getFeaturedWorks({int limit = 4}) async {
+    if (!SupabaseService.isInitialized) {
+      return [];
+    }
+
     try {
       final response = await client
           .from(_tableName)
@@ -72,7 +89,9 @@ class WorkRepository extends BaseRepository {
           .map((json) => WorkModel.fromMap(json as Map<String, dynamic>))
           .toList();
     } catch (e) {
-      throw Exception('Failed to fetch featured works: $e');
+      // Log error but return empty list instead of throwing
+      debugPrint('Error fetching featured works: $e');
+      return [];
     }
   }
 

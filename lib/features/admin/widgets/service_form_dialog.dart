@@ -67,12 +67,12 @@ class _ServiceFormDialogState extends State<ServiceFormDialog> {
       };
 
       if (widget.service != null) {
-        await SupabaseService.client
+        await SupabaseService.requiredClient
             .from('services')
             .update(data)
             .eq('id', widget.service!.id);
       } else {
-        await SupabaseService.client.from('services').insert(data);
+        await SupabaseService.requiredClient.from('services').insert(data);
       }
 
       if (mounted) {

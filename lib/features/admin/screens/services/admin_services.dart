@@ -41,7 +41,7 @@ class _AdminServicesScreenState extends State<AdminServicesScreen> {
 
   Future<void> _deleteService(String id) async {
     try {
-      await SupabaseService.client.from('services').delete().eq('id', id);
+      await SupabaseService.requiredClient.from('services').delete().eq('id', id);
       _loadServices();
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(

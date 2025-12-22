@@ -12,7 +12,7 @@ class JwtTokenHelper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final session = SupabaseService.auth.currentSession;
+    final session = SupabaseService.auth?.currentSession;
     final token = session?.accessToken;
 
     return Card(

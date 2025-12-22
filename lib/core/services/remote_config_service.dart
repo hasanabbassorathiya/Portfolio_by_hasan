@@ -23,22 +23,24 @@ class RemoteConfigService {
       }
 
       // Fallback to Supabase remote_config table
-      try {
-        final response = await SupabaseService.client
-            .from('remote_config')
-            .select('value')
-            .eq('key', key)
-            .maybeSingle();
+      if (SupabaseService.isInitialized) {
+        try {
+          final response = await SupabaseService.client!
+              .from('remote_config')
+              .select('value')
+              .eq('key', key)
+              .maybeSingle();
 
-        if (response != null && response['value'] != null) {
-          final value = response['value'];
-          if (value is String) {
-            return value;
+          if (response != null && response['value'] != null) {
+            final value = response['value'];
+            if (value is String) {
+              return value;
+            }
+            return value.toString();
           }
-          return value.toString();
+        } catch (e) {
+          debugPrint('Error fetching from Supabase remote_config: $e');
         }
-      } catch (e) {
-        debugPrint('Error fetching from Supabase remote_config: $e');
       }
 
       return defaultValue;
@@ -64,24 +66,26 @@ class RemoteConfigService {
       }
 
       // Fallback to Supabase
-      try {
-        final response = await SupabaseService.client
-            .from('remote_config')
-            .select('value')
-            .eq('key', key)
-            .maybeSingle();
+      if (SupabaseService.isInitialized) {
+        try {
+          final response = await SupabaseService.client!
+              .from('remote_config')
+              .select('value')
+              .eq('key', key)
+              .maybeSingle();
 
-        if (response != null && response['value'] != null) {
-          final value = response['value'];
-          if (value is bool) {
-            return value;
+          if (response != null && response['value'] != null) {
+            final value = response['value'];
+            if (value is bool) {
+              return value;
+            }
+            if (value is String) {
+              return value.toLowerCase() == 'true';
+            }
           }
-          if (value is String) {
-            return value.toLowerCase() == 'true';
-          }
+        } catch (e) {
+          debugPrint('Error fetching from Supabase remote_config: $e');
         }
-      } catch (e) {
-        debugPrint('Error fetching from Supabase remote_config: $e');
       }
 
       return defaultValue;
@@ -107,24 +111,26 @@ class RemoteConfigService {
       }
 
       // Fallback to Supabase
-      try {
-        final response = await SupabaseService.client
-            .from('remote_config')
-            .select('value')
-            .eq('key', key)
-            .maybeSingle();
+      if (SupabaseService.isInitialized) {
+        try {
+          final response = await SupabaseService.client!
+              .from('remote_config')
+              .select('value')
+              .eq('key', key)
+              .maybeSingle();
 
-        if (response != null && response['value'] != null) {
-          final value = response['value'];
-          if (value is num) {
-            return value;
+          if (response != null && response['value'] != null) {
+            final value = response['value'];
+            if (value is num) {
+              return value;
+            }
+            if (value is String) {
+              return num.tryParse(value) ?? defaultValue;
+            }
           }
-          if (value is String) {
-            return num.tryParse(value) ?? defaultValue;
-          }
+        } catch (e) {
+          debugPrint('Error fetching from Supabase remote_config: $e');
         }
-      } catch (e) {
-        debugPrint('Error fetching from Supabase remote_config: $e');
       }
 
       return defaultValue;
@@ -140,13 +146,17 @@ class RemoteConfigService {
     required dynamic value,
     String? description,
   }) async {
+    if (!SupabaseService.isInitialized) {
+      throw Exception('Supabase not initialized');
+    }
+    
     try {
-      final user = SupabaseService.auth.currentUser;
+      final user = SupabaseService.auth?.currentUser;
       if (user == null) {
         throw Exception('Must be authenticated to set config');
       }
 
-      await SupabaseService.client.from('remote_config').upsert({
+      await SupabaseService.client!.from('remote_config').upsert({
         'key': key,
         'value': value,
         'description': description,

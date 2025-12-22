@@ -9,6 +9,7 @@ import 'package:portfolio/views/blogs/blogs.dart';
 import 'package:portfolio/views/blogs/blog_detail.dart';
 import 'package:portfolio/features/admin/screens/admin_login.dart';
 import 'package:portfolio/features/admin/screens/admin_dashboard.dart';
+import 'package:portfolio/features/admin/screens/admin_reset_password.dart';
 import 'package:portfolio/core/services/supabase_service.dart';
 
 import '../../views/home/home.dart';
@@ -81,13 +82,18 @@ class AppRouter {
         builder: (context, goState) => const AdminLoginScreen(),
       ),
       GoRoute(
+        path: AppRoutes.adminResetPassword,
+        name: 'admin-reset-password',
+        builder: (context, goState) => const AdminResetPasswordScreen(),
+      ),
+      GoRoute(
         path: AppRoutes.adminDashboard,
         name: 'admin-dashboard',
         builder: (context, goState) => const AdminDashboard(),
       ),
     ],
     redirect: (context, state) {
-      final session = SupabaseService.auth.currentSession;
+      final session = SupabaseService.auth?.currentSession;
       final isAdminRoute = state.uri.path.startsWith('/admin');
 
       // If accessing admin login while already logged in, redirect to dashboard
@@ -95,8 +101,10 @@ class AppRouter {
         return AppRoutes.adminDashboard;
       }
 
-      // Protect admin routes (except login)
-      if (isAdminRoute && state.uri.path != AppRoutes.adminLogin) {
+      // Protect admin routes (except login and reset password)
+      if (isAdminRoute &&
+          state.uri.path != AppRoutes.adminLogin &&
+          state.uri.path != AppRoutes.adminResetPassword) {
         if (session == null) {
           return AppRoutes.adminLogin;
         }

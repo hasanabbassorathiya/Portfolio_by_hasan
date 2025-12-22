@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:portfolio/core/repositories/experience_repository.dart';
+import 'package:portfolio/core/repositories/social_link_repository.dart';
+import 'package:portfolio/models/social_link/social_link_model.dart';
 import 'package:portfolio/shared/constants/assets.dart';
 import 'package:portfolio/shared/constants/colors.dart';
 import 'package:portfolio/shared/constants/textstyles.dart';
 import 'package:portfolio/shared/constants/utils.dart';
 import 'package:portfolio/shared/widgets/button.dart';
+import 'package:portfolio/shared/widgets/profile_image_widget.dart';
 import 'package:portfolio/shared/widgets/experience_card.dart';
 import 'package:portfolio/shared/widgets/gradient_text.dart';
 import 'package:portfolio/shared/widgets/empty_state.dart';
@@ -26,8 +30,11 @@ class _AboutState extends State<About> with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _fadeInAnimation;
   final ExperienceRepository _experienceRepository = ExperienceRepository();
+  final SocialLinkRepository _socialLinkRepository = SocialLinkRepository();
   List<ExperienceModel> _experiences = [];
+  List<SocialLinkModel> _socialLinks = [];
   bool _isLoadingExperiences = true;
+  bool _isLoadingSocialLinks = true;
 
   @override
   void initState() {
@@ -42,6 +49,7 @@ class _AboutState extends State<About> with SingleTickerProviderStateMixin {
       curve: Curves.easeOut,
     );
     _loadExperiences();
+    _loadSocialLinks();
   }
 
   void _trackPageView() {
@@ -65,18 +73,65 @@ class _AboutState extends State<About> with SingleTickerProviderStateMixin {
     }
   }
 
+  Future<void> _loadSocialLinks() async {
+    try {
+      final socialLinks = await _socialLinkRepository.getAllSocialLinks();
+      setState(() {
+        _socialLinks = socialLinks;
+        _isLoadingSocialLinks = false;
+      });
+    } catch (e) {
+      setState(() {
+        _isLoadingSocialLinks = false;
+      });
+    }
+  }
+
+  IconData _getIconForPlatform(String platform) {
+    switch (platform.toLowerCase()) {
+      case 'linkedin':
+        return FontAwesomeIcons.linkedin;
+      case 'github':
+        return FontAwesomeIcons.github;
+      case 'twitter':
+        return FontAwesomeIcons.twitter;
+      case 'facebook':
+        return FontAwesomeIcons.facebook;
+      case 'instagram':
+        return Iconsax.instagram_copy;
+      case 'behance':
+        return FontAwesomeIcons.behance;
+      case 'dribbble':
+        return FontAwesomeIcons.dribbble;
+      default:
+        return Icons.link;
+    }
+  }
+
   void _activatePage() {
     _animationController.forward(from: 0.0);
   }
+
+  // Key for ProfileImageWidget to force refresh
+  GlobalKey _profileImageKey = GlobalKey();
 
   @override
   void didUpdateWidget(covariant About oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.isActive && !oldWidget.isActive) {
       _activatePage();
+      // Refresh profile image when page becomes active
+      _refreshProfileImage();
     } else if (!widget.isActive && oldWidget.isActive) {
       _animationController.reset();
     }
+  }
+
+  void _refreshProfileImage() {
+    // Force ProfileImageWidget to reload by changing its key
+    setState(() {
+      _profileImageKey = GlobalKey();
+    });
   }
 
   @override
@@ -252,6 +307,8 @@ class _AboutState extends State<About> with SingleTickerProviderStateMixin {
                     ),
                     AppUtils().vSpace(size: isSmall ? 30.0 : 40.0),
                     _buildContactInfo(context, isSmall, isMedium),
+                    AppUtils().vSpace(size: isSmall ? 24.0 : 32.0),
+                    _buildSocialLinks(context, isSmall),
                   ],
                 ),
               ),
@@ -279,8 +336,8 @@ class _AboutState extends State<About> with SingleTickerProviderStateMixin {
               AppUtils().vSpace(size: isSmall ? 20.0 : 40.0),
               Align(
                 alignment: isSmall ? Alignment.center : Alignment.topLeft,
-                child: Image.asset(
-                  AppAssets.user,
+                child: ProfileImageWidget(
+                  key: _profileImageKey,
                   width: isSmall ? 180.0 : 260.0,
                   height: isSmall ? 180.0 : 260.0,
                   fit: BoxFit.cover,
@@ -329,10 +386,98 @@ class _AboutState extends State<About> with SingleTickerProviderStateMixin {
               ),
               AppUtils().vSpace(size: isSmall ? 30.0 : 40.0),
               _buildContactInfo(context, isSmall, isMedium),
+              AppUtils().vSpace(size: isSmall ? 24.0 : 32.0),
+              _buildSocialLinks(context, isSmall),
             ],
           );
         }
       },
+    );
+  }
+
+  Widget _buildSocialLinks(BuildContext context, bool isSmall) {
+    if (_isLoadingSocialLinks) {
+      return const SizedBox.shrink();
+    }
+
+    if (_socialLinks.isEmpty) {
+      // Fallback to hardcoded links if database is empty
+      return Wrap(
+        spacing: 16.0,
+        runSpacing: 16.0,
+        children: [
+          _buildSocialIcon(
+            context,
+            FontAwesomeIcons.linkedin,
+            AppLinks.linkedIn,
+            isSmall,
+          ),
+          _buildSocialIcon(
+            context,
+            Iconsax.instagram_copy,
+            AppLinks.instagram,
+            isSmall,
+          ),
+          _buildSocialIcon(
+            context,
+            Iconsax.facebook_copy,
+            AppLinks.facebook,
+            isSmall,
+          ),
+          if (AppLinks.github.isNotEmpty && AppLinks.github != 'YOUR_GITHUB_PROFILE')
+            _buildSocialIcon(
+              context,
+              FontAwesomeIcons.github,
+              AppLinks.github,
+              isSmall,
+            ),
+        ],
+      );
+    }
+
+    return Wrap(
+      spacing: 16.0,
+      runSpacing: 16.0,
+      children: _socialLinks.map((link) {
+        return _buildSocialIcon(
+          context,
+          _getIconForPlatform(link.platform),
+          link.url,
+          isSmall,
+        );
+      }).toList(),
+    );
+  }
+
+  Widget _buildSocialIcon(
+    BuildContext context,
+    IconData icon,
+    String url,
+    bool isSmall,
+  ) {
+    return InkWell(
+      onTap: () => LinkUtils.launchUrl(url),
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        width: isSmall ? 44.0 : 50.0,
+        height: isSmall ? 44.0 : 50.0,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: AppColors.bgColor,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Icon(
+          icon,
+          size: isSmall ? 20 : 24,
+          color: AppColors.primaryColor,
+        ),
+      ),
     );
   }
 
