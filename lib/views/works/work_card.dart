@@ -6,6 +6,7 @@ import 'package:portfolio/shared/constants/design_tokens.dart';
 import 'package:portfolio/shared/constants/textstyles.dart';
 import 'package:portfolio/shared/constants/colors.dart';
 import 'package:portfolio/shared/constants/utils.dart';
+import 'package:portfolio/core/services/analytics_service.dart';
 
 class WorkCard extends StatefulWidget {
   final String imageAsset;
@@ -36,11 +37,25 @@ class _WorkCardState extends State<WorkCard> {
   Widget build(BuildContext context) {
     return ModernCard(
       onTap: () {
+        // Track work card click
+        AnalyticsService.trackEvent(
+          eventName: 'work_card_clicked',
+          eventData: {
+            'work_id': widget.workId,
+            'work_title': widget.title,
+            'category': widget.category,
+          },
+        );
+
         // Navigate to detail page if available, otherwise open URL
         if (widget.projectUrl != null &&
             widget.projectUrl!.isNotEmpty &&
             !widget.projectUrl!.startsWith('YOUR_')) {
-          LinkUtils.launchUrl(widget.projectUrl!);
+          LinkUtils.launchUrl(
+            widget.projectUrl!,
+            linkType: 'work_project',
+            linkName: widget.title,
+          );
         } else {
           context.go('/works/${widget.workId}');
         }

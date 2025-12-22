@@ -11,6 +11,7 @@ import 'package:portfolio/features/admin/screens/admin_login.dart';
 import 'package:portfolio/features/admin/screens/admin_dashboard.dart';
 import 'package:portfolio/features/admin/screens/admin_reset_password.dart';
 import 'package:portfolio/core/services/supabase_service.dart';
+import 'package:portfolio/core/services/analytics_service.dart';
 
 import '../../views/home/home.dart';
 import 'package:portfolio/shared/widgets/main_layout_shell.dart';
@@ -20,6 +21,7 @@ import 'package:flutter/material.dart';
 class AppRouter {
   GoRouter appRouter = GoRouter(
     debugLogDiagnostics: kDebugMode,
+    observers: [_AnalyticsRouteObserver()],
     routes: [
       ShellRoute(
         builder:
@@ -113,4 +115,55 @@ class AppRouter {
       return null;
     },
   );
+}
+
+/// Route observer to track navigation events
+class _AnalyticsRouteObserver extends NavigatorObserver {
+  @override
+  void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {
+    super.didPush(route, previousRoute);
+    _trackRouteChange(route, 'push');
+  }
+
+  @override
+  void didPop(Route<dynamic> route, Route<dynamic>? previousRoute) {
+    super.didPop(route, previousRoute);
+    _trackRouteChange(previousRoute, 'pop');
+  }
+
+  @override
+  void didReplace({Route<dynamic>? newRoute, Route<dynamic>? oldRoute}) {
+    super.didReplace(newRoute: newRoute, oldRoute: oldRoute);
+    if (newRoute != null) {
+      _trackRouteChange(newRoute, 'replace');
+    }
+  }
+
+  void _trackRouteChange(Route<dynamic>? route, String action) {
+    if (route == null) return;
+
+    final routeName =
+        route.settings.name ??
+        route.settings.arguments?.toString() ??
+        'unknown';
+    final routePath =
+        route.settings.arguments is Map
+            ? (route.settings.arguments as Map)['path']?.toString()
+            : null;
+
+    // Only track non-admin routes
+    if (routeName.contains('admin') ||
+        (routePath?.contains('admin') ?? false)) {
+      return;
+    }
+
+    AnalyticsService.trackEvent(
+      eventName: 'navigation',
+      eventData: {
+        'action': action,
+        'route_name': routeName,
+        'route_path': routePath ?? routeName,
+      },
+    );
+  }
 }

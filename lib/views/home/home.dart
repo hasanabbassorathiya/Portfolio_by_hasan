@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:portfolio/shared/constants/assets.dart';
+import 'package:go_router/go_router.dart';
 import 'dart:math' as math;
 
 import 'package:portfolio/shared/constants/colors.dart';
@@ -230,15 +230,11 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                           width: 2,
                                         ),
                                       ),
-                                      child: Image.asset(
-                                        AppAssets.user,
-                                        fit:
-                                            BoxFit
-                                                .cover, // Use contain to prevent distortion
-                                        width:
-                                            actualSize, // Use calculated size
-                                        height:
-                                            actualSize, // Use calculated size
+                                      child: ProfileImageWidget(
+                                        key: _profileImageKey,
+                                        fit: BoxFit.cover,
+                                        width: actualSize,
+                                        height: actualSize,
                                       ),
                                     ),
 
@@ -419,7 +415,11 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                         title: 'Let\'s talk with me',
                                         icons: Iconsax.arrow_right_3_copy,
                                         onTap: () {
-                                          // TODO: Integrate navigation/logging
+                                          AnalyticsService.trackButtonClick(
+                                            buttonName: 'Let\'s talk with me',
+                                            location: 'home',
+                                          );
+                                          context.go('/contact');
                                         },
                                       ),
                                     ),
@@ -640,7 +640,11 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                         title: 'Let\'s talk with me',
                                         icons: Iconsax.arrow_right_3_copy,
                                         onTap: () {
-                                          // TODO: Integrate navigation/logging
+                                          AnalyticsService.trackButtonClick(
+                                            buttonName: 'Let\'s talk with me',
+                                            location: 'home',
+                                          );
+                                          context.go('/contact');
                                         },
                                       ),
                                     ),

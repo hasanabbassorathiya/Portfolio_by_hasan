@@ -903,6 +903,16 @@ class _BlogDetailState extends State<BlogDetail>
   ) {
     return InkWell(
       onTap: () async {
+        // Track social share click
+        AnalyticsService.trackEvent(
+          eventName: 'social_share_clicked',
+          eventData: {
+            'platform': label.toLowerCase(),
+            'blog_id': _blog?.id,
+            'blog_title': _blog?.title,
+          },
+        );
+
         final uri = Uri.parse(shareUrl);
         if (await canLaunchUrl(uri)) {
           await launchUrl(uri, mode: LaunchMode.externalApplication);
@@ -940,49 +950,5 @@ class _BlogDetailState extends State<BlogDetail>
     // For now, return empty since we need async loading
     // TODO: Implement related blogs loading with async repository
     return const SizedBox.shrink();
-  }
-
-  Widget _buildBlogCard(BlogModel blog) {
-    return ModernCard(
-      onTap: () => context.go('/blogs/${blog.id}'),
-      showGradientBorder: true,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(DesignTokens.borderRadius8),
-            child: Image.asset(
-              blog.imageAsset,
-              fit: BoxFit.cover,
-              height: 200,
-              width: double.infinity,
-              errorBuilder: (context, error, stackTrace) {
-                return Container(
-                  height: 200,
-                  color: AppColors.backgroundDark,
-                  child: const Icon(Icons.image, size: 48),
-                );
-              },
-            ),
-          ),
-          AppUtils().vSpace(size: DesignTokens.space16),
-          Text(
-            blog.date,
-            style: AppStyles.body(
-              fontSize: DesignTokens.fontSize12,
-              color: AppColors.textSecondary,
-              context: null,
-            ),
-          ),
-          AppUtils().vSpace(size: DesignTokens.space8),
-          Text(
-            blog.title,
-            style: AppStyles.titleMedium(context: null),
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-          ),
-        ],
-      ),
-    );
   }
 }

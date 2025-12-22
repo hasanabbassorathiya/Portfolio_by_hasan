@@ -679,6 +679,13 @@ class _ContactState extends State<Contact> with SingleTickerProviderStateMixin {
       controller: controller,
       maxLines: maxLines,
       validator: validator,
+      onTap: () {
+        // Track form field interaction
+        AnalyticsService.trackEvent(
+          eventName: 'form_field_focused',
+          eventData: {'field_name': label.toLowerCase()},
+        );
+      },
       style: AppStyles.body(fontSize: 16).copyWith(color: Colors.white),
       decoration: InputDecoration(
         labelText: label,

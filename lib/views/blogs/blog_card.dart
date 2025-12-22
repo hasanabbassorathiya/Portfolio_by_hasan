@@ -5,6 +5,7 @@ import 'package:portfolio/shared/constants/colors.dart';
 import 'package:portfolio/shared/widgets/modern_card.dart';
 import 'package:portfolio/shared/constants/design_tokens.dart';
 import 'package:portfolio/shared/constants/utils.dart';
+import 'package:portfolio/core/services/analytics_service.dart';
 
 class BlogCard extends StatefulWidget {
   final String imageAsset;
@@ -28,7 +29,17 @@ class _BlogCardState extends State<BlogCard> {
   @override
   Widget build(BuildContext context) {
     return ModernCard(
-      onTap: () => context.go('/blogs/${widget.blogId}'),
+      onTap: () {
+        // Track blog card click
+        AnalyticsService.trackEvent(
+          eventName: 'blog_card_clicked',
+          eventData: {
+            'blog_id': widget.blogId,
+            'blog_title': widget.title,
+          },
+        );
+        context.go('/blogs/${widget.blogId}');
+      },
       showGradientBorder: true,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

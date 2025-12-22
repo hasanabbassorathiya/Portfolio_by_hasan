@@ -4,7 +4,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:portfolio/core/repositories/experience_repository.dart';
 import 'package:portfolio/core/repositories/social_link_repository.dart';
 import 'package:portfolio/models/social_link/social_link_model.dart';
-import 'package:portfolio/shared/constants/assets.dart';
 import 'package:portfolio/shared/constants/colors.dart';
 import 'package:portfolio/shared/constants/textstyles.dart';
 import 'package:portfolio/shared/constants/utils.dart';
@@ -53,10 +52,7 @@ class _AboutState extends State<About> with SingleTickerProviderStateMixin {
   }
 
   void _trackPageView() {
-    AnalyticsService.trackPageView(
-      pagePath: '/about',
-      pageTitle: 'About',
-    );
+    AnalyticsService.trackPageView(pagePath: '/about', pageTitle: 'About');
   }
 
   Future<void> _loadExperiences() async {
@@ -106,6 +102,20 @@ class _AboutState extends State<About> with SingleTickerProviderStateMixin {
       default:
         return Icons.link;
     }
+  }
+
+  String _getPlatformFromUrl(String url) {
+    final lowerUrl = url.toLowerCase();
+    if (lowerUrl.contains('linkedin.com')) return 'linkedin';
+    if (lowerUrl.contains('github.com')) return 'github';
+    if (lowerUrl.contains('twitter.com') || lowerUrl.contains('x.com')) {
+      return 'twitter';
+    }
+    if (lowerUrl.contains('facebook.com')) return 'facebook';
+    if (lowerUrl.contains('instagram.com')) return 'instagram';
+    if (lowerUrl.contains('behance.net')) return 'behance';
+    if (lowerUrl.contains('dribbble.com')) return 'dribbble';
+    return 'unknown';
   }
 
   void _activatePage() {
@@ -218,8 +228,7 @@ class _AboutState extends State<About> with SingleTickerProviderStateMixin {
                       ),
                     ),
                     AppUtils().vSpace(size: isSmall ? 24.0 : 40.0),
-                    Image.asset(
-                      AppAssets.user,
+                    Container(
                       width:
                           isSmall
                               ? 180.0
@@ -232,7 +241,40 @@ class _AboutState extends State<About> with SingleTickerProviderStateMixin {
                               : isMedium
                               ? 220.0
                               : 260.0,
-                      fit: BoxFit.cover,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(30),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.06),
+                            blurRadius: 32,
+                            offset: const Offset(0, 16),
+                          ),
+                        ],
+                        border: Border.all(
+                          color: AppColors.primaryColor.withOpacity(0.1),
+                          width: 2,
+                        ),
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(28),
+                        child: ProfileImageWidget(
+                          key: _profileImageKey,
+                          width:
+                              isSmall
+                                  ? 180.0
+                                  : isMedium
+                                  ? 220.0
+                                  : 260.0,
+                          height:
+                              isSmall
+                                  ? 180.0
+                                  : isMedium
+                                  ? 220.0
+                                  : 260.0,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
                     ),
                   ],
                 ),
@@ -303,7 +345,17 @@ class _AboutState extends State<About> with SingleTickerProviderStateMixin {
                     AppButton(
                       title: 'Download CV 	',
                       icons: Iconsax.arrow_right_3_copy,
-                      onTap: () => LinkUtils.launchUrl(AppLinks.cvLink),
+                      onTap: () {
+                        AnalyticsService.trackDownload(
+                          fileType: 'pdf',
+                          fileName: 'CV',
+                        );
+                        LinkUtils.launchUrl(
+                          AppLinks.cvLink,
+                          linkType: 'cv_download',
+                          linkName: 'CV',
+                        );
+                      },
                     ),
                     AppUtils().vSpace(size: isSmall ? 30.0 : 40.0),
                     _buildContactInfo(context, isSmall, isMedium),
@@ -336,11 +388,33 @@ class _AboutState extends State<About> with SingleTickerProviderStateMixin {
               AppUtils().vSpace(size: isSmall ? 20.0 : 40.0),
               Align(
                 alignment: isSmall ? Alignment.center : Alignment.topLeft,
-                child: ProfileImageWidget(
-                  key: _profileImageKey,
+                child: Container(
                   width: isSmall ? 180.0 : 260.0,
                   height: isSmall ? 180.0 : 260.0,
-                  fit: BoxFit.cover,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(30),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.06),
+                        blurRadius: 32,
+                        offset: const Offset(0, 16),
+                      ),
+                    ],
+                    border: Border.all(
+                      color: AppColors.primaryColor.withOpacity(0.1),
+                      width: 2,
+                    ),
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(28),
+                    child: ProfileImageWidget(
+                      key: _profileImageKey,
+                      width: isSmall ? 180.0 : 260.0,
+                      height: isSmall ? 180.0 : 260.0,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
                 ),
               ),
               AppUtils().vSpace(size: isSmall ? 24.0 : 32.0),
@@ -382,7 +456,17 @@ class _AboutState extends State<About> with SingleTickerProviderStateMixin {
               AppButton(
                 title: 'Download CV 	',
                 icons: Iconsax.arrow_right_3_copy,
-                onTap: () => LinkUtils.launchUrl(AppLinks.cvLink),
+                onTap: () {
+                  AnalyticsService.trackDownload(
+                    fileType: 'pdf',
+                    fileName: 'CV',
+                  );
+                  LinkUtils.launchUrl(
+                    AppLinks.cvLink,
+                    linkType: 'cv_download',
+                    linkName: 'CV',
+                  );
+                },
               ),
               AppUtils().vSpace(size: isSmall ? 30.0 : 40.0),
               _buildContactInfo(context, isSmall, isMedium),
@@ -424,7 +508,8 @@ class _AboutState extends State<About> with SingleTickerProviderStateMixin {
             AppLinks.facebook,
             isSmall,
           ),
-          if (AppLinks.github.isNotEmpty && AppLinks.github != 'YOUR_GITHUB_PROFILE')
+          if (AppLinks.github.isNotEmpty &&
+              AppLinks.github != 'YOUR_GITHUB_PROFILE')
             _buildSocialIcon(
               context,
               FontAwesomeIcons.github,
@@ -438,14 +523,15 @@ class _AboutState extends State<About> with SingleTickerProviderStateMixin {
     return Wrap(
       spacing: 16.0,
       runSpacing: 16.0,
-      children: _socialLinks.map((link) {
-        return _buildSocialIcon(
-          context,
-          _getIconForPlatform(link.platform),
-          link.url,
-          isSmall,
-        );
-      }).toList(),
+      children:
+          _socialLinks.map((link) {
+            return _buildSocialIcon(
+              context,
+              _getIconForPlatform(link.platform),
+              link.url,
+              isSmall,
+            );
+          }).toList(),
     );
   }
 
@@ -456,7 +542,19 @@ class _AboutState extends State<About> with SingleTickerProviderStateMixin {
     bool isSmall,
   ) {
     return InkWell(
-      onTap: () => LinkUtils.launchUrl(url),
+      onTap: () {
+        // Extract platform from URL
+        final platform = _getPlatformFromUrl(url);
+        AnalyticsService.trackEvent(
+          eventName: 'social_link_clicked',
+          eventData: {'platform': platform, 'url': url},
+        );
+        LinkUtils.launchUrl(
+          url,
+          linkType: 'social_$platform',
+          linkName: platform,
+        );
+      },
       borderRadius: BorderRadius.circular(12),
       child: Container(
         width: isSmall ? 44.0 : 50.0,
@@ -809,7 +907,17 @@ class _AboutState extends State<About> with SingleTickerProviderStateMixin {
                 AppButton(
                   title: 'Download my resume', // Removed extra space
                   icons: Iconsax.arrow_right_3_copy,
-                  onTap: () => LinkUtils.launchUrl(AppLinks.resumeLink),
+                  onTap: () {
+                    AnalyticsService.trackDownload(
+                      fileType: 'pdf',
+                      fileName: 'Resume',
+                    );
+                    LinkUtils.launchUrl(
+                      AppLinks.resumeLink,
+                      linkType: 'cv_download',
+                      linkName: 'Resume',
+                    );
+                  },
                 ),
               ],
             ),
