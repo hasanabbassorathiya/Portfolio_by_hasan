@@ -12,7 +12,6 @@ import 'package:portfolio/features/admin/screens/works/admin_works.dart';
 import 'package:portfolio/features/admin/screens/experiences/admin_experiences.dart';
 import 'package:portfolio/features/admin/screens/testimonials/admin_testimonials.dart';
 import 'package:portfolio/features/admin/screens/profile/admin_profile.dart';
-import 'package:portfolio/features/admin/screens/resume_intake/admin_resume_intake.dart';
 import 'package:portfolio/features/admin/screens/services/admin_services.dart';
 import 'package:portfolio/features/admin/screens/contacts/admin_contacts.dart';
 import 'package:portfolio/features/admin/screens/social_links/admin_social_links.dart';
@@ -68,11 +67,6 @@ class _AdminDashboardState extends State<AdminDashboard> {
       title: 'Profile',
       icon: Icons.person_outline,
       widget: const AdminProfileScreen(),
-    ),
-    AdminScreen(
-      title: 'Resume Intake',
-      icon: Icons.description_outlined,
-      widget: const AdminResumeIntakeScreen(),
     ),
     AdminScreen(
       title: 'Social Links',
