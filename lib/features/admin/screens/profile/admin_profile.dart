@@ -8,7 +8,6 @@ import 'package:portfolio/shared/constants/colors.dart';
 import 'package:portfolio/shared/constants/textstyles.dart';
 import 'package:portfolio/shared/constants/utils.dart';
 import 'package:portfolio/shared/widgets/file_upload_widget.dart';
-import 'package:portfolio/features/admin/widgets/resume_parser_dialog.dart';
 
 class AdminProfileScreen extends StatefulWidget {
   const AdminProfileScreen({super.key});
@@ -116,7 +115,9 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
             .update(profileData)
             .eq('id', _profile!.id);
       } else {
-        await SupabaseService.requiredClient.from('profiles').insert(profileData);
+        await SupabaseService.requiredClient
+            .from('profiles')
+            .insert(profileData);
       }
 
       if (mounted) {
@@ -130,7 +131,9 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
         // Show a message that the image will update on other pages
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Profile image updated! Navigate to Home/About pages to see the change.'),
+            content: Text(
+              'Profile image updated! Navigate to Home/About pages to see the change.',
+            ),
             duration: Duration(seconds: 3),
             backgroundColor: Colors.blue,
           ),
@@ -170,48 +173,25 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          Row(
-                            children: [
-                              ElevatedButton.icon(
-                                onPressed: () async {
-                                  final result = await showDialog(
-                                    context: context,
-                                    builder: (context) => const ResumeParserDialog(),
-                                  );
-                                  if (result == true) {
-                                    // Reload profile after successful parsing
-                                    await _loadProfile();
-                                  }
-                                },
-                                icon: const Icon(Icons.upload_file),
-                                label: const Text('Parse Resume'),
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: AppColors.primaryColor.withOpacity(0.8),
-                                  foregroundColor: Colors.white,
-                                ),
-                              ),
-                              AppUtils().hSpace(size: 12),
-                              ElevatedButton.icon(
-                                onPressed: _isSaving ? null : _saveProfile,
-                                icon:
-                                    _isSaving
-                                        ? const SizedBox(
-                                          width: 16,
-                                          height: 16,
-                                          child: CircularProgressIndicator(
-                                            strokeWidth: 2,
-                                          ),
-                                        )
-                                        : const Icon(Icons.save),
-                                label: Text(
-                                  _isSaving ? 'Saving...' : 'Save Profile',
-                                ),
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: AppColors.primaryColor,
-                                  foregroundColor: Colors.white,
-                                ),
-                              ),
-                            ],
+                          ElevatedButton.icon(
+                            onPressed: _isSaving ? null : _saveProfile,
+                            icon:
+                                _isSaving
+                                    ? const SizedBox(
+                                      width: 16,
+                                      height: 16,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                      ),
+                                    )
+                                    : const Icon(Icons.save),
+                            label: Text(
+                              _isSaving ? 'Saving...' : 'Save Profile',
+                            ),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.primaryColor,
+                              foregroundColor: Colors.white,
+                            ),
                           ),
                         ],
                       ),

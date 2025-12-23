@@ -19,7 +19,8 @@ $$ LANGUAGE plpgsql;
 
 -- Option 2: Add an INSERT policy for the trigger (alternative approach)
 -- Allow the function to insert (it runs as the database user, not the app user)
-CREATE POLICY IF NOT EXISTS "Allow trigger to insert analytics summary"
+DROP POLICY IF EXISTS "Allow trigger to insert analytics summary" ON analytics_summary;
+CREATE POLICY "Allow trigger to insert analytics summary"
   ON analytics_summary FOR INSERT
   WITH CHECK (true);
 

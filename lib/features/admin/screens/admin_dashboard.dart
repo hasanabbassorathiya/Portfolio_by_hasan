@@ -12,6 +12,7 @@ import 'package:portfolio/features/admin/screens/works/admin_works.dart';
 import 'package:portfolio/features/admin/screens/experiences/admin_experiences.dart';
 import 'package:portfolio/features/admin/screens/testimonials/admin_testimonials.dart';
 import 'package:portfolio/features/admin/screens/profile/admin_profile.dart';
+import 'package:portfolio/features/admin/screens/resume_intake/admin_resume_intake.dart';
 import 'package:portfolio/features/admin/screens/services/admin_services.dart';
 import 'package:portfolio/features/admin/screens/contacts/admin_contacts.dart';
 import 'package:portfolio/features/admin/screens/social_links/admin_social_links.dart';
@@ -69,6 +70,11 @@ class _AdminDashboardState extends State<AdminDashboard> {
       widget: const AdminProfileScreen(),
     ),
     AdminScreen(
+      title: 'Resume Intake',
+      icon: Icons.description_outlined,
+      widget: const AdminResumeIntakeScreen(),
+    ),
+    AdminScreen(
       title: 'Social Links',
       icon: Icons.link,
       widget: const AdminSocialLinksScreen(),
@@ -80,22 +86,22 @@ class _AdminDashboardState extends State<AdminDashboard> {
     ),
   ];
 
-          Future<void> _logout() async {
-            try {
-              if (SupabaseService.isInitialized) {
-                await SupabaseService.auth!.signOut();
-              }
-              if (mounted) {
-                context.go(AppRoutes.adminLogin);
-              }
-            } catch (e) {
-              if (mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Logout failed: ${e.toString()}')),
-                );
-              }
-            }
-          }
+  Future<void> _logout() async {
+    try {
+      if (SupabaseService.isInitialized) {
+        await SupabaseService.auth!.signOut();
+      }
+      if (mounted) {
+        context.go(AppRoutes.adminLogin);
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Logout failed: ${e.toString()}')),
+        );
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -216,45 +222,48 @@ class _DashboardOverview extends StatelessWidget {
           children: [
             Text(
               'Dashboard Overview',
-              style: AppStyles.heading(fontSize: 32, fontWeight: FontWeight.bold),
+              style: AppStyles.heading(
+                fontSize: 32,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-          AppUtils().vSpace(size: 32),
-          // Stats cards
+            AppUtils().vSpace(size: 32),
+            // Stats cards
             Wrap(
               spacing: 24,
               runSpacing: 24,
               children: [
-              _StatCard(
-                title: 'Total Blogs',
-                value: '0',
-                icon: Icons.article_outlined,
-                color: Colors.blue,
-              ),
-              _StatCard(
-                title: 'Total Works',
-                value: '0',
-                icon: Icons.work_outline,
-                color: Colors.green,
-              ),
-              _StatCard(
-                title: 'Experiences',
-                value: '0',
-                icon: Icons.business_outlined,
-                color: Colors.orange,
-              ),
-              _StatCard(
-                title: 'Testimonials',
-                value: '0',
-                icon: Icons.format_quote_outlined,
-                color: Colors.purple,
-              ),
-              _StatCard(
-                title: 'Unread Messages',
-                value: '0',
-                icon: Icons.mail_outline,
-                color: Colors.red,
-              ),
-            ],
+                _StatCard(
+                  title: 'Total Blogs',
+                  value: '0',
+                  icon: Icons.article_outlined,
+                  color: Colors.blue,
+                ),
+                _StatCard(
+                  title: 'Total Works',
+                  value: '0',
+                  icon: Icons.work_outline,
+                  color: Colors.green,
+                ),
+                _StatCard(
+                  title: 'Experiences',
+                  value: '0',
+                  icon: Icons.business_outlined,
+                  color: Colors.orange,
+                ),
+                _StatCard(
+                  title: 'Testimonials',
+                  value: '0',
+                  icon: Icons.format_quote_outlined,
+                  color: Colors.purple,
+                ),
+                _StatCard(
+                  title: 'Unread Messages',
+                  value: '0',
+                  icon: Icons.mail_outline,
+                  color: Colors.red,
+                ),
+              ],
             ),
           ],
         ),

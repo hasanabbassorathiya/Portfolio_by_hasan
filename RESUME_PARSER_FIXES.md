@@ -111,3 +111,4 @@ After deploying the updated Edge Function:
    - If skills not found: Check if skills section uses different naming
    - If dates not parsed: Check date format in your resume
 
+

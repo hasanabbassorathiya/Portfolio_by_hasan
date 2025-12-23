@@ -3,11 +3,12 @@
 
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-import pdfParse from 'https://esm.sh/pdf-parse@1.1.1';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+  'Access-Control-Max-Age': '86400',
 };
 
 interface ParsedResumeData {
@@ -111,35 +112,13 @@ serve(async (req) => {
   }
 });
 
-// PDF text extraction using pdf-parse
+// PDF text extraction using fallback method (Deno-compatible)
 async function extractTextFromPDF(bytes: Uint8Array): Promise<string> {
-  try {
-    console.log('Using pdf-parse library to extract text...');
-    console.log(`PDF size: ${bytes.length} bytes`);
-    
-    // pdf-parse expects a Buffer-like object
-    // In Deno, we need to convert Uint8Array to Buffer
-    const buffer = typeof Buffer !== 'undefined' 
-      ? Buffer.from(bytes) 
-      : new Uint8Array(bytes); // Fallback for Deno
-    
-    const data = await pdfParse(buffer);
-    const text = data.text;
-
-    if (!text || text.trim().length < 10) {
-      throw new Error(
-        'Could not extract text from PDF. Please ensure the PDF contains readable text (not scanned images).',
-      );
-    }
-
-    console.log(`Successfully extracted ${text.length} characters from PDF`);
-    return text;
-  } catch (error) {
-    console.error('pdf-parse extraction failed:', error);
-    // Fallback to basic extraction
-    console.log('Trying fallback extraction method...');
-    return extractTextFromPDFFallback(bytes);
-  }
+  console.log('Extracting text from PDF using fallback method...');
+  console.log(`PDF size: ${bytes.length} bytes`);
+  
+  // Use fallback extraction method (works in Deno)
+  return extractTextFromPDFFallback(bytes);
 }
 
 // Fallback PDF text extraction (basic approach)
