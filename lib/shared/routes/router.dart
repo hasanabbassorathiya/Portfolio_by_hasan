@@ -93,10 +93,31 @@ class AppRouter {
         name: 'admin-dashboard',
         builder: (context, goState) => const AdminDashboard(),
       ),
+      // Handle /admin route
+      GoRoute(
+        path: '/admin',
+        redirect: (context, state) {
+          final session = SupabaseService.auth?.currentSession;
+          if (session != null) {
+            return AppRoutes.adminDashboard;
+          } else {
+            return AppRoutes.adminLogin;
+          }
+        },
+      ),
     ],
     redirect: (context, state) {
       final session = SupabaseService.auth?.currentSession;
       final isAdminRoute = state.uri.path.startsWith('/admin');
+      
+      // Handle /admin route specifically
+      if (state.uri.path == '/admin') {
+        if (session != null) {
+          return AppRoutes.adminDashboard;
+        } else {
+          return AppRoutes.adminLogin;
+        }
+      }
 
       // If accessing admin login while already logged in, redirect to dashboard
       if (state.uri.path == AppRoutes.adminLogin && session != null) {

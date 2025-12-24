@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:portfolio/core/repositories/contact_repository.dart';
+import 'package:portfolio/core/repositories/profile_repository.dart';
 import 'package:portfolio/shared/constants/textstyles.dart';
 import 'package:portfolio/shared/constants/utils.dart';
 import 'package:portfolio/shared/constants/links.dart';
@@ -29,8 +30,12 @@ class _ContactState extends State<Contact> with SingleTickerProviderStateMixin {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _messageController = TextEditingController();
   final ContactRepository _contactRepository = ContactRepository();
+  final ProfileRepository _profileRepository = ProfileRepository();
   final _formKey = GlobalKey<FormState>();
   bool _isSubmitting = false;
+  String? _phone;
+  String? _email;
+  String? _location;
 
   // Add hover state variables
   bool _isHoveringPhoneNumber = false;
@@ -44,6 +49,7 @@ class _ContactState extends State<Contact> with SingleTickerProviderStateMixin {
   void initState() {
     super.initState();
     _trackPageView();
+    _loadProfile();
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 800), // Adjust duration as needed
@@ -59,6 +65,21 @@ class _ContactState extends State<Contact> with SingleTickerProviderStateMixin {
       pagePath: '/contact',
       pageTitle: 'Contact',
     );
+  }
+
+  Future<void> _loadProfile() async {
+    try {
+      final profile = await _profileRepository.getProfile();
+      if (profile != null) {
+        setState(() {
+          _phone = profile.phone;
+          _email = profile.email;
+          _location = profile.location;
+        });
+      }
+    } catch (e) {
+      // Silently fail, will use fallback values
+    }
   }
 
   // Method to activate page animations and scroll to top
@@ -193,7 +214,7 @@ class _ContactState extends State<Contact> with SingleTickerProviderStateMixin {
                             AppUtils().vSpace(size: 20),
                             // Add Contact Info details here (e.g., email, phone, address)
                             Text(
-                              '10st Abd EL Aziz Al Soud, 05th Floor, Manial,\n Roda, Cairo, Egypt.', // Address from Figma
+                              _location ?? '10st Abd EL Aziz Al Soud, 05th Floor, Manial,\n Roda, Cairo, Egypt.', // Location from profile or fallback
                               style: AppStyles.body(),
                             ),
                             AppUtils().vSpace(
@@ -202,16 +223,15 @@ class _ContactState extends State<Contact> with SingleTickerProviderStateMixin {
                             InkWell(
                               onTap:
                                   () => LinkUtils.launchPhone(
-                                    AppLinks.phoneNumber,
-                                  ), // Use constant and LinkUtils
+                                    _phone ?? AppLinks.phoneNumber,
+                                  ), // Use profile phone or fallback
                               onHover: (value) {
                                 setState(() {
                                   _isHoveringPhoneNumber = value;
                                 });
                               },
                               child: Text(
-                                AppLinks
-                                    .phoneNumber, // Use phone number constant
+                                _phone ?? AppLinks.phoneNumber, // Use profile phone or fallback
                                 style: AppStyles.heading(fontSize: 20).copyWith(
                                   fontWeight: FontWeight.bold,
                                   color:
@@ -228,15 +248,15 @@ class _ContactState extends State<Contact> with SingleTickerProviderStateMixin {
                             InkWell(
                               onTap:
                                   () => LinkUtils.launchEmail(
-                                    AppLinks.email,
-                                  ), // Use constant and LinkUtils
+                                    _email ?? AppLinks.email,
+                                  ), // Use profile email or fallback
                               onHover: (value) {
                                 setState(() {
                                   _isHoveringEmail = value;
                                 });
                               },
                               child: Text(
-                                AppLinks.email, // Use email constant
+                                _email ?? AppLinks.email, // Use profile email or fallback
                                 style: AppStyles.heading(fontSize: 20).copyWith(
                                   fontWeight: FontWeight.bold,
                                   color:
@@ -377,7 +397,7 @@ class _ContactState extends State<Contact> with SingleTickerProviderStateMixin {
                       AppUtils().vSpace(size: 20),
                       // Add Contact Info details here (e.g., email, phone, address)
                       Text(
-                        '10st Abd EL Aziz Al Soud, 05th Floor, Manial,\n Roda, Cairo, Egypt.', // Address from Figma
+                        _location ?? '10st Abd EL Aziz Al Soud, 05th Floor, Manial,\n Roda, Cairo, Egypt.', // Location from profile or fallback
                         style: AppStyles.body(),
                       ),
                       AppUtils().vSpace(size: 20), // Spacing based on Figma

@@ -35,6 +35,9 @@ class _AboutState extends State<About> with SingleTickerProviderStateMixin {
   List<ExperienceModel> _experiences = [];
   List<SocialLinkModel> _socialLinks = [];
   String? _quote;
+  String? _phone;
+  String? _email;
+  String? _location;
   bool _isLoadingExperiences = true;
   bool _isLoadingSocialLinks = true;
 
@@ -93,10 +96,13 @@ class _AboutState extends State<About> with SingleTickerProviderStateMixin {
       if (profile != null) {
         setState(() {
           _quote = profile.quote;
+          _phone = profile.phone;
+          _email = profile.email;
+          _location = profile.location;
         });
       }
     } catch (e) {
-      // Silently fail, quote will just not be displayed
+      // Silently fail, will use fallback values
     }
   }
 
@@ -612,9 +618,9 @@ class _AboutState extends State<About> with SingleTickerProviderStateMixin {
             ),
             const SizedBox(width: 12.0),
             InkWell(
-              onTap: () => LinkUtils.launchPhone(AppLinks.phoneNumber),
+              onTap: () => LinkUtils.launchPhone(_phone ?? AppLinks.phoneNumber),
               child: Text(
-                AppLinks.phoneNumber,
+                _phone ?? AppLinks.phoneNumber,
                 style: AppStyles.regular(
                   fontWeight: FontWeight.bold,
                   fontSize: isSmall ? 15 : 18.0,
@@ -637,9 +643,9 @@ class _AboutState extends State<About> with SingleTickerProviderStateMixin {
             ),
             const SizedBox(width: 12.0),
             InkWell(
-              onTap: () => LinkUtils.launchEmail(AppLinks.email),
+              onTap: () => LinkUtils.launchEmail(_email ?? AppLinks.email),
               child: Text(
-                AppLinks.email,
+                _email ?? AppLinks.email,
                 style: AppStyles.regular(
                   fontWeight: FontWeight.bold,
                   fontSize: isSmall ? 15 : 18.0,
@@ -685,7 +691,7 @@ class _AboutState extends State<About> with SingleTickerProviderStateMixin {
             ),
             const SizedBox(width: 12.0), // Adjusted spacing
             Text(
-              'Dubai, UAE', // Location from Figma
+              _location ?? 'Dubai, UAE', // Location from profile or fallback
               style: AppStyles.regular(
                 // Using regular style with bold
                 fontWeight: FontWeight.bold,

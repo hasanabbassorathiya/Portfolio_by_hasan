@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:logger/logger.dart';
+import 'package:go_router/go_router.dart';
+import 'package:portfolio/core/services/supabase_service.dart';
 import 'package:portfolio/shared/constants/colors.dart';
 import 'package:portfolio/shared/constants/links.dart';
 import 'package:portfolio/shared/routes/app_routes.dart';
@@ -87,40 +89,116 @@ class _AppSidebarState extends State<AppSidebar> {
               ),
             ),
 
-            // Social Buttons and Copyright
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                SocialButtons(
-                  icon: Iconsax.instagram_copy,
-                  link: AppLinks.instagram,
-                ),
-                SizedBox(height: 20.0),
-                SocialButtons(icon: Iconsax.code_1, link: AppLinks.github),
-                SizedBox(height: 30.0),
-                Text(
-                  'Copyright ©${DateTime.now().year}',
-                  style: GoogleFonts.ibmPlexSans().copyWith(
-                    color: AppColors.bgColor,
-                    fontSize: 16.0,
-                  ),
-                ),
-                Text(
-                  'Hasan Abbas Sorathiya.',
-                  style: GoogleFonts.ibmPlexSans().copyWith(
-                    color: AppColors.bgColor,
-                    fontSize: 16.0,
-                  ),
-                ),
-                Text(
-                  'All right reserved.',
-                  style: GoogleFonts.ibmPlexSans().copyWith(
-                    color: AppColors.bgColor,
-                    fontSize: 16.0,
-                  ),
-                ),
-              ],
+            // Login/Admin Section
+            Builder(
+              builder: (context) {
+                final session = SupabaseService.auth?.currentSession;
+                final isLoggedIn = session != null;
+                
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (isLoggedIn) ...[
+                      // View Switcher when logged in
+                      Container(
+                        padding: const EdgeInsets.all(12.0),
+                        decoration: BoxDecoration(
+                          color: AppColors.bgColor.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.admin_panel_settings,
+                              color: AppColors.bgColor,
+                              size: 20,
+                            ),
+                            const SizedBox(width: 8.0),
+                            Expanded(
+                              child: Text(
+                                'Admin Mode',
+                                style: GoogleFonts.ibmPlexSans().copyWith(
+                                  color: AppColors.bgColor,
+                                  fontSize: 14.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            Switch(
+                              value: widget.currentLocation.startsWith('/admin'),
+                              onChanged: (value) {
+                                if (value) {
+                                  context.go(AppRoutes.adminDashboard);
+                                } else {
+                                  context.go(AppRoutes.home);
+                                }
+                              },
+                              activeColor: AppColors.bgColor,
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 12.0),
+                    ] else ...[
+                      // Login button when not logged in
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton.icon(
+                          onPressed: () {
+                            context.go(AppRoutes.adminLogin);
+                          },
+                          icon: const Icon(Icons.login, size: 18),
+                          label: Text(
+                            'Login',
+                            style: GoogleFonts.ibmPlexSans().copyWith(
+                              fontSize: 14.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.bgColor,
+                            foregroundColor: AppColors.primaryColor,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16.0,
+                              vertical: 12.0,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 20.0),
+                    ],
+                    // Social Buttons and Copyright
+                    SocialButtons(
+                      icon: Iconsax.instagram_copy,
+                      link: AppLinks.instagram,
+                    ),
+                    SizedBox(height: 20.0),
+                    SocialButtons(icon: Iconsax.code_1, link: AppLinks.github),
+                    SizedBox(height: 30.0),
+                    Text(
+                      'Copyright ©${DateTime.now().year}',
+                      style: GoogleFonts.ibmPlexSans().copyWith(
+                        color: AppColors.bgColor,
+                        fontSize: 16.0,
+                      ),
+                    ),
+                    Text(
+                      'Hasan Abbas Sorathiya.',
+                      style: GoogleFonts.ibmPlexSans().copyWith(
+                        color: AppColors.bgColor,
+                        fontSize: 16.0,
+                      ),
+                    ),
+                    Text(
+                      'All right reserved.',
+                      style: GoogleFonts.ibmPlexSans().copyWith(
+                        color: AppColors.bgColor,
+                        fontSize: 16.0,
+                      ),
+                    ),
+                  ],
+                );
+              },
             ),
           ],
         ),
