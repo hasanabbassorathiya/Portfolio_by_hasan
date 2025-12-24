@@ -29,28 +29,86 @@ jobs:
       - name: Verify Flutter setup
         run: flutter doctor -v
 
-      - name: Build web app
+      - name: Build web app (Release)
         run: |
-          flutter build web --release --base-href / \
+          flutter clean
+          flutter build web --release \
+            --base-href / \
             --dart-define=SUPABASE_URL="${{ secrets.SUPABASE_URL }}" \
             --dart-define=SUPABASE_ANON_KEY="${{ secrets.SUPABASE_ANON_KEY }}" \
-            --dart-define=APP_NAME="${{ secrets.APP_NAME || 'Portfolio' }}" \
+            --dart-define=APP_NAME="${{ secrets.APP_NAME || 'Hasan Abbas Sorathiya' }}" \
             --dart-define=DEFAULT_LOCALE="${{ secrets.DEFAULT_LOCALE || 'en' }}" \
-            --dart-define=SUPPORTED_LOCALES="${{ secrets.SUPPORTED_LOCALES || 'en' }}"
+            --dart-define=SUPPORTED_LOCALES="${{ secrets.SUPPORTED_LOCALES || 'en,ar,fr' }}" \
+            --dart-define=ENABLE_ANALYTICS="${{ secrets.ENABLE_ANALYTICS || 'true' }}" \
+            --dart-define=ENABLE_CRASH_REPORTING="${{ secrets.ENABLE_CRASH_REPORTING || 'true' }}" \
+            --web-renderer canvaskit \
+            --source-maps
+
+      - name: Verify build output
+        run: |
+          if [ ! -d "build/web" ]; then
+            echo "❌ Build output directory not found"
+            exit 1
+          fi
+          if [ ! -f "build/web/index.html" ]; then
+            echo "❌ index.html not found in build output"
+            exit 1
+          fi
+          echo "✅ Build output verified"
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
+          cache: 'npm'
 
-      - name: Install Firebase CLI
-        run: npm install -g firebase-tools
+      - name: Install Firebase CLI and dependencies
+        run: |
+          npm install -g firebase-tools@latest
+          sudo apt-get update && sudo apt-get install -y jq || true
+
+      - name: Authenticate with Firebase
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: |
+          if [ -z "$FIREBASE_SERVICE_ACCOUNT" ]; then
+            echo "❌ FIREBASE_SERVICE_ACCOUNT secret is not set"
+            exit 1
+          fi
+          # Write service account JSON to file
+          echo "$FIREBASE_SERVICE_ACCOUNT" > $HOME/firebase-service-account.json
+          export GOOGLE_APPLICATION_CREDENTIALS="$HOME/firebase-service-account.json"
+          
+          # Verify JSON is valid (using Python if jq is not available)
+          if command -v jq &> /dev/null; then
+            if ! jq empty $HOME/firebase-service-account.json 2>/dev/null; then
+              echo "❌ Invalid JSON in FIREBASE_SERVICE_ACCOUNT"
+              exit 1
+            fi
+          else
+            if ! python3 -m json.tool $HOME/firebase-service-account.json > /dev/null 2>&1; then
+              echo "❌ Invalid JSON in FIREBASE_SERVICE_ACCOUNT"
+              exit 1
+            fi
+          fi
+          
+          # Set Firebase project
+          firebase use hasan-abbas-portfolio
+          
+          # Verify authentication
+          echo "✅ Firebase authentication verified"
 
       - name: Deploy to Firebase Hosting
-        uses: FirebaseExtended/action-hosting-deploy@v0
-        with:
-          repoToken: '${{ secrets.GITHUB_TOKEN }}'
-          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}'
-          channelId: live
-          projectId: hasan-abbas-portfolio
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: $HOME/firebase-service-account.json
+        run: |
+          firebase deploy --only hosting --project hasan-abbas-portfolio
+
+      - name: Deployment summary
+        if: success()
+        run: |
+          echo "✅ Deployment successful!"
+          echo "🌐 Your site is live at:"
+          echo "   https://hasan-abbas-portfolio.web.app"
+          echo "   https://hasan-abbas-portfolio.firebaseapp.com"
 

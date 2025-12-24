@@ -60,3 +60,5 @@ ui-debug.log
 # Service account keys
 *-service-account.json
 service-account.json
+# Firebase service account JSON files (contains private keys)
+hasan-abbas-portfolio-*.json
