@@ -37,7 +37,6 @@ jobs:
             --dart-define=SUPPORTED_LOCALES="${{ secrets.SUPPORTED_LOCALES || 'en,ar,fr' }}" \
             --dart-define=ENABLE_ANALYTICS="${{ secrets.ENABLE_ANALYTICS || 'true' }}" \
             --dart-define=ENABLE_CRASH_REPORTING="${{ secrets.ENABLE_CRASH_REPORTING || 'true' }}" \
-            --web-renderer canvaskit \
             --source-maps
 
       - name: Verify build output

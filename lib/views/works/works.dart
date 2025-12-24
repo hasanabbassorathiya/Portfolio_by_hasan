@@ -190,6 +190,7 @@ class _WorksState extends State<Works> with SingleTickerProviderStateMixin {
                             description: project.description,
                             projectUrl: project.projectUrl,
                             workId: project.id,
+                            appIconUrl: project.appIconUrl,
                           ),
                         );
                       }).toList();

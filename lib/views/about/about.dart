@@ -3,6 +3,7 @@ import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:portfolio/core/repositories/experience_repository.dart';
 import 'package:portfolio/core/repositories/social_link_repository.dart';
+import 'package:portfolio/core/repositories/profile_repository.dart';
 import 'package:portfolio/models/social_link/social_link_model.dart';
 import 'package:portfolio/shared/constants/colors.dart';
 import 'package:portfolio/shared/constants/textstyles.dart';
@@ -30,8 +31,10 @@ class _AboutState extends State<About> with SingleTickerProviderStateMixin {
   late Animation<double> _fadeInAnimation;
   final ExperienceRepository _experienceRepository = ExperienceRepository();
   final SocialLinkRepository _socialLinkRepository = SocialLinkRepository();
+  final ProfileRepository _profileRepository = ProfileRepository();
   List<ExperienceModel> _experiences = [];
   List<SocialLinkModel> _socialLinks = [];
+  String? _quote;
   bool _isLoadingExperiences = true;
   bool _isLoadingSocialLinks = true;
 
@@ -49,6 +52,7 @@ class _AboutState extends State<About> with SingleTickerProviderStateMixin {
     );
     _loadExperiences();
     _loadSocialLinks();
+    _loadProfile();
   }
 
   void _trackPageView() {
@@ -83,12 +87,25 @@ class _AboutState extends State<About> with SingleTickerProviderStateMixin {
     }
   }
 
+  Future<void> _loadProfile() async {
+    try {
+      final profile = await _profileRepository.getProfile();
+      if (profile != null) {
+        setState(() {
+          _quote = profile.quote;
+        });
+      }
+    } catch (e) {
+      // Silently fail, quote will just not be displayed
+    }
+  }
+
   IconData _getIconForPlatform(String platform) {
     switch (platform.toLowerCase()) {
       case 'linkedin':
         return FontAwesomeIcons.linkedin;
       case 'github':
-        return FontAwesomeIcons.github;
+        return FontAwesomeIcons.githubAlt; // Using githubAlt for better visibility
       case 'twitter':
         return FontAwesomeIcons.twitter;
       case 'facebook':
@@ -803,6 +820,10 @@ class _AboutState extends State<About> with SingleTickerProviderStateMixin {
 
   // Extracted method for Quote Section (reused)
   Widget _buildQuoteSection(BuildContext context, bool isSmall, bool isMedium) {
+    if (_quote == null || _quote!.isEmpty) {
+      return const SizedBox.shrink();
+    }
+    
     return Center(
       // Center the quote section horizontally
       child: Container(
@@ -831,7 +852,7 @@ class _AboutState extends State<About> with SingleTickerProviderStateMixin {
             Flexible(
               // Use Flexible to allow text to take available space but shrink if needed
               child: Text(
-                "“Lorem ipsum dolor sit amet, consectetur adipiscing elit. Faucibus sed sit ultrices et sed metus sollicitudin.”", // Verify text content
+                _quote!,
                 softWrap: true,
                 style: AppStyles.subheading(
                   // Using subheading style

@@ -16,6 +16,7 @@ class WorkCard extends StatefulWidget {
   final String? projectUrl;
   final String category;
   final String workId;
+  final String? appIconUrl;
 
   const WorkCard({
     super.key,
@@ -26,6 +27,7 @@ class WorkCard extends StatefulWidget {
     this.projectUrl,
     required this.category,
     required this.workId,
+    this.appIconUrl,
   });
 
   @override
@@ -64,21 +66,87 @@ class _WorkCardState extends State<WorkCard> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(DesignTokens.borderRadius8),
-            child: Image.asset(
-              widget.imageAsset,
-              fit: BoxFit.cover,
-              height: 200.0,
-              width: double.infinity,
-              errorBuilder: (context, error, stackTrace) {
-                return Container(
-                  height: 200,
-                  color: AppColors.backgroundDark,
-                  child: const Icon(Icons.image, size: 48),
-                );
-              },
-            ),
+          Stack(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(DesignTokens.borderRadius8),
+                child: widget.imageAsset.startsWith('http://') || widget.imageAsset.startsWith('https://')
+                    ? Image.network(
+                        widget.imageAsset,
+                        fit: BoxFit.cover,
+                        height: 200.0,
+                        width: double.infinity,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Container(
+                            height: 200,
+                            color: AppColors.backgroundDark,
+                            child: const Icon(Icons.image, size: 48),
+                          );
+                        },
+                        loadingBuilder: (context, child, loadingProgress) {
+                          if (loadingProgress == null) return child;
+                          return Container(
+                            height: 200,
+                            color: AppColors.backgroundDark,
+                            child: Center(
+                              child: CircularProgressIndicator(
+                                value: loadingProgress.expectedTotalBytes != null
+                                    ? loadingProgress.cumulativeBytesLoaded /
+                                        loadingProgress.expectedTotalBytes!
+                                    : null,
+                              ),
+                            ),
+                          );
+                        },
+                      )
+                    : Image.asset(
+                        widget.imageAsset,
+                        fit: BoxFit.cover,
+                        height: 200.0,
+                        width: double.infinity,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Container(
+                            height: 200,
+                            color: AppColors.backgroundDark,
+                            child: const Icon(Icons.image, size: 48),
+                          );
+                        },
+                      ),
+              ),
+              if (widget.appIconUrl != null && widget.appIconUrl!.isNotEmpty)
+                Positioned(
+                  bottom: DesignTokens.space12,
+                  right: DesignTokens.space12,
+                  child: Container(
+                    width: 50,
+                    height: 50,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: Colors.white, width: 2),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.3),
+                          blurRadius: 8,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: Image.network(
+                        widget.appIconUrl!,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Container(
+                            color: AppColors.backgroundDark,
+                            child: const Icon(Icons.apps, size: 24, color: Colors.white),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                ),
+            ],
           ),
           Padding(
             padding: const EdgeInsets.all(DesignTokens.space16),

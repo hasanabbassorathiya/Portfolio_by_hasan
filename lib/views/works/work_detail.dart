@@ -10,6 +10,7 @@ import 'package:portfolio/shared/widgets/modern_button.dart';
 import 'package:portfolio/shared/widgets/modern_card.dart';
 import 'package:portfolio/shared/widgets/smooth_scroll_wrapper.dart';
 import 'package:portfolio/core/services/analytics_service.dart';
+import 'package:portfolio/shared/utils/link_utils.dart';
 
 /// Work detail page
 /// Displays full project details with case study information
@@ -134,16 +135,41 @@ class _WorkDetailState extends State<WorkDetail>
         child: Stack(
           fit: StackFit.expand,
           children: [
-            Image.asset(
-              _work!.imageAsset,
-              fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) {
-                return Container(
-                  color: AppColors.backgroundDark,
-                  child: const Icon(Icons.image, size: 64, color: Colors.white),
-                );
-              },
-            ),
+            _work!.imageAsset.startsWith('http://') || _work!.imageAsset.startsWith('https://')
+                ? Image.network(
+                    _work!.imageAsset,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Container(
+                        color: AppColors.backgroundDark,
+                        child: const Icon(Icons.image, size: 64, color: Colors.white),
+                      );
+                    },
+                    loadingBuilder: (context, child, loadingProgress) {
+                      if (loadingProgress == null) return child;
+                      return Container(
+                        color: AppColors.backgroundDark,
+                        child: Center(
+                          child: CircularProgressIndicator(
+                            value: loadingProgress.expectedTotalBytes != null
+                                ? loadingProgress.cumulativeBytesLoaded /
+                                    loadingProgress.expectedTotalBytes!
+                                : null,
+                          ),
+                        ),
+                      );
+                    },
+                  )
+                : Image.asset(
+                    _work!.imageAsset,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Container(
+                        color: AppColors.backgroundDark,
+                        child: const Icon(Icons.image, size: 64, color: Colors.white),
+                      );
+                    },
+                  ),
             Container(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
@@ -201,52 +227,130 @@ class _WorkDetailState extends State<WorkDetail>
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: DesignTokens.space12,
-                      vertical: DesignTokens.space6,
-                    ),
-                    decoration: BoxDecoration(
-                      gradient: AppColors.primaryGradient,
-                      borderRadius: BorderRadius.circular(
-                        DesignTokens.borderRadius4,
+                  Row(
+                    children: [
+                      if (_work!.appIconUrl != null && _work!.appIconUrl!.isNotEmpty)
+                        Container(
+                          margin: const EdgeInsets.only(right: DesignTokens.space16),
+                          width: 60,
+                          height: 60,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(color: Colors.white.withOpacity(0.3)),
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(12),
+                            child: Image.network(
+                              _work!.appIconUrl!,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) {
+                                return Container(
+                                  color: Colors.white.withOpacity(0.2),
+                                  child: const Icon(Icons.apps, color: Colors.white),
+                                );
+                              },
+                            ),
+                          ),
+                        ),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: DesignTokens.space12,
+                                vertical: DesignTokens.space6,
+                              ),
+                              decoration: BoxDecoration(
+                                gradient: AppColors.primaryGradient,
+                                borderRadius: BorderRadius.circular(
+                                  DesignTokens.borderRadius4,
+                                ),
+                              ),
+                              child: Text(
+                                _work!.category.toUpperCase(),
+                                style: AppStyles.body(
+                                  fontSize: DesignTokens.fontSize12,
+                                  color: Colors.white,
+                                  context: context,
+                                ),
+                              ),
+                            ),
+                            AppUtils().vSpace(size: DesignTokens.space16),
+                            Text(
+                              _work!.title,
+                              style: AppStyles.heading(
+                                fontSize: Responsive.fontSize(
+                                  context,
+                                  DesignTokens.fontSize32,
+                                ),
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                                context: context,
+                              ),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            AppUtils().vSpace(size: DesignTokens.space12),
+                            Text(
+                              _work!.description,
+                              style: AppStyles.body(
+                                fontSize: DesignTokens.fontSize16,
+                                color: Colors.white70,
+                                context: context,
+                              ),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  if ((_work!.playStoreUrl != null && _work!.playStoreUrl!.isNotEmpty) ||
+                      (_work!.appStoreUrl != null && _work!.appStoreUrl!.isNotEmpty))
+                    Padding(
+                      padding: const EdgeInsets.only(top: DesignTokens.space16),
+                      child: Row(
+                        children: [
+                          if (_work!.playStoreUrl != null && _work!.playStoreUrl!.isNotEmpty)
+                            ElevatedButton.icon(
+                              onPressed: () {
+                                LinkUtils.launchUrl(
+                                  _work!.playStoreUrl!,
+                                  linkType: 'play_store',
+                                  linkName: 'Play Store',
+                                );
+                              },
+                              icon: const Icon(Icons.android, size: 20),
+                              label: const Text('Play Store'),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.white,
+                                foregroundColor: Colors.black,
+                              ),
+                            ),
+                          if (_work!.playStoreUrl != null && _work!.playStoreUrl!.isNotEmpty &&
+                              _work!.appStoreUrl != null && _work!.appStoreUrl!.isNotEmpty)
+                            AppUtils().hSpace(size: DesignTokens.space12),
+                          if (_work!.appStoreUrl != null && _work!.appStoreUrl!.isNotEmpty)
+                            ElevatedButton.icon(
+                              onPressed: () {
+                                LinkUtils.launchUrl(
+                                  _work!.appStoreUrl!,
+                                  linkType: 'app_store',
+                                  linkName: 'App Store',
+                                );
+                              },
+                              icon: const Icon(Icons.apple, size: 20),
+                              label: const Text('App Store'),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.white,
+                                foregroundColor: Colors.black,
+                              ),
+                            ),
+                        ],
                       ),
                     ),
-                    child: Text(
-                      _work!.category.toUpperCase(),
-                      style: AppStyles.body(
-                        fontSize: DesignTokens.fontSize12,
-                        color: Colors.white,
-                        context: context,
-                      ),
-                    ),
-                  ),
-                  AppUtils().vSpace(size: DesignTokens.space16),
-                  Text(
-                    _work!.title,
-                    style: AppStyles.heading(
-                      fontSize: Responsive.fontSize(
-                        context,
-                        DesignTokens.fontSize32,
-                      ),
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                      context: context,
-                    ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  AppUtils().vSpace(size: DesignTokens.space12),
-                  Text(
-                    _work!.description,
-                    style: AppStyles.body(
-                      fontSize: DesignTokens.fontSize16,
-                      color: Colors.white70,
-                      context: context,
-                    ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
                 ],
               ),
             ),
@@ -718,47 +822,7 @@ class _WorkDetailState extends State<WorkDetail>
             ),
           ),
           AppUtils().vSpace(size: DesignTokens.space24),
-          LayoutBuilder(
-            builder: (context, constraints) {
-              final columns = Responsive.gridColumnCount(context);
-              final gap = Responsive.gridGap(context);
-              final itemWidth =
-                  (constraints.maxWidth - (columns - 1) * gap) / columns;
-
-              return Wrap(
-                spacing: gap,
-                runSpacing: gap,
-                children:
-                    _work!.images!.map((imagePath) {
-                      return SizedBox(
-                        width: itemWidth,
-                        child: ModernCard(
-                          padding: EdgeInsets.zero,
-                          showGradientBorder: true,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(
-                              DesignTokens.borderRadius12,
-                            ),
-                            child: Image.asset(
-                              imagePath,
-                              fit: BoxFit.cover,
-                              height: 300,
-                              width: double.infinity,
-                              errorBuilder: (context, error, stackTrace) {
-                                return Container(
-                                  height: 300,
-                                  color: AppColors.backgroundDark,
-                                  child: const Icon(Icons.image, size: 48),
-                                );
-                              },
-                            ),
-                          ),
-                        ),
-                      );
-                    }).toList(),
-              );
-            },
-          ),
+          _ImageCarousel(images: _work!.images!),
         ],
       ),
     );
@@ -853,6 +917,122 @@ class _WorkDetailState extends State<WorkDetail>
           ),
         ],
       ),
+    );
+  }
+}
+
+/// Image carousel widget for displaying multiple images
+class _ImageCarousel extends StatefulWidget {
+  final List<String> images;
+
+  const _ImageCarousel({required this.images});
+
+  @override
+  State<_ImageCarousel> createState() => _ImageCarouselState();
+}
+
+class _ImageCarouselState extends State<_ImageCarousel> {
+  final PageController _pageController = PageController();
+  int _currentPage = 0;
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        SizedBox(
+          height: 400,
+          child: PageView.builder(
+            controller: _pageController,
+            onPageChanged: (index) {
+              setState(() {
+                _currentPage = index;
+              });
+            },
+            itemCount: widget.images.length,
+            itemBuilder: (context, index) {
+              final imageUrl = widget.images[index];
+              final isNetworkImage = imageUrl.startsWith('http://') || imageUrl.startsWith('https://');
+              
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: DesignTokens.space8),
+                child: ModernCard(
+                  padding: EdgeInsets.zero,
+                  showGradientBorder: true,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(DesignTokens.borderRadius12),
+                    child: isNetworkImage
+                        ? Image.network(
+                            imageUrl,
+                            fit: BoxFit.cover,
+                            width: double.infinity,
+                            errorBuilder: (context, error, stackTrace) {
+                              return Container(
+                                height: 400,
+                                color: AppColors.backgroundDark,
+                                child: const Icon(Icons.image, size: 48),
+                              );
+                            },
+                            loadingBuilder: (context, child, loadingProgress) {
+                              if (loadingProgress == null) return child;
+                              return Container(
+                                height: 400,
+                                color: AppColors.backgroundDark,
+                                child: Center(
+                                  child: CircularProgressIndicator(
+                                    value: loadingProgress.expectedTotalBytes != null
+                                        ? loadingProgress.cumulativeBytesLoaded /
+                                            loadingProgress.expectedTotalBytes!
+                                        : null,
+                                  ),
+                                ),
+                              );
+                            },
+                          )
+                        : Image.asset(
+                            imageUrl,
+                            fit: BoxFit.cover,
+                            width: double.infinity,
+                            errorBuilder: (context, error, stackTrace) {
+                              return Container(
+                                height: 400,
+                                color: AppColors.backgroundDark,
+                                child: const Icon(Icons.image, size: 48),
+                              );
+                            },
+                          ),
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+        if (widget.images.length > 1) ...[
+          AppUtils().vSpace(size: DesignTokens.space16),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: List.generate(
+              widget.images.length,
+              (index) => Container(
+                width: 8,
+                height: 8,
+                margin: const EdgeInsets.symmetric(horizontal: 4),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: _currentPage == index
+                      ? AppColors.primary
+                      : AppColors.textSecondary.withOpacity(0.3),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ],
     );
   }
 }

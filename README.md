@@ -23,50 +23,200 @@ A beautiful, production-ready portfolio website built with Flutter, Supabase, an
 - 📤 **File Uploads** - Upload images/files from any device (web/mobile/desktop)
 - 🔍 **Search & Filter** - Advanced filtering for works and blogs
 
-## 🚀 Quick Start
+## 🚀 Quick Start Guide
 
-### Prerequisites
+### Step 1: Prerequisites
 
-- Flutter SDK (3.0 or higher)
-- Supabase account ([Sign up free](https://supabase.com))
-- Firebase account (optional, for analytics)
-- Git
+Before you begin, ensure you have:
 
-### Installation
+- **Flutter SDK** (3.0 or higher)
+  - Install from [flutter.dev](https://flutter.dev/docs/get-started/install)
+  - Verify: `flutter --version`
+- **Supabase Account** - [Sign up free](https://supabase.com)
+- **Firebase Account** (optional, for analytics) - [Sign up free](https://firebase.google.com)
+- **Git** - For cloning the repository
 
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/yourusername/portfolio.git
-   cd portfolio
-   ```
+### Step 2: Clone the Repository
 
-2. **Install dependencies**
-   ```bash
-   flutter pub get
-   ```
+```bash
+git clone https://github.com/yourusername/portfolio.git
+cd portfolio
+```
 
-3. **Configure environment**
-   - Copy `.env.example` to `.env` (if exists) or create `.env`
-   - Add your Supabase credentials (see [Setup Guide](docs/setup/SETUP.md))
+### Step 3: Install Dependencies
 
-4. **Run database migrations**
-   - See [Database Setup](docs/setup/DATABASE.md) for detailed instructions
-   - Or use: `supabase db push` (if CLI is installed)
+```bash
+flutter pub get
+```
 
-5. **Run the app**
-   ```bash
-   flutter run -d chrome  # For web
-   flutter run             # For mobile/desktop
-   ```
+### Step 4: Set Up Supabase
+
+#### 4.1 Create Supabase Project
+
+1. Go to [Supabase Dashboard](https://app.supabase.com)
+2. Click **New Project**
+3. Fill in:
+   - **Name**: Your project name
+   - **Database Password**: Choose a strong password (save it!)
+   - **Region**: Choose closest to your users
+4. Click **Create new project**
+5. Wait for project to be ready (2-3 minutes)
+
+#### 4.2 Get Your Credentials
+
+1. In Supabase Dashboard, go to **Settings** → **API**
+2. Copy the following:
+   - **Project URL**: `https://xxxxx.supabase.co`
+   - **anon public key**: Long string starting with `eyJ...`
+
+#### 4.3 Run Database Migrations
+
+**Option A: Using Supabase CLI (Recommended)**
+
+```bash
+# Install Supabase CLI
+npm install -g supabase
+# Or using Homebrew (Mac)
+brew install supabase/tap/supabase
+
+# Login to Supabase
+supabase login
+
+# Link your project
+supabase link --project-ref your-project-ref
+
+# Push all migrations
+supabase db push
+```
+
+**Option B: Manual Setup**
+
+1. Go to Supabase Dashboard → **SQL Editor**
+2. Run each migration file in order from `docs/sql/`:
+   - `001_initial_schema.sql`
+   - `002_seed_data.sql`
+   - `003_analytics_and_config.sql`
+   - `004_admin_policies.sql`
+   - `005_fix_analytics_rls.sql`
+   - `006_fix_blog_rls.sql`
+   - `007_add_blog_status_and_scheduling.sql`
+   - `008_setup_storage_policies.sql`
+
+#### 4.4 Create Storage Buckets
+
+1. Go to **Storage** in Supabase Dashboard
+2. Create these buckets (make them **Public**):
+   - `avatars` - Profile images
+   - `works` - Project images
+   - `blogs` - Blog post images
+   - `services` - Service icons
+   - `testimonials` - Client images
+
+For each bucket:
+- Click **New bucket**
+- Enter bucket name
+- Check **Public bucket**
+- Click **Create bucket**
+
+### Step 5: Configure Environment Variables
+
+Create a `.env` file in the project root:
+
+```env
+# Supabase Configuration
+SUPABASE_URL=https://your-project.supabase.co
+SUPABASE_ANON_KEY=your-anon-key-here
+
+# App Configuration
+APP_NAME=Portfolio
+DEFAULT_LOCALE=en
+
+# Feature Flags
+ENABLE_ANALYTICS=true
+ENABLE_CRASH_REPORTING=false
+```
+
+**Important**: Replace `your-project.supabase.co` and `your-anon-key-here` with your actual values from Step 4.2.
+
+### Step 6: Set Up Admin User
+
+1. Go to Supabase Dashboard → **Authentication** → **Users**
+2. Click **Add user** → **Create new user**
+3. Enter:
+   - **Email**: Your admin email
+   - **Password**: Strong password
+4. Click **Create user**
+5. **Save these credentials** - you'll need them to login to the admin panel
+
+### Step 7: Configure Firebase (Optional but Recommended)
+
+#### 7.1 Create Firebase Project
+
+1. Go to [Firebase Console](https://console.firebase.google.com)
+2. Click **Add project**
+3. Enter project name
+4. Follow the setup wizard
+
+#### 7.2 Add Web App
+
+1. In Firebase Console, click **Web** icon (`</>`)
+2. Register app with a nickname
+3. Copy the Firebase config
+
+#### 7.3 Configure Firebase in Flutter
+
+```bash
+# Install FlutterFire CLI
+dart pub global activate flutterfire_cli
+
+# Configure Firebase
+flutterfire configure
+```
+
+Follow the prompts to select your Firebase project and platforms.
+
+### Step 8: Run the Application
+
+```bash
+# For web
+flutter run -d chrome
+
+# For mobile (iOS)
+flutter run -d ios
+
+# For mobile (Android)
+flutter run -d android
+
+# For desktop (macOS)
+flutter run -d macos
+```
+
+### Step 9: Access Admin Panel
+
+1. Once the app is running, navigate to `/admin/login`
+2. Enter your admin credentials (from Step 6)
+3. You'll be redirected to the admin dashboard
+
+### Step 10: Initial Setup in Admin Panel
+
+After logging in:
+
+1. **Profile**: Update your profile information
+2. **Works**: Add your portfolio projects
+3. **Experiences**: Add your work experience
+4. **Services**: Add services you offer
+5. **Social Links**: Add your social media links
+6. **Blogs**: Create your first blog post
 
 ## 📚 Documentation
 
-- **[Complete Setup Guide](docs/setup/SETUP.md)** - Step-by-step setup instructions
+- **[Complete Setup Guide](docs/setup/SETUP.md)** - Detailed step-by-step setup instructions
 - **[Database Setup](docs/setup/DATABASE.md)** - SQL migrations and database configuration
 - **[API Documentation](docs/api/API.md)** - Complete API reference
 - **[Postman Collection](docs/api/portfolio-api.postman_collection.json)** - Import for API testing
-- **[Admin Panel Guide](docs/setup/ADMIN.md)** - Admin panel usage guide
+- **[Postman Setup Guide](docs/api/POSTMAN_SETUP.md)** - How to use the Postman collection
 - **[Deployment Guide](docs/setup/DEPLOYMENT.md)** - Deploy to production
+- **[FAQ](docs/setup/FAQ.md)** - Frequently asked questions
 
 ## 🗂️ Project Structure
 
@@ -79,9 +229,10 @@ portfolio/
 │   ├── shared/            # Shared widgets, utils, constants
 │   └── views/              # UI screens (home, about, blogs, etc.)
 ├── docs/                   # Documentation
-│   ├── sql/               # Database migrations
+│   ├── sql/               # Database migrations (8 files)
 │   ├── api/               # API documentation & Postman collection
-│   └── setup/             # Setup guides
+│   ├── setup/             # Setup guides
+│   └── guides/            # Feature guides
 ├── supabase/
 │   └── migrations/        # Supabase database migrations
 ├── assets/                 # Images, icons, fonts
@@ -114,67 +265,157 @@ The project uses Supabase (PostgreSQL) with the following main tables:
 
 See [Database Setup](docs/setup/DATABASE.md) for complete schema.
 
-## 🔑 Environment Variables
+## 🧪 Testing APIs
+
+### Using Postman
+
+1. **Import Collection**
+   - Open Postman
+   - Click **Import** → **File**
+   - Select `docs/api/portfolio-api.postman_collection.json`
+
+2. **Set Environment Variables**
+   - Create a new environment in Postman
+   - Add these variables:
+     - `BASE_URL`: `https://your-project.supabase.co/rest/v1`
+     - `ANON_KEY`: Your Supabase anon key
+     - `JWT_TOKEN`: Admin JWT token (get from admin login)
+
+3. **Get JWT Token**
+   - Login to admin panel at `/admin/login`
+   - Or use Supabase Auth API (see [API Documentation](docs/api/API.md))
+
+See [Postman Setup Guide](docs/api/POSTMAN_SETUP.md) for detailed instructions.
+
+## 🚢 Deployment
+
+### Web Deployment (Firebase Hosting)
+
+#### Prerequisites
+
+- Firebase account
+- Firebase CLI installed: `npm install -g firebase-tools`
+- Firebase project created
+
+#### Steps
+
+1. **Login to Firebase**
+   ```bash
+   firebase login
+   ```
+
+2. **Initialize Firebase** (if not already done)
+   ```bash
+   firebase init hosting
+   ```
+   - Select your Firebase project
+   - Public directory: `build/web`
+   - Single-page app: Yes
+   - Overwrite index.html: No
+
+3. **Build for Production**
+   ```bash
+   flutter build web --release
+   ```
+
+4. **Deploy**
+   ```bash
+   firebase deploy --only hosting
+   ```
+
+5. **Access Your Site**
+   - Your site will be available at: `https://your-project.web.app`
+   - Or your custom domain if configured
+
+### Mobile Deployment
+
+#### Android
+
+```bash
+# Build APK
+flutter build apk --release
+
+# Build App Bundle (for Play Store)
+flutter build appbundle --release
+```
+
+#### iOS
+
+```bash
+# Build for App Store
+flutter build ios --release
+```
+
+Then open `ios/Runner.xcworkspace` in Xcode to archive and upload.
+
+See [Deployment Guide](docs/setup/DEPLOYMENT.md) for detailed instructions.
+
+## 📖 Admin Panel Features
+
+Access the admin panel at `/admin/login` after deployment.
+
+**Available Features:**
+- 📊 **Dashboard** - Overview with statistics
+- 👤 **Profile** - Manage your profile information
+- 📝 **Blogs** - Create/edit blogs with draft/scheduled publishing
+- 💼 **Works** - Manage portfolio projects
+- 🏢 **Experiences** - Manage work experience
+- 🛠️ **Services** - Manage services offered
+- 💬 **Testimonials** - Manage client testimonials
+- 🔗 **Social Links** - Manage social media links
+- 📊 **Analytics** - View analytics data
+- 📧 **Contacts** - View contact form submissions
+
+## 🔑 Environment Variables Reference
 
 Create a `.env` file in the project root:
 
 ```env
+# Supabase Configuration (Required)
 SUPABASE_URL=https://your-project.supabase.co
 SUPABASE_ANON_KEY=your-anon-key-here
+
+# App Configuration (Optional)
+APP_NAME=Portfolio
+DEFAULT_LOCALE=en
+SUPPORTED_LOCALES=en,ar,fr
+
+# Feature Flags (Optional)
+ENABLE_ANALYTICS=true
+ENABLE_CRASH_REPORTING=false
 ```
 
-Get these from: Supabase Dashboard → Settings → API
+Get Supabase credentials from: Supabase Dashboard → Settings → API
 
-## 🧪 Testing APIs
+## 🐛 Troubleshooting
 
-Import the Postman collection:
+### Common Issues
 
-1. Open Postman
-2. Import → File → Select `docs/api/portfolio-api.postman_collection.json`
-3. Set environment variables:
-   - `BASE_URL`: Your Supabase REST API URL
-   - `ANON_KEY`: Your Supabase anon key
-   - `JWT_TOKEN`: Admin JWT token (get from admin login)
+#### "Supabase not initialized"
+- Check your `.env` file exists and has correct values
+- Verify `SUPABASE_URL` and `SUPABASE_ANON_KEY` are correct
+- Restart the app after changing `.env`
 
-See [API Documentation](docs/api/API.md) for details.
+#### "Row-level security policy violation"
+- Run all SQL migrations in order
+- Check that RLS policies are created (see `docs/sql/`)
+- Verify you're authenticated (include JWT token for admin endpoints)
 
-## 🚢 Deployment
+#### "Storage bucket not found"
+- Create the required storage buckets in Supabase Dashboard
+- Ensure buckets are public or policies allow access
+- Run migration `008_setup_storage_policies.sql`
 
-### Web (Firebase Hosting)
+#### "Failed to upload file"
+- Check storage bucket exists
+- Verify storage policies allow uploads
+- Check file size limits
 
-```bash
-flutter build web --release
-firebase deploy --only hosting
-```
+### Getting Help
 
-### Mobile
-
-```bash
-# Android
-flutter build apk --release
-flutter build appbundle --release
-
-# iOS
-flutter build ios --release
-```
-
-See [Deployment Guide](docs/setup/DEPLOYMENT.md) for detailed instructions.
-
-## 📖 Admin Panel
-
-Access the admin panel at `/admin/login` after deployment.
-
-**Default Features:**
-- Dashboard with statistics
-- Manage Profile
-- Create/Edit Blogs (with draft/scheduled publishing)
-- Manage Works/Projects
-- Manage Experiences
-- Manage Services
-- Manage Testimonials
-- Manage Social Links
-- View Analytics
-- View Contact Messages
+- Check [FAQ](docs/setup/FAQ.md)
+- Review [Setup Guide](docs/setup/SETUP.md)
+- Open an issue on GitHub
 
 ## 🤝 Contributing
 
@@ -185,6 +426,8 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
 4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
 
 ## 📝 License
 
@@ -200,10 +443,17 @@ This project is open source and available under the [MIT License](LICENSE).
 ## 📞 Support
 
 For issues, questions, or contributions:
-- Open an issue on GitHub
-- Check the [Documentation](docs/)
-- Review [FAQ](docs/setup/FAQ.md)
+- 📖 Check the [Documentation](docs/)
+- ❓ Review [FAQ](docs/setup/FAQ.md)
+- 🐛 Open an issue on GitHub
+- 💬 Start a discussion
+
+## 🌟 Star History
+
+If you find this project useful, please consider giving it a star ⭐
 
 ---
 
 **Made with ❤️ using Flutter**
+
+**Ready to build your portfolio? Start with [Step 1](#step-1-prerequisites) above!**

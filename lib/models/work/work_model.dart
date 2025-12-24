@@ -15,6 +15,9 @@ class WorkModel {
   final String? challenge;
   final String? solution;
   final List<String>? images;
+  final String? playStoreUrl;
+  final String? appStoreUrl;
+  final String? appIconUrl;
 
   const WorkModel({
     required this.id,
@@ -31,6 +34,9 @@ class WorkModel {
     this.challenge,
     this.solution,
     this.images,
+    this.playStoreUrl,
+    this.appStoreUrl,
+    this.appIconUrl,
   });
 
   /// Create a work model from a map
@@ -56,6 +62,9 @@ class WorkModel {
       solution: map['solution'] as String?,
       images:
           (map['images'] as List<dynamic>?)?.map((e) => e.toString()).toList(),
+      playStoreUrl: map['play_store_url'] as String?,
+      appStoreUrl: map['app_store_url'] as String?,
+      appIconUrl: map['app_icon_url'] as String?,
     );
   }
 
@@ -76,6 +85,9 @@ class WorkModel {
       'challenge': challenge,
       'solution': solution,
       'images': images,
+      'play_store_url': playStoreUrl,
+      'app_store_url': appStoreUrl,
+      'app_icon_url': appIconUrl,
     };
   }
 }

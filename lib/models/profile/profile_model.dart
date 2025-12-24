@@ -10,6 +10,7 @@ class ProfileModel {
   final String? location;
   final String? avatarUrl;
   final String? resumeUrl;
+  final String? quote;
 
   ProfileModel({
     required this.id,
@@ -21,6 +22,7 @@ class ProfileModel {
     this.location,
     this.avatarUrl,
     this.resumeUrl,
+    this.quote,
   });
 
   factory ProfileModel.fromMap(Map<String, dynamic> map) {
@@ -34,6 +36,7 @@ class ProfileModel {
       location: map['location'] as String?,
       avatarUrl: map['avatar_url'] as String?,
       resumeUrl: map['resume_url'] as String?,
+      quote: map['quote'] as String?,
     );
   }
 
@@ -48,6 +51,7 @@ class ProfileModel {
       'location': location,
       'avatar_url': avatarUrl,
       'resume_url': resumeUrl,
+      'quote': quote,
     };
   }
 }

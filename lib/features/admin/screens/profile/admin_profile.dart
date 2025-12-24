@@ -30,6 +30,7 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
   final _phoneController = TextEditingController();
   final _locationController = TextEditingController();
   final _resumeUrlController = TextEditingController();
+  final _quoteController = TextEditingController();
   String? _avatarUrl;
 
   @override
@@ -47,6 +48,7 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
     _phoneController.dispose();
     _locationController.dispose();
     _resumeUrlController.dispose();
+    _quoteController.dispose();
     super.dispose();
   }
 
@@ -64,6 +66,7 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
           _phoneController.text = profile.phone ?? '';
           _locationController.text = profile.location ?? '';
           _resumeUrlController.text = profile.resumeUrl ?? '';
+          _quoteController.text = profile.quote ?? '';
           _avatarUrl = profile.avatarUrl;
         });
       }
@@ -107,6 +110,10 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
             _resumeUrlController.text.trim().isEmpty
                 ? null
                 : _resumeUrlController.text.trim(),
+        'quote':
+            _quoteController.text.trim().isEmpty
+                ? null
+                : _quoteController.text.trim(),
       };
 
       if (_profile != null) {
@@ -296,6 +303,16 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
                           border: OutlineInputBorder(),
                           helperText: 'Link to your resume/CV',
                         ),
+                      ),
+                      AppUtils().vSpace(size: 16),
+                      TextFormField(
+                        controller: _quoteController,
+                        decoration: const InputDecoration(
+                          labelText: 'Quote',
+                          border: OutlineInputBorder(),
+                          helperText: 'Personal quote displayed in the about section',
+                        ),
+                        maxLines: 3,
                       ),
                     ],
                   ),

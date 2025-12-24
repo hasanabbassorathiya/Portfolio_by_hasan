@@ -30,6 +30,9 @@ class _WorkFormDialogState extends State<WorkFormDialog> {
   final _tagsController = TextEditingController();
   final _technologiesController = TextEditingController();
   final _imagesController = TextEditingController();
+  final _playStoreUrlController = TextEditingController();
+  final _appStoreUrlController = TextEditingController();
+  final _appIconUrlController = TextEditingController();
   bool _isActive = true;
   bool _isFeatured = false;
   int _orderIndex = 0;
@@ -53,6 +56,9 @@ class _WorkFormDialogState extends State<WorkFormDialog> {
       _technologiesController.text =
           widget.work!.technologies?.join(', ') ?? '';
       _imagesController.text = widget.work!.images?.join(', ') ?? '';
+      _playStoreUrlController.text = widget.work!.playStoreUrl ?? '';
+      _appStoreUrlController.text = widget.work!.appStoreUrl ?? '';
+      _appIconUrlController.text = widget.work!.appIconUrl ?? '';
     }
   }
 
@@ -71,6 +77,9 @@ class _WorkFormDialogState extends State<WorkFormDialog> {
     _tagsController.dispose();
     _technologiesController.dispose();
     _imagesController.dispose();
+    _playStoreUrlController.dispose();
+    _appStoreUrlController.dispose();
+    _appIconUrlController.dispose();
     super.dispose();
   }
 
@@ -135,6 +144,18 @@ class _WorkFormDialogState extends State<WorkFormDialog> {
         'tags': tags,
         'technologies': technologies.isEmpty ? null : technologies,
         'images': images.isEmpty ? null : images,
+        'play_store_url':
+            _playStoreUrlController.text.trim().isEmpty
+                ? null
+                : _playStoreUrlController.text.trim(),
+        'app_store_url':
+            _appStoreUrlController.text.trim().isEmpty
+                ? null
+                : _appStoreUrlController.text.trim(),
+        'app_icon_url':
+            _appIconUrlController.text.trim().isEmpty
+                ? null
+                : _appIconUrlController.text.trim(),
         'is_active': _isActive,
         'is_featured': _isFeatured,
         'order_index': _orderIndex,
@@ -342,6 +363,41 @@ class _WorkFormDialogState extends State<WorkFormDialog> {
                           border: OutlineInputBorder(),
                           helperText: 'Comma-separated URLs',
                         ),
+                      ),
+                      AppUtils().vSpace(size: 16),
+                      TextFormField(
+                        controller: _appIconUrlController,
+                        decoration: const InputDecoration(
+                          labelText: 'App Icon URL',
+                          border: OutlineInputBorder(),
+                          helperText: 'Icon image URL for mobile apps',
+                        ),
+                      ),
+                      AppUtils().vSpace(size: 16),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: TextFormField(
+                              controller: _playStoreUrlController,
+                              decoration: const InputDecoration(
+                                labelText: 'Play Store URL',
+                                border: OutlineInputBorder(),
+                                helperText: 'Google Play Store link',
+                              ),
+                            ),
+                          ),
+                          AppUtils().hSpace(size: 16),
+                          Expanded(
+                            child: TextFormField(
+                              controller: _appStoreUrlController,
+                              decoration: const InputDecoration(
+                                labelText: 'App Store URL',
+                                border: OutlineInputBorder(),
+                                helperText: 'Apple App Store link',
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                       AppUtils().vSpace(size: 16),
                       Row(
