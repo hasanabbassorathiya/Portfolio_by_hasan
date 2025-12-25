@@ -60,8 +60,22 @@ class WorkModel {
               .toList(),
       challenge: map['challenge'] as String?,
       solution: map['solution'] as String?,
-      images:
-          (map['images'] as List<dynamic>?)?.map((e) => e.toString()).toList(),
+      images: () {
+        final imagesData = map['images'];
+        if (imagesData == null) return null;
+        if (imagesData is List) {
+          return imagesData.map((e) => e.toString()).toList();
+        }
+        if (imagesData is String) {
+          // Handle comma-separated string
+          return imagesData
+              .split(',')
+              .map((e) => e.trim())
+              .where((e) => e.isNotEmpty)
+              .toList();
+        }
+        return null;
+      }(),
       playStoreUrl: map['play_store_url'] as String?,
       appStoreUrl: map['app_store_url'] as String?,
       appIconUrl: map['app_icon_url'] as String?,

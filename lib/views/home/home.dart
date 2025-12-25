@@ -15,6 +15,9 @@ import 'package:portfolio/shared/widgets/social_buttons.dart';
 import 'package:portfolio/shared/widgets/profile_image_widget.dart';
 import 'package:portfolio/core/services/analytics_service.dart';
 import 'package:portfolio/core/repositories/profile_repository.dart';
+import 'package:portfolio/core/repositories/social_link_repository.dart';
+import 'package:portfolio/models/social_link/social_link_model.dart';
+import 'package:portfolio/shared/utils/platform_icons.dart';
 
 class Home extends StatefulWidget {
   final bool isActive;
@@ -39,7 +42,10 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   bool _isHoveringPhoneNumber = false;
   bool _isHoveringEmail = false;
   final ProfileRepository _profileRepository = ProfileRepository();
+  final SocialLinkRepository _socialLinkRepository = SocialLinkRepository();
   String? _phone;
+  String? _title;
+  List<SocialLinkModel> _socialLinks = [];
 
   void _trackPageView() {
     AnalyticsService.trackPageView(
@@ -54,10 +60,39 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
       if (profile != null) {
         setState(() {
           _phone = profile.phone;
+          _title = profile.title;
         });
       }
     } catch (e) {
       // Silently fail
+    }
+  }
+
+  Future<void> _loadSocialLinks() async {
+    try {
+      final links = await _socialLinkRepository.getAllSocialLinks();
+      setState(() {
+        _socialLinks = links;
+      });
+    } catch (e) {
+      // Silently fail
+    }
+  }
+
+  IconData _getIconForPlatform(String platform) {
+    // Try PlatformIcons first, then fallback to Iconsax
+    final icon = PlatformIcons.getIcon(platform);
+    if (icon != FontAwesomeIcons.link) {
+      return icon;
+    }
+    // Fallback for Iconsax icons
+    switch (platform.toLowerCase()) {
+      case 'instagram':
+        return Iconsax.instagram_copy;
+      case 'facebook':
+        return Iconsax.facebook_copy;
+      default:
+        return Icons.link;
     }
   }
 
@@ -71,6 +106,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     super.initState();
     _trackPageView();
     _loadProfile();
+    _loadSocialLinks();
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 1200),
@@ -410,7 +446,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                     child: FadeTransition(
                                       opacity: _textFadeIn,
                                       child: Text(
-                                        'Software Engineer based in UAE',
+                                        _title ?? 'Software Engineer based in UAE',
                                         style: AppStyles.subheading(
                                           fontSize:
                                               isSmall
@@ -436,7 +472,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                             buttonName: 'Let\'s talk with me',
                                             location: 'home',
                                           );
-                                          context.go('/contact?scrollToForm=true');
+                                          // Navigate to contact route - MainLayoutShell will handle scrolling
+                                          context.go('/contact');
                                         },
                                       ),
                                     ),
@@ -523,30 +560,21 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                         ),
                                       ],
                                     ),
-                                    // Social Buttons
+                                    // Social Buttons from admin
                                     AppUtils().vSpace(
                                       size: isSmall ? 24.0 : 32.0,
                                     ),
-                                    Wrap(
-                                      spacing: 16.0,
-                                      runSpacing: 16.0,
-                                      children: [
-                                        SocialButtons(
-                                          icon: FontAwesomeIcons.linkedin,
-                                          link: AppLinks.linkedIn,
-                                        ), // LinkedIn first
-                                        const SizedBox(height: 12),
-                                        SocialButtons(
-                                          icon: Iconsax.instagram_copy,
-                                          link: AppLinks.instagram,
-                                        ), // Instagram second
-                                        const SizedBox(height: 12),
-                                        SocialButtons(
-                                          icon: Iconsax.facebook_copy,
-                                          link: AppLinks.facebook,
-                                        ), // Facebook third
-                                      ],
-                                    ),
+                                    if (_socialLinks.isNotEmpty)
+                                      Wrap(
+                                        spacing: 16.0,
+                                        runSpacing: 16.0,
+                                        children: _socialLinks.map((link) {
+                                          return SocialButtons(
+                                            icon: _getIconForPlatform(link.platform),
+                                            link: link.url,
+                                          );
+                                        }).toList(),
+                                      ),
                                   ],
                                 ),
                               ),
@@ -637,7 +665,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                     child: FadeTransition(
                                       opacity: _textFadeIn,
                                       child: Text(
-                                        'Software Engineer based in UAE',
+                                        _title ?? 'Software Engineer based in UAE',
                                         style: AppStyles.subheading(
                                           fontSize:
                                               isSmall
@@ -663,7 +691,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                             buttonName: 'Let\'s talk with me',
                                             location: 'home',
                                           );
-                                          context.go('/contact?scrollToForm=true');
+                                          // Navigate to contact route - MainLayoutShell will handle scrolling
+                                          context.go('/contact');
                                         },
                                       ),
                                     ),
@@ -751,30 +780,21 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                         ),
                                       ],
                                     ),
-                                    // Social Buttons
+                                    // Social Buttons from admin
                                     AppUtils().vSpace(
                                       size: isSmall ? 24.0 : 32.0,
                                     ),
-                                    Wrap(
-                                      spacing: 16.0,
-                                      runSpacing: 16.0,
-                                      children: [
-                                        SocialButtons(
-                                          icon: FontAwesomeIcons.linkedin,
-                                          link: AppLinks.linkedIn,
-                                        ), // LinkedIn first
-                                        const SizedBox(height: 12),
-                                        SocialButtons(
-                                          icon: Iconsax.instagram_copy,
-                                          link: AppLinks.instagram,
-                                        ), // Instagram second
-                                        const SizedBox(height: 12),
-                                        SocialButtons(
-                                          icon: Iconsax.facebook_copy,
-                                          link: AppLinks.facebook,
-                                        ), // Facebook third
-                                      ],
-                                    ),
+                                    if (_socialLinks.isNotEmpty)
+                                      Wrap(
+                                        spacing: 16.0,
+                                        runSpacing: 16.0,
+                                        children: _socialLinks.map((link) {
+                                          return SocialButtons(
+                                            icon: _getIconForPlatform(link.platform),
+                                            link: link.url,
+                                          );
+                                        }).toList(),
+                                      ),
                                   ],
                                 ),
                               ),
@@ -931,21 +951,17 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                         ? CrossAxisAlignment.center
                                         : CrossAxisAlignment.end,
                                 children: [
-                                  // Reordering social buttons to match Figma
-                                  SocialButtons(
-                                    icon: FontAwesomeIcons.linkedin,
-                                    link: AppLinks.linkedIn,
-                                  ), // LinkedIn first
-                                  const SizedBox(height: 12),
-                                  SocialButtons(
-                                    icon: Iconsax.instagram_copy,
-                                    link: AppLinks.instagram,
-                                  ), // Instagram second
-                                  const SizedBox(height: 12),
-                                  SocialButtons(
-                                    icon: Iconsax.facebook_copy,
-                                    link: AppLinks.facebook,
-                                  ), // Facebook third
+                                  // Social buttons from admin
+                                  if (_socialLinks.isNotEmpty)
+                                    ..._socialLinks.map((link) {
+                                      return Padding(
+                                        padding: const EdgeInsets.only(bottom: 12),
+                                        child: SocialButtons(
+                                          icon: _getIconForPlatform(link.platform),
+                                          link: link.url,
+                                        ),
+                                      );
+                                    }).toList(),
                                   const SizedBox(height: 12),
                                   if (!isSmall)
                                     SizedBox(

@@ -236,16 +236,6 @@ class _AboutState extends State<About> with SingleTickerProviderStateMixin {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    if (_title != null && _title!.isNotEmpty) ...[
-                      AppUtils().vSpace(size: isSmall ? 12.0 : 16.0),
-                      Text(
-                        _title!,
-                        style: AppStyles.subheading(
-                          fontSize: isSmall ? 18 : 24,
-                          color: AppColors.textSecondary,
-                        ),
-                      ),
-                    ],
                     AppUtils().vSpace(size: isSmall ? 24.0 : 40.0),
                     Container(
                       width:
@@ -433,23 +423,25 @@ class _AboutState extends State<About> with SingleTickerProviderStateMixin {
                 TextSpan(
                   children: [
                     TextSpan(
-                      text: 'Software Engineer'.toUpperCase(),
+                      text: (_title ?? 'Software Engineer').toUpperCase(),
                       style: AppStyles.heading(
                         fontSize: isSmall ? 16.0 : 24.0,
                         fontWeight: FontWeight.bold,
                       ).copyWith(fontStyle: FontStyle.italic),
                     ),
-                    TextSpan(
-                      text: ' based in '.toUpperCase(),
-                      style: AppStyles.heading(fontSize: isSmall ? 16.0 : 24.0),
-                    ),
-                    TextSpan(
-                      text: 'UAE'.toUpperCase(),
-                      style: AppStyles.heading(
-                        fontSize: isSmall ? 16.0 : 24.0,
-                        fontWeight: FontWeight.bold,
-                      ).copyWith(fontStyle: FontStyle.italic),
-                    ),
+                    if (_location != null && _location!.isNotEmpty) ...[
+                      TextSpan(
+                        text: ' based in '.toUpperCase(),
+                        style: AppStyles.heading(fontSize: isSmall ? 16.0 : 24.0),
+                      ),
+                      TextSpan(
+                        text: _location!.toUpperCase(),
+                        style: AppStyles.heading(
+                          fontSize: isSmall ? 16.0 : 24.0,
+                          fontWeight: FontWeight.bold,
+                        ).copyWith(fontStyle: FontStyle.italic),
+                      ),
+                    ],
                   ],
                 ),
               ),

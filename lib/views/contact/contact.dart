@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
-import 'dart:io';
 import 'package:portfolio/core/repositories/contact_repository.dart';
 import 'package:portfolio/core/repositories/profile_repository.dart';
 import 'package:portfolio/shared/constants/textstyles.dart';
@@ -8,11 +7,10 @@ import 'package:portfolio/shared/constants/utils.dart';
 import 'package:portfolio/shared/constants/links.dart';
 import 'package:portfolio/shared/utils/link_utils.dart';
 import 'package:portfolio/shared/widgets/button.dart';
+import 'package:portfolio/shared/widgets/file_upload_widget.dart';
 import 'package:portfolio/shared/constants/colors.dart';
 import 'package:portfolio/core/services/analytics_service.dart';
 import 'package:portfolio/core/services/error_handler.dart';
-import 'package:portfolio/core/services/supabase_service.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 class Contact extends StatefulWidget {
   // Add isActive parameter
@@ -41,8 +39,7 @@ class _ContactState extends State<Contact> with SingleTickerProviderStateMixin {
   String? _phone;
   String? _email;
   String? _location;
-  String? _selectedFileName;
-  PlatformFile? _selectedFile;
+  String? _attachmentUrl;
 
   // Add hover state variables
   bool _isHoveringPhoneNumber = false;
@@ -57,7 +54,6 @@ class _ContactState extends State<Contact> with SingleTickerProviderStateMixin {
     super.initState();
     _trackPageView();
     _loadProfile();
-    _scrollToFormIfNeeded();
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 800), // Adjust duration as needed
@@ -91,79 +87,19 @@ class _ContactState extends State<Contact> with SingleTickerProviderStateMixin {
   }
 
   void _scrollToFormIfNeeded() {
-    // Check if we came from home page "Let's talk with me" button
-    final uri = Uri.base;
-    final shouldScroll = uri.queryParameters['scrollToForm'] == 'true';
-    
-    if (shouldScroll) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        final context = _formKeyForScroll.currentContext;
-        if (context != null) {
-          Scrollable.ensureVisible(
-            context,
-            duration: const Duration(milliseconds: 500),
-            curve: Curves.easeInOut,
-          );
-        }
-      });
-    }
-  }
-
-  Future<void> _pickFile() async {
-    try {
-      final result = await FilePicker.platform.pickFiles(
-        type: FileType.any,
-        allowMultiple: false,
-      );
-
-      if (result != null && result.files.single.path != null) {
-        setState(() {
-          _selectedFile = result.files.single;
-          _selectedFileName = _selectedFile!.name;
-        });
-      }
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error picking file: $e')),
+    // Always scroll to form when page loads
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final context = _formKeyForScroll.currentContext;
+      if (context != null) {
+        Scrollable.ensureVisible(
+          context,
+          duration: const Duration(milliseconds: 800),
+          curve: Curves.easeInOut,
         );
       }
-    }
+    });
   }
 
-  Future<String?> _uploadFile() async {
-    if (_selectedFile == null || _selectedFile!.path == null) {
-      return null;
-    }
-
-    try {
-      final file = File(_selectedFile!.path!);
-      final fileBytes = await file.readAsBytes();
-      final fileName = '${DateTime.now().millisecondsSinceEpoch}_${_selectedFile!.name}';
-      final filePath = 'contact_attachments/$fileName';
-
-      await SupabaseService.requiredClient.storage
-          .from('contact_attachments')
-          .uploadBinary(
-            filePath,
-            fileBytes,
-            fileOptions: const FileOptions(upsert: false),
-          );
-
-      final publicUrl = SupabaseService.requiredClient.storage
-          .from('contact_attachments')
-          .getPublicUrl(filePath);
-
-      return publicUrl;
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error uploading file: $e')),
-        );
-      }
-      return null;
-    }
-  }
 
   // Method to activate page animations and scroll to top
   void _activatePage() {
@@ -180,6 +116,15 @@ class _ContactState extends State<Contact> with SingleTickerProviderStateMixin {
       // Optionally reset animations when page becomes inactive
       _animationController.reset();
     }
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Scroll to form when page is first loaded
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _scrollToFormIfNeeded();
+    });
   }
 
   @override
@@ -201,16 +146,11 @@ class _ContactState extends State<Contact> with SingleTickerProviderStateMixin {
     });
 
     try {
-      String? attachmentUrl;
-      if (_selectedFile != null) {
-        attachmentUrl = await _uploadFile();
-      }
-
       await _contactRepository.submitContactMessage(
         name: _nameController.text.trim(),
         email: _emailController.text.trim(),
         message: _messageController.text.trim(),
-        attachmentUrl: attachmentUrl,
+        attachmentUrl: _attachmentUrl,
       );
 
       // Track successful submission
@@ -227,8 +167,7 @@ class _ContactState extends State<Contact> with SingleTickerProviderStateMixin {
         _emailController.clear();
         _messageController.clear();
         setState(() {
-          _selectedFile = null;
-          _selectedFileName = null;
+          _attachmentUrl = null;
         });
       }
     } catch (e, stackTrace) {
@@ -278,7 +217,7 @@ class _ContactState extends State<Contact> with SingleTickerProviderStateMixin {
             Text('Contact', style: AppStyles.subheading(fontSize: 18)),
             AppUtils().vSpace(size: 12),
             Text(
-              'GET IN TOUCH'.toUpperCase(),
+              'Get in Touch',
               style: AppStyles.heading(
                 fontSize: isSmall ? 32 : 48,
                 fontWeight: FontWeight.bold,
@@ -758,32 +697,18 @@ class _ContactState extends State<Contact> with SingleTickerProviderStateMixin {
               },
             ),
             AppUtils().vSpace(size: 20), // Spacing
-            // Attach File
-            InkWell(
-              onTap: _pickFile,
-              child: Row(
-                children: [
-                  Icon(
-                    Icons.attach_file,
-                    color: Colors.white,
-                  ),
-                  AppUtils().hSpace(size: 8),
-                  Text(
-                    _selectedFileName ?? 'ATTACH FILE',
-                    style: AppStyles.body(
-                      fontSize: 14,
-                    ).copyWith(color: Colors.white, fontWeight: FontWeight.bold),
-                  ),
-                  if (_selectedFileName != null) ...[
-                    AppUtils().hSpace(size: 8),
-                    Icon(
-                      Icons.close,
-                      color: Colors.white,
-                      size: 16,
-                    ),
-                  ],
-                ],
-              ),
+            // Attach File using FileUploadWidget
+            FileUploadWidget(
+              initialUrl: _attachmentUrl,
+              bucket: 'contact_attachments',
+              label: 'Attach File',
+              fileType: FileType.any,
+              allowUrlInput: false,
+              onFileUploaded: (url) {
+                setState(() {
+                  _attachmentUrl = url.isNotEmpty ? url : null;
+                });
+              },
             ),
             AppUtils().vSpace(size: 40), // Spacing before button
             // Submit Button

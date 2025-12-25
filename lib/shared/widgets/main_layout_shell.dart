@@ -28,8 +28,9 @@ class _MainLayoutShellState extends State<MainLayoutShell> {
     if (context != null) {
       Scrollable.ensureVisible(
         context,
-        duration: const Duration(milliseconds: 600),
+        duration: const Duration(milliseconds: 800),
         curve: Curves.easeInOutCubic,
+        alignment: 0.0, // Align to top
       );
       setState(() {
         _activeSection = index;

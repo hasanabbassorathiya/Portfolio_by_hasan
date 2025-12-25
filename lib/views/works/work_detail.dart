@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:portfolio/models/work/work_model.dart';
+import 'package:portfolio/models/work/work_model.dart' hide WorkRepository;
+import 'package:portfolio/core/repositories/work_repository.dart';
 import 'package:portfolio/shared/constants/colors.dart';
 import 'package:portfolio/shared/constants/design_tokens.dart';
 import 'package:portfolio/shared/constants/textstyles.dart';
@@ -30,20 +31,13 @@ class _WorkDetailState extends State<WorkDetail>
   late Animation<double> _fadeAnimation;
   WorkModel? _work;
   final ScrollController _scrollController = ScrollController();
+  final WorkRepository _workRepository = WorkRepository();
+  bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    _work = WorkRepository.getWorkById(widget.workId);
-    
-    // Track work view
-    if (_work != null) {
-      AnalyticsService.trackWorkView(_work!.id);
-      AnalyticsService.trackPageView(
-        pagePath: '/works/${_work!.id}',
-        pageTitle: _work!.title,
-      );
-    }
+    _loadWork();
 
     _controller = AnimationController(
       vsync: this,
@@ -58,6 +52,33 @@ class _WorkDetailState extends State<WorkDetail>
     _controller.forward();
   }
 
+  Future<void> _loadWork() async {
+    try {
+      final work = await _workRepository.getWorkById(widget.workId);
+      if (work != null) {
+        setState(() {
+          _work = work;
+          _isLoading = false;
+        });
+        
+        // Track work view
+        AnalyticsService.trackWorkView(work.id);
+        AnalyticsService.trackPageView(
+          pagePath: '/works/${work.id}',
+          pageTitle: work.title,
+        );
+      } else {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
   @override
   void dispose() {
     _controller.dispose();
@@ -67,6 +88,14 @@ class _WorkDetailState extends State<WorkDetail>
 
   @override
   Widget build(BuildContext context) {
+    if (_isLoading) {
+      return Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+
     if (_work == null) {
       return Scaffold(
         body: Center(
@@ -95,6 +124,13 @@ class _WorkDetailState extends State<WorkDetail>
             mainAxisSize: MainAxisSize.min,
             children: [
               _buildHeroSection(context),
+              // Show image carousel right after hero if images exist
+              if (_work!.images != null && _work!.images!.isNotEmpty) ...[
+                Padding(
+                  padding: Responsive.padding(context),
+                  child: _buildGallery(context),
+                ),
+              ],
               Padding(
                 padding: Responsive.padding(context),
                 child: ResponsiveBuilder(
@@ -138,7 +174,7 @@ class _WorkDetailState extends State<WorkDetail>
             _work!.imageAsset.startsWith('http://') || _work!.imageAsset.startsWith('https://')
                 ? Image.network(
                     _work!.imageAsset,
-                    fit: BoxFit.cover,
+                    fit: BoxFit.fill,
                     errorBuilder: (context, error, stackTrace) {
                       return Container(
                         color: AppColors.backgroundDark,
@@ -162,7 +198,7 @@ class _WorkDetailState extends State<WorkDetail>
                   )
                 : Image.asset(
                     _work!.imageAsset,
-                    fit: BoxFit.cover,
+                    fit: BoxFit.fill,
                     errorBuilder: (context, error, stackTrace) {
                       return Container(
                         color: AppColors.backgroundDark,
@@ -314,38 +350,74 @@ class _WorkDetailState extends State<WorkDetail>
                       child: Row(
                         children: [
                           if (_work!.playStoreUrl != null && _work!.playStoreUrl!.isNotEmpty)
-                            ElevatedButton.icon(
-                              onPressed: () {
+                            InkWell(
+                              onTap: () {
                                 LinkUtils.launchUrl(
                                   _work!.playStoreUrl!,
                                   linkType: 'play_store',
                                   linkName: 'Play Store',
                                 );
                               },
-                              icon: const Icon(Icons.android, size: 20),
-                              label: const Text('Play Store'),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.white,
-                                foregroundColor: Colors.black,
+                              child: Image.network(
+                                'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRSv479P9YVGLOLcKO-lyUEOUTzgY44actorw&s',
+                                height: 60,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Container(
+                                    height: 60,
+                                    width: 180,
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: Center(
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Icon(Icons.android, color: Colors.black),
+                                          SizedBox(width: 8),
+                                          Text('Play Store', style: TextStyle(color: Colors.black)),
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                },
                               ),
                             ),
                           if (_work!.playStoreUrl != null && _work!.playStoreUrl!.isNotEmpty &&
                               _work!.appStoreUrl != null && _work!.appStoreUrl!.isNotEmpty)
                             AppUtils().hSpace(size: DesignTokens.space12),
                           if (_work!.appStoreUrl != null && _work!.appStoreUrl!.isNotEmpty)
-                            ElevatedButton.icon(
-                              onPressed: () {
+                            InkWell(
+                              onTap: () {
                                 LinkUtils.launchUrl(
                                   _work!.appStoreUrl!,
                                   linkType: 'app_store',
                                   linkName: 'App Store',
                                 );
                               },
-                              icon: const Icon(Icons.apple, size: 20),
-                              label: const Text('App Store'),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.white,
-                                foregroundColor: Colors.black,
+                              child: Image.network(
+                                'https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg',
+                                height: 60,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Container(
+                                    height: 60,
+                                    width: 180,
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: Center(
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Icon(Icons.apple, color: Colors.black),
+                                          SizedBox(width: 8),
+                                          Text('App Store', style: TextStyle(color: Colors.black)),
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                },
                               ),
                             ),
                         ],
@@ -380,10 +452,6 @@ class _WorkDetailState extends State<WorkDetail>
         _buildTechnologies(context),
         AppUtils().vSpace(size: DesignTokens.space32),
         _buildTags(context),
-        if (_work!.images != null && _work!.images!.isNotEmpty) ...[
-          AppUtils().vSpace(size: DesignTokens.space32),
-          _buildGallery(context),
-        ],
         AppUtils().vSpace(size: DesignTokens.space48),
         _buildRelatedWorks(context),
         AppUtils().vSpace(size: DesignTokens.space48),
@@ -415,10 +483,6 @@ class _WorkDetailState extends State<WorkDetail>
           _buildTechnologies(context),
           AppUtils().vSpace(size: DesignTokens.space40),
           _buildTags(context),
-          if (_work!.images != null && _work!.images!.isNotEmpty) ...[
-            AppUtils().vSpace(size: DesignTokens.space40),
-            _buildGallery(context),
-          ],
           AppUtils().vSpace(size: DesignTokens.space56),
           _buildRelatedWorks(context),
           AppUtils().vSpace(size: DesignTokens.space56),
@@ -475,10 +539,6 @@ class _WorkDetailState extends State<WorkDetail>
             ),
             AppUtils().vSpace(size: DesignTokens.space48),
             _buildTags(context),
-            if (_work!.images != null && _work!.images!.isNotEmpty) ...[
-              AppUtils().vSpace(size: DesignTokens.space48),
-              _buildGallery(context),
-            ],
             AppUtils().vSpace(size: DesignTokens.space64),
             _buildRelatedWorks(context),
             AppUtils().vSpace(size: DesignTokens.space64),
@@ -829,50 +889,59 @@ class _WorkDetailState extends State<WorkDetail>
   }
 
   Widget _buildRelatedWorks(BuildContext context) {
-    final relatedWorks =
-        WorkRepository.getAllWorks()
+    // Related works will be loaded asynchronously
+    return FutureBuilder<List<WorkModel>>(
+      future: _workRepository.getAllWorks(limit: 4),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          return const SizedBox.shrink();
+        }
+        
+        final relatedWorks = snapshot.data!
             .where((work) => work.id != _work!.id)
             .take(3)
             .toList();
+        
+        if (relatedWorks.isEmpty) return const SizedBox.shrink();
 
-    if (relatedWorks.isEmpty) return const SizedBox.shrink();
+        return AnimatedSection(
+          delay: const Duration(milliseconds: 800),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Related Projects',
+                style: AppStyles.heading(
+                  fontSize: Responsive.fontSize(context, DesignTokens.fontSize32),
+                  fontWeight: FontWeight.bold,
+                  context: context,
+                ),
+              ),
+              AppUtils().vSpace(size: DesignTokens.space24),
+              LayoutBuilder(
+                builder: (context, constraints) {
+                  final columns = Responsive.gridColumnCount(context);
+                  final gap = Responsive.gridGap(context);
+                  final itemWidth =
+                      (constraints.maxWidth - (columns - 1) * gap) / columns;
 
-    return AnimatedSection(
-      delay: const Duration(milliseconds: 800),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Related Projects',
-            style: AppStyles.heading(
-              fontSize: Responsive.fontSize(context, DesignTokens.fontSize32),
-              fontWeight: FontWeight.bold,
-              context: context,
-            ),
+                  return Wrap(
+                    spacing: gap,
+                    runSpacing: gap,
+                    children:
+                        relatedWorks.map((work) {
+                          return SizedBox(
+                            width: itemWidth,
+                            child: _buildWorkCard(work),
+                          );
+                        }).toList(),
+                  );
+                },
+              ),
+            ],
           ),
-          AppUtils().vSpace(size: DesignTokens.space24),
-          LayoutBuilder(
-            builder: (context, constraints) {
-              final columns = Responsive.gridColumnCount(context);
-              final gap = Responsive.gridGap(context);
-              final itemWidth =
-                  (constraints.maxWidth - (columns - 1) * gap) / columns;
-
-              return Wrap(
-                spacing: gap,
-                runSpacing: gap,
-                children:
-                    relatedWorks.map((work) {
-                      return SizedBox(
-                        width: itemWidth,
-                        child: _buildWorkCard(work),
-                      );
-                    }).toList(),
-              );
-            },
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 
