@@ -205,6 +205,8 @@ class _WorksState extends State<Works> with SingleTickerProviderStateMixin {
                             projectUrl: project.projectUrl,
                             workId: project.id,
                             appIconUrl: project.appIconUrl,
+                            playStoreUrl: project.playStoreUrl,
+                            appStoreUrl: project.appStoreUrl,
                           ),
                         );
                       }).toList();
@@ -355,6 +357,102 @@ class _WorksState extends State<Works> with SingleTickerProviderStateMixin {
                                       ),
                                     ),
                                   ],
+                                  // Navigation buttons below name
+                                  AppUtils().vSpace(size: 24),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      MouseRegion(
+                                        onEnter: (_) => setState(() => _isHoveringPrev = true),
+                                        onExit: (_) => setState(() => _isHoveringPrev = false),
+                                        child: InkWell(
+                                          onTap: () {
+                                            if (_testimonials.isNotEmpty) {
+                                              setState(() {
+                                                _currentTestimonialIndex = (_currentTestimonialIndex - 1 + _testimonials.length) % _testimonials.length;
+                                              });
+                                              _testimonialTimer?.cancel();
+                                              _startTestimonialAutoScroll();
+                                            }
+                                          },
+                                          borderRadius: BorderRadius.circular(30),
+                                          child: Container(
+                                            width: 50,
+                                            height: 50,
+                                            decoration: BoxDecoration(
+                                              color: _isHoveringPrev
+                                                  ? AppColors.bgColor.withOpacity(0.3)
+                                                  : AppColors.bgColor.withOpacity(0.2),
+                                              shape: BoxShape.circle,
+                                              border: Border.all(
+                                                color: AppColors.bgColor.withOpacity(0.5),
+                                                width: 1.5,
+                                              ),
+                                              boxShadow: _isHoveringPrev
+                                                  ? [
+                                                      BoxShadow(
+                                                        color: AppColors.bgColor.withOpacity(0.4),
+                                                        blurRadius: 12,
+                                                        spreadRadius: 2,
+                                                      ),
+                                                    ]
+                                                  : null,
+                                            ),
+                                            child: Icon(
+                                              Icons.arrow_back_ios_new,
+                                              color: AppColors.bgColor,
+                                              size: 20,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      AppUtils().hSpace(size: 20),
+                                      MouseRegion(
+                                        onEnter: (_) => setState(() => _isHoveringNext = true),
+                                        onExit: (_) => setState(() => _isHoveringNext = false),
+                                        child: InkWell(
+                                          onTap: () {
+                                            if (_testimonials.isNotEmpty) {
+                                              setState(() {
+                                                _currentTestimonialIndex = (_currentTestimonialIndex + 1) % _testimonials.length;
+                                              });
+                                              _testimonialTimer?.cancel();
+                                              _startTestimonialAutoScroll();
+                                            }
+                                          },
+                                          borderRadius: BorderRadius.circular(30),
+                                          child: Container(
+                                            width: 50,
+                                            height: 50,
+                                            decoration: BoxDecoration(
+                                              color: _isHoveringNext
+                                                  ? AppColors.bgColor.withOpacity(0.3)
+                                                  : AppColors.bgColor.withOpacity(0.2),
+                                              shape: BoxShape.circle,
+                                              border: Border.all(
+                                                color: AppColors.bgColor.withOpacity(0.5),
+                                                width: 1.5,
+                                              ),
+                                              boxShadow: _isHoveringNext
+                                                  ? [
+                                                      BoxShadow(
+                                                        color: AppColors.bgColor.withOpacity(0.4),
+                                                        blurRadius: 12,
+                                                        spreadRadius: 2,
+                                                      ),
+                                                    ]
+                                                  : null,
+                                            ),
+                                            child: Icon(
+                                              Icons.arrow_forward_ios,
+                                              color: AppColors.bgColor,
+                                              size: 20,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ],
                               ),
                             ],
@@ -432,86 +530,105 @@ class _WorksState extends State<Works> with SingleTickerProviderStateMixin {
                                             ),
                                           ),
                                         ],
+                                        // Navigation buttons below name
+                                        AppUtils().vSpace(size: 32),
+                                        Row(
+                                          children: [
+                                            MouseRegion(
+                                              onEnter: (_) => setState(() => _isHoveringPrev = true),
+                                              onExit: (_) => setState(() => _isHoveringPrev = false),
+                                              child: InkWell(
+                                                onTap: () {
+                                                  if (_testimonials.isNotEmpty) {
+                                                    setState(() {
+                                                      _currentTestimonialIndex = (_currentTestimonialIndex - 1 + _testimonials.length) % _testimonials.length;
+                                                    });
+                                                    _testimonialTimer?.cancel();
+                                                    _startTestimonialAutoScroll();
+                                                  }
+                                                },
+                                                borderRadius: BorderRadius.circular(30),
+                                                child: Container(
+                                                  width: 56,
+                                                  height: 56,
+                                                  decoration: BoxDecoration(
+                                                    color: _isHoveringPrev
+                                                        ? AppColors.bgColor.withOpacity(0.3)
+                                                        : AppColors.bgColor.withOpacity(0.2),
+                                                    shape: BoxShape.circle,
+                                                    border: Border.all(
+                                                      color: AppColors.bgColor.withOpacity(0.5),
+                                                      width: 1.5,
+                                                    ),
+                                                    boxShadow: _isHoveringPrev
+                                                        ? [
+                                                            BoxShadow(
+                                                              color: AppColors.bgColor.withOpacity(0.4),
+                                                              blurRadius: 12,
+                                                              spreadRadius: 2,
+                                                            ),
+                                                          ]
+                                                        : null,
+                                                  ),
+                                                  child: Icon(
+                                                    Icons.arrow_back_ios_new,
+                                                    color: AppColors.bgColor,
+                                                    size: 22,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            AppUtils().hSpace(size: 24),
+                                            MouseRegion(
+                                              onEnter: (_) => setState(() => _isHoveringNext = true),
+                                              onExit: (_) => setState(() => _isHoveringNext = false),
+                                              child: InkWell(
+                                                onTap: () {
+                                                  if (_testimonials.isNotEmpty) {
+                                                    setState(() {
+                                                      _currentTestimonialIndex = (_currentTestimonialIndex + 1) % _testimonials.length;
+                                                    });
+                                                    _testimonialTimer?.cancel();
+                                                    _startTestimonialAutoScroll();
+                                                  }
+                                                },
+                                                borderRadius: BorderRadius.circular(30),
+                                                child: Container(
+                                                  width: 56,
+                                                  height: 56,
+                                                  decoration: BoxDecoration(
+                                                    color: _isHoveringNext
+                                                        ? AppColors.bgColor.withOpacity(0.3)
+                                                        : AppColors.bgColor.withOpacity(0.2),
+                                                    shape: BoxShape.circle,
+                                                    border: Border.all(
+                                                      color: AppColors.bgColor.withOpacity(0.5),
+                                                      width: 1.5,
+                                                    ),
+                                                    boxShadow: _isHoveringNext
+                                                        ? [
+                                                            BoxShadow(
+                                                              color: AppColors.bgColor.withOpacity(0.4),
+                                                              blurRadius: 12,
+                                                              spreadRadius: 2,
+                                                            ),
+                                                          ]
+                                                        : null,
+                                                  ),
+                                                  child: Icon(
+                                                    Icons.arrow_forward_ios,
+                                                    color: AppColors.bgColor,
+                                                    size: 22,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ],
                                     ),
                                   ],
                                 ),
-                              ),
-                              // Navigation Arrows on right
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  MouseRegion(
-                                    onEnter: (_) => setState(() => _isHoveringPrev = true),
-                                    onExit: (_) => setState(() => _isHoveringPrev = false),
-                                    child: InkWell(
-                                      onTap: () {
-                                        if (_testimonials.isNotEmpty) {
-                                          setState(() {
-                                            _currentTestimonialIndex = (_currentTestimonialIndex - 1) % _testimonials.length;
-                                          });
-                                          _testimonialTimer?.cancel();
-                                          _startTestimonialAutoScroll();
-                                        }
-                                      },
-                                      child: Container(
-                                        width: 60,
-                                        height: 60,
-                                        decoration: BoxDecoration(
-                                          color: _isHoveringPrev
-                                              ? AppColors.bgColor.withOpacity(0.3)
-                                              : AppColors.bgColor.withOpacity(0.2),
-                                          shape: BoxShape.circle,
-                                          boxShadow: _isHoveringPrev
-                                              ? [
-                                                  BoxShadow(
-                                                    color: Colors.orange.withOpacity(0.5),
-                                                    blurRadius: 25,
-                                                    spreadRadius: 0,
-                                                  ),
-                                                ]
-                                              : null,
-                                        ),
-                                        child: Icon(
-                                          Icons.arrow_back,
-                                          color: AppColors.bgColor,
-                                          size: 24,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  AppUtils().vSpace(size: 14),
-                                  MouseRegion(
-                                    onEnter: (_) => setState(() => _isHoveringNext = true),
-                                    onExit: (_) => setState(() => _isHoveringNext = false),
-                                    child: InkWell(
-                                      onTap: () {
-                                        if (_testimonials.isNotEmpty) {
-                                          setState(() {
-                                            _currentTestimonialIndex = (_currentTestimonialIndex + 1) % _testimonials.length;
-                                          });
-                                          _testimonialTimer?.cancel();
-                                          _startTestimonialAutoScroll();
-                                        }
-                                      },
-                                      child: Container(
-                                        width: 60,
-                                        height: 60,
-                                        decoration: BoxDecoration(
-                                          color: _isHoveringNext
-                                              ? AppColors.bgColor
-                                              : AppColors.bgColor.withOpacity(0.2),
-                                          shape: BoxShape.circle,
-                                        ),
-                                        child: Icon(
-                                          Icons.arrow_forward,
-                                          color: _isHoveringNext ? AppColors.primaryColor : AppColors.bgColor,
-                                          size: 24,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
                               ),
                             ],
                           );

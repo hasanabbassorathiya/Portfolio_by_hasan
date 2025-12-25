@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:go_router/go_router.dart';
 import 'package:portfolio/core/repositories/contact_repository.dart';
 import 'package:portfolio/core/repositories/profile_repository.dart';
 import 'package:portfolio/shared/constants/textstyles.dart';
@@ -87,17 +88,22 @@ class _ContactState extends State<Contact> with SingleTickerProviderStateMixin {
   }
 
   void _scrollToFormIfNeeded() {
-    // Always scroll to form when page loads
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final context = _formKeyForScroll.currentContext;
-      if (context != null) {
-        Scrollable.ensureVisible(
-          context,
-          duration: const Duration(milliseconds: 800),
-          curve: Curves.easeInOut,
-        );
-      }
-    });
+    // Check if scrollToForm query parameter is present
+    final location = GoRouterState.of(context).uri;
+    final shouldScroll = location.queryParameters['scrollToForm'] == 'true';
+    
+    if (shouldScroll) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        final context = _formKeyForScroll.currentContext;
+        if (context != null) {
+          Scrollable.ensureVisible(
+            context,
+            duration: const Duration(milliseconds: 800),
+            curve: Curves.easeInOut,
+          );
+        }
+      });
+    }
   }
 
 

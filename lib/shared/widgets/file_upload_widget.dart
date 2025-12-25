@@ -211,39 +211,17 @@ class _FileUploadWidgetState extends State<FileUploadWidget> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              widget.label,
-              style: AppStyles.body(fontWeight: FontWeight.bold),
+        if (widget.label.isNotEmpty) ...[
+          Text(
+            widget.label.toUpperCase(),
+            style: AppStyles.body(
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+              color: Colors.grey.shade700,
             ),
-            if (widget.allowUrlInput)
-              Row(
-                children: [
-                  TextButton.icon(
-                    onPressed: () {
-                      setState(() {
-                        _isUrlMode = !_isUrlMode;
-                        if (!_isUrlMode) {
-                          _urlController.clear();
-                        }
-                      });
-                    },
-                    icon: Icon(
-                      _isUrlMode ? Icons.upload_file : Icons.link,
-                      size: 16,
-                    ),
-                    label: Text(
-                      _isUrlMode ? 'Upload File' : 'Enter URL',
-                      style: AppStyles.body(fontSize: 12),
-                    ),
-                  ),
-                ],
-              ),
-          ],
-        ),
-        AppUtils().vSpace(size: 8),
+          ),
+          AppUtils().vSpace(size: 12),
+        ],
         if (_isUrlMode && widget.allowUrlInput)
           Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -269,59 +247,89 @@ class _FileUploadWidgetState extends State<FileUploadWidget> {
             ],
           )
         else
-          GestureDetector(
+          InkWell(
             onTap: _isUploading ? null : _pickAndUploadFile,
+            borderRadius: BorderRadius.circular(12),
             child: Container(
-              height: widget.fileType == FileType.image ? 200 : 100,
+              padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey.shade300),
-                borderRadius: BorderRadius.circular(8),
-                color: Colors.grey.shade50,
+                border: Border.all(
+                  color: _isUploading 
+                      ? Colors.grey.shade300 
+                      : Colors.grey.shade400,
+                  width: 1.5,
+                ),
+                borderRadius: BorderRadius.circular(12),
+                color: _isUploading 
+                    ? Colors.grey.shade50 
+                    : Colors.white,
               ),
               child: _isUploading
-                  ? Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const CircularProgressIndicator(),
-                          AppUtils().vSpace(size: 16),
-                          Text(
-                            'Uploading... ${(_uploadProgress * 100).toInt()}%',
-                            style: AppStyles.body(),
+                  ? Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const CircularProgressIndicator(
+                          strokeWidth: 2.5,
+                        ),
+                        AppUtils().vSpace(size: 16),
+                        Text(
+                          'Uploading... ${(_uploadProgress * 100).toInt()}%',
+                          style: AppStyles.body(
+                            fontSize: 14,
+                            color: Colors.grey.shade700,
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     )
                   : _fileUrl != null && _fileUrl!.isNotEmpty
                       ? _buildPreview()
-                      : Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(
+                      : Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(12),
+                              decoration: BoxDecoration(
+                                color: Colors.grey.shade100,
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Icon(
                                 widget.fileType == FileType.image
-                                    ? Icons.cloud_upload_outlined
-                                    : Icons.upload_file,
-                                size: 48,
-                                color: Colors.grey.shade400,
+                                    ? Icons.attach_file
+                                    : Icons.insert_drive_file,
+                                size: 24,
+                                color: Colors.grey.shade700,
                               ),
-                              AppUtils().vSpace(size: 8),
-                              Text(
-                                'Tap to ${widget.fileType == FileType.image ? "upload image" : "upload file"}',
-                                style: AppStyles.body(color: Colors.grey.shade600),
-                              ),
-                              if (widget.allowUrlInput) ...[
-                                AppUtils().vSpace(size: 4),
-                                Text(
-                                  'or enter URL',
-                                  style: AppStyles.body(
-                                    fontSize: 12,
-                                    color: Colors.grey.shade500,
+                            ),
+                            const SizedBox(width: 16),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Attach File',
+                                    style: AppStyles.body(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.grey.shade900,
+                                    ),
                                   ),
-                                ),
-                              ],
-                            ],
-                          ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    'Click to browse or drag and drop',
+                                    style: AppStyles.body(
+                                      fontSize: 12,
+                                      color: Colors.grey.shade600,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Icon(
+                              Icons.arrow_forward_ios,
+                              size: 16,
+                              color: Colors.grey.shade400,
+                            ),
+                          ],
                         ),
             ),
           ),

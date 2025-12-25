@@ -13,6 +13,7 @@ import 'package:portfolio/shared/utils/link_utils.dart';
 import 'package:portfolio/shared/widgets/button.dart';
 import 'package:portfolio/shared/widgets/social_buttons.dart';
 import 'package:portfolio/shared/widgets/profile_image_widget.dart';
+import 'package:portfolio/shared/widgets/typewriter_text.dart';
 import 'package:portfolio/core/services/analytics_service.dart';
 import 'package:portfolio/core/repositories/profile_repository.dart';
 import 'package:portfolio/core/repositories/social_link_repository.dart';
@@ -45,6 +46,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   final SocialLinkRepository _socialLinkRepository = SocialLinkRepository();
   String? _phone;
   String? _title;
+  String? _bio;
   List<SocialLinkModel> _socialLinks = [];
 
   void _trackPageView() {
@@ -61,6 +63,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
         setState(() {
           _phone = profile.phone;
           _title = profile.title;
+          _bio = profile.bio;
         });
       }
     } catch (e) {
@@ -154,6 +157,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
 
   // Key for ProfileImageWidget to force refresh
   GlobalKey _profileImageKey = GlobalKey();
+  // Key for TypewriterText to restart animation
+  GlobalKey _typewriterKey = GlobalKey();
 
   @override
   void didUpdateWidget(covariant Home oldWidget) {
@@ -163,6 +168,10 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
       _activatePage();
       // Refresh profile image when page becomes active
       _refreshProfileImage();
+      // Restart typewriter animation
+      setState(() {
+        _typewriterKey = GlobalKey();
+      });
     } else if (!widget.isActive && oldWidget.isActive) {
       // Optionally reset animations when page becomes inactive
       _controller.reset();
@@ -445,18 +454,33 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                     position: _textSlide,
                                     child: FadeTransition(
                                       opacity: _textFadeIn,
-                                      child: Text(
-                                        _title ?? 'Software Engineer based in UAE',
-                                        style: AppStyles.subheading(
-                                          fontSize:
-                                              isSmall
-                                                  ? 14
-                                                  : isMedium
-                                                  ? 18
-                                                  : 24,
-                                          fontWeight: FontWeight.w500,
-                                        ).copyWith(fontStyle: FontStyle.italic),
-                                      ),
+                                      child: _bio != null && _bio!.isNotEmpty
+                                          ? TypewriterText(
+                                              key: _typewriterKey,
+                                              text: _bio!,
+                                              style: AppStyles.subheading(
+                                                fontSize:
+                                                    isSmall
+                                                        ? 14
+                                                        : isMedium
+                                                        ? 18
+                                                        : 24,
+                                                fontWeight: FontWeight.w500,
+                                              ).copyWith(fontStyle: FontStyle.italic),
+                                              speed: const Duration(milliseconds: 30),
+                                            )
+                                          : Text(
+                                              _title ?? 'Software Engineer based in UAE',
+                                              style: AppStyles.subheading(
+                                                fontSize:
+                                                    isSmall
+                                                        ? 14
+                                                        : isMedium
+                                                        ? 18
+                                                        : 24,
+                                                fontWeight: FontWeight.w500,
+                                              ).copyWith(fontStyle: FontStyle.italic),
+                                            ),
                                     ),
                                   ),
                                   const SizedBox(height: 30),
@@ -472,8 +496,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                             buttonName: 'Let\'s talk with me',
                                             location: 'home',
                                           );
-                                          // Navigate to contact route - MainLayoutShell will handle scrolling
-                                          context.go('/contact');
+                                          // Navigate to contact route with scrollToForm parameter
+                                          context.go('/contact?scrollToForm=true');
                                         },
                                       ),
                                     ),
@@ -664,18 +688,33 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                     position: _textSlide,
                                     child: FadeTransition(
                                       opacity: _textFadeIn,
-                                      child: Text(
-                                        _title ?? 'Software Engineer based in UAE',
-                                        style: AppStyles.subheading(
-                                          fontSize:
-                                              isSmall
-                                                  ? 14
-                                                  : isMedium
-                                                  ? 18
-                                                  : 24,
-                                          fontWeight: FontWeight.w500,
-                                        ).copyWith(fontStyle: FontStyle.italic),
-                                      ),
+                                      child: _bio != null && _bio!.isNotEmpty
+                                          ? TypewriterText(
+                                              key: _typewriterKey,
+                                              text: _bio!,
+                                              style: AppStyles.subheading(
+                                                fontSize:
+                                                    isSmall
+                                                        ? 14
+                                                        : isMedium
+                                                        ? 18
+                                                        : 24,
+                                                fontWeight: FontWeight.w500,
+                                              ).copyWith(fontStyle: FontStyle.italic),
+                                              speed: const Duration(milliseconds: 30),
+                                            )
+                                          : Text(
+                                              _title ?? 'Software Engineer based in UAE',
+                                              style: AppStyles.subheading(
+                                                fontSize:
+                                                    isSmall
+                                                        ? 14
+                                                        : isMedium
+                                                        ? 18
+                                                        : 24,
+                                                fontWeight: FontWeight.w500,
+                                              ).copyWith(fontStyle: FontStyle.italic),
+                                            ),
                                     ),
                                   ),
                                   const SizedBox(height: 30),
@@ -691,8 +730,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                             buttonName: 'Let\'s talk with me',
                                             location: 'home',
                                           );
-                                          // Navigate to contact route - MainLayoutShell will handle scrolling
-                                          context.go('/contact');
+                                          // Navigate to contact route with scrollToForm parameter
+                                          context.go('/contact?scrollToForm=true');
                                         },
                                       ),
                                     ),

@@ -99,34 +99,7 @@ class _AppSidebarState extends State<AppSidebar> {
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    if (isLoggedIn) ...[
-                      // Dashboard button when logged in
-                      SizedBox(
-                        width: double.infinity,
-                        child: ElevatedButton.icon(
-                          onPressed: () {
-                            context.go(AppRoutes.adminDashboard);
-                          },
-                          icon: const Icon(Icons.dashboard, size: 18),
-                          label: Text(
-                            'Dashboard',
-                            style: GoogleFonts.ibmPlexSans().copyWith(
-                              fontSize: 14.0,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.bgColor,
-                            foregroundColor: AppColors.primaryColor,
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 16.0,
-                              vertical: 12.0,
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 12.0),
-                    ] else ...[
+                    if (!isLoggedIn) ...[
                       // Login button when not logged in
                       SizedBox(
                         width: double.infinity,
