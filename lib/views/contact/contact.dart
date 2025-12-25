@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:file_picker/file_picker.dart';
+import 'dart:io';
 import 'package:portfolio/core/repositories/contact_repository.dart';
 import 'package:portfolio/core/repositories/profile_repository.dart';
 import 'package:portfolio/shared/constants/textstyles.dart';
@@ -9,6 +11,8 @@ import 'package:portfolio/shared/widgets/button.dart';
 import 'package:portfolio/shared/constants/colors.dart';
 import 'package:portfolio/core/services/analytics_service.dart';
 import 'package:portfolio/core/services/error_handler.dart';
+import 'package:portfolio/core/services/supabase_service.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class Contact extends StatefulWidget {
   // Add isActive parameter
@@ -32,10 +36,13 @@ class _ContactState extends State<Contact> with SingleTickerProviderStateMixin {
   final ContactRepository _contactRepository = ContactRepository();
   final ProfileRepository _profileRepository = ProfileRepository();
   final _formKey = GlobalKey<FormState>();
+  final _formKeyForScroll = GlobalKey();
   bool _isSubmitting = false;
   String? _phone;
   String? _email;
   String? _location;
+  String? _selectedFileName;
+  PlatformFile? _selectedFile;
 
   // Add hover state variables
   bool _isHoveringPhoneNumber = false;
@@ -50,6 +57,7 @@ class _ContactState extends State<Contact> with SingleTickerProviderStateMixin {
     super.initState();
     _trackPageView();
     _loadProfile();
+    _scrollToFormIfNeeded();
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 800), // Adjust duration as needed
@@ -79,6 +87,81 @@ class _ContactState extends State<Contact> with SingleTickerProviderStateMixin {
       }
     } catch (e) {
       // Silently fail, will use fallback values
+    }
+  }
+
+  void _scrollToFormIfNeeded() {
+    // Check if we came from home page "Let's talk with me" button
+    final uri = Uri.base;
+    final shouldScroll = uri.queryParameters['scrollToForm'] == 'true';
+    
+    if (shouldScroll) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        final context = _formKeyForScroll.currentContext;
+        if (context != null) {
+          Scrollable.ensureVisible(
+            context,
+            duration: const Duration(milliseconds: 500),
+            curve: Curves.easeInOut,
+          );
+        }
+      });
+    }
+  }
+
+  Future<void> _pickFile() async {
+    try {
+      final result = await FilePicker.platform.pickFiles(
+        type: FileType.any,
+        allowMultiple: false,
+      );
+
+      if (result != null && result.files.single.path != null) {
+        setState(() {
+          _selectedFile = result.files.single;
+          _selectedFileName = _selectedFile!.name;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error picking file: $e')),
+        );
+      }
+    }
+  }
+
+  Future<String?> _uploadFile() async {
+    if (_selectedFile == null || _selectedFile!.path == null) {
+      return null;
+    }
+
+    try {
+      final file = File(_selectedFile!.path!);
+      final fileBytes = await file.readAsBytes();
+      final fileName = '${DateTime.now().millisecondsSinceEpoch}_${_selectedFile!.name}';
+      final filePath = 'contact_attachments/$fileName';
+
+      await SupabaseService.requiredClient.storage
+          .from('contact_attachments')
+          .uploadBinary(
+            filePath,
+            fileBytes,
+            fileOptions: const FileOptions(upsert: false),
+          );
+
+      final publicUrl = SupabaseService.requiredClient.storage
+          .from('contact_attachments')
+          .getPublicUrl(filePath);
+
+      return publicUrl;
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error uploading file: $e')),
+        );
+      }
+      return null;
     }
   }
 
@@ -118,10 +201,16 @@ class _ContactState extends State<Contact> with SingleTickerProviderStateMixin {
     });
 
     try {
+      String? attachmentUrl;
+      if (_selectedFile != null) {
+        attachmentUrl = await _uploadFile();
+      }
+
       await _contactRepository.submitContactMessage(
         name: _nameController.text.trim(),
         email: _emailController.text.trim(),
         message: _messageController.text.trim(),
+        attachmentUrl: attachmentUrl,
       );
 
       // Track successful submission
@@ -137,6 +226,10 @@ class _ContactState extends State<Contact> with SingleTickerProviderStateMixin {
         _nameController.clear();
         _emailController.clear();
         _messageController.clear();
+        setState(() {
+          _selectedFile = null;
+          _selectedFileName = null;
+        });
       }
     } catch (e, stackTrace) {
       // Record error to Crashlytics
@@ -220,28 +313,30 @@ class _ContactState extends State<Contact> with SingleTickerProviderStateMixin {
                             AppUtils().vSpace(
                               size: 20,
                             ), // Spacing based on Figma
-                            InkWell(
-                              onTap:
-                                  () => LinkUtils.launchPhone(
-                                    _phone ?? AppLinks.phoneNumber,
-                                  ), // Use profile phone or fallback
-                              onHover: (value) {
-                                setState(() {
-                                  _isHoveringPhoneNumber = value;
-                                });
-                              },
-                              child: Text(
-                                _phone ?? AppLinks.phoneNumber, // Use profile phone or fallback
-                                style: AppStyles.heading(fontSize: 20).copyWith(
-                                  fontWeight: FontWeight.bold,
-                                  color:
-                                      _isHoveringPhoneNumber
-                                          ? AppColors.primaryColor
-                                          : Colors
-                                              .black, // Change color on hover
-                                ), // Style based on Figma
+                            if (_phone != null && _phone!.isNotEmpty) ...[
+                              InkWell(
+                                onTap:
+                                    () => LinkUtils.launchPhone(
+                                      _phone!,
+                                    ),
+                                onHover: (value) {
+                                  setState(() {
+                                    _isHoveringPhoneNumber = value;
+                                  });
+                                },
+                                child: Text(
+                                  _phone!,
+                                  style: AppStyles.heading(fontSize: 20).copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    color:
+                                        _isHoveringPhoneNumber
+                                            ? AppColors.primaryColor
+                                            : Colors.black,
+                                  ),
+                                ),
                               ),
-                            ),
+                              AppUtils().vSpace(size: 12),
+                            ],
                             AppUtils().vSpace(
                               size: 12,
                             ), // Spacing based on Figma
@@ -401,28 +496,30 @@ class _ContactState extends State<Contact> with SingleTickerProviderStateMixin {
                         style: AppStyles.body(),
                       ),
                       AppUtils().vSpace(size: 20), // Spacing based on Figma
-                      InkWell(
-                        onTap:
-                            () => LinkUtils.launchPhone(
-                              AppLinks.phoneNumber,
-                            ), // Use constant and LinkUtils
-                        onHover: (value) {
-                          setState(() {
-                            _isHoveringPhoneNumber = value;
-                          });
-                        },
-                        child: Text(
-                          AppLinks.phoneNumber, // Use phone number constant
-                          style: AppStyles.heading(fontSize: 20).copyWith(
-                            fontWeight: FontWeight.bold,
-                            color:
-                                _isHoveringPhoneNumber
-                                    ? AppColors.primaryColor
-                                    : Colors.black, // Change color on hover
-                          ), // Style based on Figma
+                      if (_phone != null && _phone!.isNotEmpty) ...[
+                        InkWell(
+                          onTap:
+                              () => LinkUtils.launchPhone(
+                                _phone!,
+                              ),
+                          onHover: (value) {
+                            setState(() {
+                              _isHoveringPhoneNumber = value;
+                            });
+                          },
+                          child: Text(
+                            _phone!,
+                            style: AppStyles.heading(fontSize: 20).copyWith(
+                              fontWeight: FontWeight.bold,
+                              color:
+                                  _isHoveringPhoneNumber
+                                      ? AppColors.primaryColor
+                                      : Colors.black,
+                            ),
+                          ),
                         ),
-                      ),
-                      AppUtils().vSpace(size: 12), // Spacing based on Figma
+                        AppUtils().vSpace(size: 12),
+                      ],
                       InkWell(
                         onTap:
                             () => LinkUtils.launchEmail(
@@ -558,6 +655,7 @@ class _ContactState extends State<Contact> with SingleTickerProviderStateMixin {
 
   Widget _buildContactForm(bool isSmall, bool isMedium) {
     return Container(
+      key: _formKeyForScroll,
       padding: EdgeInsets.all(isSmall ? 20 : 40),
       decoration: BoxDecoration(
         gradient: AppUtils().appGradient,
@@ -661,20 +759,31 @@ class _ContactState extends State<Contact> with SingleTickerProviderStateMixin {
             ),
             AppUtils().vSpace(size: 20), // Spacing
             // Attach File
-            Row(
-              children: [
-                Icon(
-                  Icons.attach_file,
-                  color: Colors.white,
-                ), // Attach file icon
-                AppUtils().hSpace(size: 8), // Spacing
-                Text(
-                  'ATTACH FILE',
-                  style: AppStyles.body(
-                    fontSize: 14,
-                  ).copyWith(color: Colors.white, fontWeight: FontWeight.bold),
-                ), // Attach file text
-              ],
+            InkWell(
+              onTap: _pickFile,
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.attach_file,
+                    color: Colors.white,
+                  ),
+                  AppUtils().hSpace(size: 8),
+                  Text(
+                    _selectedFileName ?? 'ATTACH FILE',
+                    style: AppStyles.body(
+                      fontSize: 14,
+                    ).copyWith(color: Colors.white, fontWeight: FontWeight.bold),
+                  ),
+                  if (_selectedFileName != null) ...[
+                    AppUtils().hSpace(size: 8),
+                    Icon(
+                      Icons.close,
+                      color: Colors.white,
+                      size: 16,
+                    ),
+                  ],
+                ],
+              ),
             ),
             AppUtils().vSpace(size: 40), // Spacing before button
             // Submit Button

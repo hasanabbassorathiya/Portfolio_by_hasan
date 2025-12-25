@@ -14,6 +14,7 @@ import 'package:portfolio/shared/widgets/button.dart';
 import 'package:portfolio/shared/widgets/social_buttons.dart';
 import 'package:portfolio/shared/widgets/profile_image_widget.dart';
 import 'package:portfolio/core/services/analytics_service.dart';
+import 'package:portfolio/core/repositories/profile_repository.dart';
 
 class Home extends StatefulWidget {
   final bool isActive;
@@ -37,12 +38,27 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
 
   bool _isHoveringPhoneNumber = false;
   bool _isHoveringEmail = false;
+  final ProfileRepository _profileRepository = ProfileRepository();
+  String? _phone;
 
   void _trackPageView() {
     AnalyticsService.trackPageView(
       pagePath: '/',
       pageTitle: 'Home',
     );
+  }
+
+  Future<void> _loadProfile() async {
+    try {
+      final profile = await _profileRepository.getProfile();
+      if (profile != null) {
+        setState(() {
+          _phone = profile.phone;
+        });
+      }
+    } catch (e) {
+      // Silently fail
+    }
   }
 
   // Method to run animations and scroll to top when page becomes active
@@ -54,6 +70,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   void initState() {
     super.initState();
     _trackPageView();
+    _loadProfile();
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 1200),
@@ -411,7 +428,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                     position: _ctaSlide,
                                     child: FadeTransition(
                                       opacity: _ctaFadeIn,
-                                      child: AppButton(
+                                        child: AppButton(
                                         title: 'Let\'s talk with me',
                                         icons: Iconsax.arrow_right_3_copy,
                                         onTap: () {
@@ -419,7 +436,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                             buttonName: 'Let\'s talk with me',
                                             location: 'home',
                                           );
-                                          context.go('/contact');
+                                          context.go('/contact?scrollToForm=true');
                                         },
                                       ),
                                     ),
@@ -437,40 +454,42 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     // Contact Info (Rows)
-                                    Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Icon(
-                                          Iconsax.call_calling_copy,
-                                          size: 18,
-                                          color: AppColors.primaryColor,
-                                        ),
-                                        const SizedBox(width: 8),
-                                        InkWell(
-                                          onTap:
-                                              () => LinkUtils.launchPhone(
-                                                AppLinks.phoneNumber,
+                                    if (_phone != null && _phone!.isNotEmpty) ...[
+                                      Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Icon(
+                                            Iconsax.call_calling_copy,
+                                            size: 18,
+                                            color: AppColors.primaryColor,
+                                          ),
+                                          const SizedBox(width: 8),
+                                          InkWell(
+                                            onTap:
+                                                () => LinkUtils.launchPhone(
+                                                  _phone!,
+                                                ),
+                                            onHover: (value) {
+                                              setState(() {
+                                                _isHoveringPhoneNumber = value;
+                                              });
+                                            },
+                                            child: Text(
+                                              _phone!,
+                                              style: AppStyles.regular(
+                                                fontWeight: FontWeight.bold,
+                                              ).copyWith(
+                                                color:
+                                                    _isHoveringPhoneNumber
+                                                        ? AppColors.primaryColor
+                                                        : Colors.black,
                                               ),
-                                          onHover: (value) {
-                                            setState(() {
-                                              _isHoveringPhoneNumber = value;
-                                            });
-                                          },
-                                          child: Text(
-                                            AppLinks.phoneNumber,
-                                            style: AppStyles.regular(
-                                              fontWeight: FontWeight.bold,
-                                            ).copyWith(
-                                              color:
-                                                  _isHoveringPhoneNumber
-                                                      ? AppColors.primaryColor
-                                                      : Colors.black,
                                             ),
                                           ),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 8),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 8),
+                                    ],
                                     Row(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
@@ -636,7 +655,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                     position: _ctaSlide,
                                     child: FadeTransition(
                                       opacity: _ctaFadeIn,
-                                      child: AppButton(
+                                        child: AppButton(
                                         title: 'Let\'s talk with me',
                                         icons: Iconsax.arrow_right_3_copy,
                                         onTap: () {
@@ -644,7 +663,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                             buttonName: 'Let\'s talk with me',
                                             location: 'home',
                                           );
-                                          context.go('/contact');
+                                          context.go('/contact?scrollToForm=true');
                                         },
                                       ),
                                     ),
@@ -663,40 +682,42 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     // Contact Info (Rows)
-                                    Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Icon(
-                                          Iconsax.call_calling_copy,
-                                          size: 18,
-                                          color: AppColors.primaryColor,
-                                        ),
-                                        const SizedBox(width: 8),
-                                        InkWell(
-                                          onTap:
-                                              () => LinkUtils.launchPhone(
-                                                AppLinks.phoneNumber,
+                                    if (_phone != null && _phone!.isNotEmpty) ...[
+                                      Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Icon(
+                                            Iconsax.call_calling_copy,
+                                            size: 18,
+                                            color: AppColors.primaryColor,
+                                          ),
+                                          const SizedBox(width: 8),
+                                          InkWell(
+                                            onTap:
+                                                () => LinkUtils.launchPhone(
+                                                  _phone!,
+                                                ),
+                                            onHover: (value) {
+                                              setState(() {
+                                                _isHoveringPhoneNumber = value;
+                                              });
+                                            },
+                                            child: Text(
+                                              _phone!,
+                                              style: AppStyles.regular(
+                                                fontWeight: FontWeight.bold,
+                                              ).copyWith(
+                                                color:
+                                                    _isHoveringPhoneNumber
+                                                        ? AppColors.primaryColor
+                                                        : Colors.black,
                                               ),
-                                          onHover: (value) {
-                                            setState(() {
-                                              _isHoveringPhoneNumber = value;
-                                            });
-                                          },
-                                          child: Text(
-                                            AppLinks.phoneNumber,
-                                            style: AppStyles.regular(
-                                              fontWeight: FontWeight.bold,
-                                            ).copyWith(
-                                              color:
-                                                  _isHoveringPhoneNumber
-                                                      ? AppColors.primaryColor
-                                                      : Colors.black,
                                             ),
                                           ),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 8),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 8),
+                                    ],
                                     Row(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [

@@ -11,6 +11,7 @@ class ProfileModel {
   final String? avatarUrl;
   final String? resumeUrl;
   final String? quote;
+  final int? yearsOfExperience;
 
   ProfileModel({
     required this.id,
@@ -23,6 +24,7 @@ class ProfileModel {
     this.avatarUrl,
     this.resumeUrl,
     this.quote,
+    this.yearsOfExperience,
   });
 
   factory ProfileModel.fromMap(Map<String, dynamic> map) {
@@ -37,6 +39,7 @@ class ProfileModel {
       avatarUrl: map['avatar_url'] as String?,
       resumeUrl: map['resume_url'] as String?,
       quote: map['quote'] as String?,
+      yearsOfExperience: map['years_of_experience'] as int?,
     );
   }
 
@@ -52,6 +55,7 @@ class ProfileModel {
       'avatar_url': avatarUrl,
       'resume_url': resumeUrl,
       'quote': quote,
+      'years_of_experience': yearsOfExperience,
     };
   }
 }

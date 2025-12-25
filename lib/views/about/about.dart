@@ -36,8 +36,8 @@ class _AboutState extends State<About> with SingleTickerProviderStateMixin {
   String? _name;
   String? _title;
   String? _bio;
+  int? _yearsOfExperience;
   bool _isLoadingSocialLinks = true;
-  bool _isLoadingProfile = true;
 
   @override
   void initState() {
@@ -76,7 +76,6 @@ class _AboutState extends State<About> with SingleTickerProviderStateMixin {
 
   Future<void> _loadProfile() async {
     try {
-      setState(() => _isLoadingProfile = true);
       final profile = await _profileRepository.getProfile();
       if (profile != null) {
         setState(() {
@@ -87,13 +86,10 @@ class _AboutState extends State<About> with SingleTickerProviderStateMixin {
           _name = profile.name;
           _title = profile.title;
           _bio = profile.bio;
-          _isLoadingProfile = false;
+          _yearsOfExperience = profile.yearsOfExperience;
         });
-      } else {
-        setState(() => _isLoadingProfile = false);
       }
     } catch (e) {
-      setState(() => _isLoadingProfile = false);
       // Silently fail, will use fallback values
     }
   }
@@ -189,6 +185,8 @@ class _AboutState extends State<About> with SingleTickerProviderStateMixin {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildIntroAndInfo(context, isSmall, isMedium),
+            AppUtils().vSpace(size: isSmall ? 40.0 : 80.0),
+            _buildYearsOfExperienceSection(context, isSmall, isMedium),
             AppUtils().vSpace(size: isSmall ? 40.0 : 80.0),
             _buildQuoteSection(context, isSmall, isMedium),
           ],
@@ -587,31 +585,33 @@ class _AboutState extends State<About> with SingleTickerProviderStateMixin {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Icon(
-              Iconsax.call_calling_copy,
-              size: 20,
-              color: AppColors.primaryColor,
-            ),
-            const SizedBox(width: 12.0),
-            InkWell(
-              onTap: () => LinkUtils.launchPhone(_phone ?? AppLinks.phoneNumber),
-              child: Text(
-                _phone ?? AppLinks.phoneNumber,
-                style: AppStyles.regular(
-                  fontWeight: FontWeight.bold,
-                  fontSize: isSmall ? 15 : 18.0,
-                ),
-                overflow: TextOverflow.ellipsis,
-                maxLines: 1,
+        if (_phone != null && _phone!.isNotEmpty) ...[
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(
+                Iconsax.call_calling_copy,
+                size: 20,
+                color: AppColors.primaryColor,
               ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 16.0),
+              const SizedBox(width: 12.0),
+              InkWell(
+                onTap: () => LinkUtils.launchPhone(_phone!),
+                child: Text(
+                  _phone!,
+                  style: AppStyles.regular(
+                    fontWeight: FontWeight.bold,
+                    fontSize: isSmall ? 15 : 18.0,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16.0),
+        ],
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
@@ -636,30 +636,6 @@ class _AboutState extends State<About> with SingleTickerProviderStateMixin {
             ),
           ],
         ),
-        const SizedBox(height: 16.0),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Icon(
-              Iconsax.user_cirlce_add_copy,
-              size: 20, // Adjusted icon size
-              color: AppColors.primaryColor,
-            ),
-            const SizedBox(width: 12.0), // Adjusted spacing
-            Text(
-              '25 Years', // Age from Figma
-              style: AppStyles.regular(
-                // Using regular style with bold
-                fontWeight: FontWeight.bold,
-                fontSize: isSmall ? 15 : 18.0, // Adjusted font size
-              ),
-              overflow: TextOverflow.ellipsis,
-              maxLines: 1,
-            ),
-          ],
-        ),
-        const SizedBox(height: 16.0), // Adjusted spacing
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
@@ -686,6 +662,69 @@ class _AboutState extends State<About> with SingleTickerProviderStateMixin {
     );
   }
 
+
+  // Years of Experience Section matching Figma design
+  Widget _buildYearsOfExperienceSection(BuildContext context, bool isSmall, bool isMedium) {
+    if (_yearsOfExperience == null) {
+      return const SizedBox.shrink();
+    }
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final bool isVerticalLayout = isSmall || isMedium;
+        
+        return Flex(
+          direction: isVerticalLayout ? Axis.vertical : Axis.horizontal,
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Years of Experience Section
+            Flexible(
+              flex: 1,
+              fit: FlexFit.loose,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      GradientText(
+                        '$_yearsOfExperience+',
+                        gradient: AppUtils().appGradient,
+                        style: AppStyles.heading(
+                          fontSize: isSmall ? 40.0 : 60.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(width: 16.0),
+                      Flexible(
+                        child: Text(
+                          'Years\nexperience...',
+                          style: AppStyles.subheading(
+                            fontWeight: FontWeight.bold,
+                            fontSize: isSmall ? 20.0 : 28.0,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  AppUtils().vSpace(size: isSmall ? 12.0 : 16.0),
+                  if (_bio != null && _bio!.isNotEmpty)
+                    Text(
+                      _bio!,
+                      softWrap: true,
+                      style: AppStyles.body(fontSize: isSmall ? 16.0 : 20.0),
+                    ),
+                ],
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   // Extracted method for Quote Section (reused)
   Widget _buildQuoteSection(BuildContext context, bool isSmall, bool isMedium) {

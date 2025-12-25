@@ -31,6 +31,7 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
   final _locationController = TextEditingController();
   final _resumeUrlController = TextEditingController();
   final _quoteController = TextEditingController();
+  final _yearsOfExperienceController = TextEditingController();
   String? _avatarUrl;
 
   @override
@@ -49,6 +50,7 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
     _locationController.dispose();
     _resumeUrlController.dispose();
     _quoteController.dispose();
+    _yearsOfExperienceController.dispose();
     super.dispose();
   }
 
@@ -67,6 +69,7 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
           _locationController.text = profile.location ?? '';
           _resumeUrlController.text = profile.resumeUrl ?? '';
           _quoteController.text = profile.quote ?? '';
+          _yearsOfExperienceController.text = profile.yearsOfExperience?.toString() ?? '';
           _avatarUrl = profile.avatarUrl;
         });
       }
@@ -114,6 +117,10 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
             _quoteController.text.trim().isEmpty
                 ? null
                 : _quoteController.text.trim(),
+        'years_of_experience':
+            _yearsOfExperienceController.text.trim().isEmpty
+                ? null
+                : int.tryParse(_yearsOfExperienceController.text.trim()),
       };
 
       if (_profile != null) {
@@ -313,6 +320,16 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
                           helperText: 'Personal quote displayed in the about section',
                         ),
                         maxLines: 3,
+                      ),
+                      AppUtils().vSpace(size: 16),
+                      TextFormField(
+                        controller: _yearsOfExperienceController,
+                        decoration: const InputDecoration(
+                          labelText: 'Years of Experience',
+                          border: OutlineInputBorder(),
+                          helperText: 'Number of years of experience (e.g., 6)',
+                        ),
+                        keyboardType: TextInputType.number,
                       ),
                     ],
                   ),

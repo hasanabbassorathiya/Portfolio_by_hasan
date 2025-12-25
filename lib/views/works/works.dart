@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
 import 'package:portfolio/core/repositories/work_repository.dart';
-import 'package:portfolio/core/repositories/testimonial_repository.dart';
+import 'package:portfolio/core/repositories/testimonial_repository.dart' show TestimonialRepository, TestimonialModel;
 import 'package:portfolio/models/work/work_model.dart' hide WorkRepository;
 import 'package:portfolio/core/services/analytics_service.dart';
 import 'work_card.dart';
@@ -30,6 +31,7 @@ class _WorksState extends State<Works> with SingleTickerProviderStateMixin {
   int _currentTestimonialIndex = 0;
   bool _isLoading = true;
   bool _hasError = false;
+  Timer? _testimonialTimer;
 
   // Add hover state for testimonial navigation buttons
   bool _isHoveringPrev = false;
@@ -48,6 +50,17 @@ class _WorksState extends State<Works> with SingleTickerProviderStateMixin {
       curve: Curves.easeOut,
     );
     _loadData();
+    _startTestimonialAutoScroll();
+  }
+
+  void _startTestimonialAutoScroll() {
+    _testimonialTimer = Timer.periodic(const Duration(seconds: 5), (_) {
+      if (_testimonials.isNotEmpty && mounted) {
+        setState(() {
+          _currentTestimonialIndex = (_currentTestimonialIndex + 1) % _testimonials.length;
+        });
+      }
+    });
   }
 
   void _trackPageView() {
@@ -94,6 +107,7 @@ class _WorksState extends State<Works> with SingleTickerProviderStateMixin {
 
   @override
   void dispose() {
+    _testimonialTimer?.cancel();
     _animationController.dispose();
     super.dispose();
   }
@@ -253,160 +267,263 @@ class _WorksState extends State<Works> with SingleTickerProviderStateMixin {
                   ),
                   AppUtils().vSpace(size: 40),
 
-                  // Testimonial Quote and Author (Placeholder structure)
-                  SizedBox(
-                    width:
-                        isSmall
-                            ? double.infinity
-                            : 800, // Constrain width on larger screens
-                    child: Column(
-                      crossAxisAlignment:
-                          CrossAxisAlignment.center, // Center content
-                      children: [
-                        if (_testimonials.isEmpty)
-                          Text(
-                            'No testimonials yet',
-                            textAlign: TextAlign.center,
-                            style: AppStyles.heading(
-                              fontSize: isSmall ? 18 : 24,
-                            ).copyWith(color: AppColors.bgColor),
-                          )
-                        else ...[
-                          Text(
-                            '"${_testimonials[_currentTestimonialIndex].quote}"',
-                            textAlign: TextAlign.center,
-                            style: AppStyles.heading(
-                              fontSize: isSmall ? 18 : 24,
-                            ).copyWith(
-                              color: AppColors.bgColor,
-                              fontStyle: FontStyle.italic,
-                            ),
-                          ),
-                          AppUtils().vSpace(size: 24),
-                          Text(
-                            '-${_testimonials[_currentTestimonialIndex].clientName}',
-                            style: AppStyles.subheading(
-                              color: AppColors.bgColor,
-                              fontSize: isSmall ? 14 : 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          if (_testimonials[_currentTestimonialIndex]
-                                      .clientRole !=
-                                  null ||
-                              _testimonials[_currentTestimonialIndex]
-                                      .clientCompany !=
-                                  null)
-                            Text(
-                              _testimonials[_currentTestimonialIndex]
-                                              .clientRole !=
-                                          null &&
-                                      _testimonials[_currentTestimonialIndex]
-                                              .clientCompany !=
-                                          null
-                                  ? '${_testimonials[_currentTestimonialIndex].clientRole}, ${_testimonials[_currentTestimonialIndex].clientCompany}'
-                                  : _testimonials[_currentTestimonialIndex]
-                                          .clientRole ??
-                                      _testimonials[_currentTestimonialIndex]
-                                          .clientCompany ??
-                                      '',
-                              style: AppStyles.body(
-                                fontSize: isSmall ? 12 : 14,
-                              ).copyWith(
-                                color: AppColors.bgColor.withOpacity(0.8),
+                  // Testimonial Layout matching Figma design
+                  if (_testimonials.isEmpty)
+                    Text(
+                      'No testimonials yet',
+                      textAlign: TextAlign.center,
+                      style: AppStyles.heading(
+                        fontSize: isSmall ? 18 : 24,
+                      ).copyWith(color: AppColors.bgColor),
+                    )
+                  else
+                    LayoutBuilder(
+                      builder: (context, constraints) {
+                        final testimonial = _testimonials[_currentTestimonialIndex];
+                        final bool isVerticalLayout = isSmall || constraints.maxWidth < 900;
+                        
+                        if (isVerticalLayout) {
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              // Client Image
+                              if (testimonial.clientImageUrl != null && testimonial.clientImageUrl!.isNotEmpty)
+                                Container(
+                                  width: 200,
+                                  height: 200,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    border: Border.all(
+                                      color: AppColors.bgColor.withOpacity(0.3),
+                                      width: 2,
+                                    ),
+                                  ),
+                                  child: ClipOval(
+                                    child: Image.network(
+                                      testimonial.clientImageUrl!,
+                                      fit: BoxFit.cover,
+                                      errorBuilder: (context, error, stackTrace) {
+                                        return Container(
+                                          color: AppColors.bgColor.withOpacity(0.2),
+                                          child: Icon(
+                                            Icons.person,
+                                            size: 80,
+                                            color: AppColors.bgColor,
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              AppUtils().vSpace(size: 24),
+                              // Quote
+                              SizedBox(
+                                width: double.infinity,
+                                child: Text(
+                                  '"${testimonial.quote}"',
+                                  textAlign: TextAlign.center,
+                                  style: AppStyles.heading(
+                                    fontSize: isSmall ? 24 : 32,
+                                    fontWeight: FontWeight.w600,
+                                  ).copyWith(
+                                    color: AppColors.bgColor,
+                                  ),
+                                ),
                               ),
-                            ),
-                        ],
-                      ],
+                              AppUtils().vSpace(size: 40),
+                              // Author Info
+                              Column(
+                                children: [
+                                  Text(
+                                    '-${testimonial.clientName}',
+                                    style: AppStyles.subheading(
+                                      color: AppColors.bgColor,
+                                      fontSize: isSmall ? 20 : 24,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                  if (testimonial.clientRole != null || testimonial.clientCompany != null) ...[
+                                    AppUtils().vSpace(size: 6),
+                                    Text(
+                                      testimonial.clientRole != null && testimonial.clientCompany != null
+                                          ? '${testimonial.clientRole}, ${testimonial.clientCompany}'
+                                          : testimonial.clientRole ?? testimonial.clientCompany ?? '',
+                                      style: AppStyles.body(
+                                        fontSize: isSmall ? 14 : 16,
+                                      ).copyWith(
+                                        color: AppColors.bgColor.withOpacity(0.8),
+                                      ),
+                                    ),
+                                  ],
+                                ],
+                              ),
+                            ],
+                          );
+                        } else {
+                          // Horizontal layout matching Figma
+                          return Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // Client Image on left
+                              if (testimonial.clientImageUrl != null && testimonial.clientImageUrl!.isNotEmpty)
+                                Container(
+                                  width: 345,
+                                  height: 477,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(8),
+                                    child: Image.network(
+                                      testimonial.clientImageUrl!,
+                                      fit: BoxFit.cover,
+                                      errorBuilder: (context, error, stackTrace) {
+                                        return Container(
+                                          color: AppColors.bgColor.withOpacity(0.2),
+                                          child: Icon(
+                                            Icons.person,
+                                            size: 100,
+                                            color: AppColors.bgColor,
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              AppUtils().hSpace(size: 56),
+                              // Quote and Author in center
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    // Quote
+                                    Text(
+                                      '"${testimonial.quote}"',
+                                      style: AppStyles.heading(
+                                        fontSize: 32,
+                                        fontWeight: FontWeight.w600,
+                                      ).copyWith(
+                                        color: AppColors.bgColor,
+                                      ),
+                                    ),
+                                    AppUtils().vSpace(size: 56),
+                                    // Author Info
+                                    Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          '-${testimonial.clientName}',
+                                          style: AppStyles.subheading(
+                                            color: AppColors.bgColor,
+                                            fontSize: 24,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                        if (testimonial.clientRole != null || testimonial.clientCompany != null) ...[
+                                          AppUtils().vSpace(size: 6),
+                                          Text(
+                                            testimonial.clientRole != null && testimonial.clientCompany != null
+                                                ? '${testimonial.clientRole}, ${testimonial.clientCompany}'
+                                                : testimonial.clientRole ?? testimonial.clientCompany ?? '',
+                                            style: AppStyles.body(
+                                              fontSize: 16,
+                                            ).copyWith(
+                                              color: AppColors.bgColor.withOpacity(0.8),
+                                            ),
+                                          ),
+                                        ],
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              // Navigation Arrows on right
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  MouseRegion(
+                                    onEnter: (_) => setState(() => _isHoveringPrev = true),
+                                    onExit: (_) => setState(() => _isHoveringPrev = false),
+                                    child: InkWell(
+                                      onTap: () {
+                                        if (_testimonials.isNotEmpty) {
+                                          setState(() {
+                                            _currentTestimonialIndex = (_currentTestimonialIndex - 1) % _testimonials.length;
+                                          });
+                                          _testimonialTimer?.cancel();
+                                          _startTestimonialAutoScroll();
+                                        }
+                                      },
+                                      child: Container(
+                                        width: 60,
+                                        height: 60,
+                                        decoration: BoxDecoration(
+                                          color: _isHoveringPrev
+                                              ? AppColors.bgColor.withOpacity(0.3)
+                                              : AppColors.bgColor.withOpacity(0.2),
+                                          shape: BoxShape.circle,
+                                          boxShadow: _isHoveringPrev
+                                              ? [
+                                                  BoxShadow(
+                                                    color: Colors.orange.withOpacity(0.5),
+                                                    blurRadius: 25,
+                                                    spreadRadius: 0,
+                                                  ),
+                                                ]
+                                              : null,
+                                        ),
+                                        child: Icon(
+                                          Icons.arrow_back,
+                                          color: AppColors.bgColor,
+                                          size: 24,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  AppUtils().vSpace(size: 14),
+                                  MouseRegion(
+                                    onEnter: (_) => setState(() => _isHoveringNext = true),
+                                    onExit: (_) => setState(() => _isHoveringNext = false),
+                                    child: InkWell(
+                                      onTap: () {
+                                        if (_testimonials.isNotEmpty) {
+                                          setState(() {
+                                            _currentTestimonialIndex = (_currentTestimonialIndex + 1) % _testimonials.length;
+                                          });
+                                          _testimonialTimer?.cancel();
+                                          _startTestimonialAutoScroll();
+                                        }
+                                      },
+                                      child: Container(
+                                        width: 60,
+                                        height: 60,
+                                        decoration: BoxDecoration(
+                                          color: _isHoveringNext
+                                              ? AppColors.bgColor
+                                              : AppColors.bgColor.withOpacity(0.2),
+                                          shape: BoxShape.circle,
+                                        ),
+                                        child: Icon(
+                                          Icons.arrow_forward,
+                                          color: _isHoveringNext ? AppColors.primaryColor : AppColors.bgColor,
+                                          size: 24,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          );
+                        }
+                      },
                     ),
-                  ),
                   AppUtils().vSpace(size: 40),
-
-                  // Navigation Buttons (Placeholder)
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      // Back Button
-                      MouseRegion(
-                        onEnter: (_) {
-                          setState(() {
-                            _isHoveringPrev = true;
-                          });
-                        },
-                        onExit: (_) {
-                          setState(() {
-                            _isHoveringPrev = false;
-                          });
-                        },
-                        child: InkWell(
-                          onTap: () {
-                            if (_testimonials.isNotEmpty) {
-                              setState(() {
-                                _currentTestimonialIndex =
-                                    (_currentTestimonialIndex - 1) %
-                                    _testimonials.length;
-                              });
-                            }
-                          },
-                          child: CircleAvatar(
-                            backgroundColor:
-                                _isHoveringPrev
-                                    ? AppColors.primaryColor.withOpacity(
-                                      0.8,
-                                    ) // Change color on hover
-                                    : AppColors.bgColor.withOpacity(0.2),
-                            child: Icon(
-                              Icons.arrow_back,
-                              color:
-                                  _isHoveringPrev
-                                      ? AppColors
-                                          .bgColor // Change icon color on hover
-                                      : AppColors.bgColor,
-                            ), // White icon
-                          ),
-                        ),
-                      ),
-                      AppUtils().hSpace(size: 16),
-                      // Forward Button
-                      MouseRegion(
-                        onEnter: (_) {
-                          setState(() {
-                            _isHoveringNext = true;
-                          });
-                        },
-                        onExit: (_) {
-                          setState(() {
-                            _isHoveringNext = false;
-                          });
-                        },
-                        child: InkWell(
-                          onTap: () {
-                            if (_testimonials.isNotEmpty) {
-                              setState(() {
-                                _currentTestimonialIndex =
-                                    (_currentTestimonialIndex + 1) %
-                                    _testimonials.length;
-                              });
-                            }
-                          },
-                          child: CircleAvatar(
-                            backgroundColor:
-                                _isHoveringNext
-                                    ? AppColors
-                                        .primaryColor // Change color on hover
-                                    : AppColors.bgColor,
-                            child: Icon(
-                              Icons.arrow_forward,
-                              color:
-                                  _isHoveringNext
-                                      ? AppColors
-                                          .bgColor // Change icon color on hover
-                                      : AppColors.primaryColor,
-                            ), // Orange icon
-                          ),
-                        ),
-                      ),
-                    ],
+                  // Divider line
+                  Container(
+                    height: 1,
+                    width: double.infinity,
+                    color: AppColors.bgColor.withOpacity(0.2),
                   ),
                   AppUtils().vSpace(size: 40),
 
