@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:portfolio/core/repositories/service_repository.dart';
+import 'package:portfolio/models/service/service_model.dart';
 import 'package:portfolio/shared/constants/colors.dart';
 import 'package:portfolio/shared/constants/textstyles.dart';
 import 'package:portfolio/shared/constants/utils.dart';
 import 'package:portfolio/shared/widgets/gradient_text.dart';
+import 'package:portfolio/shared/widgets/empty_state.dart';
+import 'package:portfolio/core/services/analytics_service.dart';
 
 class Services extends StatefulWidget {
   final bool isActive;
@@ -17,6 +21,9 @@ class _ServicesState extends State<Services>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _fadeInAnimation;
+  final ServiceRepository _serviceRepository = ServiceRepository();
+  List<ServiceModel> _services = [];
+  bool _isLoading = true;
 
   int? _expandedIndex;
   int? _hoveredIndex;
@@ -24,6 +31,7 @@ class _ServicesState extends State<Services>
   @override
   void initState() {
     super.initState();
+    _trackPageView();
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 800),
@@ -32,6 +40,27 @@ class _ServicesState extends State<Services>
       parent: _animationController,
       curve: Curves.easeOut,
     );
+    _loadServices();
+  }
+
+  void _trackPageView() {
+    AnalyticsService.trackPageView(
+      pagePath: '/services',
+      pageTitle: 'Services',
+    );
+  }
+
+  Future<void> _loadServices() async {
+    try {
+      setState(() => _isLoading = true);
+      final services = await _serviceRepository.getActiveServices();
+      setState(() {
+        _services = services;
+        _isLoading = false;
+      });
+    } catch (e) {
+      setState(() => _isLoading = false);
+    }
   }
 
   void _activatePage() {
@@ -95,58 +124,21 @@ class _ServicesState extends State<Services>
               ),
             ),
             AppUtils().vSpace(size: 48),
-            _buildServiceItem(
-              context,
-              isSmall,
-              isMedium,
-              'WEB DESIGN',
-              'You can customize a template or make your own from scratch, with an immersive library at your disposal. You can customize a template',
-              0,
-              _expandedIndex,
-              _toggleExpanded,
-            ),
-            AppUtils().vSpace(size: 20),
-            const Divider(),
-            AppUtils().vSpace(size: 20),
-            _buildServiceItem(
-              context,
-              isSmall,
-              isMedium,
-              'UI/UX DESIGN',
-              'You can customize a template or make your own from scratch, with an immersive library at your disposal. You can customize a template',
-              1,
-              _expandedIndex,
-              _toggleExpanded,
-            ),
-            AppUtils().vSpace(size: 20),
-            const Divider(),
-            AppUtils().vSpace(size: 20),
-            _buildMobileAppServiceItem(
-              context,
-              isSmall,
-              isMedium,
-              'MOBILE APPLICATION',
-              'You can customize a template or make your own from scratch, with an immersive library at your disposal. You can customize a template',
-              'assets/mobile_app.png',
-              2,
-              _expandedIndex,
-              _toggleExpanded,
-            ),
-            AppUtils().vSpace(size: 20),
-            const Divider(),
-            AppUtils().vSpace(size: 20),
-            _buildServiceItem(
-              context,
-              isSmall,
-              isMedium,
-              'USER RESEARCH',
-              'You can customize a template or make your own from scratch, with an immersive library at your disposal. You can customize a template',
-              3,
-              _expandedIndex,
-              _toggleExpanded,
-            ),
-            AppUtils().vSpace(size: 20),
-            const Divider(),
+            if (_isLoading)
+              const Center(
+                child: Padding(
+                  padding: EdgeInsets.all(48.0),
+                  child: CircularProgressIndicator(),
+                ),
+              )
+            else if (_services.isEmpty)
+              EmptyState(
+                title: 'No Services Yet',
+                message: 'Services will appear here once added from the admin panel.',
+                icon: Icons.build_outlined,
+              )
+            else
+              ..._buildServicesList(context, isSmall, isMedium),
             AppUtils().vSpace(size: 48),
           ],
         ),
@@ -233,7 +225,15 @@ class _ServicesState extends State<Services>
                   ),
                   if (isExpanded && constraints.maxWidth >= 700) ...[
                     SizedBox(width: 16),
-                    Image.asset(imageAsset, fit: BoxFit.contain),
+                    imageAsset.startsWith('http://') || imageAsset.startsWith('https://')
+                        ? Image.network(
+                            imageAsset,
+                            fit: BoxFit.contain,
+                            errorBuilder: (context, error, stackTrace) {
+                              return const SizedBox.shrink();
+                            },
+                          )
+                        : Image.asset(imageAsset, fit: BoxFit.contain),
                   ],
                 ],
               );
@@ -298,7 +298,15 @@ class _ServicesState extends State<Services>
                       ),
                     ),
                     AppUtils().vSpace(size: 20),
-                    Image.asset(imageAsset, fit: BoxFit.contain),
+                    imageAsset.startsWith('http://') || imageAsset.startsWith('https://')
+                        ? Image.network(
+                            imageAsset,
+                            fit: BoxFit.contain,
+                            errorBuilder: (context, error, stackTrace) {
+                              return const SizedBox.shrink();
+                            },
+                          )
+                        : Image.asset(imageAsset, fit: BoxFit.contain),
                   ],
                 ],
               );
@@ -395,5 +403,53 @@ class _ServicesState extends State<Services>
         ),
       ),
     );
+  }
+
+  List<Widget> _buildServicesList(
+    BuildContext context,
+    bool isSmall,
+    bool isMedium,
+  ) {
+    final List<Widget> widgets = [];
+    for (int i = 0; i < _services.length; i++) {
+      final service = _services[i];
+      final hasImage = service.iconUrl != null && service.iconUrl!.isNotEmpty;
+      
+      if (hasImage && service.iconUrl!.contains('mobile')) {
+        widgets.add(
+          _buildMobileAppServiceItem(
+            context,
+            isSmall,
+            isMedium,
+            service.title.toUpperCase(),
+            service.description ?? 'No description available.',
+            service.iconUrl!,
+            i,
+            _expandedIndex,
+            _toggleExpanded,
+          ),
+        );
+      } else {
+        widgets.add(
+          _buildServiceItem(
+            context,
+            isSmall,
+            isMedium,
+            service.title.toUpperCase(),
+            service.description ?? 'No description available.',
+            i,
+            _expandedIndex,
+            _toggleExpanded,
+          ),
+        );
+      }
+      
+      if (i < _services.length - 1) {
+        widgets.add(AppUtils().vSpace(size: 20));
+        widgets.add(const Divider());
+        widgets.add(AppUtils().vSpace(size: 20));
+      }
+    }
+    return widgets;
   }
 }

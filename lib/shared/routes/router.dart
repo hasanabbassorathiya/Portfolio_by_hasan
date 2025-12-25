@@ -3,6 +3,7 @@ import 'package:portfolio/shared/routes/app_routes.dart';
 import 'package:portfolio/views/about/about.dart';
 import 'package:portfolio/views/contact/contact.dart';
 import 'package:portfolio/views/services/services.dart';
+import 'package:portfolio/views/experiences/experiences.dart';
 import 'package:portfolio/views/works/works.dart';
 import 'package:portfolio/views/works/work_detail.dart';
 import 'package:portfolio/views/blogs/blogs.dart';
@@ -42,6 +43,11 @@ class AppRouter {
             path: AppRoutes.services,
             name: AppRoutes.services,
             builder: (context, goState) => const Services(),
+          ),
+          GoRoute(
+            path: AppRoutes.experiences,
+            name: AppRoutes.experiences,
+            builder: (context, goState) => const Experiences(),
           ),
           GoRoute(
             path: AppRoutes.works,

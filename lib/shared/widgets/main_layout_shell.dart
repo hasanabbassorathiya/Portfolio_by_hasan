@@ -6,6 +6,7 @@ import 'package:portfolio/shared/widgets/smooth_scroll_wrapper.dart';
 import 'package:portfolio/views/home/home.dart';
 import 'package:portfolio/views/about/about.dart';
 import 'package:portfolio/views/services/services.dart';
+import 'package:portfolio/views/experiences/experiences.dart';
 import 'package:portfolio/views/works/works.dart';
 import 'package:portfolio/views/blogs/blogs.dart';
 import 'package:portfolio/views/contact/contact.dart';
@@ -19,7 +20,7 @@ class MainLayoutShell extends StatefulWidget {
 
 class _MainLayoutShellState extends State<MainLayoutShell> {
   final ScrollController _scrollController = ScrollController();
-  final List<GlobalKey> _sectionKeys = List.generate(6, (_) => GlobalKey());
+  final List<GlobalKey> _sectionKeys = List.generate(7, (_) => GlobalKey());
   int _activeSection = 0;
 
   void _scrollToSection(int index) {
@@ -141,21 +142,28 @@ class _MainLayoutShellState extends State<MainLayoutShell> {
                     delay: const Duration(milliseconds: 300),
                     child: _SectionContainer(
                       key: _sectionKeys[3],
-                      child: Works(isActive: _activeSection == 3),
+                      child: Experiences(isActive: _activeSection == 3),
                     ),
                   ),
                   AnimatedSection(
                     delay: const Duration(milliseconds: 400),
                     child: _SectionContainer(
                       key: _sectionKeys[4],
-                      child: Blogs(isActive: _activeSection == 4),
+                      child: Works(isActive: _activeSection == 4),
                     ),
                   ),
                   AnimatedSection(
                     delay: const Duration(milliseconds: 500),
                     child: _SectionContainer(
                       key: _sectionKeys[5],
-                      child: Contact(isActive: _activeSection == 5),
+                      child: Blogs(isActive: _activeSection == 5),
+                    ),
+                  ),
+                  AnimatedSection(
+                    delay: const Duration(milliseconds: 600),
+                    child: _SectionContainer(
+                      key: _sectionKeys[6],
+                      child: Contact(isActive: _activeSection == 6),
                     ),
                   ),
                 ],
@@ -176,10 +184,12 @@ class _MainLayoutShellState extends State<MainLayoutShell> {
       case 2:
         return 'SERVICES';
       case 3:
-        return 'WORKS';
+        return 'EXPERIENCES';
       case 4:
-        return 'BLOGS';
+        return 'WORKS';
       case 5:
+        return 'BLOGS';
+      case 6:
         return 'CONTACT';
       default:
         return '';
@@ -195,10 +205,12 @@ class _MainLayoutShellState extends State<MainLayoutShell> {
       case 2:
         return '/services';
       case 3:
-        return '/works';
+        return '/experiences';
       case 4:
-        return '/blogs';
+        return '/works';
       case 5:
+        return '/blogs';
+      case 6:
         return '/contact';
       default:
         return '/';
@@ -213,12 +225,14 @@ class _MainLayoutShellState extends State<MainLayoutShell> {
         return 1;
       case '/services':
         return 2;
-      case '/works':
+      case '/experiences':
         return 3;
-      case '/blogs':
+      case '/works':
         return 4;
-      case '/contact':
+      case '/blogs':
         return 5;
+      case '/contact':
+        return 6;
       default:
         return 0;
     }

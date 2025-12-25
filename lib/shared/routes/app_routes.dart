@@ -2,6 +2,7 @@ class AppRoutes {
   static String home = '/';
   static String about = '/about';
   static String services = '/services';
+  static String experiences = '/experiences';
   static String works = '/works';
   static String workDetail = '/works/:id';
   static String blogs = '/blogs';

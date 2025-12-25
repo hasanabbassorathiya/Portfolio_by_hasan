@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:portfolio/core/repositories/experience_repository.dart';
 import 'package:portfolio/core/repositories/social_link_repository.dart';
 import 'package:portfolio/core/repositories/profile_repository.dart';
 import 'package:portfolio/models/social_link/social_link_model.dart';
@@ -10,9 +9,7 @@ import 'package:portfolio/shared/constants/textstyles.dart';
 import 'package:portfolio/shared/constants/utils.dart';
 import 'package:portfolio/shared/widgets/button.dart';
 import 'package:portfolio/shared/widgets/profile_image_widget.dart';
-import 'package:portfolio/shared/widgets/experience_card.dart';
 import 'package:portfolio/shared/widgets/gradient_text.dart';
-import 'package:portfolio/shared/widgets/empty_state.dart';
 import 'package:portfolio/shared/utils/link_utils.dart';
 import 'package:portfolio/shared/constants/links.dart';
 import 'package:portfolio/core/services/analytics_service.dart';
@@ -29,17 +26,18 @@ class About extends StatefulWidget {
 class _AboutState extends State<About> with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _fadeInAnimation;
-  final ExperienceRepository _experienceRepository = ExperienceRepository();
   final SocialLinkRepository _socialLinkRepository = SocialLinkRepository();
   final ProfileRepository _profileRepository = ProfileRepository();
-  List<ExperienceModel> _experiences = [];
   List<SocialLinkModel> _socialLinks = [];
   String? _quote;
   String? _phone;
   String? _email;
   String? _location;
-  bool _isLoadingExperiences = true;
+  String? _name;
+  String? _title;
+  String? _bio;
   bool _isLoadingSocialLinks = true;
+  bool _isLoadingProfile = true;
 
   @override
   void initState() {
@@ -53,7 +51,6 @@ class _AboutState extends State<About> with SingleTickerProviderStateMixin {
       parent: _animationController,
       curve: Curves.easeOut,
     );
-    _loadExperiences();
     _loadSocialLinks();
     _loadProfile();
   }
@@ -62,19 +59,6 @@ class _AboutState extends State<About> with SingleTickerProviderStateMixin {
     AnalyticsService.trackPageView(pagePath: '/about', pageTitle: 'About');
   }
 
-  Future<void> _loadExperiences() async {
-    try {
-      final experiences = await _experienceRepository.getAllExperiences();
-      setState(() {
-        _experiences = experiences;
-        _isLoadingExperiences = false;
-      });
-    } catch (e) {
-      setState(() {
-        _isLoadingExperiences = false;
-      });
-    }
-  }
 
   Future<void> _loadSocialLinks() async {
     try {
@@ -92,6 +76,7 @@ class _AboutState extends State<About> with SingleTickerProviderStateMixin {
 
   Future<void> _loadProfile() async {
     try {
+      setState(() => _isLoadingProfile = true);
       final profile = await _profileRepository.getProfile();
       if (profile != null) {
         setState(() {
@@ -99,9 +84,16 @@ class _AboutState extends State<About> with SingleTickerProviderStateMixin {
           _phone = profile.phone;
           _email = profile.email;
           _location = profile.location;
+          _name = profile.name;
+          _title = profile.title;
+          _bio = profile.bio;
+          _isLoadingProfile = false;
         });
+      } else {
+        setState(() => _isLoadingProfile = false);
       }
     } catch (e) {
+      setState(() => _isLoadingProfile = false);
       // Silently fail, will use fallback values
     }
   }
@@ -198,11 +190,7 @@ class _AboutState extends State<About> with SingleTickerProviderStateMixin {
           children: [
             _buildIntroAndInfo(context, isSmall, isMedium),
             AppUtils().vSpace(size: isSmall ? 40.0 : 80.0),
-            _buildExperienceAndClients(context, isSmall, isMedium),
-            AppUtils().vSpace(size: isSmall ? 40.0 : 80.0),
             _buildQuoteSection(context, isSmall, isMedium),
-            AppUtils().vSpace(size: isSmall ? 40.0 : 80.0),
-            _buildBottomExperienceCards(context, isSmall, isMedium),
           ],
         ),
       ),
@@ -243,13 +231,23 @@ class _AboutState extends State<About> with SingleTickerProviderStateMixin {
                               : 20.0,
                     ),
                     Text(
-                      'Welcome to...',
+                      _name ?? 'Welcome to...',
                       style: AppStyles.heading(
                         color: AppColors.primaryColor,
                         fontSize: isSmall ? 36 : 48,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
+                    if (_title != null && _title!.isNotEmpty) ...[
+                      AppUtils().vSpace(size: isSmall ? 12.0 : 16.0),
+                      Text(
+                        _title!,
+                        style: AppStyles.subheading(
+                          fontSize: isSmall ? 18 : 24,
+                          color: AppColors.textSecondary,
+                        ),
+                      ),
+                    ],
                     AppUtils().vSpace(size: isSmall ? 24.0 : 40.0),
                     Container(
                       width:
@@ -309,7 +307,7 @@ class _AboutState extends State<About> with SingleTickerProviderStateMixin {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     GradientText(
-                      'HASAN ABBAS SORATHIYA',
+                      (_name ?? 'HASAN ABBAS SORATHIYA').toUpperCase(),
                       style: AppStyles.heading(
                         color: AppColors.primaryColor,
                         fontSize:
@@ -322,48 +320,30 @@ class _AboutState extends State<About> with SingleTickerProviderStateMixin {
                       ),
                       gradient: AppUtils().appGradient,
                     ),
-                    AppUtils().vSpace(size: isSmall ? 12.0 : 16.0),
-                    Text.rich(
-                      TextSpan(
-                        children: [
-                          TextSpan(
-                            text: 'Software Engineer'.toUpperCase(),
-                            style: AppStyles.heading(
-                              fontSize:
-                                  isSmall
-                                      ? 16.0
-                                      : isMedium
-                                      ? 20.0
-                                      : 24.0,
-                              fontWeight: FontWeight.bold,
-                            ).copyWith(fontStyle: FontStyle.italic),
-                          ),
-                          TextSpan(
-                            text: ' based in '.toUpperCase(),
-                            style: AppStyles.heading(
-                              fontSize:
-                                  isSmall
-                                      ? 16.0
-                                      : isMedium
-                                      ? 20.0
-                                      : 24.0,
-                            ),
-                          ),
-                          TextSpan(
-                            text: 'UAE'.toUpperCase(),
-                            style: AppStyles.heading(
-                              fontSize:
-                                  isSmall
-                                      ? 16.0
-                                      : isMedium
-                                      ? 20.0
-                                      : 24.0,
-                              fontWeight: FontWeight.bold,
-                            ).copyWith(fontStyle: FontStyle.italic),
-                          ),
-                        ],
+                    if (_title != null && _title!.isNotEmpty) ...[
+                      AppUtils().vSpace(size: isSmall ? 12.0 : 16.0),
+                      Text(
+                        _title!.toUpperCase(),
+                        style: AppStyles.heading(
+                          fontSize:
+                              isSmall
+                                  ? 16.0
+                                  : isMedium
+                                  ? 20.0
+                                  : 24.0,
+                          fontWeight: FontWeight.bold,
+                        ).copyWith(fontStyle: FontStyle.italic),
                       ),
-                    ),
+                    ],
+                    if (_bio != null && _bio!.isNotEmpty) ...[
+                      AppUtils().vSpace(size: isSmall ? 24.0 : 32.0),
+                      Text(
+                        _bio!,
+                        style: AppStyles.body(
+                          fontSize: isSmall ? 16.0 : 20.0,
+                        ),
+                      ),
+                    ],
                     AppUtils().vSpace(size: isSmall ? 32.0 : 48.0),
                     AppButton(
                       title: 'Download CV 	',
@@ -706,123 +686,6 @@ class _AboutState extends State<About> with SingleTickerProviderStateMixin {
     );
   }
 
-  // Extracted method for Experience and Clients Section (reused)
-  Widget _buildExperienceAndClients(
-    BuildContext context,
-    bool isSmall,
-    bool isMedium,
-  ) {
-    bool isVerticalLayout = isSmall || isMedium;
-    return Flex(
-      direction: isVerticalLayout ? Axis.vertical : Axis.horizontal,
-      mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // First Column (Years Experience)
-        Flexible(
-          flex: 1,
-          fit: FlexFit.loose,
-          child:
-              isVerticalLayout
-                  ? Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          GradientText(
-                            '6+\t',
-                            gradient: AppUtils().appGradient,
-                            style: AppStyles.heading(
-                              fontSize: isSmall ? 40.0 : 60.0,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(width: 16.0),
-                          Flexible(
-                            child: Text(
-                              'Years Experience',
-                              style: AppStyles.subheading(
-                                fontWeight: FontWeight.bold,
-                                fontSize: isSmall ? 20.0 : 28.0,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      AppUtils().vSpace(size: isSmall ? 12.0 : 16.0),
-                      Text(
-                        'Hello there! My name is Hasan Abbas Sorathiya. I am a web designer & developer, and I\'m very passionate and dedicated to my work.',
-                        softWrap: true,
-                        style: AppStyles.body(fontSize: isSmall ? 16.0 : 20.0),
-                      ),
-                    ],
-                  )
-                  : Text(
-                    'Hello there! My name is Hasan Abbas Sorathiya. I am a web designer & developer, and I\'m very passionate and dedicated to my work.',
-                    softWrap: true,
-                    style: AppStyles.body(fontSize: isSmall ? 16.0 : 20.0),
-                  ),
-        ),
-
-        // Spacing between columns/sections
-        SizedBox(
-          width: isVerticalLayout ? 0.0 : 60.0,
-          height: isVerticalLayout ? 40.0 : 0.0,
-        ),
-
-        // Second Column (Clients Worldwide)
-        Flexible(
-          flex: 1,
-          fit: FlexFit.loose,
-          child:
-              isVerticalLayout
-                  ? Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          GradientText(
-                            '14+\t',
-                            gradient: AppUtils().appGradient,
-                            style: AppStyles.heading(
-                              fontSize: isSmall ? 40.0 : 60.0,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(width: 16.0),
-                          Flexible(
-                            child: Text(
-                              'Clients Worldwide',
-                              style: AppStyles.subheading(
-                                fontWeight: FontWeight.bold,
-                                fontSize: isSmall ? 20.0 : 28.0,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      AppUtils().vSpace(size: isSmall ? 12.0 : 16.0),
-                      Text(
-                        'With 10+ years experience as a professional a graphic designer, I have acquired the skills and knowledge necessary to make your project a success.',
-                        softWrap: true,
-                        style: AppStyles.body(fontSize: isSmall ? 16.0 : 20.0),
-                      ),
-                    ],
-                  )
-                  : Text(
-                    'With 10+ years experience as a professional a graphic designer, I have acquired the skills and knowledge necessary to make your project a success.',
-                    softWrap: true,
-                    style: AppStyles.body(fontSize: isSmall ? 16.0 : 20.0),
-                  ),
-        ),
-      ],
-    );
-  }
 
   // Extracted method for Quote Section (reused)
   Widget _buildQuoteSection(BuildContext context, bool isSmall, bool isMedium) {
@@ -873,131 +736,4 @@ class _AboutState extends State<About> with SingleTickerProviderStateMixin {
     );
   }
 
-  // Extracted method for Bottom Experience Cards Section (reused)
-  Widget _buildBottomExperienceCards(
-    BuildContext context,
-    bool isSmall,
-    bool isMedium,
-  ) {
-    return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: isSmall ? 24.0 : 100.0, // Adjusted padding
-        vertical: isSmall ? 40.0 : 80.0, // Adjusted padding
-      ),
-      decoration: BoxDecoration(
-        gradient: AppUtils().appGradient,
-      ), // Keep gradient
-      child: Flex(
-        direction: isSmall || isMedium ? Axis.vertical : Axis.horizontal,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment:
-            CrossAxisAlignment.start, // Align items to the start vertically
-        children: [
-          Flexible(
-            flex: isSmall || isMedium ? 0 : 1,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Experience',
-                  style: AppStyles.subheading(
-                    color: AppColors.bgColor,
-                  ).copyWith(
-                    fontSize: isSmall ? 18.0 : 24.0,
-                  ), // Adjusted font size
-                ),
-                AppUtils().vSpace(
-                  size: isSmall ? 12.0 : 16.0, // Adjusted spacing
-                ),
-                Text(
-                  'My experience'.toUpperCase(),
-                  style: AppStyles.heading(
-                    color: AppColors.bgColor,
-                    fontSize: isSmall ? 36.0 : 48.0, // Adjusted font size
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                AppUtils().vSpace(
-                  size: isSmall ? 16.0 : 20.0, // Adjusted spacing
-                ),
-                Text(
-                  'Hello there! My name is Hasan Abbas Sorathiya.I am a web designer & developer, and I\'m very passionate and dedicated to my work.', // Verify text
-                  softWrap: true,
-                  style: AppStyles.body(
-                    color: AppColors.bgColor, // White text
-                    fontSize: isSmall ? 16.0 : 20.0, // Adjusted font size
-                  ),
-                ),
-                AppUtils().vSpace(
-                  size: isSmall ? 24.0 : 32.0, // Adjusted spacing before button
-                ),
-                AppButton(
-                  title: 'Download my resume', // Removed extra space
-                  icons: Iconsax.arrow_right_3_copy,
-                  onTap: () {
-                    AnalyticsService.trackDownload(
-                      fileType: 'pdf',
-                      fileName: 'Resume',
-                    );
-                    LinkUtils.launchUrl(
-                      AppLinks.resumeLink,
-                      linkType: 'cv_download',
-                      linkName: 'Resume',
-                    );
-                  },
-                ),
-              ],
-            ),
-          ),
-          SizedBox(
-            width:
-                isSmall || isMedium
-                    ? 0.0
-                    : 60.0, // Adjusted spacing between columns
-            height:
-                isSmall || isMedium
-                    ? 40.0
-                    : 0.0, // Adjusted spacing between columns
-          ),
-          Flexible(
-            flex: isSmall || isMedium ? 0 : 1,
-            child:
-                _isLoadingExperiences
-                    ? const Center(child: CircularProgressIndicator())
-                    : _experiences.isEmpty
-                    ? EmptyState(
-                      title: 'No Experience Yet',
-                      message: 'Work experience will appear here!',
-                      icon: Icons.work_outline,
-                    )
-                    : Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children:
-                          _experiences.map<Widget>((exp) {
-                            return Padding(
-                              padding: const EdgeInsets.only(bottom: 24.0),
-                              child: ExperienceCard(
-                                key: ValueKey(exp.id),
-                                title: exp.position,
-                                experience:
-                                    exp.description != null
-                                        ? [exp.description!]
-                                        : const [],
-                                designation: exp.position,
-                                company: exp.company,
-                                startDate: exp.startDate,
-                                endDate:
-                                    exp.endDate ??
-                                    (exp.isCurrent
-                                        ? DateTime.now()
-                                        : exp.startDate),
-                              ),
-                            );
-                          }).toList(),
-                    ),
-          ),
-        ],
-      ),
-    );
-  }
 }

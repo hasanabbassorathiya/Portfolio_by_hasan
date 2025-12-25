@@ -34,6 +34,7 @@ class _AppSidebarState extends State<AppSidebar> {
     AppMenu(title: "HOME", path: AppRoutes.home),
     AppMenu(title: "About", path: AppRoutes.about),
     AppMenu(title: "Services", path: AppRoutes.services),
+    AppMenu(title: "Experiences", path: AppRoutes.experiences),
     AppMenu(title: "Works", path: AppRoutes.works),
     AppMenu(title: "Blogs", path: AppRoutes.blogs),
     AppMenu(title: "Contact", path: AppRoutes.contact),
@@ -99,43 +100,29 @@ class _AppSidebarState extends State<AppSidebar> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     if (isLoggedIn) ...[
-                      // View Switcher when logged in
-                      Container(
-                        padding: const EdgeInsets.all(12.0),
-                        decoration: BoxDecoration(
-                          color: AppColors.bgColor.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                        child: Row(
-                          children: [
-                            Icon(
-                              Icons.admin_panel_settings,
-                              color: AppColors.bgColor,
-                              size: 20,
+                      // Dashboard button when logged in
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton.icon(
+                          onPressed: () {
+                            context.go(AppRoutes.adminDashboard);
+                          },
+                          icon: const Icon(Icons.dashboard, size: 18),
+                          label: Text(
+                            'Dashboard',
+                            style: GoogleFonts.ibmPlexSans().copyWith(
+                              fontSize: 14.0,
+                              fontWeight: FontWeight.bold,
                             ),
-                            const SizedBox(width: 8.0),
-                            Expanded(
-                              child: Text(
-                                'Admin Mode',
-                                style: GoogleFonts.ibmPlexSans().copyWith(
-                                  color: AppColors.bgColor,
-                                  fontSize: 14.0,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.bgColor,
+                            foregroundColor: AppColors.primaryColor,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16.0,
+                              vertical: 12.0,
                             ),
-                            Switch(
-                              value: widget.currentLocation.startsWith('/admin'),
-                              onChanged: (value) {
-                                if (value) {
-                                  context.go(AppRoutes.adminDashboard);
-                                } else {
-                                  context.go(AppRoutes.home);
-                                }
-                              },
-                              activeColor: AppColors.bgColor,
-                            ),
-                          ],
+                          ),
                         ),
                       ),
                       const SizedBox(height: 12.0),
