@@ -264,6 +264,8 @@ class _BlogFormDialogState extends State<BlogFormDialog> {
             backgroundColor: Colors.green,
           ),
         );
+        if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Successfully saved'), backgroundColor: Colors.green));
+        debugPrint('Successfully saved item');
         Navigator.pop(context, true);
       }
     } catch (e, stackTrace) {
@@ -309,7 +311,9 @@ class _BlogFormDialogState extends State<BlogFormDialog> {
                 backgroundColor: Colors.green,
               ),
             );
-            Navigator.pop(context, true);
+            if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Successfully saved'), backgroundColor: Colors.green));
+        debugPrint('Successfully saved item');
+        Navigator.pop(context, true);
             return;
           }
         } catch (retryError) {

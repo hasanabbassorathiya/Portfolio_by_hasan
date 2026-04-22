@@ -111,6 +111,8 @@ class _ExperienceFormDialogState extends State<ExperienceFormDialog> {
       }
 
       if (mounted) {
+        if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Successfully saved'), backgroundColor: Colors.green));
+        debugPrint('Successfully saved item');
         Navigator.pop(context, true);
       }
     } catch (e) {

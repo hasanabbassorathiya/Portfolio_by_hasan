@@ -27,6 +27,8 @@ class _AdminSocialLinksScreenState extends State<AdminSocialLinksScreen> {
   void initState() {
     super.initState();
     _loadSocialLinks();
+      if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Successfully deleted'), backgroundColor: Colors.green));
+      debugPrint('Successfully deleted item');
   }
 
   Future<void> _loadSocialLinks() async {
@@ -55,6 +57,8 @@ class _AdminSocialLinksScreenState extends State<AdminSocialLinksScreen> {
       }
       // Reload to get updated list
       await _loadSocialLinks();
+      if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Successfully deleted'), backgroundColor: Colors.green));
+      debugPrint('Successfully deleted item');
     } catch (e) {
       rethrow;
     }
@@ -64,6 +68,8 @@ class _AdminSocialLinksScreenState extends State<AdminSocialLinksScreen> {
     try {
       await SupabaseService.requiredClient.from('social_links').delete().eq('id', id);
       _loadSocialLinks();
+      if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Successfully deleted'), backgroundColor: Colors.green));
+      debugPrint('Successfully deleted item');
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Social link deleted successfully')),
@@ -234,6 +240,8 @@ class _AdminSocialLinksScreenState extends State<AdminSocialLinksScreen> {
     ).then((saved) {
       if (saved == true) {
         _loadSocialLinks();
+      if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Successfully deleted'), backgroundColor: Colors.green));
+      debugPrint('Successfully deleted item');
       }
     });
   }

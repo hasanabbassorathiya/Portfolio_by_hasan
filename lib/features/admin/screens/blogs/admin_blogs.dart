@@ -23,6 +23,8 @@ class _AdminBlogsScreenState extends State<AdminBlogsScreen> {
   void initState() {
     super.initState();
     _loadBlogs();
+      if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Successfully deleted'), backgroundColor: Colors.green));
+      debugPrint('Successfully deleted item');
   }
 
   Future<void> _loadBlogs() async {
@@ -55,6 +57,8 @@ class _AdminBlogsScreenState extends State<AdminBlogsScreen> {
     try {
       await _blogRepository.client.from('blogs').delete().eq('id', id);
       _loadBlogs();
+      if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Successfully deleted'), backgroundColor: Colors.green));
+      debugPrint('Successfully deleted item');
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Blog deleted successfully')),
@@ -202,6 +206,8 @@ class _AdminBlogsScreenState extends State<AdminBlogsScreen> {
     ).then((saved) {
       if (saved == true) {
         _loadBlogs();
+      if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Successfully deleted'), backgroundColor: Colors.green));
+      debugPrint('Successfully deleted item');
       }
     });
   }

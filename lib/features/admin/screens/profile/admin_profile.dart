@@ -59,7 +59,8 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
       setState(() => _isLoading = true);
       final profile = await _profileRepository.getProfile();
       if (profile != null) {
-        setState(() {
+        if (!mounted) return;
+      setState(() {
           _profile = profile;
           _nameController.text = profile.name;
           _titleController.text = profile.title;
@@ -217,7 +218,8 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
                         fileType: FileType.image,
                         allowUrlInput: true,
                         onFileUploaded: (url) {
-                          setState(() {
+                          if (!mounted) return;
+      setState(() {
                             _avatarUrl = url;
                           });
                         },

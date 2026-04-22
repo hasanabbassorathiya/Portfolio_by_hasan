@@ -22,6 +22,8 @@ class _AdminWorksScreenState extends State<AdminWorksScreen> {
   void initState() {
     super.initState();
     _loadWorks();
+      if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Successfully deleted'), backgroundColor: Colors.green));
+      debugPrint('Successfully deleted item');
   }
 
   Future<void> _loadWorks() async {
@@ -48,6 +50,8 @@ class _AdminWorksScreenState extends State<AdminWorksScreen> {
     try {
       await SupabaseService.requiredClient.from('works').delete().eq('id', id);
       _loadWorks();
+      if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Successfully deleted'), backgroundColor: Colors.green));
+      debugPrint('Successfully deleted item');
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Work deleted successfully')),
@@ -96,6 +100,8 @@ class _AdminWorksScreenState extends State<AdminWorksScreen> {
     ).then((saved) {
       if (saved == true) {
         _loadWorks();
+      if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Successfully deleted'), backgroundColor: Colors.green));
+      debugPrint('Successfully deleted item');
       }
     });
   }

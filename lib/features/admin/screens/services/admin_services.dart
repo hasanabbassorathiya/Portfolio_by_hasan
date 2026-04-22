@@ -24,6 +24,8 @@ class _AdminServicesScreenState extends State<AdminServicesScreen> {
   void initState() {
     super.initState();
     _loadServices();
+      if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Successfully deleted'), backgroundColor: Colors.green));
+      debugPrint('Successfully deleted item');
   }
 
   Future<void> _loadServices() async {
@@ -43,6 +45,8 @@ class _AdminServicesScreenState extends State<AdminServicesScreen> {
     try {
       await SupabaseService.requiredClient.from('services').delete().eq('id', id);
       _loadServices();
+      if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Successfully deleted'), backgroundColor: Colors.green));
+      debugPrint('Successfully deleted item');
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Service deleted successfully')),
@@ -202,6 +206,8 @@ class _AdminServicesScreenState extends State<AdminServicesScreen> {
     ).then((saved) {
       if (saved == true) {
         _loadServices();
+      if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Successfully deleted'), backgroundColor: Colors.green));
+      debugPrint('Successfully deleted item');
       }
     });
   }

@@ -23,6 +23,8 @@ class _AdminTestimonialsScreenState extends State<AdminTestimonialsScreen> {
   void initState() {
     super.initState();
     _loadTestimonials();
+      if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Successfully deleted'), backgroundColor: Colors.green));
+      debugPrint('Successfully deleted item');
   }
 
   Future<void> _loadTestimonials() async {
@@ -53,6 +55,8 @@ class _AdminTestimonialsScreenState extends State<AdminTestimonialsScreen> {
     try {
       await SupabaseService.requiredClient.from('testimonials').delete().eq('id', id);
       _loadTestimonials();
+      if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Successfully deleted'), backgroundColor: Colors.green));
+      debugPrint('Successfully deleted item');
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Testimonial deleted successfully')),
@@ -242,6 +246,8 @@ class _AdminTestimonialsScreenState extends State<AdminTestimonialsScreen> {
     ).then((saved) {
       if (saved == true) {
         _loadTestimonials();
+      if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Successfully deleted'), backgroundColor: Colors.green));
+      debugPrint('Successfully deleted item');
       }
     });
   }

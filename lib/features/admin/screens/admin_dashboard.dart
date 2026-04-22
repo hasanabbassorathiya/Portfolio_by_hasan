@@ -201,26 +201,34 @@ class _AdminDashboardState extends State<AdminDashboard> {
                   padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                   child: SizedBox(
                     width: double.infinity,
-                    child: ElevatedButton.icon(
-                      onPressed: () {
-                        context.go(AppRoutes.home);
-                      },
-                      icon: const Icon(Icons.public, size: 18),
-                      label: Text(
-                        'Go to Portfolio',
-                        style: AppStyles.body(
-                          color: AppColors.primaryColor,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16.0,
-                          vertical: 12.0,
-                        ),
-                      ),
-                    ),
+                    child: isSmall
+                        ? IconButton(
+                            onPressed: () {
+                              context.go(AppRoutes.home);
+                            },
+                            icon: const Icon(Icons.public, color: Colors.white),
+                            tooltip: 'Go to Portfolio',
+                          )
+                        : ElevatedButton.icon(
+                            onPressed: () {
+                              context.go(AppRoutes.home);
+                            },
+                            icon: const Icon(Icons.public, size: 18),
+                            label: Text(
+                              'Go to Portfolio',
+                              style: AppStyles.body(
+                                color: AppColors.primaryColor,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.white,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16.0,
+                                vertical: 12.0,
+                              ),
+                            ),
+                          ),
                   ),
                 ),
                 // Logout button

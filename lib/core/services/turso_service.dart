@@ -31,7 +31,7 @@ class TursoClient {
   }
 }
 
-class TursoQueryBuilder {
+class TursoQueryBuilder implements Future<dynamic> {
   final TursoClient client;
   final String table;
   String _action = '';
@@ -68,6 +68,11 @@ class TursoQueryBuilder {
     return this;
   }
 
+  TursoQueryBuilder delete() {
+    _action = 'delete';
+    return this;
+  }
+
   TursoQueryBuilder eq(String column, dynamic value) {
     if (value is String) {
       _where.add("$column = '$value'");
@@ -75,6 +80,38 @@ class TursoQueryBuilder {
       _where.add("$column = ${value ? 1 : 0}");
     } else {
       _where.add("$column = $value");
+    }
+    return this;
+  }
+
+  TursoQueryBuilder gte(String column, dynamic value) {
+    if (value is String) {
+      _where.add("$column >= '$value'");
+    } else {
+      _where.add("$column >= $value");
+    }
+    return this;
+  }
+
+  TursoQueryBuilder lte(String column, dynamic value) {
+    if (value is String) {
+      _where.add("$column <= '$value'");
+    } else {
+      _where.add("$column <= $value");
+    }
+    return this;
+  }
+
+  TursoQueryBuilder not(String column, String operator, dynamic value) {
+    String op = '=';
+    if (operator == 'eq') op = '!=';
+    else if (operator == 'gt') op = '<=';
+    else if (operator == 'lt') op = '>=';
+
+    if (value is String) {
+      _where.add("$column $op '$value'");
+    } else {
+      _where.add("$column $op $value");
     }
     return this;
   }
@@ -155,6 +192,11 @@ class TursoQueryBuilder {
       if (_where.isNotEmpty) {
         sql += ' WHERE ${_where.join(' AND ')}';
       }
+    } else if (_action == 'delete') {
+      sql = 'DELETE FROM $table';
+      if (_where.isNotEmpty) {
+        sql += ' WHERE ${_where.join(' AND ')}';
+      }
     }
 
     try {
@@ -172,9 +214,24 @@ class TursoQueryBuilder {
         })
       );
 
-      final data = jsonDecode(response.body);
-      final execResult = data['results'][0]['response']['result'];
-      if (execResult['cols'] == null) return []; // no rows
+      Map<String, dynamic> data;
+      try {
+        data = jsonDecode(response.body);
+      } catch (e) {
+        debugPrint('Turso error body: ${response.body}');
+        throw Exception('Failed to parse response');
+      }
+      final results = data['results'] as List?;
+      if (results == null || results.isEmpty) throw Exception('No results');
+      final resultObj = results[0] as Map<String, dynamic>?;
+      if (resultObj == null) throw Exception('Result object is null');
+      if (resultObj['type'] == 'error') {
+        throw Exception(resultObj['error']['message']);
+      }
+      final res = resultObj['response'] as Map<String, dynamic>?;
+      if (res == null) throw Exception('Response is null');
+      final execResult = res['result'] as Map<String, dynamic>?;
+      if (execResult == null || execResult['cols'] == null) return []; // no rows
 
       final cols = (execResult['cols'] as List).map((c) => c['name'] as String).toList();
       final rows = execResult['rows'] as List;
@@ -202,23 +259,32 @@ class TursoQueryBuilder {
     }
   }
 
-  // To allow `await client.from('x').select()` we need to implement Future methods
-  // or return a future. A clean way is to implement `then`.
   Future<dynamic> _toFuture() => _execute();
 
-  Future<dynamic> then<R>(Future<R> Function(dynamic value) onValue, {Function? onError}) {
-    return _toFuture().then(onValue, onError: onError);
+    @override
+  Future<R> then<R>(dynamic Function(dynamic value) onValue, {Function? onError}) {
+    return _toFuture().then((v) => onValue(v), onError: onError);
   }
 
+  @override
   Future<dynamic> catchError(Function onError, {bool Function(Object)? test}) {
     return _toFuture().catchError(onError, test: test);
   }
 
-  Future<dynamic> whenComplete(Future<void> Function() action) {
+  @override
+  Future<dynamic> whenComplete(dynamic Function() action) {
     return _toFuture().whenComplete(action);
   }
 
-  Future<dynamic> timeout(Duration timeLimit, {Future<dynamic> Function()? onTimeout}) {
+  @override
+  
+  @override
+  Stream<dynamic> asStream() {
+    return Stream.fromFuture(_toFuture());
+  }
+
+  @override
+  Future<dynamic> timeout(Duration timeLimit, {dynamic Function()? onTimeout}) {
     return _toFuture().timeout(timeLimit, onTimeout: onTimeout);
   }
 }

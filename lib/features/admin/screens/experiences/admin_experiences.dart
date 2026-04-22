@@ -23,6 +23,8 @@ class _AdminExperiencesScreenState extends State<AdminExperiencesScreen> {
   void initState() {
     super.initState();
     _loadExperiences();
+      if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Successfully deleted'), backgroundColor: Colors.green));
+      debugPrint('Successfully deleted item');
   }
 
   Future<void> _loadExperiences() async {
@@ -42,6 +44,8 @@ class _AdminExperiencesScreenState extends State<AdminExperiencesScreen> {
     try {
       await SupabaseService.requiredClient.from('experiences').delete().eq('id', id);
       _loadExperiences();
+      if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Successfully deleted'), backgroundColor: Colors.green));
+      debugPrint('Successfully deleted item');
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Experience deleted successfully')),
@@ -187,6 +191,8 @@ class _AdminExperiencesScreenState extends State<AdminExperiencesScreen> {
     ).then((saved) {
       if (saved == true) {
         _loadExperiences();
+      if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Successfully deleted'), backgroundColor: Colors.green));
+      debugPrint('Successfully deleted item');
       }
     });
   }
