@@ -48,8 +48,8 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
       }
       
       await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: email,
-        password: password,
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
       );
 
       if (mounted) {
