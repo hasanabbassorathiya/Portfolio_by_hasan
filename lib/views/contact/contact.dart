@@ -175,8 +175,6 @@ class _ContactState extends State<Contact> with SingleTickerProviderStateMixin {
         _nameController.clear();
         _emailController.clear();
         _subjectController.clear();
-        setState(() => _attachmentBytes = null);
-        setState(() => _attachmentName = null);
         _messageController.clear();
         setState(() {
           _attachmentUrl = null;
