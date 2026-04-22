@@ -29,8 +29,8 @@ class MockAuth {
   dynamic get currentSession => MockSession();
   Stream<dynamic> get onAuthStateChange => Stream.empty();
 }
-class MockSession { }
-class MockUser { }
+class MockSession { dynamic get user => MockUser(); }
+class MockUser { String get email => 'admin@admin.com'; String get id => 'admin-123'; }
 
 class MockStorage {
   MockBucket from(String bucket) => MockBucket();
