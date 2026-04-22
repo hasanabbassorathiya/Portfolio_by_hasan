@@ -339,9 +339,9 @@ class _FileUploadWidgetState extends State<FileUploadWidget> {
             children: [
               Expanded(
                 child: Text(
-                  _fileUrl!,
+                  _fileUrl!.startsWith('data:') ? 'File Attached (Base64)' : _fileUrl!,
                   style: AppStyles.body(fontSize: 12, color: Colors.grey.shade600),
-                  maxLines: 2,
+                  maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
@@ -425,7 +425,7 @@ class _FileUploadWidgetState extends State<FileUploadWidget> {
                   ),
                   AppUtils().vSpace(size: 4),
                   Text(
-                    _fileUrl!,
+                    _fileUrl!.startsWith('data:') ? 'File Attached (Base64)' : _fileUrl!,
                     style: AppStyles.body(fontSize: 12, color: Colors.grey.shade600),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,

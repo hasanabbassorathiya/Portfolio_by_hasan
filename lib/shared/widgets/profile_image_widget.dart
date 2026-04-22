@@ -1,6 +1,7 @@
 /// Profile image widget
 /// Displays profile image from database or fallback to asset
 import 'package:flutter/foundation.dart' show debugPrint;
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:portfolio/core/repositories/profile_repository.dart';
 import 'package:portfolio/shared/constants/assets.dart';

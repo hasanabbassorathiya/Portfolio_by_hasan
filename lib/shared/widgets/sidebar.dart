@@ -30,6 +30,28 @@ class AppSidebar extends StatefulWidget {
 }
 
 class _AppSidebarState extends State<AppSidebar> {
+
+  List<dynamic> _socialLinks = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadSocialLinks();
+  }
+
+  Future<void> _loadSocialLinks() async {
+    try {
+      final response = await SupabaseService.requiredClient.from('social_links').select().eq('is_active', true).order('order_index', ascending: true);
+      if (mounted) {
+        setState(() {
+          _socialLinks = response as List;
+        });
+      }
+    } catch(e) {
+      // ignore
+    }
+  }
+
   List<AppMenu> menu = [
     AppMenu(title: "HOME", path: AppRoutes.home),
     AppMenu(title: "About", path: AppRoutes.about),
@@ -128,13 +150,24 @@ class _AppSidebarState extends State<AppSidebar> {
                       const SizedBox(height: 20.0),
                     ],
                     // Social Buttons and Copyright
-                    SocialButtons(
-                      icon: Iconsax.instagram_copy,
-                      link: AppLinks.instagram,
-                    ),
-                    SizedBox(height: 20.0),
-                    SocialButtons(icon: Iconsax.code_1, link: AppLinks.github),
-                    SizedBox(height: 30.0),
+                    ..._socialLinks.map((link) {
+                      IconData iconData = Iconsax.link_1;
+                      final platform = (link['platform'] as String).toLowerCase();
+                      if (platform.contains('github')) iconData = Iconsax.code_1;
+                      else if (platform.contains('linkedin')) iconData = Iconsax.link_2; // fallback
+                      else if (platform.contains('twitter') || platform.contains('x')) iconData = Iconsax.message; // fallback
+                      else if (platform.contains('instagram')) iconData = Iconsax.instagram_copy;
+                      else if (platform.contains('email')) iconData = Iconsax.sms;
+                      
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 20.0),
+                        child: SocialButtons(
+                          icon: iconData,
+                          link: link['url'],
+                        ),
+                      );
+                    }).toList(),
+                    SizedBox(height: 10.0),
                     Text(
                       'Copyright ©${DateTime.now().year}',
                       style: GoogleFonts.ibmPlexSans().copyWith(
