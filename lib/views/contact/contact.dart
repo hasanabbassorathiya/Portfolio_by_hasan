@@ -31,6 +31,7 @@ class _ContactState extends State<Contact> with SingleTickerProviderStateMixin {
   // Controllers for form fields
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _subjectController = TextEditingController();
   final TextEditingController _messageController = TextEditingController();
   final ContactRepository _contactRepository = ContactRepository();
   final ProfileRepository _profileRepository = ProfileRepository();
@@ -137,6 +138,7 @@ class _ContactState extends State<Contact> with SingleTickerProviderStateMixin {
   void dispose() {
     _nameController.dispose();
     _emailController.dispose();
+    _subjectController.dispose();
     _messageController.dispose();
     _animationController.dispose();
     super.dispose();
@@ -155,6 +157,7 @@ class _ContactState extends State<Contact> with SingleTickerProviderStateMixin {
       await _contactRepository.submitContactMessage(
         name: _nameController.text.trim(),
         email: _emailController.text.trim(),
+        subject: _subjectController.text.trim(),
         message: _messageController.text.trim(),
         attachmentUrl: _attachmentUrl,
       );
@@ -171,6 +174,9 @@ class _ContactState extends State<Contact> with SingleTickerProviderStateMixin {
         );
         _nameController.clear();
         _emailController.clear();
+        _subjectController.clear();
+        setState(() => _attachmentBytes = null);
+        setState(() => _attachmentName = null);
         _messageController.clear();
         setState(() {
           _attachmentUrl = null;
@@ -690,6 +696,18 @@ class _ContactState extends State<Contact> with SingleTickerProviderStateMixin {
             AppUtils().vSpace(
               size: 20,
             ), // Spacing between name/email and message
+                        // Subject Input
+            _buildTextField(
+              'SUBJECT',
+              _subjectController,
+              validator: (value) {
+                if (value == null || value.trim().isEmpty) {
+                  return 'Please enter a subject';
+                }
+                return null;
+              },
+            ),
+            AppUtils().vSpace(size: 20), // Spacing
             // Message Input
             _buildTextField(
               'MESSAGE',
