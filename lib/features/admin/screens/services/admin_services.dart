@@ -24,8 +24,6 @@ class _AdminServicesScreenState extends State<AdminServicesScreen> {
   void initState() {
     super.initState();
     _loadServices();
-      if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Successfully deleted'), backgroundColor: Colors.green));
-      debugPrint('Successfully deleted item');
   }
 
   Future<void> _loadServices() async {

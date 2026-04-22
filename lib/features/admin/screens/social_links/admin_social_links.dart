@@ -27,8 +27,6 @@ class _AdminSocialLinksScreenState extends State<AdminSocialLinksScreen> {
   void initState() {
     super.initState();
     _loadSocialLinks();
-      if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Successfully deleted'), backgroundColor: Colors.green));
-      debugPrint('Successfully deleted item');
   }
 
   Future<void> _loadSocialLinks() async {

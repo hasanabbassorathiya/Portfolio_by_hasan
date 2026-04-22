@@ -23,8 +23,6 @@ class _AdminTestimonialsScreenState extends State<AdminTestimonialsScreen> {
   void initState() {
     super.initState();
     _loadTestimonials();
-      if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Successfully deleted'), backgroundColor: Colors.green));
-      debugPrint('Successfully deleted item');
   }
 
   Future<void> _loadTestimonials() async {

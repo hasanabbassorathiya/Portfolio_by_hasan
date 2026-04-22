@@ -23,8 +23,6 @@ class _AdminExperiencesScreenState extends State<AdminExperiencesScreen> {
   void initState() {
     super.initState();
     _loadExperiences();
-      if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Successfully deleted'), backgroundColor: Colors.green));
-      debugPrint('Successfully deleted item');
   }
 
   Future<void> _loadExperiences() async {

@@ -23,8 +23,6 @@ class _AdminBlogsScreenState extends State<AdminBlogsScreen> {
   void initState() {
     super.initState();
     _loadBlogs();
-      if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Successfully deleted'), backgroundColor: Colors.green));
-      debugPrint('Successfully deleted item');
   }
 
   Future<void> _loadBlogs() async {
