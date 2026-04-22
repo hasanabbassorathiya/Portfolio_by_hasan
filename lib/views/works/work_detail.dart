@@ -395,9 +395,10 @@ class _WorkDetailState extends State<WorkDetail>
                                   linkName: 'App Store',
                                 );
                               },
-                              child: Image.network(
-                                'https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg',
+                              child: Image.asset(
+                                'assets/icons/appstore.png',
                                 height: 60,
+                                fit: BoxFit.contain,
                                 errorBuilder: (context, error, stackTrace) {
                                   return Container(
                                     height: 60,

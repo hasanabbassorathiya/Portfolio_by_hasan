@@ -1,11 +1,11 @@
 /// Base repository
 /// Provides common functionality for all repositories
-import 'package:supabase_flutter/supabase_flutter.dart';
+
 import '../services/supabase_service.dart';
 
 abstract class BaseRepository {
   /// Get Supabase client
-  SupabaseClient get client {
+  dynamic get client {
     final client = SupabaseService.client;
     if (client == null) {
       throw Exception(
@@ -16,7 +16,7 @@ abstract class BaseRepository {
   }
 
   /// Get table reference
-  RealtimeChannel getChannel(String channelName) {
+  dynamic getChannel(String channelName) {
     return client.channel(channelName);
   }
 

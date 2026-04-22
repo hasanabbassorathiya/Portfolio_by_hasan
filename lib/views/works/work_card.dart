@@ -254,30 +254,30 @@ class _WorkCardState extends State<WorkCard> {
                                 linkName: 'App Store',
                               );
                             },
-                            child: Image.network(
-                              'https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg',
-                              height: 40,
-                              fit: BoxFit.contain,
-                              errorBuilder: (context, error, stackTrace) {
-                                return Container(
-                                  height: 40,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  child: Center(
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Icon(Icons.apple, color: Colors.black, size: 16),
-                                        SizedBox(width: 4),
-                                        Text('App Store', style: TextStyle(color: Colors.black, fontSize: 12)),
-                                      ],
+                              child: Image.asset(
+                                'assets/icons/appstore.png',
+                                height: 40,
+                                fit: BoxFit.contain,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Container(
+                                    height: 40,
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(8),
                                     ),
-                                  ),
-                                );
-                              },
-                            ),
+                                    child: Center(
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Icon(Icons.apple, color: Colors.black, size: 16),
+                                          SizedBox(width: 4),
+                                          Text('App Store', style: TextStyle(color: Colors.black, fontSize: 12)),
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
                           ),
                         ),
                     ],
@@ -458,8 +458,8 @@ class _WorkCardState extends State<WorkCard> {
                                 linkName: 'App Store',
                               );
                             },
-                            child: Image.network(
-                              'https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg',
+                            child: Image.asset(
+                              'assets/icons/appstore.png',
                               height: 50,
                               fit: BoxFit.contain,
                               errorBuilder: (context, error, stackTrace) {

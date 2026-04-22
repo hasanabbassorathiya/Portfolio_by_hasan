@@ -560,25 +560,28 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                           color: AppColors.primaryColor,
                                         ),
                                         const SizedBox(width: 8),
-                                        InkWell(
-                                          onTap:
-                                              () => LinkUtils.launchEmail(
-                                                AppLinks.email,
+                                        Flexible(
+                                          child: InkWell(
+                                            onTap:
+                                                () => LinkUtils.launchEmail(
+                                                  AppLinks.email,
+                                                ),
+                                            onHover: (value) {
+                                              setState(() {
+                                                _isHoveringEmail = value;
+                                              });
+                                            },
+                                            child: Text(
+                                              AppLinks.email,
+                                              style: AppStyles.regular(
+                                                fontWeight: FontWeight.bold,
+                                              ).copyWith(
+                                                color:
+                                                    _isHoveringEmail
+                                                        ? AppColors.primaryColor
+                                                        : Colors.black,
                                               ),
-                                          onHover: (value) {
-                                            setState(() {
-                                              _isHoveringEmail = value;
-                                            });
-                                          },
-                                          child: Text(
-                                            AppLinks.email,
-                                            style: AppStyles.regular(
-                                              fontWeight: FontWeight.bold,
-                                            ).copyWith(
-                                              color:
-                                                  _isHoveringEmail
-                                                      ? AppColors.primaryColor
-                                                      : Colors.black,
+                                              overflow: TextOverflow.ellipsis,
                                             ),
                                           ),
                                         ),
@@ -609,14 +612,14 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                         : [
                           // Order for Medium and Large screens (Row)
                           // Left: Text and CTA
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment:
-                                isSmall
-                                    ? MainAxisAlignment.start
-                                    : MainAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
+                          Expanded(
+                            flex: isMedium ? 3 : 4,
+                            child: SingleChildScrollView(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
                               // Section with Name, Title, and Button
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -795,25 +798,28 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                           color: AppColors.primaryColor,
                                         ),
                                         const SizedBox(width: 8),
-                                        InkWell(
-                                          onTap:
-                                              () => LinkUtils.launchEmail(
-                                                AppLinks.email,
+                                        Flexible(
+                                          child: InkWell(
+                                            onTap:
+                                                () => LinkUtils.launchEmail(
+                                                  AppLinks.email,
+                                                ),
+                                            onHover: (value) {
+                                              setState(() {
+                                                _isHoveringEmail = value;
+                                              });
+                                            },
+                                            child: Text(
+                                              AppLinks.email,
+                                              style: AppStyles.regular(
+                                                fontWeight: FontWeight.bold,
+                                              ).copyWith(
+                                                color:
+                                                    _isHoveringEmail
+                                                        ? AppColors.primaryColor
+                                                        : Colors.black,
                                               ),
-                                          onHover: (value) {
-                                            setState(() {
-                                              _isHoveringEmail = value;
-                                            });
-                                          },
-                                          child: Text(
-                                            AppLinks.email,
-                                            style: AppStyles.regular(
-                                              fontWeight: FontWeight.bold,
-                                            ).copyWith(
-                                              color:
-                                                  _isHoveringEmail
-                                                      ? AppColors.primaryColor
-                                                      : Colors.black,
+                                              overflow: TextOverflow.ellipsis,
                                             ),
                                           ),
                                         ),
@@ -839,9 +845,11 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                               ),
                             ],
                           ),
+                            ),
+                          ),
                           // Center: Profile/Illustration
                           Expanded(
-                            flex: isMedium ? 4 : 4,
+                            flex: isMedium ? 4 : 3,
                             child: Center(
                               child: LayoutBuilder(
                                 builder: (context, constraints) {

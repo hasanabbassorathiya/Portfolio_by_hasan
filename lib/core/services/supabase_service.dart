@@ -1,62 +1,44 @@
-/// Supabase service
-/// Provides centralized access to Supabase client
 import 'package:flutter/foundation.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
-import '../config/app_config.dart';
+import 'turso_service.dart';
 
 class SupabaseService {
   SupabaseService._();
 
-  static SupabaseClient? _client;
-
-  /// Initialize Supabase
   static Future<void> initialize() async {
-    try {
-      final url = AppConfig.supabaseUrl;
-      final anonKey = AppConfig.supabaseAnonKey;
-      
-      if (url.isEmpty || anonKey.isEmpty) {
-        // For web, try to get from window.location or use empty initialization
-        // This allows the app to load even if Supabase is not configured
-        // Individual features will handle the error gracefully
-        debugPrint('Supabase credentials not found. App will run in limited mode.');
-        return;
-      }
-      
-      await Supabase.initialize(
-        url: url,
-        anonKey: anonKey,
-      );
-      _client = Supabase.instance.client;
-    } catch (e) {
-      // Gracefully handle initialization errors
-      debugPrint('Supabase initialization failed: $e');
-      debugPrint('App will continue without Supabase features.');
-    }
+    await TursoService.initialize();
   }
 
-  /// Get Supabase client
-  /// Returns null if Supabase is not initialized
-  static SupabaseClient? get client => _client;
+  static TursoClient? get client => TursoService.client;
 
-  /// Get Supabase client (throws if not initialized)
-  /// Use this in admin features that require Supabase
-  static SupabaseClient get requiredClient {
-    if (_client == null) {
-      throw Exception(
-        'Supabase not initialized. Please configure SUPABASE_URL and SUPABASE_ANON_KEY.',
-      );
-    }
-    return _client!;
-  }
+  static TursoClient get requiredClient => TursoService.requiredClient;
 
-  /// Check if Supabase is initialized
-  static bool get isInitialized => _client != null;
+  static bool get isInitialized => TursoService.isInitialized;
 
-  /// Get storage client
-  static SupabaseStorageClient? get storage => _client?.storage;
+  static dynamic get storage => MockStorage();
 
-  /// Get auth client
-  static GoTrueClient? get auth => _client?.auth;
+  static dynamic get auth => MockAuth();
 }
 
+class MockAuth {
+  Future<void> signInWithPassword({required String email, required String password}) async {}
+  Future<void> resetPasswordForEmail(String email, {String? redirectTo}) async {}
+  Future<void> signOut() async {}
+  Future<dynamic> verifyOTP({required String token, required String type, required String email}) async => null;
+  Future<dynamic> updateUser(dynamic attributes) async => null;
+  dynamic get currentUser => MockUser();
+  dynamic get currentSession => MockSession();
+  Stream<dynamic> get onAuthStateChange => Stream.empty();
+}
+class MockSession { }
+class MockUser { }
+
+class MockStorage {
+  MockBucket from(String bucket) => MockBucket();
+}
+
+class MockBucket {
+  Future<void> remove(List<String> paths) async {}
+  String getPublicUrl(String path) => 'https://example.com/mock.png';
+  Future<dynamic> upload(String path, dynamic file, {dynamic fileOptions}) async => 'mock';
+  Future<dynamic> uploadBinary(String path, dynamic bytes, {dynamic fileOptions}) async => 'mock';
+}

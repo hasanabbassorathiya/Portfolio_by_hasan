@@ -120,7 +120,7 @@ class StorageService {
       final fullPath = path != null ? '$path/$uniqueFileName' : uniqueFileName;
       debugPrint('StorageService.uploadImageWeb: Full path: $fullPath');
 
-      // Check if bucket exists
+      // Check if bucket exists - for contact_attachments, we allow public uploads
       debugPrint('StorageService.uploadImageWeb: Checking bucket access...');
       try {
         await storage.from(bucket).list();
@@ -128,7 +128,12 @@ class StorageService {
       } catch (bucketError) {
         debugPrint('StorageService.uploadImageWeb: ERROR - Bucket check failed');
         debugPrint('StorageService.uploadImageWeb: Bucket error: $bucketError');
-        throw Exception('Bucket "$bucket" not found or not accessible. Please create the bucket in Supabase Storage first. Error: $bucketError');
+        // For contact_attachments bucket, try to continue anyway as it might be a permissions issue
+        if (bucket == 'contact_attachments') {
+          debugPrint('StorageService.uploadImageWeb: Continuing with contact_attachments upload despite bucket check failure');
+        } else {
+          throw Exception('Bucket "$bucket" not found or not accessible. Please create the bucket in Supabase Storage first. Error: $bucketError');
+        }
       }
 
       // For web, we need to handle File or Uint8List
