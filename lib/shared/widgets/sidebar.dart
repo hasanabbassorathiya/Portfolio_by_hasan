@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
@@ -115,7 +116,7 @@ class _AppSidebarState extends State<AppSidebar> {
             // Login/Admin Section
             Builder(
               builder: (context) {
-                final session = SupabaseService.auth?.currentSession;
+                final session = FirebaseAuth.instance.currentUser;
                 final isLoggedIn = session != null;
                 
                 return Column(

@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:go_router/go_router.dart';
 import 'package:portfolio/shared/routes/app_routes.dart';
 import 'package:portfolio/views/about/about.dart';
@@ -103,7 +104,7 @@ class AppRouter {
       GoRoute(
         path: '/admin',
         redirect: (context, state) {
-          final session = SupabaseService.auth?.currentSession;
+          final session = FirebaseAuth.instance.currentUser;
           if (session != null) {
             return AppRoutes.adminDashboard;
           } else {
@@ -113,7 +114,7 @@ class AppRouter {
       ),
     ],
     redirect: (context, state) {
-      final session = SupabaseService.auth?.currentSession;
+      final session = FirebaseAuth.instance.currentUser;
       final isAdminRoute = state.uri.path.startsWith('/admin');
       
       // Handle /admin route specifically

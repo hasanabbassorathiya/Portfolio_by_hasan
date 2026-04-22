@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 /// Admin dashboard
 /// Main control panel for managing portfolio content
 import 'package:flutter/material.dart';
@@ -103,7 +104,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
   Future<void> _logout() async {
     try {
       if (SupabaseService.isInitialized) {
-        await SupabaseService.auth!.signOut();
+        await FirebaseAuth.instance.signOut();
       }
       if (mounted) {
         context.go(AppRoutes.adminLogin);
