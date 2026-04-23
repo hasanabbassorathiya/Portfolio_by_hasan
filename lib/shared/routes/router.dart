@@ -137,6 +137,7 @@ class AppRouter {
         session = null;
       }
 
+      final bypassAuth = Firebase.apps.isEmpty;
       final isAdminRoute = state.uri.path.startsWith('/admin');
       
       // Handle /admin route specifically
@@ -157,7 +158,7 @@ class AppRouter {
       if (isAdminRoute &&
           state.uri.path != AppRoutes.adminLogin &&
           state.uri.path != AppRoutes.adminResetPassword) {
-        if (session == null) {
+        if (session == null && !bypassAuth) {
           return AppRoutes.adminLogin;
         }
       }
