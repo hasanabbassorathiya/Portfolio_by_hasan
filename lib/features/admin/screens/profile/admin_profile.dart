@@ -86,47 +86,8 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
   }
 
   
-  Future<void> _showResetDbDialog() async {
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Reset Database?'),
-        content: const Text('This will PERMANENTLY DELETE all data across all tables. This action cannot be undone. Are you absolutely sure?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context, true),
-            style: TextButton.styleFrom(foregroundColor: Colors.red),
-            child: const Text('DELETE ALL DATA'),
-          ),
-        ],
-      ),
-    );
 
-    if (confirmed == true) {
-      try {
-        final tables = ['profiles', 'experiences', 'works', 'services', 'social_links', 'testimonials', 'blogs', 'contact_messages'];
-        for (final table in tables) {
-          await SupabaseService.requiredClient.from(table).delete().gte('id', ''); // delete all
-        }
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Database reset successfully'), backgroundColor: Colors.red),
-          );
-          _loadProfile();
-        }
-      } catch (e) {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Failed to reset: $e'), backgroundColor: Colors.red),
-          );
-        }
-      }
-    }
-  }
+  
 
   
   Future<void> _showResetDbDialog() async {
