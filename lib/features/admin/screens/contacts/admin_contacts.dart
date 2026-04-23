@@ -1,3 +1,4 @@
+import 'package:url_launcher/url_launcher.dart';
 /// Admin contacts management screen
 /// Shows all contact form submissions
 import 'package:flutter/material.dart';
