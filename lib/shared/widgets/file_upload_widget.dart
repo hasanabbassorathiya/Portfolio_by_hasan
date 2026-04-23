@@ -1,3 +1,4 @@
+import 'dart:convert';
 /// Enhanced file upload widget
 /// Supports both local file upload and direct URL input
 import 'dart:io';

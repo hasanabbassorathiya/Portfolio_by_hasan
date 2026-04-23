@@ -91,7 +91,10 @@ class _ProfileImageWidgetState extends State<ProfileImageWidget> {
 
     if (imageUrl != null && imageUrl.isNotEmpty) {
       // Add cache-busting parameter to force reload
-      final cacheBustUrl = imageUrl.contains('?')
+      // Don't cache bust data URIs
+      final cacheBustUrl = imageUrl.startsWith('data:')
+          ? imageUrl
+          : imageUrl.contains('?')
           ? '$imageUrl&_refresh=$_refreshCounter'
           : '$imageUrl?_refresh=$_refreshCounter';
       
