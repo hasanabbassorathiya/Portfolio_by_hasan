@@ -104,7 +104,13 @@ class _AdminDashboardState extends State<AdminDashboard> {
   Future<void> _logout() async {
     try {
       if (SupabaseService.isInitialized) {
-        await FirebaseAuth.instance.signOut();
+        
+        try {
+          await FirebaseAuth.instance.signOut();
+        } catch(e) {
+          debugPrint('Signout error: $e');
+        }
+
       }
       if (mounted) {
         context.go(AppRoutes.adminLogin);

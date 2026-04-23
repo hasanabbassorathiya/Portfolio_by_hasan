@@ -116,7 +116,14 @@ class _AppSidebarState extends State<AppSidebar> {
             // Login/Admin Section
             Builder(
               builder: (context) {
-                final session = FirebaseAuth.instance.currentUser;
+                
+      dynamic session;
+      try {
+        session = FirebaseAuth.instance.currentUser;
+      } catch(e) {
+        session = null;
+      }
+
                 final isLoggedIn = session != null;
                 
                 return Column(

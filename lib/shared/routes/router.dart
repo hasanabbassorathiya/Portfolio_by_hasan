@@ -104,7 +104,14 @@ class AppRouter {
       GoRoute(
         path: '/admin',
         redirect: (context, state) {
-          final session = FirebaseAuth.instance.currentUser;
+          
+      dynamic session;
+      try {
+        session = FirebaseAuth.instance.currentUser;
+      } catch(e) {
+        session = null;
+      }
+
           if (session != null) {
             return AppRoutes.adminDashboard;
           } else {
@@ -114,7 +121,14 @@ class AppRouter {
       ),
     ],
     redirect: (context, state) {
-      final session = FirebaseAuth.instance.currentUser;
+      
+      dynamic session;
+      try {
+        session = FirebaseAuth.instance.currentUser;
+      } catch(e) {
+        session = null;
+      }
+
       final isAdminRoute = state.uri.path.startsWith('/admin');
       
       // Handle /admin route specifically

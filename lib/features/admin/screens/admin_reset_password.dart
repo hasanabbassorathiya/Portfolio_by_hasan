@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 /// Admin password reset screen
 /// Handles password reset after user clicks the recovery link from email

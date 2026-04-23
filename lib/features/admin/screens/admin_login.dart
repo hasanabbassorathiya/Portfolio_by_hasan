@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 /// Admin login screen
 /// Provides authentication for admin panel access
@@ -47,6 +48,10 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
         throw Exception('Supabase not initialized. Please configure SUPABASE_URL and SUPABASE_ANON_KEY.');
       }
       
+      
+      if (Firebase.apps.isEmpty) {
+        throw Exception('Firebase is not configured. Please follow the README to set up Firebase Auth using flutterfire configure.');
+      }
       await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: _emailController.text.trim(),
         password: _passwordController.text.trim(),
