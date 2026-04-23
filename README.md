@@ -38,23 +38,16 @@ To clone and use this for your own portfolio, follow these steps:
 2. Create a new project.
 3. Go to **Authentication** -> **Sign-in method** and enable **Email/Password**.
 4. Go to the **Users** tab and click **Add user**. Enter your email and a secure password. This will be your Admin login.
-5. Register a Web App in your Firebase Project settings to get your configuration.
-6. Add the configuration to a new file at `lib/firebase_options.dart`:
-   ```dart
-   import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
-   import 'package:flutter/foundation.dart' show defaultTargetPlatform, kIsWeb, TargetPlatform;
+5. Use the **FlutterFire CLI** to automatically configure your project:
+   ```bash
+   # Install the CLI if you haven't already
+   dart pub global activate flutterfire_cli
 
-   class DefaultFirebaseOptions {
-     static FirebaseOptions get currentPlatform {
-       // Insert your Firebase configuration here
-       return const FirebaseOptions(
-         apiKey: "YOUR_API_KEY",
-         appId: "YOUR_APP_ID",
-         messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-         projectId: "YOUR_PROJECT_ID",
-       );
-     }
-   }
+   # Log in to Firebase
+   firebase login
+
+   # Configure your Flutter project (this will generate lib/firebase_options.dart automatically)
+   flutterfire configure
    ```
 
 ### 3. Local Turso Embedded Replicas (Optional)
