@@ -345,6 +345,29 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
                         decoration: const InputDecoration(
                           labelText: 'Location',
                           border: OutlineInputBorder(),
+
+                      const SizedBox(height: 48),
+                      const Divider(),
+                      const SizedBox(height: 24),
+                      Text(
+                        'Danger Zone',
+                        style: AppStyles.heading(
+                          fontSize: 20,
+                          color: Colors.red,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      ElevatedButton.icon(
+                        onPressed: _showResetDbDialog,
+                        icon: const Icon(Icons.warning, color: Colors.white),
+                        label: const Text('Reset Database', style: TextStyle(color: Colors.white)),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.red,
+                          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                        ),
+                      ),
+                      const SizedBox(height: 32),
+  
                         ),
                       ),
                       AppUtils().vSpace(size: 16),
