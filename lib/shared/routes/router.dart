@@ -105,14 +105,21 @@ class AppRouter {
         path: '/admin',
         redirect: (context, state) {
           
+      
       dynamic session;
       try {
-        session = FirebaseAuth.instance.currentUser;
+        if (Firebase.apps.isNotEmpty) {
+          session = FirebaseAuth.instance.currentUser;
+        }
       } catch(e) {
         session = null;
       }
+      
+      // Bypass auth for local testing if Firebase is not configured
+      final bypassAuth = Firebase.apps.isEmpty;
 
-          if (session != null) {
+
+          if (session != null || bypassAuth) {
             return AppRoutes.adminDashboard;
           } else {
             return AppRoutes.adminLogin;
