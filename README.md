@@ -64,3 +64,17 @@ final client = await LibsqlClient.create(
 await client.sync();
 ```
 *(Ensure you add `libsql_dart` to your `pubspec.yaml` if you want to use embedded replicas instead of the HTTP pipeline).*
+
+### 4. Hosting on GitHub Pages (Free)
+
+This repository includes a GitHub Action to automatically deploy your portfolio to GitHub Pages whenever you push to the `main` branch.
+
+To set this up:
+1. Go to your repository settings on GitHub.
+2. Go to **Pages** (under the "Code and automation" section).
+3. Under **Build and deployment** -> **Source**, select **GitHub Actions**.
+4. Go to **Secrets and variables** -> **Actions**.
+5. Click **New repository secret** and add the following two secrets exactly as named:
+   - `TURSO_URL`: Your Turso Pipeline URL (e.g. `https://<your-db>.turso.io/v2/pipeline`)
+   - `TURSO_TOKEN`: Your Turso Database token
+6. Trigger a push to the `main` branch, and the GitHub Action will automatically build and publish your secure portfolio to GitHub Pages!

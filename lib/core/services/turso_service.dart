@@ -4,8 +4,8 @@ import '../config/app_config.dart';
 import 'package:flutter/foundation.dart';
 
 class TursoService {
-  static const String _url = 'https://portfolio-hasanabbassorathiya.aws-ap-northeast-1.turso.io/v2/pipeline';
-  static const String _token = 'eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJhIjoicnciLCJpYXQiOjE3NzY4OTYxMTEsImlkIjoiMDE5ZGI3NDEtZTQwMS03YTEwLWI4ZjktMWRkNWMwZGFmODJkIiwicmlkIjoiN2U3NjE4ODItZTE2NS00NjRlLWFjOTEtNjdkNThmMTE2MzcyIn0.jtwLWceKGS1rYSDn7khf_AWHHuhqFITuhzALUqhNeKp8d-5D35yq2bwy_AusFQt316GywCfMVN2Q-qsNa2fnDA';
+  static String get _url => AppConfig.tursoUrl;
+  static String get _token => AppConfig.tursoToken;
 
   static TursoClient? _client;
 

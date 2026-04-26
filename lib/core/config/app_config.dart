@@ -6,6 +6,26 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 class AppConfig {
   AppConfig._();
 
+  static String get tursoUrl {
+    final fromEnv = dotenv.env['TURSO_URL'];
+    if (fromEnv != null && fromEnv.isNotEmpty) return fromEnv;
+    if (kIsWeb) {
+      const fromBuild = String.fromEnvironment('TURSO_URL', defaultValue: '');
+      if (fromBuild.isNotEmpty) return fromBuild;
+    }
+    return '';
+  }
+
+  static String get tursoToken {
+    final fromEnv = dotenv.env['TURSO_TOKEN'];
+    if (fromEnv != null && fromEnv.isNotEmpty) return fromEnv;
+    if (kIsWeb) {
+      const fromBuild = String.fromEnvironment('TURSO_TOKEN', defaultValue: '');
+      if (fromBuild.isNotEmpty) return fromBuild;
+    }
+    return '';
+  }
+
   /// Supabase URL
   /// For web, also check for build-time environment variables
   static String get supabaseUrl {
