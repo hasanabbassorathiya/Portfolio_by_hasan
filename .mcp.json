@@ -1,5 +1,15 @@
 {
   "mcpServers": {
+    "playwright": {
+      "command": "npx",
+      "args": [
+        "@playwright/mcp@latest",
+        "--extension"
+      ],
+      "env": {
+        "PLAYWRIGHT_MCP_EXTENSION_TOKEN": "TkwfjZcL2ELeY5DklVK9NqBL4E0eY_BBwOjhXvzqeUE"
+      }
+    },
     "claude-flow": {
       "command": "npx",
       "args": [

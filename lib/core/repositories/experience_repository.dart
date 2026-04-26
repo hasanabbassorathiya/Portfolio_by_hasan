@@ -24,19 +24,25 @@ class ExperienceModel {
   });
 
   factory ExperienceModel.fromMap(Map<String, dynamic> map) {
-    return ExperienceModel(
-      id: map['id'] as String,
-      company: map['company'] as String,
-      position: map['position'] as String,
-      description: map['description'] as String?,
-      startDate: DateTime.parse(map['start_date'] as String),
-      endDate:
-          map['end_date'] != null
-              ? DateTime.parse(map['end_date'] as String)
-              : null,
-      isCurrent: map['is_current'] as bool? ?? false,
-      orderIndex: map['order_index'] as int? ?? 0,
-    );
+    try {
+      return ExperienceModel(
+        id: map['id']?.toString() ?? DateTime.now().millisecondsSinceEpoch.toString(),
+        company: map['company']?.toString() ?? 'Unknown Company',
+        position: map['position']?.toString() ?? 'Unknown Position',
+        description: map['description']?.toString(),
+        startDate: map['start_date'] \!= null && map['start_date'].toString().isNotEmpty 
+            ? DateTime.parse(map['start_date'].toString()) 
+            : DateTime.now(),
+        endDate: map['end_date'] \!= null && map['end_date'].toString().isNotEmpty
+                ? DateTime.parse(map['end_date'].toString())
+                : null,
+        isCurrent: map['is_current'] == true || map['is_current'] == 1 || map['is_current'] == '1',
+        orderIndex: int.tryParse(map['order_index']?.toString() ?? '0') ?? 0,
+      );
+    } catch (e) {
+      print("Error parsing ExperienceModel: $e, map: $map");
+      rethrow;
+    }
   }
 }
 
@@ -56,6 +62,7 @@ class ExperienceRepository extends BaseRepository {
           .map((json) => ExperienceModel.fromMap(json as Map<String, dynamic>))
           .toList();
     } catch (e) {
+      print('Failed to fetch experiences: $e');
       throw Exception('Failed to fetch experiences: $e');
     }
   }

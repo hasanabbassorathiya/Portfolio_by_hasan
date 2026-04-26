@@ -35,6 +35,11 @@ class _AdminExperiencesScreenState extends State<AdminExperiencesScreen> {
       });
     } catch (e) {
       setState(() => _isLoading = false);
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Load error: $e'), duration: const Duration(seconds: 10)),
+        );
+      }
     }
   }
 

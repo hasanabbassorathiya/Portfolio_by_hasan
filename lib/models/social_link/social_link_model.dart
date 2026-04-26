@@ -18,14 +18,19 @@ class SocialLinkModel {
   });
 
   factory SocialLinkModel.fromMap(Map<String, dynamic> map) {
-    return SocialLinkModel(
-      id: map['id'] as String,
-      profileId: map['profile_id'] as String?,
-      platform: map['platform'] as String,
-      url: map['url'] as String,
-      iconUrl: map['icon_url'] as String?,
-      orderIndex: map['order_index'] as int? ?? 0,
-    );
+    try {
+      return SocialLinkModel(
+        id: map['id']?.toString() ?? DateTime.now().millisecondsSinceEpoch.toString(),
+        profileId: map['profile_id']?.toString(),
+        platform: map['platform']?.toString() ?? 'unknown',
+        url: map['url']?.toString() ?? '',
+        iconUrl: map['icon_url']?.toString(),
+        orderIndex: int.tryParse(map['order_index']?.toString() ?? '0') ?? 0,
+      );
+    } catch (e) {
+      print("Error parsing SocialLinkModel: $e, map: $map");
+      rethrow;
+    }
   }
 
   Map<String, dynamic> toMap() {

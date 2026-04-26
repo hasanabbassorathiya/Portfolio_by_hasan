@@ -17,6 +17,12 @@ class BlogFormDialog extends StatefulWidget {
 }
 
 class _BlogFormDialogState extends State<BlogFormDialog> {
+
+  String _generateId() {
+    return DateTime.now().millisecondsSinceEpoch.toString() + '_' + 
+           (1000 + DateTime.now().microsecond).toString();
+  }
+
   final _formKey = GlobalKey<FormState>();
   final _titleController = TextEditingController();
   final _slugController = TextEditingController();
@@ -253,6 +259,7 @@ class _BlogFormDialogState extends State<BlogFormDialog> {
             .eq('id', widget.blog!.id);
         debugPrint('Blog Save: Update successful');
       } else {
+        data['id'] = _generateId();
         await SupabaseService.requiredClient.from('blogs').insert(data);
         debugPrint('Blog Save: Insert successful');
       }

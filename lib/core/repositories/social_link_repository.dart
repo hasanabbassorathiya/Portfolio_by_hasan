@@ -11,7 +11,7 @@ class SocialLinkRepository extends BaseRepository {
     try {
       dynamic query = client.from(_tableName).select();
 
-      if (profileId != null) {
+      if (profileId \!= null) {
         query = query.eq('profile_id', profileId);
       }
 
@@ -22,6 +22,7 @@ class SocialLinkRepository extends BaseRepository {
           .map((json) => SocialLinkModel.fromMap(json as Map<String, dynamic>))
           .toList();
     } catch (e) {
+      print('Failed to fetch social links: $e');
       throw Exception('Failed to fetch social links: $e');
     }
   }

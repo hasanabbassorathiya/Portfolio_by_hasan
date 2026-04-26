@@ -16,6 +16,12 @@ class WorkFormDialog extends StatefulWidget {
 }
 
 class _WorkFormDialogState extends State<WorkFormDialog> {
+
+  String _generateId() {
+    return DateTime.now().millisecondsSinceEpoch.toString() + '_' + 
+           (1000 + DateTime.now().microsecond).toString();
+  }
+
   final _formKey = GlobalKey<FormState>();
   final _titleController = TextEditingController();
   final _categoryController = TextEditingController();
@@ -167,6 +173,7 @@ class _WorkFormDialogState extends State<WorkFormDialog> {
             .update(data)
             .eq('id', widget.work!.id);
       } else {
+        data['id'] = _generateId();
         await SupabaseService.requiredClient.from('works').insert(data);
       }
 

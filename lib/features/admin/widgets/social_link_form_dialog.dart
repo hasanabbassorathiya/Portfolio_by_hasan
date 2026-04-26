@@ -18,6 +18,12 @@ class SocialLinkFormDialog extends StatefulWidget {
 }
 
 class _SocialLinkFormDialogState extends State<SocialLinkFormDialog> {
+
+  String _generateId() {
+    return DateTime.now().millisecondsSinceEpoch.toString() + '_' + 
+           (1000 + DateTime.now().microsecond).toString();
+  }
+
   final _formKey = GlobalKey<FormState>();
   final _urlController = TextEditingController();
   final _orderIndexController = TextEditingController();
@@ -82,6 +88,7 @@ class _SocialLinkFormDialogState extends State<SocialLinkFormDialog> {
             .update(data)
             .eq('id', widget.socialLink!.id);
       } else {
+        data['id'] = _generateId();
         await SupabaseService.requiredClient.from('social_links').insert(data);
       }
 

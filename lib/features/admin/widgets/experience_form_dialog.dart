@@ -16,6 +16,12 @@ class ExperienceFormDialog extends StatefulWidget {
 }
 
 class _ExperienceFormDialogState extends State<ExperienceFormDialog> {
+
+  String _generateId() {
+    return DateTime.now().millisecondsSinceEpoch.toString() + '_' + 
+           (1000 + DateTime.now().microsecond).toString();
+  }
+
   final _formKey = GlobalKey<FormState>();
   final _companyController = TextEditingController();
   final _positionController = TextEditingController();
@@ -107,6 +113,7 @@ class _ExperienceFormDialogState extends State<ExperienceFormDialog> {
             .update(data)
             .eq('id', widget.experience!.id);
       } else {
+        data['id'] = _generateId();
         await SupabaseService.requiredClient.from('experiences').insert(data);
       }
 

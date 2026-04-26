@@ -2,6 +2,9 @@ import 'package:url_launcher/url_launcher.dart';
 /// Admin contacts management screen
 /// Shows all contact form submissions
 import 'package:flutter/material.dart';
+import 'dart:convert';
+// ignore: avoid_web_libraries_in_flutter
+import 'dart:html' as html;
 import 'package:portfolio/core/services/supabase_service.dart';
 import 'package:portfolio/shared/constants/colors.dart';
 import 'package:portfolio/shared/constants/textstyles.dart';
@@ -152,6 +155,9 @@ class _AdminContactsScreenState extends State<AdminContactsScreen> {
   }
 
   void _showMessageDetail(Map<String, dynamic> message) {
+    final attachmentUrl = message['attachment_url'] as String?;
+    final subject = message['subject'] as String?;
+
     showDialog(
       context: context,
       builder:
@@ -163,10 +169,20 @@ class _AdminContactsScreenState extends State<AdminContactsScreen> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text('Email: ${message['email']}'),
+                  if (subject != null && subject.isNotEmpty) ...[
+                    AppUtils().vSpace(size: 8),
+                    Text('Subject: $subject', style: const TextStyle(fontWeight: FontWeight.bold)),
+                  ],
                   AppUtils().vSpace(size: 16),
-                  Text('Message:'),
+                  Text('Message:', style: const TextStyle(fontWeight: FontWeight.bold)),
                   AppUtils().vSpace(size: 8),
                   Text(message['message'] as String? ?? ''),
+                  if (attachmentUrl != null && attachmentUrl.isNotEmpty) ...[
+                    AppUtils().vSpace(size: 16),
+                    Text('Attachment:', style: const TextStyle(fontWeight: FontWeight.bold)),
+                    AppUtils().vSpace(size: 8),
+                    _buildAttachmentView(attachmentUrl),
+                  ],
                   AppUtils().vSpace(size: 16),
                   Text(
                     'Date: ${_formatDate(message['created_at'] as String?)}',
@@ -183,6 +199,58 @@ class _AdminContactsScreenState extends State<AdminContactsScreen> {
             ],
           ),
     );
+  }
+
+  Widget _buildAttachmentView(String attachmentData) {
+    if (attachmentData.startsWith('data:image')) {
+      try {
+        final base64String = attachmentData.split(',').last;
+        final bytes = base64Decode(base64String);
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Image.memory(bytes, height: 200, fit: BoxFit.contain),
+            AppUtils().vSpace(size: 8),
+            ElevatedButton.icon(
+              onPressed: () => _downloadFile(attachmentData, 'attachment.png'),
+              icon: const Icon(Icons.download),
+              label: const Text('Download Image'),
+            ),
+          ],
+        );
+      } catch (e) {
+        return const Text('Invalid image data');
+      }
+    } else if (attachmentData.startsWith('data:application/pdf')) {
+      return ElevatedButton.icon(
+        onPressed: () => _downloadFile(attachmentData, 'attachment.pdf'),
+        icon: const Icon(Icons.picture_as_pdf),
+        label: const Text('Download PDF'),
+      );
+    } else {
+      return ElevatedButton.icon(
+        onPressed: () => _downloadFile(attachmentData, 'attachment.file'),
+        icon: const Icon(Icons.download),
+        label: const Text('Download File'),
+      );
+    }
+  }
+
+  void _downloadFile(String dataUrl, String defaultName) {
+    try {
+      final anchor = html.AnchorElement(href: dataUrl)
+        ..target = 'blank'
+        ..download = defaultName;
+      html.document.body?.append(anchor);
+      anchor.click();
+      anchor.remove();
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Could not download file: $e')),
+        );
+      }
+    }
   }
 
   String _formatDate(String? dateString) {

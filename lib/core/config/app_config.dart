@@ -93,13 +93,11 @@ class AppConfig {
     try {
       await dotenv.load(fileName: '.env');
     } catch (e) {
-      // For web, .env might not be available as an asset
-      // Use default values or environment variables
-      // In production, set these via build-time environment variables
-      if (kIsWeb) {
-        // Try to get from window.location or use defaults
-        // For now, we'll use empty strings and let the user set them
-        // via environment variables at build time
+      try {
+        await dotenv.load(fileName: 'assets/.env');
+      } catch (e2) {
+        debugPrint('Dotenv load failed: $e2');
+        // Ignore
       }
     }
   }

@@ -17,6 +17,12 @@ class TestimonialFormDialog extends StatefulWidget {
 }
 
 class _TestimonialFormDialogState extends State<TestimonialFormDialog> {
+
+  String _generateId() {
+    return DateTime.now().millisecondsSinceEpoch.toString() + '_' + 
+           (1000 + DateTime.now().microsecond).toString();
+  }
+
   final _formKey = GlobalKey<FormState>();
   final _clientNameController = TextEditingController();
   final _clientRoleController = TextEditingController();
@@ -87,6 +93,7 @@ class _TestimonialFormDialogState extends State<TestimonialFormDialog> {
             .update(data)
             .eq('id', widget.testimonial!.id);
       } else {
+        data['id'] = _generateId();
         await SupabaseService.requiredClient.from('testimonials').insert(data);
       }
 

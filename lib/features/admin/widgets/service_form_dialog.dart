@@ -17,6 +17,12 @@ class ServiceFormDialog extends StatefulWidget {
 }
 
 class _ServiceFormDialogState extends State<ServiceFormDialog> {
+
+  String _generateId() {
+    return DateTime.now().millisecondsSinceEpoch.toString() + '_' + 
+           (1000 + DateTime.now().microsecond).toString();
+  }
+
   final _formKey = GlobalKey<FormState>();
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
@@ -72,6 +78,7 @@ class _ServiceFormDialogState extends State<ServiceFormDialog> {
             .update(data)
             .eq('id', widget.service!.id);
       } else {
+        data['id'] = _generateId();
         await SupabaseService.requiredClient.from('services').insert(data);
       }
 
