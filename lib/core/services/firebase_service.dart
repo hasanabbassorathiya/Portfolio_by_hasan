@@ -27,13 +27,12 @@ class FirebaseService {
         // Not initialized, try to initialize
         // For web, Firebase needs to be configured via index.html
         // If not configured, we'll skip Firebase initialization gracefully
-        if (kIsWeb) {
-          // Skip Firebase initialization for web if not configured
-          // Firebase is optional - app works without it
-          debugPrint('Firebase web not configured - skipping (optional)');
-          return;
+        try {
+          await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+        } catch (initE) {
+          debugPrint('Firebase initialization failed: $initE');
+          return; // Proceed without Firebase
         }
-        await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
       }
 
       // Initialize Analytics (only if Firebase is available)
