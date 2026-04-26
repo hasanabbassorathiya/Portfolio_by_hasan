@@ -489,11 +489,11 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                     child: FadeTransition(
                                       opacity: _ctaFadeIn,
                                         child: AppButton(
-                                        title: 'Let\'s talk with me',
+                                        title: 'Get in Touch',
                                         icons: Iconsax.arrow_right_3_copy,
                                         onTap: () {
                                           AnalyticsService.trackButtonClick(
-                                            buttonName: 'Let\'s talk with me',
+                                            buttonName: 'Get in Touch',
                                             location: 'home',
                                           );
                                           // Navigate to contact route with scrollToForm parameter
@@ -726,7 +726,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                     child: FadeTransition(
                                       opacity: _ctaFadeIn,
                                         child: AppButton(
-                                        title: 'Let\'s talk with me',
+                                        title: 'Get in Touch',
                                         icons: Iconsax.arrow_right_3_copy,
                                         onTap: () {
                                           AnalyticsService.trackButtonClick(

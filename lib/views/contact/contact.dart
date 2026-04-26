@@ -616,7 +616,7 @@ class _ContactState extends State<Contact> with SingleTickerProviderStateMixin {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'ANY PROJECT?',
+              'SEND A MESSAGE',
               style: AppStyles.heading(
                 fontSize: isSmall ? 24 : 32,
               ).copyWith(color: Colors.white),
