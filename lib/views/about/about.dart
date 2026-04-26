@@ -335,20 +335,37 @@ class _AboutState extends State<About> with SingleTickerProviderStateMixin {
                       ),
                     ],
                     AppUtils().vSpace(size: isSmall ? 32.0 : 48.0),
-                    AppButton(
-                      title: 'Download CV',
-                      icons: Iconsax.arrow_right_3_copy,
-                      onTap: () {
-                        AnalyticsService.trackDownload(
-                          fileType: 'pdf',
-                          fileName: 'CV',
-                        );
-                        LinkUtils.launchUrl(
-                          _resumeUrl ?? AppLinks.cvLink,
-                          linkType: 'cv_download',
-                          linkName: 'CV',
-                        );
-                      },
+                    Wrap(
+                      spacing: 16.0,
+                      runSpacing: 16.0,
+                      children: [
+                        AppButton(
+                          title: 'Download CV',
+                          icons: Iconsax.arrow_right_3_copy,
+                          onTap: () {
+                            AnalyticsService.trackDownload(
+                              fileType: 'pdf',
+                              fileName: 'CV',
+                            );
+                            LinkUtils.launchUrl(
+                              _resumeUrl ?? AppLinks.cvLink,
+                              linkType: 'cv_download',
+                              linkName: 'CV',
+                            );
+                          },
+                        ),
+                        AppButton(
+                          title: 'View Open Source',
+                          icons: Iconsax.code_1,
+                          onTap: () {
+                            LinkUtils.launchUrl(
+                              'https://github.com/hasanabbassorathiya/Portfolio_by_hasan',
+                              linkType: 'github_portfolio',
+                              linkName: 'Portfolio Repo',
+                            );
+                          },
+                        ),
+                      ],
                     ),
                     AppUtils().vSpace(size: isSmall ? 30.0 : 40.0),
                     _buildContactInfo(context, isSmall, isMedium),

@@ -8,7 +8,7 @@
   
   [![Flutter](https://img.shields.io/badge/Flutter-3.27-02569B?style=for-the-badge&logo=flutter&logoColor=white)](https://flutter.dev)
   [![Turso](https://img.shields.io/badge/Turso-Database-000000?style=for-the-badge&logo=sqlite&logoColor=white)](https://turso.tech)
-  [![Netlify](https://img.shields.io/badge/Hosted_on-Netlify-00C7B7?style=for-the-badge&logo=netlify&logoColor=white)](https://netlify.com)
+  [![Firebase](https://img.shields.io/badge/Hosted_on-Firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=white)](https://hasan-abbas-portfolio.web.app)
   [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
 </div>
 
@@ -72,7 +72,7 @@ This repository is designed to be easily cloned and deployed for **your own pers
    flutterfire configure
    ```
 
-### 3. Hosting on Netlify (Recommended)
+### 4. Hosting on Netlify (Alternative)
 
 This repository includes a `netlify.toml` configuration file for seamless, zero-config deployment.
 
@@ -87,7 +87,7 @@ This repository includes a `netlify.toml` configuration file for seamless, zero-
 6. Click **Deploy site**.
 
 
-### 5. Hosting on Firebase (Alternative)
+### 3. Hosting on Firebase (Recommended)
 
 If you prefer to host this app via Firebase Hosting using GitHub Actions, follow these steps:
 
