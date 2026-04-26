@@ -86,7 +86,26 @@ This repository includes a `netlify.toml` configuration file for seamless, zero-
    - `APP_NAME` : `Portfolio`
 6. Click **Deploy site**.
 
-### 4. Local Turso Embedded Replicas (Optional Advanced Mode)
+
+### 5. Hosting on Firebase (Alternative)
+
+If you prefer to host this app via Firebase Hosting using GitHub Actions, follow these steps:
+
+1. Enable Firebase Hosting in the Firebase Console.
+2. Initialize Firebase Hosting locally by running:
+   ```bash
+   firebase init hosting
+   # Set the public directory to: build/web
+   # Configure as a single-page app: Yes
+   ```
+3. Go to GitHub **Settings** -> **Secrets and variables** -> **Actions**.
+4. Add your Turso Database Secrets (`TURSO_URL` and `TURSO_TOKEN`).
+5. Add your Firebase Service Account JSON as a secret named `FIREBASE_SERVICE_ACCOUNT`.
+6. Add your Firebase Project ID as a secret named `FIREBASE_PROJECT_ID`.
+7. Push to `main`, and the `firebase-deploy.yml` GitHub Action will compile and release your app!
+
+
+### 6. Local Turso Embedded Replicas (Optional Advanced Mode)
 For ultra-fast sub-millisecond local reads, you can enable Turso's embedded replicas.
 Update your database connection string in the Dart code to:
 ```dart
