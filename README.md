@@ -65,7 +65,23 @@ await client.sync();
 ```
 *(Ensure you add `libsql_dart` to your `pubspec.yaml` if you want to use embedded replicas instead of the HTTP pipeline).*
 
-### 4. Hosting on GitHub Pages (Free)
+
+### 4. Hosting on Netlify (Recommended)
+
+This repository includes a `netlify.toml` configuration file for seamless, zero-config deployment.
+
+1. Log into your [Netlify](https://app.netlify.com/) account.
+2. Click **Add new site** -> **Import an existing project**.
+3. Connect your GitHub account and select the `Portfolio_by_hasan` repository.
+4. The build settings (Command: `flutter build web --release`, Publish directory: `build/web`) will auto-populate from the `netlify.toml` file.
+5. Click **Add environment variables** and enter:
+   - `TURSO_URL` : Your Turso Pipeline URL
+   - `TURSO_TOKEN` : Your Turso database token
+   - `APP_NAME` : `Portfolio`
+6. Click **Deploy site**.
+
+
+### 5. Hosting on GitHub Pages (Free)
 
 This repository includes a GitHub Action to automatically deploy your portfolio to GitHub Pages whenever you push to the `main` branch.
 
