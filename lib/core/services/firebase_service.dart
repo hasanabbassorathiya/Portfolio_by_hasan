@@ -1,3 +1,4 @@
+import '../../firebase_options.dart';
 /// Firebase service
 /// Centralized Firebase initialization and access
 import 'package:firebase_core/firebase_core.dart';
@@ -32,7 +33,7 @@ class FirebaseService {
           debugPrint('Firebase web not configured - skipping (optional)');
           return;
         }
-        await Firebase.initializeApp();
+        await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
       }
 
       // Initialize Analytics (only if Firebase is available)
