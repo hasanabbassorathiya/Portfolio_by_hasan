@@ -37,6 +37,7 @@ class _AboutState extends State<About> with SingleTickerProviderStateMixin {
   String? _title;
   String? _bio;
   int? _yearsOfExperience;
+  String? _resumeUrl;
   bool _isLoadingSocialLinks = true;
 
   @override
@@ -87,6 +88,7 @@ class _AboutState extends State<About> with SingleTickerProviderStateMixin {
           _title = profile.title;
           _bio = profile.bio;
           _yearsOfExperience = profile.yearsOfExperience;
+          _resumeUrl = profile.resumeUrl;
         });
       }
     } catch (e) {
@@ -334,7 +336,7 @@ class _AboutState extends State<About> with SingleTickerProviderStateMixin {
                     ],
                     AppUtils().vSpace(size: isSmall ? 32.0 : 48.0),
                     AppButton(
-                      title: 'Download CV 	',
+                      title: 'Download CV',
                       icons: Iconsax.arrow_right_3_copy,
                       onTap: () {
                         AnalyticsService.trackDownload(
@@ -342,7 +344,7 @@ class _AboutState extends State<About> with SingleTickerProviderStateMixin {
                           fileName: 'CV',
                         );
                         LinkUtils.launchUrl(
-                          AppLinks.cvLink,
+                          _resumeUrl ?? AppLinks.cvLink,
                           linkType: 'cv_download',
                           linkName: 'CV',
                         );

@@ -3,9 +3,9 @@ class AppLinks {
   static const String email = 'hasanabbassorathiya12@gmail.com';
   static const String phoneNumber = '+971589602320';
   static const String cvLink =
-      'https://drive.google.com/file/d/1wshwQ-T1VeL3dod72ZgPcCjWzYVVaiCQ/view?usp=sharing';
+      'https://flowcv.com/resume/pmesjl0q9sm9';
   static const String resumeLink =
-      'https://drive.google.com/file/d/1wshwQ-T1VeL3dod72ZgPcCjWzYVVaiCQ/view?usp=sharing';
+      'https://flowcv.com/resume/pmesjl0q9sm9';
 
   // Social Media Links
   static const String linkedIn =
