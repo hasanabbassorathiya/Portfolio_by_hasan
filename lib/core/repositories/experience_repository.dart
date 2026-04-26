@@ -31,10 +31,10 @@ class ExperienceModel {
         position: map['position']?.toString() ?? 'Unknown Position',
         description: map['description']?.toString(),
         startDate: map['start_date'] \!= null && map['start_date'].toString().isNotEmpty 
-            ? DateTime.parse(map['start_date'].toString()) 
+            ? DateTime.tryParse(map['start_date'].toString()) ?? DateTime.now() 
             : DateTime.now(),
         endDate: map['end_date'] \!= null && map['end_date'].toString().isNotEmpty
-                ? DateTime.parse(map['end_date'].toString())
+                ? DateTime.tryParse(map['end_date'].toString())
                 : null,
         isCurrent: map['is_current'] == true || map['is_current'] == 1 || map['is_current'] == '1',
         orderIndex: int.tryParse(map['order_index']?.toString() ?? '0') ?? 0,

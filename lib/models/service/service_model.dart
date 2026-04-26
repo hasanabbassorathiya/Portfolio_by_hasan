@@ -19,7 +19,7 @@ class ServiceModel {
 
   factory ServiceModel.fromMap(Map<String, dynamic> map) {
     return ServiceModel(
-      id: map['id'] as String,
+      id: map['id']?.toString() ?? DateTime.now().millisecondsSinceEpoch.toString(),
       title: map['title'] as String,
       description: map['description'] as String?,
       iconUrl: map['icon_url'] as String?,

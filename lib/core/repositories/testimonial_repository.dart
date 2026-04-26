@@ -29,7 +29,7 @@ class TestimonialModel {
 
   factory TestimonialModel.fromMap(Map<String, dynamic> map) {
     return TestimonialModel(
-      id: map['id'] as String,
+      id: map['id']?.toString() ?? DateTime.now().millisecondsSinceEpoch.toString(),
       clientName: map['client_name'] as String,
       clientRole: map['client_role'] as String?,
       clientCompany: map['client_company'] as String?,

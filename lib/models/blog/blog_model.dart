@@ -33,14 +33,14 @@ class BlogModel {
     String formattedDate = map['date'] as String? ?? '';
     if (publishedAt != null) {
       try {
-        final date = DateTime.parse(publishedAt);
+        final date = (DateTime.tryParse(publishedAt.toString()) ?? DateTime.now());
         formattedDate = '${date.day} ${_getMonthName(date.month)}, ${date.year}';
       } catch (e) {
         formattedDate = publishedAt;
       }
     } else if (createdAt != null && formattedDate.isEmpty) {
       try {
-        final date = DateTime.parse(createdAt);
+        final date = (DateTime.tryParse(createdAt.toString()) ?? DateTime.now());
         formattedDate = '${date.day} ${_getMonthName(date.month)}, ${date.year}';
       } catch (e) {
         formattedDate = createdAt;
@@ -48,7 +48,7 @@ class BlogModel {
     }
 
     return BlogModel(
-      id: map['id'] as String,
+      id: map['id']?.toString() ?? DateTime.now().millisecondsSinceEpoch.toString(),
       title: map['title'] as String,
       date: formattedDate,
       imageAsset: map['image_url'] as String? ?? map['imageAsset'] as String? ?? '',

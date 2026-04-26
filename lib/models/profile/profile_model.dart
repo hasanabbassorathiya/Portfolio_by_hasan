@@ -29,7 +29,7 @@ class ProfileModel {
 
   factory ProfileModel.fromMap(Map<String, dynamic> map) {
     return ProfileModel(
-      id: map['id'] as String,
+      id: map['id']?.toString() ?? DateTime.now().millisecondsSinceEpoch.toString(),
       name: map['name'] as String,
       title: map['title'] as String,
       bio: map['bio'] as String?,

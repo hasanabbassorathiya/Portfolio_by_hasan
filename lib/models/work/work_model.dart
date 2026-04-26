@@ -42,7 +42,7 @@ class WorkModel {
   /// Create a work model from a map
   factory WorkModel.fromMap(Map<String, dynamic> map) {
     return WorkModel(
-      id: map['id'] as String,
+      id: map['id']?.toString() ?? DateTime.now().millisecondsSinceEpoch.toString(),
       title: map['title'] as String,
       category: map['category'] as String,
       imageAsset: map['image_url'] as String? ?? map['imageAsset'] as String? ?? '',
