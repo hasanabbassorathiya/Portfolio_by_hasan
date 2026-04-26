@@ -219,7 +219,7 @@ class TursoQueryBuilder implements Future<dynamic> {
         data = jsonDecode(response.body);
       } catch (e) {
         debugPrint('Turso error body: ${response.body}');
-        throw Exception('Failed to parse response');
+        throw Exception('Failed to parse response. Status: \${response.statusCode}, Body: \${response.body.length > 200 ? response.body.substring(0, 200) : response.body}, SQL: \$sql');
       }
       final results = data['results'] as List?;
       if (results == null || results.isEmpty) throw Exception('No results');
