@@ -150,6 +150,7 @@ class TursoQueryBuilder implements Future<dynamic> {
     String sql = '';
     if (_action == 'select') {
       sql = 'SELECT ${_selectCols.join(', ')} FROM $table';
+      debugPrint('Generated SQL: $sql');
       if (_where.isNotEmpty) {
         sql += ' WHERE ${_where.join(' AND ')}';
       }
