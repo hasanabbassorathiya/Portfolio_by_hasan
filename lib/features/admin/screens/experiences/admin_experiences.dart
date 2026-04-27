@@ -22,7 +22,10 @@ class _AdminExperiencesScreenState extends State<AdminExperiencesScreen> {
   @override
   void initState() {
     super.initState();
-    _loadExperiences();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      debugPrint('AdminExperiencesScreen initState - postFrameCallback');
+      _loadExperiences();
+    });
   }
 
   Future<void> _loadExperiences() async {
@@ -112,14 +115,23 @@ class _AdminExperiencesScreenState extends State<AdminExperiencesScreen> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              ElevatedButton.icon(
-                onPressed: () => _showAddEditExperienceDialog(),
-                icon: const Icon(Icons.add),
-                label: const Text('Add Experience'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primaryColor,
-                  foregroundColor: Colors.white,
-                ),
+              Row(
+                children: [
+                  IconButton(
+                    onPressed: _loadExperiences,
+                    icon: const Icon(Icons.refresh),
+                  ),
+                  const SizedBox(width: 16),
+                  ElevatedButton.icon(
+                    onPressed: () => _showAddEditExperienceDialog(),
+                    icon: const Icon(Icons.add),
+                    label: const Text('Add Experience'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primaryColor,
+                      foregroundColor: Colors.white,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
