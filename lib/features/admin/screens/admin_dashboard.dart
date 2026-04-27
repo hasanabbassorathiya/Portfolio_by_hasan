@@ -254,7 +254,10 @@ class _AdminDashboardState extends State<AdminDashboard> {
             ),
           ),
           // Main content
-          Expanded(child: _screens[_selectedIndex].widget),
+          Expanded(
+            key: ValueKey(_selectedIndex),
+            child: _screens[_selectedIndex].widget,
+          ),
         ],
       ),
     );
