@@ -1,5 +1,6 @@
 /// Experience repository
 /// Handles all experience-related database operations
+import 'package:flutter/foundation.dart';
 import 'base_repository.dart';
 
 class ExperienceModel {
@@ -31,7 +32,7 @@ class ExperienceModel {
         position: map['position']?.toString() ?? 'Unknown Position',
         description: map['description']?.toString(),
         startDate: map['start_date'] \!= null && map['start_date'].toString().isNotEmpty 
-            ? DateTime.tryParse(map['start_date'].toString()) ?? DateTime.now() 
+            ? (DateTime.tryParse(map['start_date'].toString()) ?? DateTime.now())
             : DateTime.now(),
         endDate: map['end_date'] \!= null && map['end_date'].toString().isNotEmpty
                 ? DateTime.tryParse(map['end_date'].toString())
@@ -40,7 +41,7 @@ class ExperienceModel {
         orderIndex: int.tryParse(map['order_index']?.toString() ?? '0') ?? 0,
       );
     } catch (e) {
-      print("Error parsing ExperienceModel: $e, map: $map");
+      debugPrint("Error parsing ExperienceModel: $e, map: $map");
       rethrow;
     }
   }
