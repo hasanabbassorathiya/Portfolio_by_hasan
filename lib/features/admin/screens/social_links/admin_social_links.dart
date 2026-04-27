@@ -247,8 +247,11 @@ class _AdminSocialLinksScreenState extends State<AdminSocialLinksScreen> {
     ).then((saved) {
       if (saved == true) {
         _loadSocialLinks();
-      if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Successfully deleted'), backgroundColor: Colors.green));
-      debugPrint('Successfully deleted item');
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Successfully saved'), backgroundColor: Colors.green),
+          );
+        }
       }
     });
   }

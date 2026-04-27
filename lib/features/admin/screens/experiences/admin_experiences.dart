@@ -197,8 +197,11 @@ class _AdminExperiencesScreenState extends State<AdminExperiencesScreen> {
     ).then((saved) {
       if (saved == true) {
         _loadExperiences();
-      if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Successfully deleted'), backgroundColor: Colors.green));
-      debugPrint('Successfully deleted item');
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Successfully saved'), backgroundColor: Colors.green),
+          );
+        }
       }
     });
   }
