@@ -337,11 +337,14 @@ class _DashboardOverviewState extends State<_DashboardOverview> {
   Future<int> _loadBlogCount() async {
     try {
       if (!SupabaseService.isInitialized) return 0;
+      debugPrint('Fetching count for blogs...');
       final response = await SupabaseService.requiredClient
           .from('blogs')
           .select('id');
+      debugPrint('Fetched blogs: $response');
       return (response as List).length;
     } catch (e) {
+      debugPrint('Error loading blog count: $e');
       return 0;
     }
   }
@@ -349,11 +352,14 @@ class _DashboardOverviewState extends State<_DashboardOverview> {
   Future<int> _loadWorkCount() async {
     try {
       if (!SupabaseService.isInitialized) return 0;
+      debugPrint('Fetching count for works...');
       final response = await SupabaseService.requiredClient
           .from('works')
           .select('id');
+      debugPrint('Fetched works: $response');
       return (response as List).length;
     } catch (e) {
+      debugPrint('Error loading work count: $e');
       return 0;
     }
   }
@@ -361,11 +367,14 @@ class _DashboardOverviewState extends State<_DashboardOverview> {
   Future<int> _loadExperienceCount() async {
     try {
       if (!SupabaseService.isInitialized) return 0;
+      debugPrint('Fetching count for experiences...');
       final response = await SupabaseService.requiredClient
           .from('experiences')
           .select('id');
+      debugPrint('Fetched experiences: $response');
       return (response as List).length;
     } catch (e) {
+      debugPrint('Error loading experience count: $e');
       return 0;
     }
   }
@@ -373,11 +382,14 @@ class _DashboardOverviewState extends State<_DashboardOverview> {
   Future<int> _loadTestimonialCount() async {
     try {
       if (!SupabaseService.isInitialized) return 0;
+      debugPrint('Fetching count for testimonials...');
       final response = await SupabaseService.requiredClient
           .from('testimonials')
           .select('id');
+      debugPrint('Fetched testimonials: $response');
       return (response as List).length;
     } catch (e) {
+      debugPrint('Error loading testimonial count: $e');
       return 0;
     }
   }
@@ -385,12 +397,15 @@ class _DashboardOverviewState extends State<_DashboardOverview> {
   Future<int> _loadUnreadMessagesCount() async {
     try {
       if (!SupabaseService.isInitialized) return 0;
+      debugPrint('Fetching count for unread messages...');
       final response = await SupabaseService.requiredClient
           .from('contact_messages')
           .select('id')
           .eq('is_read', false);
+      debugPrint('Fetched unread messages: $response');
       return (response as List).length;
     } catch (e) {
+      debugPrint('Error loading unread messages count: $e');
       return 0;
     }
   }
