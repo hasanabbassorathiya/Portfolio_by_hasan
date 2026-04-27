@@ -231,7 +231,11 @@ class TursoQueryBuilder implements Future<dynamic> {
       final res = resultObj['response'] as Map<String, dynamic>?;
       if (res == null) throw Exception('Response is null');
       final execResult = res['result'] as Map<String, dynamic>?;
-      if (execResult == null || execResult['cols'] == null) return []; // no rows
+      if (execResult == null) return []; // no rows
+      if (execResult['cols'] == null) {
+        debugPrint('Turso execResult: $execResult');
+        return []; // no rows
+      }
 
       final cols = (execResult['cols'] as List).map((c) => c['name'] as String).toList();
       final rows = execResult['rows'] as List;
