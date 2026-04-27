@@ -199,6 +199,8 @@ class TursoQueryBuilder implements Future<dynamic> {
       }
     }
 
+    debugPrint('Executing SQL: $sql');
+
     try {
       final response = await http.post(
         Uri.parse(client.url),
