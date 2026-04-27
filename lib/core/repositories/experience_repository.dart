@@ -54,15 +54,16 @@ class ExperienceRepository extends BaseRepository {
     try {
       final response = await client
           .from(_tableName)
-          .select()
-          .order('order_index', ascending: true)
-          .order('start_date', ascending: false);
+          .select('*')
+          .order('order_index', ascending: true);
+
+      debugPrint('Raw Experiences Response: $response');
 
       return (response as List)
           .map((json) => ExperienceModel.fromMap(json as Map<String, dynamic>))
           .toList();
     } catch (e) {
-      print('Failed to fetch experiences: $e');
+      debugPrint('Failed to fetch experiences: $e');
       throw Exception('Failed to fetch experiences: $e');
     }
   }
