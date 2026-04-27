@@ -11,7 +11,7 @@ class SocialLinkRepository extends BaseRepository {
     try {
       dynamic query = client.from(_tableName).select();
 
-      if (profileId \!= null) {
+      if (profileId != null) {
         query = query.eq('profile_id', profileId);
       }
 

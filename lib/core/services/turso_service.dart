@@ -217,6 +217,8 @@ class TursoQueryBuilder implements Future<dynamic> {
         })
       );
 
+      debugPrint('Turso Raw Response: ${response.body}');
+
       Map<String, dynamic> data;
       try {
         data = jsonDecode(response.body);
