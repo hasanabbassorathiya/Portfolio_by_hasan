@@ -32,14 +32,18 @@ class _AdminSocialLinksScreenState extends State<AdminSocialLinksScreen> {
   Future<void> _loadSocialLinks() async {
     try {
       setState(() => _isLoading = true);
+      debugPrint('Loading social links...');
       final links = await _socialLinkRepository.getAllSocialLinks();
+      debugPrint('Fetched ${links.length} social links: ${links.map((l) => l.platform).join(', ')}');
       // Sort by order_index
       links.sort((a, b) => a.orderIndex.compareTo(b.orderIndex));
       setState(() {
+        debugPrint('Loaded ${links.length} social links');
         _socialLinks = links;
         _isLoading = false;
       });
     } catch (e) {
+      debugPrint('Error loading social links: $e');
       setState(() => _isLoading = false);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(

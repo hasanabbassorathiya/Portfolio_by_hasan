@@ -28,12 +28,15 @@ class _AdminExperiencesScreenState extends State<AdminExperiencesScreen> {
   Future<void> _loadExperiences() async {
     try {
       setState(() => _isLoading = true);
+      debugPrint('Loading experiences...');
       final experiences = await _experienceRepository.getAllExperiences();
+      debugPrint('Fetched ${experiences.length} experiences: ${experiences.map((e) => e.position).join(', ')}');
       setState(() {
         _experiences = experiences;
         _isLoading = false;
       });
     } catch (e) {
+      debugPrint('Error loading experiences: $e');
       setState(() => _isLoading = false);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
