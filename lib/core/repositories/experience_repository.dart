@@ -31,18 +31,22 @@ class ExperienceModel {
         company: map['company']?.toString() ?? 'Unknown Company',
         position: map['position']?.toString() ?? 'Unknown Position',
         description: map['description']?.toString(),
-        startDate: map['start_date'] != null && map['start_date'].toString().isNotEmpty
-            ? (DateTime.tryParse(map['start_date'].toString()) ?? DateTime.now())
-            : DateTime.now(),
-        endDate: map['end_date'] != null && map['end_date'].toString().isNotEmpty
-                ? DateTime.tryParse(map['end_date'].toString())
-                : null,
+        startDate: (DateTime.tryParse(map['start_date']?.toString() ?? '') ?? DateTime.now()),
+        endDate: map['end_date'] != null ? DateTime.tryParse(map['end_date'].toString()) : null,
         isCurrent: map['is_current'] == true || map['is_current'] == 1 || map['is_current'] == '1',
         orderIndex: int.tryParse(map['order_index']?.toString() ?? '0') ?? 0,
       );
     } catch (e) {
       debugPrint("Error parsing ExperienceModel: $e, map: $map");
-      rethrow;
+      // Return a dummy object to prevent the whole list from breaking
+      return ExperienceModel(
+        id: DateTime.now().millisecondsSinceEpoch.toString(),
+        company: 'Error loading item',
+        position: '',
+        startDate: DateTime.now(),
+        isCurrent: false,
+        orderIndex: 999,
+      );
     }
   }
 }
@@ -55,7 +59,7 @@ class ExperienceRepository extends BaseRepository {
     try {
       final response = await client
           .from(_tableName)
-          .select('*')
+          .select('id, company, position, description, start_date, end_date, is_current, order_index')
           .order('order_index', ascending: true);
 
       debugPrint('Raw Experiences Response: $response');
