@@ -1,5 +1,6 @@
 {
   "hosting": {
+    "site": "hasan-abbas-portfolio",
     "public": "build/web",
     "ignore": [
       "firebase.json",
