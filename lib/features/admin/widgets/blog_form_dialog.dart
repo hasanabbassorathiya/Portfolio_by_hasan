@@ -466,15 +466,9 @@ class _BlogFormDialogState extends State<BlogFormDialog> {
                             child: TextFormField(
                               controller: _imageUrlController,
                               decoration: const InputDecoration(
-                                labelText: 'Image URL *',
+                                labelText: 'Image URL',
                                 border: OutlineInputBorder(),
                               ),
-                              validator: (value) {
-                                if (value == null || value.trim().isEmpty) {
-                                  return 'Image URL is required';
-                                }
-                                return null;
-                              },
                             ),
                           ),
                         ],

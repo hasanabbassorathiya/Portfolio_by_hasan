@@ -61,6 +61,17 @@ class _ServiceFormDialogState extends State<ServiceFormDialog> {
     setState(() => _isLoading = true);
 
     try {
+      // Validate icon
+      if (_iconUrl == null || _iconUrl!.isEmpty) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Please upload an icon')),
+          );
+        }
+        setState(() => _isLoading = false);
+        return;
+      }
+
       final data = {
         'title': _titleController.text.trim(),
         'description':

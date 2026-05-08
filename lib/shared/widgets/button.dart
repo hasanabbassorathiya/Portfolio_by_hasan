@@ -52,7 +52,7 @@ class _AppButtonState extends State<AppButton> {
               ),
             ),
             if (widget.icons != null)
-              Icon(widget.icons, size: 24.0, color: AppColors.bgColor),
+              Icon(widget.icons as IconData?, size: 24.0, color: AppColors.bgColor),
           ],
         ),
       ),

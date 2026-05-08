@@ -73,6 +73,13 @@ class TursoQueryBuilder implements Future<dynamic> {
     return this;
   }
 
+  // Add this method to allow empty deletes
+  TursoQueryBuilder deleteAll() {
+    _action = 'delete';
+    _where.clear(); // Clear all where clauses
+    return this;
+  }
+
   TursoQueryBuilder eq(String column, dynamic value) {
     if (value is String) {
       _where.add("$column = '$value'");
@@ -236,9 +243,15 @@ class TursoQueryBuilder implements Future<dynamic> {
       final res = resultObj['response'] as Map<String, dynamic>?;
       if (res == null) throw Exception('Response is null');
       final execResult = res['result'] as Map<String, dynamic>?;
-      if (execResult == null) return []; // no rows
+      if (execResult == null) {
+        debugPrint('Turso Error: execResult is null');
+        return [];
+      }
+
+      debugPrint('Turso execResult: $execResult');
+
       if (execResult['cols'] == null) {
-        debugPrint('Turso execResult: $execResult');
+        debugPrint('Turso Error: cols is null');
         return []; // no rows
       }
 

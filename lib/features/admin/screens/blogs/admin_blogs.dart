@@ -27,12 +27,14 @@ class _AdminBlogsScreenState extends State<AdminBlogsScreen> {
 
   Future<void> _loadBlogs() async {
     try {
+      debugPrint('AdminBlogs: Loading blogs...');
       setState(() => _isLoading = true);
       // Get all blogs including unpublished
       final response = await _blogRepository.client
           .from('blogs')
           .select()
           .order('created_at', ascending: false);
+      debugPrint('AdminBlogs: Loaded response: $response');
       final blogs =
           (response as List)
               .map((json) => BlogModel.fromMap(json as Map<String, dynamic>))
@@ -42,6 +44,7 @@ class _AdminBlogsScreenState extends State<AdminBlogsScreen> {
         _isLoading = false;
       });
     } catch (e) {
+      debugPrint('AdminBlogs: Error loading blogs: $e');
       setState(() => _isLoading = false);
       if (mounted) {
         ScaffoldMessenger.of(

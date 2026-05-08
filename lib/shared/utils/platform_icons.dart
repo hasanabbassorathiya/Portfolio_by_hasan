@@ -8,7 +8,7 @@ class PlatformIcons {
   PlatformIcons._();
 
   /// Get icon for a platform
-  static IconData getIcon(String platform) {
+  static dynamic getIcon(String platform) {
     switch (platform.toLowerCase()) {
       case 'facebook':
         return FontAwesomeIcons.facebook;

@@ -63,6 +63,8 @@ class ExperienceRepository extends BaseRepository {
           .order('order_index', ascending: true);
 
       debugPrint('Raw Experiences Response: $response');
+      // Added logging to diagnose empty list issue
+      debugPrint('Raw Data from experiences table: $response');
 
       return (response as List)
           .map((json) => ExperienceModel.fromMap(json as Map<String, dynamic>))

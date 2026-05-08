@@ -13,6 +13,7 @@ import 'package:portfolio/shared/widgets/gradient_text.dart';
 import 'package:portfolio/shared/utils/link_utils.dart';
 import 'package:portfolio/shared/constants/links.dart';
 import 'package:portfolio/core/services/analytics_service.dart';
+import 'package:portfolio/shared/utils/platform_icons.dart';
 
 class About extends StatefulWidget {
   final bool isActive;
@@ -96,25 +97,10 @@ class _AboutState extends State<About> with SingleTickerProviderStateMixin {
     }
   }
 
+  // Changed IconData to FaIconData in signature
+  // Changed FaIconData to IconData in signature
   IconData _getIconForPlatform(String platform) {
-    switch (platform.toLowerCase()) {
-      case 'linkedin':
-        return FontAwesomeIcons.linkedin;
-      case 'github':
-        return FontAwesomeIcons.githubAlt; // Using githubAlt for better visibility
-      case 'twitter':
-        return FontAwesomeIcons.twitter;
-      case 'facebook':
-        return FontAwesomeIcons.facebook;
-      case 'instagram':
-        return Iconsax.instagram_copy;
-      case 'behance':
-        return FontAwesomeIcons.behance;
-      case 'dribbble':
-        return FontAwesomeIcons.dribbble;
-      default:
-        return Icons.link;
-    }
+    return PlatformIcons.getIcon(platform);
   }
 
   String _getPlatformFromUrl(String url) {
@@ -340,31 +326,21 @@ class _AboutState extends State<About> with SingleTickerProviderStateMixin {
                       runSpacing: 16.0,
                       children: [
                         AppButton(
-                          title: 'Download CV',
+                          title: 'Resume',
                           icons: Iconsax.arrow_right_3_copy,
                           onTap: () {
                             AnalyticsService.trackDownload(
                               fileType: 'pdf',
-                              fileName: 'CV',
+                              fileName: 'Resume',
                             );
                             LinkUtils.launchUrl(
                               _resumeUrl ?? AppLinks.cvLink,
                               linkType: 'cv_download',
-                              linkName: 'CV',
+                              linkName: 'Resume',
                             );
                           },
                         ),
-                        AppButton(
-                          title: 'View Open Source',
-                          icons: Iconsax.code_1,
-                          onTap: () {
-                            LinkUtils.launchUrl(
-                              'https://github.com/hasanabbassorathiya/Portfolio_by_hasan',
-                              linkType: 'github_portfolio',
-                              linkName: 'Portfolio Repo',
-                            );
-                          },
-                        ),
+                        // Removed View Open Source CTA
                       ],
                     ),
                     AppUtils().vSpace(size: isSmall ? 30.0 : 40.0),
@@ -466,17 +442,17 @@ class _AboutState extends State<About> with SingleTickerProviderStateMixin {
               ),
               AppUtils().vSpace(size: isSmall ? 24.0 : 32.0),
               AppButton(
-                title: 'Download CV 	',
+                title: 'Resume',
                 icons: Iconsax.arrow_right_3_copy,
                 onTap: () {
                   AnalyticsService.trackDownload(
                     fileType: 'pdf',
-                    fileName: 'CV',
+                    fileName: 'Resume',
                   );
                   LinkUtils.launchUrl(
                     AppLinks.cvLink,
                     linkType: 'cv_download',
-                    linkName: 'CV',
+                    linkName: 'Resume',
                   );
                 },
               ),
@@ -510,13 +486,13 @@ class _AboutState extends State<About> with SingleTickerProviderStateMixin {
           ),
           _buildSocialIcon(
             context,
-            Iconsax.instagram_copy,
+            FontAwesomeIcons.instagram,
             AppLinks.instagram,
             isSmall,
           ),
           _buildSocialIcon(
             context,
-            Iconsax.facebook_copy,
+            FontAwesomeIcons.facebook,
             AppLinks.facebook,
             isSmall,
           ),
@@ -549,13 +525,12 @@ class _AboutState extends State<About> with SingleTickerProviderStateMixin {
 
   Widget _buildSocialIcon(
     BuildContext context,
-    IconData icon,
+    IconData icon, // Changed from FaIconData
     String url,
     bool isSmall,
   ) {
     return InkWell(
       onTap: () {
-        // Extract platform from URL
         final platform = _getPlatformFromUrl(url);
         AnalyticsService.trackEvent(
           eventName: 'social_link_clicked',
@@ -582,7 +557,7 @@ class _AboutState extends State<About> with SingleTickerProviderStateMixin {
             ),
           ],
         ),
-        child: Icon(
+        child: FaIcon(
           icon,
           size: isSmall ? 20 : 24,
           color: AppColors.primaryColor,

@@ -114,7 +114,7 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
       try {
         final tables = ['profiles', 'experiences', 'works', 'services', 'social_links', 'testimonials', 'blogs', 'contact_messages'];
         for (final table in tables) {
-          await SupabaseService.requiredClient.from(table).delete().gte('id', ''); // delete all
+          await SupabaseService.requiredClient.from(table).delete();
         }
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(

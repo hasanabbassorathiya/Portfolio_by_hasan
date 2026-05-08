@@ -1,14 +1,10 @@
-import 'package:url_launcher/url_launcher.dart';
-/// Admin contacts management screen
-/// Shows all contact form submissions
 import 'package:flutter/material.dart';
 import 'dart:convert';
-// ignore: avoid_web_libraries_in_flutter
-import 'dart:html' as html;
 import 'package:portfolio/core/services/supabase_service.dart';
 import 'package:portfolio/shared/constants/colors.dart';
 import 'package:portfolio/shared/constants/textstyles.dart';
 import 'package:portfolio/shared/constants/utils.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AdminContactsScreen extends StatefulWidget {
   const AdminContactsScreen({super.key});
@@ -238,12 +234,9 @@ class _AdminContactsScreenState extends State<AdminContactsScreen> {
 
   void _downloadFile(String dataUrl, String defaultName) {
     try {
-      final anchor = html.AnchorElement(href: dataUrl)
-        ..target = 'blank'
-        ..download = defaultName;
-      html.document.body?.append(anchor);
-      anchor.click();
-      anchor.remove();
+      // Platform-agnostic download via url_launcher
+      final Uri uri = Uri.parse(dataUrl);
+      launchUrl(uri);
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(

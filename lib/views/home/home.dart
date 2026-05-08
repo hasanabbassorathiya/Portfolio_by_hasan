@@ -82,21 +82,10 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     }
   }
 
-  IconData _getIconForPlatform(String platform) {
-    // Try PlatformIcons first, then fallback to Iconsax
+  dynamic _getIconForPlatform(String platform) {
+    // Try PlatformIcons first, then fallback to default
     final icon = PlatformIcons.getIcon(platform);
-    if (icon != FontAwesomeIcons.link) {
-      return icon;
-    }
-    // Fallback for Iconsax icons
-    switch (platform.toLowerCase()) {
-      case 'instagram':
-        return Iconsax.instagram_copy;
-      case 'facebook':
-        return Iconsax.facebook_copy;
-      default:
-        return Icons.link;
-    }
+    return icon;
   }
 
   // Method to run animations and scroll to top when page becomes active
@@ -488,122 +477,112 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                     position: _ctaSlide,
                                     child: FadeTransition(
                                       opacity: _ctaFadeIn,
-                                        child: AppButton(
-                                        title: 'Get in Touch',
-                                        icons: Iconsax.arrow_right_3_copy,
-                                        onTap: () {
-                                          AnalyticsService.trackButtonClick(
-                                            buttonName: 'Get in Touch',
-                                            location: 'home',
-                                          );
-                                          // Navigate to contact route with scrollToForm parameter
-                                          context.go('/contact?scrollToForm=true');
-                                        },
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    height: 48,
-                                  ), // Spacing after button
-                                ],
-                              ),
-                              // Section with Contact Info and Social Buttons
-                              FadeTransition(
-                                opacity:
-                                    _contactFadeIn, // Apply contact specific fade
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    // Contact Info (Rows)
-                                    if (_phone != null && _phone!.isNotEmpty) ...[
-                                      Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Icon(
-                                            Iconsax.call_calling_copy,
-                                            size: 18,
-                                            color: AppColors.primaryColor,
-                                          ),
-                                          const SizedBox(width: 8),
-                                          InkWell(
-                                            onTap:
-                                                () => LinkUtils.launchPhone(
-                                                  _phone!,
-                                                ),
-                                            onHover: (value) {
-                                              setState(() {
-                                                _isHoveringPhoneNumber = value;
-                                              });
-                                            },
-                                            child: Text(
-                                              _phone!,
-                                              style: AppStyles.regular(
-                                                fontWeight: FontWeight.bold,
-                                              ).copyWith(
-                                                color:
-                                                    _isHoveringPhoneNumber
-                                                        ? AppColors.primaryColor
-                                                        : Colors.black,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      const SizedBox(height: 8),
+                                      // Removed View Open Source CTA
+                                      // Removed View Open Source CTA
+                                      const SizedBox(
+                                        height: 48,
+                                      ), // Spacing after button
                                     ],
-                                    Row(
-                                      mainAxisSize: MainAxisSize.min,
+                                  ),
+                                  // Section with Contact Info and Social Buttons
+                                  FadeTransition(
+                                    opacity:
+                                        _contactFadeIn, // Apply contact specific fade
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        Icon(
-                                          Iconsax.message_text_1_copy,
-                                          size: 18,
-                                          color: AppColors.primaryColor,
-                                        ),
-                                        const SizedBox(width: 8),
-                                        Flexible(
-                                          child: InkWell(
-                                            onTap:
-                                                () => LinkUtils.launchEmail(
-                                                  AppLinks.email,
-                                                ),
-                                            onHover: (value) {
-                                              setState(() {
-                                                _isHoveringEmail = value;
-                                              });
-                                            },
-                                            child: Text(
-                                              AppLinks.email,
-                                              style: AppStyles.regular(
-                                                fontWeight: FontWeight.bold,
-                                              ).copyWith(
-                                                color:
-                                                    _isHoveringEmail
-                                                        ? AppColors.primaryColor
-                                                        : Colors.black,
+                                        // Contact Info (Rows)
+                                        if (_phone != null && _phone!.isNotEmpty) ...[
+                                          Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Icon(
+                                                Iconsax.call_calling_copy,
+                                                size: 18,
+                                                color: AppColors.primaryColor,
                                               ),
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
+                                              const SizedBox(width: 8),
+                                              InkWell(
+                                                onTap:
+                                                    () => LinkUtils.launchPhone(
+                                                      _phone!,
+                                                    ),
+                                                onHover: (value) {
+                                                  setState(() {
+                                                    _isHoveringPhoneNumber = value;
+                                                  });
+                                                },
+                                                child: Text(
+                                                  _phone!,
+                                                  style: AppStyles.regular(
+                                                    fontWeight: FontWeight.bold,
+                                                  ).copyWith(
+                                                    color:
+                                                        _isHoveringPhoneNumber
+                                                            ? AppColors.primaryColor
+                                                            : Colors.black,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
                                           ),
+                                          const SizedBox(height: 8),
+                                        ],
+                                        Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Icon(
+                                              Iconsax.message_text_1_copy,
+                                              size: 18,
+                                              color: AppColors.primaryColor,
+                                            ),
+                                            const SizedBox(width: 8),
+                                            Flexible(
+                                              child: InkWell(
+                                                onTap:
+                                                    () => LinkUtils.launchEmail(
+                                                      AppLinks.email,
+                                                    ),
+                                                onHover: (value) {
+                                                  setState(() {
+                                                    _isHoveringEmail = value;
+                                                  });
+                                                },
+                                                child: Text(
+                                                  AppLinks.email,
+                                                  style: AppStyles.regular(
+                                                    fontWeight: FontWeight.bold,
+                                                  ).copyWith(
+                                                    color:
+                                                        _isHoveringEmail
+                                                            ? AppColors.primaryColor
+                                                            : Colors.black,
+                                                  ),
+                                                  overflow: TextOverflow.ellipsis,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
                                         ),
+                                        // Social Buttons from admin
+                                        AppUtils().vSpace(
+                                          size: isSmall ? 24.0 : 32.0,
+                                        ),
+                                        if (_socialLinks.isNotEmpty)
+                                          Wrap(
+                                            spacing: 16.0,
+                                            runSpacing: 16.0,
+                                            children: _socialLinks.map((link) {
+                                              return SocialButtons(
+                                                icon: _getIconForPlatform(link.platform),
+                                                link: link.url,
+                                              );
+                                            }).toList(),
+                                          ),
                                       ],
                                     ),
-                                    // Social Buttons from admin
-                                    AppUtils().vSpace(
-                                      size: isSmall ? 24.0 : 32.0,
-                                    ),
-                                    if (_socialLinks.isNotEmpty)
-                                      Wrap(
-                                        spacing: 16.0,
-                                        runSpacing: 16.0,
-                                        children: _socialLinks.map((link) {
-                                          return SocialButtons(
-                                            icon: _getIconForPlatform(link.platform),
-                                            link: link.url,
-                                          );
-                                        }).toList(),
-                                      ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
                             ],
                           ),

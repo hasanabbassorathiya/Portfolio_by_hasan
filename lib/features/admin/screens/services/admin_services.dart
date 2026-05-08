@@ -204,8 +204,11 @@ class _AdminServicesScreenState extends State<AdminServicesScreen> {
     ).then((saved) {
       if (saved == true) {
         _loadServices();
-      if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Successfully deleted'), backgroundColor: Colors.green));
-      debugPrint('Successfully deleted item');
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Successfully saved'), backgroundColor: Colors.green),
+          );
+        }
       }
     });
   }

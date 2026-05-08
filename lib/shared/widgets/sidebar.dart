@@ -1,3 +1,4 @@
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -159,14 +160,14 @@ class _AppSidebarState extends State<AppSidebar> {
                     ],
                     // Social Buttons and Copyright
                     ..._socialLinks.map((link) {
-                      IconData iconData = Iconsax.link_1;
+                      FaIconData iconData = FontAwesomeIcons.link;
                       final platform = (link['platform'] as String).toLowerCase();
-                      if (platform.contains('github')) iconData = Iconsax.code_1;
-                      else if (platform.contains('linkedin')) iconData = Iconsax.link_2; // fallback
-                      else if (platform.contains('twitter') || platform.contains('x')) iconData = Iconsax.message; // fallback
-                      else if (platform.contains('instagram')) iconData = Iconsax.instagram_copy;
-                      else if (platform.contains('email')) iconData = Iconsax.sms;
-                      
+                      if (platform.contains('github')) iconData = FontAwesomeIcons.github;
+                      else if (platform.contains('linkedin')) iconData = FontAwesomeIcons.linkedin;
+                      else if (platform.contains('twitter') || platform.contains('x')) iconData = FontAwesomeIcons.twitter;
+                      else if (platform.contains('instagram')) iconData = FontAwesomeIcons.instagram;
+                      else if (platform.contains('email')) iconData = FontAwesomeIcons.envelope;
+
                       return Padding(
                         padding: const EdgeInsets.only(bottom: 20.0),
                         child: SocialButtons(

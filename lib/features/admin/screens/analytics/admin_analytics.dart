@@ -52,12 +52,16 @@ class _AdminAnalyticsScreenState extends State<AdminAnalyticsScreen> {
           .gte('created_at', startDate.toIso8601String())
           .order('created_at', ascending: false);
 
+      debugPrint('Analytics page views response: $pageViewsResponse');
+
       // Load custom events
       final eventsResponse = await SupabaseService.requiredClient
           .from('custom_events')
           .select()
           .gte('created_at', startDate.toIso8601String())
           .order('created_at', ascending: false);
+
+      debugPrint('Analytics custom events response: $eventsResponse');
 
       // Calculate statistics
       final pageViews =
