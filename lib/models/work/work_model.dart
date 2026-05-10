@@ -49,8 +49,11 @@ class WorkModel {
       description: map['description'] as String,
       projectUrl: map['project_url'] as String? ?? map['projectUrl'] as String?,
       tags:
-          (map['tags'] as List<dynamic>?)?.map((e) => e.toString()).toList() ??
-          [],
+          (map['tags'] is List)
+              ? (map['tags'] as List<dynamic>).map((e) => e.toString()).toList()
+              : (map['tags'] is String)
+              ? (map['tags'] as String).split(',').map((e) => e.trim()).toList()
+              : [],
       client: map['client'] as String?,
       year: map['year'] as String?,
       role: map['role'] as String?,

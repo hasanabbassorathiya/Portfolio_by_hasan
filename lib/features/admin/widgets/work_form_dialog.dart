@@ -147,9 +147,9 @@ class _WorkFormDialogState extends State<WorkFormDialog> {
             _solutionController.text.trim().isEmpty
                 ? null
                 : _solutionController.text.trim(),
-        'tags': tags,
-        'technologies': technologies.isEmpty ? null : technologies,
-        'images': images.isEmpty ? null : images,
+        'tags': tags.join(','),
+        'technologies': technologies.isEmpty ? null : technologies.join(','),
+        'images': images.isEmpty ? null : images.join(','),
         'play_store_url':
             _playStoreUrlController.text.trim().isEmpty
                 ? null
@@ -162,8 +162,8 @@ class _WorkFormDialogState extends State<WorkFormDialog> {
             _appIconUrlController.text.trim().isEmpty
                 ? null
                 : _appIconUrlController.text.trim(),
-        'is_active': _isActive,
-        'is_featured': _isFeatured,
+        'is_active': _isActive ? 1 : 0,
+        'is_featured': _isFeatured ? 1 : 0,
         'order_index': _orderIndex,
       };
 

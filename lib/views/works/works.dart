@@ -71,19 +71,24 @@ class _WorksState extends State<Works> with SingleTickerProviderStateMixin {
   }
 
   Future<void> _loadData() async {
+    final startTime = DateTime.now();
+    debugPrint('Works: Loading data started...');
     try {
       setState(() {
         _isLoading = true;
         _hasError = false;
       });
       final works = await _workRepository.getAllWorks();
+      debugPrint('Works: Loaded ${works.length} projects in ${DateTime.now().difference(startTime).inMilliseconds}ms');
       final testimonials = await _testimonialRepository.getActiveTestimonials();
+      debugPrint('Works: Loaded ${testimonials.length} testimonials in ${DateTime.now().difference(startTime).inMilliseconds}ms');
       setState(() {
         _projects = works;
         _testimonials = testimonials;
         _isLoading = false;
       });
     } catch (e) {
+      debugPrint('Works: Error loading data: $e');
       setState(() {
         _hasError = true;
         _isLoading = false;

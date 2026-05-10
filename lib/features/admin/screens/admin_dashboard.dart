@@ -17,7 +17,10 @@ import 'package:portfolio/features/admin/screens/services/admin_services.dart';
 import 'package:portfolio/features/admin/screens/contacts/admin_contacts.dart';
 import 'package:portfolio/features/admin/screens/social_links/admin_social_links.dart';
 import 'package:portfolio/features/admin/screens/analytics/admin_analytics.dart';
+import 'package:logger/logger.dart';
 import 'dart:async';
+
+final logger = Logger();
 
 class AdminDashboard extends StatefulWidget {
   const AdminDashboard({super.key});
@@ -93,6 +96,22 @@ class _AdminDashboardState extends State<AdminDashboard> {
         setState(() {});
       }
     });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Move route check here, safe to call after dependencies changed
+    final String? subRoute = GoRouterState.of(context).uri.toString();
+    if (subRoute != null) {
+      for (int i = 0; i < _screens.length; i++) {
+        // Simple heuristic: match screen title to path
+        if (subRoute.contains(_screens[i].title.toLowerCase())) {
+          _selectedIndex = i; // Use simple assignment, no setState needed here if called early
+          break;
+        }
+      }
+    }
   }
 
   @override
@@ -190,6 +209,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
                                   ),
                                 ),
                         onTap: () {
+                          print('DEBUG: Navigating to: ${screen.title}');
                           setState(() {
                             _selectedIndex = index;
                           });

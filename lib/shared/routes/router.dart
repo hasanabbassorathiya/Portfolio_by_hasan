@@ -12,6 +12,7 @@ import 'package:portfolio/views/blogs/blogs.dart';
 import 'package:portfolio/views/blogs/blog_detail.dart';
 import 'package:portfolio/features/admin/screens/admin_login.dart';
 import 'package:portfolio/features/admin/screens/admin_dashboard.dart';
+import 'package:portfolio/features/admin/screens/blogs/admin_blogs.dart';
 import 'package:portfolio/features/admin/screens/admin_reset_password.dart';
 import 'package:portfolio/core/services/supabase_service.dart';
 import 'package:portfolio/core/services/analytics_service.dart';
@@ -100,6 +101,18 @@ class AppRouter {
         path: AppRoutes.adminDashboard,
         name: 'admin-dashboard',
         builder: (context, goState) => const AdminDashboard(),
+        routes: [
+          GoRoute(
+            path: 'blogs',
+            name: 'admin-blogs',
+            builder: (context, goState) => const AdminDashboard(), // Keep dashboard shell
+          ),
+          GoRoute(
+            path: 'analytics',
+            name: 'admin-analytics',
+            builder: (context, goState) => const AdminDashboard(), // Keep dashboard shell
+          ),
+        ],
       ),
       // Handle /admin route
       GoRoute(

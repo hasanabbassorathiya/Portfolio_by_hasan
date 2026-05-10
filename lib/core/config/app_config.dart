@@ -11,8 +11,10 @@ class AppConfig {
     if (fromEnv != null && fromEnv.isNotEmpty) return fromEnv;
     if (kIsWeb) {
       const fromBuild = String.fromEnvironment('TURSO_URL', defaultValue: '');
+      debugPrint('AppConfig: TURSO_URL from build: $fromBuild');
       if (fromBuild.isNotEmpty) return fromBuild;
     }
+    debugPrint('AppConfig: TURSO_URL not found');
     return '';
   }
 
@@ -21,8 +23,10 @@ class AppConfig {
     if (fromEnv != null && fromEnv.isNotEmpty) return fromEnv;
     if (kIsWeb) {
       const fromBuild = String.fromEnvironment('TURSO_TOKEN', defaultValue: '');
+      debugPrint('AppConfig: TURSO_TOKEN from build: ${fromBuild.substring(0, 5)}...');
       if (fromBuild.isNotEmpty) return fromBuild;
     }
+    debugPrint('AppConfig: TURSO_TOKEN not found');
     return '';
   }
 

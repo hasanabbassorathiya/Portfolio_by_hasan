@@ -4,6 +4,18 @@
 import '../services/supabase_service.dart';
 
 abstract class BaseRepository {
+  // Simple in-memory cache
+  static final Map<String, dynamic> _cache = {};
+
+  /// Get cached data if available
+  T? getCached<T>(String key) => _cache[key] as T?;
+
+  /// Set data to cache
+  void setCache(String key, dynamic value) => _cache[key] = value;
+
+  /// Clear cache
+  void clearCache() => _cache.clear();
+
   /// Get Supabase client
   dynamic get client {
     final client = SupabaseService.client;

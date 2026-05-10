@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:go_router/go_router.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:portfolio/core/repositories/contact_repository.dart';
 import 'package:portfolio/core/repositories/profile_repository.dart';
 import 'package:portfolio/shared/constants/textstyles.dart';
@@ -9,6 +10,7 @@ import 'package:portfolio/shared/constants/links.dart';
 import 'package:portfolio/shared/utils/link_utils.dart';
 import 'package:portfolio/shared/widgets/button.dart';
 import 'package:portfolio/shared/widgets/file_upload_widget.dart';
+import 'package:portfolio/shared/widgets/social_buttons.dart';
 import 'package:portfolio/shared/constants/colors.dart';
 import 'package:portfolio/core/services/analytics_service.dart';
 import 'package:portfolio/core/services/error_handler.dart';
@@ -319,98 +321,21 @@ class _ContactState extends State<Contact> with SingleTickerProviderStateMixin {
                               spacing: 16, // Horizontal spacing between items
                               runSpacing: 12, // Vertical spacing if items wrap
                               children: [
-                                // Social Media Text Links
-                                InkWell(
-                                  onTap:
-                                      () => LinkUtils.launchUrl(
-                                        AppLinks.facebook,
-                                      ), // Use constant and LinkUtils
-                                  onHover: (value) {
-                                    setState(() {
-                                      _isHoveringFacebook = value;
-                                    });
-                                  },
-                                  child: Text(
-                                    'FACEBOOK',
-                                    style: AppStyles.body(
-                                      fontSize: 14,
-                                    ).copyWith(
-                                      fontWeight: FontWeight.bold,
-                                      color:
-                                          _isHoveringFacebook
-                                              ? AppColors.primaryColor
-                                              : Colors.black,
-                                    ),
-                                  ),
+                                SocialButtons(
+                                  icon: FontAwesomeIcons.facebook,
+                                  link: AppLinks.facebook,
                                 ),
-                                InkWell(
-                                  onTap:
-                                      () => LinkUtils.launchUrl(
-                                        AppLinks.twitter,
-                                      ), // Use constant and LinkUtils
-                                  onHover: (value) {
-                                    setState(() {
-                                      _isHoveringTwitter = value;
-                                    });
-                                  },
-                                  child: Text(
-                                    'TWITTER',
-                                    style: AppStyles.body(
-                                      fontSize: 14,
-                                    ).copyWith(
-                                      fontWeight: FontWeight.bold,
-                                      color:
-                                          _isHoveringTwitter
-                                              ? AppColors.primaryColor
-                                              : Colors.black,
-                                    ),
-                                  ),
+                                SocialButtons(
+                                  icon: FontAwesomeIcons.twitter,
+                                  link: AppLinks.twitter,
                                 ),
-                                InkWell(
-                                  onTap:
-                                      () => LinkUtils.launchUrl(
-                                        AppLinks.instagram,
-                                      ), // Use constant and LinkUtils
-                                  onHover: (value) {
-                                    setState(() {
-                                      _isHoveringInstagram = value;
-                                    });
-                                  },
-                                  child: Text(
-                                    'INSTAGRAM',
-                                    style: AppStyles.body(
-                                      fontSize: 14,
-                                    ).copyWith(
-                                      fontWeight: FontWeight.bold,
-                                      color:
-                                          _isHoveringInstagram
-                                              ? AppColors.primaryColor
-                                              : Colors.black,
-                                    ),
-                                  ),
+                                SocialButtons(
+                                  icon: FontAwesomeIcons.instagram,
+                                  link: AppLinks.instagram,
                                 ),
-                                InkWell(
-                                  onTap:
-                                      () => LinkUtils.launchUrl(
-                                        AppLinks.linkedIn,
-                                      ), // Use constant and LinkUtils
-                                  onHover: (value) {
-                                    setState(() {
-                                      _isHoveringLinkedIn = value;
-                                    });
-                                  },
-                                  child: Text(
-                                    'LINKEDIN',
-                                    style: AppStyles.body(
-                                      fontSize: 14,
-                                    ).copyWith(
-                                      fontWeight: FontWeight.bold,
-                                      color:
-                                          _isHoveringLinkedIn
-                                              ? AppColors.primaryColor
-                                              : Colors.black,
-                                    ),
-                                  ),
+                                SocialButtons(
+                                  icon: FontAwesomeIcons.linkedin,
+                                  link: AppLinks.linkedIn,
                                 ),
                               ],
                             ), // Social icons wrap

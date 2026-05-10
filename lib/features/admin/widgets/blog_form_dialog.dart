@@ -154,21 +154,9 @@ class _BlogFormDialogState extends State<BlogFormDialog> {
       'slug': slugValue,
       'content': _contentController.text.trim(),
       'excerpt': _excerptController.text.trim(),
-      'author': _authorController.text.trim(),
-      'read_time':
-          _readTimeController.text.trim().isEmpty
-              ? null
-              : _readTimeController.text.trim(),
-      'category':
-          _categoryController.text.trim().isEmpty
-              ? null
-              : _categoryController.text.trim(),
-      'image_url': _imageUrlController.text.trim(),
-      'tags': tags,
-      'status': _blogStatus,
-      'is_published': isPublished,
+      'cover_image_url': _imageUrlController.text.trim(),
+      'is_published': isPublished ? 1 : 0,
       if (publishedAt != null) 'published_at': publishedAt.toIso8601String(),
-      if (scheduledPublishAt != null) 'scheduled_publish_at': scheduledPublishAt.toIso8601String(),
     };
   }
 

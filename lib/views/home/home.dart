@@ -8,6 +8,7 @@ import 'package:portfolio/shared/constants/colors.dart';
 import 'package:portfolio/shared/constants/textstyles.dart';
 import 'package:portfolio/shared/constants/utils.dart';
 import 'package:portfolio/shared/constants/links.dart';
+import 'package:portfolio/shared/routes/app_routes.dart';
 import 'package:portfolio/shared/utils/link_utils.dart';
 
 import 'package:portfolio/shared/widgets/button.dart';
@@ -47,6 +48,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   String? _phone;
   String? _title;
   String? _bio;
+  String? _resumeUrl;
   List<SocialLinkModel> _socialLinks = [];
 
   void _trackPageView() {
@@ -64,6 +66,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
           _phone = profile.phone;
           _title = profile.title;
           _bio = profile.bio;
+          _resumeUrl = profile.resumeUrl;
         });
       }
     } catch (e) {
@@ -477,13 +480,26 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                     position: _ctaSlide,
                                     child: FadeTransition(
                                       opacity: _ctaFadeIn,
-                                      // Removed View Open Source CTA
-                                      // Removed View Open Source CTA
-                                      const SizedBox(
-                                        height: 48,
-                                      ), // Spacing after button
-                                    ],
+                                      child: AppButton(
+                                        title: 'Resume',
+                                        icons: Iconsax.arrow_right_3_copy,
+                                        onTap: () {
+                                          AnalyticsService.trackDownload(
+                                            fileType: 'pdf',
+                                            fileName: 'Resume',
+                                          );
+                                          LinkUtils.launchUrl(
+                                            _resumeUrl ?? AppLinks.cvLink,
+                                            linkType: 'cv_download',
+                                            linkName: 'Resume',
+                                          );
+                                        },
+                                      ),
+                                    ),
                                   ),
+                                  const SizedBox(
+                                    height: 48,
+                                  ), // Spacing after button
                                   // Section with Contact Info and Social Buttons
                                   FadeTransition(
                                     opacity:
@@ -712,8 +728,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                             buttonName: 'Let\'s talk with me',
                                             location: 'home',
                                           );
-                                          // Navigate to contact route with scrollToForm parameter
-                                          context.go('/contact?scrollToForm=true');
+                                          // Navigate to contact route by name to ensure correctness
+                                          context.goNamed(AppRoutes.contact);
                                         },
                                       ),
                                     ),

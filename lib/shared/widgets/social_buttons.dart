@@ -19,27 +19,33 @@ class _SocialButtonsState extends State<SocialButtons> {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        LinkUtils.launchUrl(widget.link);
-      },
-      onHover: (value) {
-        setState(() {
-          _isHovering = value;
-        });
-      },
-      child: Container(
-        width: 40.0,
-        height: 40.0,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: _isHovering ? null : AppColors.bgColor,
-          gradient: _isHovering ? AppUtils().appGradient : null,
-        ),
-        child: FaIcon(
-          widget.icon,
-          size: 24,
-          color: _isHovering ? Colors.white : AppColors.primaryColor,
+    return Material(
+      color: Colors.transparent,
+      shape: const CircleBorder(),
+      child: InkWell(
+        customBorder: const CircleBorder(),
+        onTap: () {
+          LinkUtils.launchUrl(widget.link);
+        },
+        onHover: (value) {
+          setState(() {
+            _isHovering = value;
+          });
+        },
+        child: Container(
+          width: 40.0,
+          height: 40.0,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: _isHovering ? AppColors.primaryColor : AppColors.bgColor,
+          ),
+          child: Center(
+            child: FaIcon(
+              widget.icon,
+              size: 16,
+              color: _isHovering ? Colors.white : AppColors.primaryColor,
+            ),
+          ),
         ),
       ),
     );

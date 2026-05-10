@@ -8,6 +8,10 @@ class SocialLinkRepository extends BaseRepository {
 
   /// Get all social links
   Future<List<SocialLinkModel>> getAllSocialLinks({String? profileId}) async {
+    final cacheKey = 'social_links_${profileId ?? 'all'}';
+    final cached = getCached<List<SocialLinkModel>>(cacheKey);
+    if (cached != null) return cached;
+
     try {
       dynamic query = client.from(_tableName).select();
 
@@ -18,9 +22,12 @@ class SocialLinkRepository extends BaseRepository {
       query = query.order('order_index', ascending: true);
 
       final response = await query;
-      return (response as List)
+      final links = (response as List)
           .map((json) => SocialLinkModel.fromMap(json as Map<String, dynamic>))
           .toList();
+
+      setCache(cacheKey, links);
+      return links;
     } catch (e) {
       print('Failed to fetch social links: $e');
       throw Exception('Failed to fetch social links: $e');

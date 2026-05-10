@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
+import 'package:go_router/go_router.dart';
 import 'package:portfolio/shared/constants/textstyles.dart';
 import 'package:portfolio/shared/widgets/sidebar.dart';
 import 'package:portfolio/shared/widgets/smooth_scroll_wrapper.dart';
@@ -60,6 +61,15 @@ class _MainLayoutShellState extends State<MainLayoutShell> {
   void initState() {
     super.initState();
     _scrollController.addListener(_onScroll);
+
+    // Add post-frame callback to check initial route
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final String? location = GoRouterState.of(context).uri.toString();
+      if (location != null) {
+        final index = _routeToSectionIndex(location);
+        _scrollToSection(index);
+      }
+    });
   }
 
   @override

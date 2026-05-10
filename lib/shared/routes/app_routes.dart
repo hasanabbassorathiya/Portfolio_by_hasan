@@ -12,5 +12,6 @@ class AppRoutes {
   // Admin routes
   static String adminLogin = '/admin/login';
   static String adminDashboard = '/admin/dashboard';
+  static String adminBlogs = '/admin/blogs';
   static String adminResetPassword = '/admin/reset-password';
 }

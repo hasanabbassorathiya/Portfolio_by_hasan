@@ -1,5 +1,7 @@
 {
   "projects": {
     "default": "hasan-abbas-portfolio"
-  }
+  },
+  "targets": {},
+  "etags": {}
 }

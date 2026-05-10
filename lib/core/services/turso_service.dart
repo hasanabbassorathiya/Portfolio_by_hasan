@@ -174,12 +174,18 @@ class TursoQueryBuilder implements Future<dynamic> {
       final cols = _insertData!.keys.join(', ');
       final vals = _insertData!.values.map((v) {
         if (v is String) {
-          final escaped = v.replaceAll("'", "''");
+          final escaped = v.replaceAll("'", "''")
+                           .replaceAll("\n", " ")
+                           .replaceAll("\\", "\\\\");
           return "'$escaped'";
         }
         if (v is bool) return v ? 1 : 0;
+        if (v is Map) {
+          final jsonStr = jsonEncode(v).replaceAll("'", "''");
+          return "'$jsonStr'";
+        }
         if (v == null) return 'NULL';
-        return v.toString();
+        return "'${v.toString().replaceAll("'", "''")}'";
       }).join(', ');
       final replace = _action == 'upsert' ? 'OR REPLACE ' : '';
       sql = 'INSERT ${replace}INTO $table ($cols) VALUES ($vals)';
@@ -209,6 +215,16 @@ class TursoQueryBuilder implements Future<dynamic> {
 
     debugPrint('Executing SQL: $sql');
 
+    final body = jsonEncode({
+      "requests": [
+        { "type": "execute", "stmt": { "sql": sql, "args": [] } },
+        { "type": "close" }
+      ]
+    });
+    debugPrint('TursoService: Request Body: $body');
+
+    debugPrint('TursoService: SQL to be executed: $sql');
+
     try {
       final response = await http.post(
         Uri.parse(client.url),
@@ -216,12 +232,7 @@ class TursoQueryBuilder implements Future<dynamic> {
           'Authorization': 'Bearer ${client.token}',
           'Content-Type': 'application/json',
         },
-        body: jsonEncode({
-          "requests": [
-            { "type": "execute", "stmt": { "sql": sql, "args": [] } },
-            { "type": "close" }
-          ]
-        })
+        body: body
       );
 
       debugPrint('Turso Raw Response: ${response.body}');

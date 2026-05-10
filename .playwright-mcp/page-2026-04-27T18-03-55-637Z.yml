@@ -1,0 +1,895 @@
+- generic [ref=e2]:
+  - region
+  - generic [ref=e3]:
+    - link "Skip to content" [ref=e4] [cursor=pointer]:
+      - /url: "#start-of-content"
+    - banner [ref=e6]:
+      - heading "Navigation Menu" [level=2] [ref=e7]
+      - generic [ref=e8]:
+        - link "Homepage" [ref=e10] [cursor=pointer]:
+          - /url: /
+          - img [ref=e11]
+        - generic [ref=e13]:
+          - navigation "Global" [ref=e16]:
+            - list [ref=e17]:
+              - listitem [ref=e18]:
+                - button "Platform" [ref=e20] [cursor=pointer]:
+                  - text: Platform
+                  - img [ref=e21]
+              - listitem [ref=e23]:
+                - button "Solutions" [ref=e25] [cursor=pointer]:
+                  - text: Solutions
+                  - img [ref=e26]
+              - listitem [ref=e28]:
+                - button "Resources" [ref=e30] [cursor=pointer]:
+                  - text: Resources
+                  - img [ref=e31]
+              - listitem [ref=e33]:
+                - button "Open Source" [ref=e35] [cursor=pointer]:
+                  - text: Open Source
+                  - img [ref=e36]
+              - listitem [ref=e38]:
+                - button "Enterprise" [ref=e40] [cursor=pointer]:
+                  - text: Enterprise
+                  - img [ref=e41]
+              - listitem [ref=e43]:
+                - link "Pricing" [ref=e44] [cursor=pointer]:
+                  - /url: https://github.com/pricing
+                  - generic [ref=e45]: Pricing
+          - generic [ref=e46]:
+            - button "Search or jump to…" [ref=e49] [cursor=pointer]:
+              - img [ref=e51]
+            - link "Sign in" [ref=e54] [cursor=pointer]:
+              - /url: /login?return_to=https%3A%2F%2Fgithub.com%2Fhasanabbassorathiya%2FPortfolio_by_hasan%2Factions
+            - link "Sign up" [ref=e55] [cursor=pointer]:
+              - /url: /signup?ref_cta=Sign+up&ref_loc=header+logged+out&ref_page=%2F%3Cuser-name%3E%2F%3Crepo-name%3E%2Factions%2Findex&source=header-repo&source_repo=hasanabbassorathiya%2FPortfolio_by_hasan
+            - button "Appearance settings" [disabled] [ref=e58]:
+              - img
+  - main [ref=e62]:
+    - generic [ref=e63]:
+      - generic [ref=e64]:
+        - generic [ref=e66]:
+          - img [ref=e67]
+          - link "hasanabbassorathiya" [ref=e70] [cursor=pointer]:
+            - /url: /hasanabbassorathiya
+          - generic [ref=e71]: /
+          - strong [ref=e72]:
+            - link "Portfolio_by_hasan" [ref=e73] [cursor=pointer]:
+              - /url: /hasanabbassorathiya/Portfolio_by_hasan
+          - generic [ref=e74]: Public
+        - generic [ref=e75]:
+          - list:
+            - listitem [ref=e76]:
+              - link "You must be signed in to change notification settings" [ref=e77] [cursor=pointer]:
+                - /url: /login?return_to=%2Fhasanabbassorathiya%2FPortfolio_by_hasan
+                - img [ref=e78]
+                - text: Notifications
+            - listitem [ref=e80]:
+              - link "Fork 0" [ref=e81] [cursor=pointer]:
+                - /url: /login?return_to=%2Fhasanabbassorathiya%2FPortfolio_by_hasan
+                - img [ref=e82]
+                - text: Fork
+                - generic "0" [ref=e84]
+            - listitem [ref=e85]:
+              - link "You must be signed in to star a repository" [ref=e87] [cursor=pointer]:
+                - /url: /login?return_to=%2Fhasanabbassorathiya%2FPortfolio_by_hasan
+                - img [ref=e88]
+                - text: Star
+                - generic "0 users starred this repository" [ref=e90]: "0"
+      - navigation "Repository" [ref=e91]:
+        - list [ref=e92]:
+          - listitem [ref=e93]:
+            - link "Code" [ref=e94] [cursor=pointer]:
+              - /url: /hasanabbassorathiya/Portfolio_by_hasan
+              - img [ref=e95]
+              - generic [ref=e97]: Code
+          - listitem [ref=e98]:
+            - link "Issues" [ref=e99] [cursor=pointer]:
+              - /url: /hasanabbassorathiya/Portfolio_by_hasan/issues
+              - img [ref=e100]
+              - generic [ref=e103]: Issues
+          - listitem [ref=e104]:
+            - link "Pull requests" [ref=e105] [cursor=pointer]:
+              - /url: /hasanabbassorathiya/Portfolio_by_hasan/pulls
+              - img [ref=e106]
+              - generic [ref=e108]: Pull requests
+          - listitem [ref=e109]:
+            - link "Actions" [ref=e110] [cursor=pointer]:
+              - /url: /hasanabbassorathiya/Portfolio_by_hasan/actions
+              - img [ref=e111]
+              - generic [ref=e113]: Actions
+          - listitem [ref=e114]:
+            - link "Projects" [ref=e115] [cursor=pointer]:
+              - /url: /hasanabbassorathiya/Portfolio_by_hasan/projects
+              - img [ref=e116]
+              - generic [ref=e118]: Projects
+          - listitem [ref=e119]:
+            - link "Security and quality" [ref=e120] [cursor=pointer]:
+              - /url: /hasanabbassorathiya/Portfolio_by_hasan/security
+              - img [ref=e121]
+              - generic [ref=e123]: Security and quality
+          - listitem [ref=e124]:
+            - link "Insights" [ref=e125] [cursor=pointer]:
+              - /url: /hasanabbassorathiya/Portfolio_by_hasan/pulse
+              - img [ref=e126]
+              - generic [ref=e128]: Insights
+    - generic [ref=e130]:
+      - 'heading "Actions: hasanabbassorathiya/Portfolio_by_hasan" [level=1] [ref=e131]'
+      - generic [ref=e134]:
+        - generic [ref=e135]:
+          - heading "Actions" [level=2] [ref=e137]
+          - navigation "Actions Workflows" [ref=e141]:
+            - list [ref=e143]:
+              - listitem [ref=e144]:
+                - link "All workflows" [ref=e145] [cursor=pointer]:
+                  - /url: /hasanabbassorathiya/Portfolio_by_hasan/actions
+                  - generic [ref=e146]: All workflows
+              - listitem [ref=e147]
+              - listitem [ref=e148]:
+                - list "Workflows" [ref=e152]:
+                  - listitem [ref=e153]:
+                    - link "Deploy Preview to Firebase Hosting" [ref=e154] [cursor=pointer]:
+                      - /url: /hasanabbassorathiya/Portfolio_by_hasan/actions/workflows/firebase-deploy-preview.yml
+                      - generic [ref=e155]: Deploy Preview to Firebase Hosting
+                  - listitem [ref=e156]:
+                    - link "Deploy to Firebase Hosting" [ref=e157] [cursor=pointer]:
+                      - /url: /hasanabbassorathiya/Portfolio_by_hasan/actions/workflows/firebase-deploy.yml
+                      - generic [ref=e158]: Deploy to Firebase Hosting
+                  - listitem [ref=e159]:
+                    - link "Deploy to GitHub Pages" [ref=e160] [cursor=pointer]:
+                      - /url: /hasanabbassorathiya/Portfolio_by_hasan/actions/workflows/deploy.yml
+                      - generic [ref=e161]: Deploy to GitHub Pages
+              - listitem [ref=e162]
+              - listitem [ref=e163]:
+                - generic [ref=e166]:
+                  - heading "Management" [level=3] [ref=e168]
+                  - list "Management" [ref=e169]:
+                    - listitem [ref=e170]:
+                      - link "Caches" [ref=e171] [cursor=pointer]:
+                        - /url: /hasanabbassorathiya/Portfolio_by_hasan/actions/caches
+                        - generic:
+                          - img
+                        - generic [ref=e172]: Caches
+        - generic [ref=e175]:
+          - generic [ref=e176]:
+            - generic [ref=e177]:
+              - heading "All workflows" [level=2] [ref=e179]:
+                - generic [ref=e181]: All workflows
+              - search [ref=e185]:
+                - combobox "Filter workflow runs" [ref=e186]
+                - img
+            - generic [ref=e187]: Showing runs from all workflows
+          - generic [ref=e188]:
+            - generic [ref=e189]:
+              - strong [ref=e192]: 96 workflow runs
+              - generic [ref=e193]:
+                - button "Workflow" [ref=e197] [cursor=pointer]:
+                  - generic [ref=e199]: Workflow
+                  - generic:
+                    - img
+                - button "Event" [ref=e203] [cursor=pointer]:
+                  - generic [ref=e205]: Event
+                  - generic:
+                    - img
+                - button "Status" [ref=e209] [cursor=pointer]:
+                  - generic [ref=e211]: Status
+                  - generic:
+                    - img
+                - button "Branch" [ref=e215] [cursor=pointer]:
+                  - generic [ref=e217]: Branch
+                  - generic:
+                    - img
+                - button "Actor" [ref=e221] [cursor=pointer]:
+                  - generic [ref=e223]: Actor
+                  - generic:
+                    - img
+            - generic [ref=e224]:
+              - generic [ref=e226]:
+                - generic [ref=e227]:
+                  - 'link "failed: Run 65 of Deploy to Firebase Hosting. fix: Admin Experiences list load robustness" [ref=e228] [cursor=pointer]':
+                    - /url: /hasanabbassorathiya/Portfolio_by_hasan/actions/runs/25011126670
+                    - img "failed:" [ref=e230]
+                    - generic [ref=e232]: "fix: Admin Experiences list load robustness"
+                  - generic [ref=e233]:
+                    - text: "Deploy to Firebase Hosting #65:"
+                    - generic [ref=e234]:
+                      - text: Commit
+                      - link "453f074" [ref=e235] [cursor=pointer]:
+                        - /url: /hasanabbassorathiya/Portfolio_by_hasan/commit/453f0749d7fc6f40a2af84de13ca5f1f5a8f06bd
+                      - text: pushed by
+                      - link "hasanabbassorathiya" [ref=e236] [cursor=pointer]:
+                        - /url: /hasanabbassorathiya
+                - link "main" [ref=e238] [cursor=pointer]:
+                  - /url: /hasanabbassorathiya/Portfolio_by_hasan/tree/refs/heads/main
+                - generic [ref=e240]:
+                  - generic [ref=e241]:
+                    - generic [ref=e242]:
+                      - img [ref=e244]
+                      - generic "Apr 27, 2026, 9:58 PM GMT+4" [ref=e246]: 6 minutes ago
+                    - generic [ref=e247]:
+                      - img "Run duration" [ref=e248]
+                      - text: 2m 12s
+                  - group [ref=e251]:
+                    - generic "Show options" [ref=e252] [cursor=pointer]:
+                      - img "Show options" [ref=e253]
+              - generic [ref=e256]:
+                - generic [ref=e257]:
+                  - 'link "failed: Run 31 of Deploy to GitHub Pages. fix: Admin Experiences list load robustness" [ref=e258] [cursor=pointer]':
+                    - /url: /hasanabbassorathiya/Portfolio_by_hasan/actions/runs/25011126638
+                    - img "failed:" [ref=e260]
+                    - generic [ref=e262]: "fix: Admin Experiences list load robustness"
+                  - generic [ref=e263]:
+                    - text: "Deploy to GitHub Pages #31:"
+                    - generic [ref=e264]:
+                      - text: Commit
+                      - link "453f074" [ref=e265] [cursor=pointer]:
+                        - /url: /hasanabbassorathiya/Portfolio_by_hasan/commit/453f0749d7fc6f40a2af84de13ca5f1f5a8f06bd
+                      - text: pushed by
+                      - link "hasanabbassorathiya" [ref=e266] [cursor=pointer]:
+                        - /url: /hasanabbassorathiya
+                - link "main" [ref=e268] [cursor=pointer]:
+                  - /url: /hasanabbassorathiya/Portfolio_by_hasan/tree/refs/heads/main
+                - generic [ref=e270]:
+                  - generic [ref=e271]:
+                    - generic [ref=e272]:
+                      - img [ref=e274]
+                      - generic "Apr 27, 2026, 9:58 PM GMT+4" [ref=e276]: 6 minutes ago
+                    - generic [ref=e277]:
+                      - img "Run duration" [ref=e278]
+                      - text: 3m 5s
+                  - group [ref=e281]:
+                    - generic "Show options" [ref=e282] [cursor=pointer]:
+                      - img "Show options" [ref=e283]
+              - generic [ref=e286]:
+                - generic [ref=e287]:
+                  - 'link "failed: Run 30 of Deploy to GitHub Pages. fix: Admin panel navigation refresh" [ref=e288] [cursor=pointer]':
+                    - /url: /hasanabbassorathiya/Portfolio_by_hasan/actions/runs/25001621887
+                    - img "failed:" [ref=e290]
+                    - generic [ref=e292]: "fix: Admin panel navigation refresh"
+                  - generic [ref=e293]:
+                    - text: "Deploy to GitHub Pages #30:"
+                    - generic [ref=e294]:
+                      - text: Commit
+                      - link "3c0f228" [ref=e295] [cursor=pointer]:
+                        - /url: /hasanabbassorathiya/Portfolio_by_hasan/commit/3c0f228a89ab94846110615cd8a5230b29ae13ff
+                      - text: pushed by
+                      - link "hasanabbassorathiya" [ref=e296] [cursor=pointer]:
+                        - /url: /hasanabbassorathiya
+                - link "main" [ref=e298] [cursor=pointer]:
+                  - /url: /hasanabbassorathiya/Portfolio_by_hasan/tree/refs/heads/main
+                - generic [ref=e300]:
+                  - generic [ref=e301]:
+                    - generic [ref=e302]:
+                      - img [ref=e304]
+                      - generic "Apr 27, 2026, 6:41 PM GMT+4" [ref=e306]: Today at 6:41 PM
+                    - generic [ref=e307]:
+                      - img "Run duration" [ref=e308]
+                      - text: 2m 2s
+                  - group [ref=e311]:
+                    - generic "Show options" [ref=e312] [cursor=pointer]:
+                      - img "Show options" [ref=e313]
+              - generic [ref=e316]:
+                - generic [ref=e317]:
+                  - 'link "failed: Run 64 of Deploy to Firebase Hosting. fix: Admin panel navigation refresh" [ref=e318] [cursor=pointer]':
+                    - /url: /hasanabbassorathiya/Portfolio_by_hasan/actions/runs/25001621870
+                    - img "failed:" [ref=e320]
+                    - generic [ref=e322]: "fix: Admin panel navigation refresh"
+                  - generic [ref=e323]:
+                    - text: "Deploy to Firebase Hosting #64:"
+                    - generic [ref=e324]:
+                      - text: Commit
+                      - link "3c0f228" [ref=e325] [cursor=pointer]:
+                        - /url: /hasanabbassorathiya/Portfolio_by_hasan/commit/3c0f228a89ab94846110615cd8a5230b29ae13ff
+                      - text: pushed by
+                      - link "hasanabbassorathiya" [ref=e326] [cursor=pointer]:
+                        - /url: /hasanabbassorathiya
+                - link "main" [ref=e328] [cursor=pointer]:
+                  - /url: /hasanabbassorathiya/Portfolio_by_hasan/tree/refs/heads/main
+                - generic [ref=e330]:
+                  - generic [ref=e331]:
+                    - generic [ref=e332]:
+                      - img [ref=e334]
+                      - generic "Apr 27, 2026, 6:41 PM GMT+4" [ref=e336]: Today at 6:41 PM
+                    - generic [ref=e337]:
+                      - img "Run duration" [ref=e338]
+                      - text: 2m 18s
+                  - group [ref=e341]:
+                    - generic "Show options" [ref=e342] [cursor=pointer]:
+                      - img "Show options" [ref=e343]
+              - generic [ref=e346]:
+                - generic [ref=e347]:
+                  - 'link "failed: Run 29 of Deploy to GitHub Pages. fix: Add SQL diagnostic logging for Turso selects" [ref=e348] [cursor=pointer]':
+                    - /url: /hasanabbassorathiya/Portfolio_by_hasan/actions/runs/25001251800
+                    - img "failed:" [ref=e350]
+                    - generic [ref=e352]: "fix: Add SQL diagnostic logging for Turso selects"
+                  - generic [ref=e353]:
+                    - text: "Deploy to GitHub Pages #29:"
+                    - generic [ref=e354]:
+                      - text: Commit
+                      - link "e9bd226" [ref=e355] [cursor=pointer]:
+                        - /url: /hasanabbassorathiya/Portfolio_by_hasan/commit/e9bd226ed9e19975dced6603e6b78113575facef
+                      - text: pushed by
+                      - link "hasanabbassorathiya" [ref=e356] [cursor=pointer]:
+                        - /url: /hasanabbassorathiya
+                - link "main" [ref=e358] [cursor=pointer]:
+                  - /url: /hasanabbassorathiya/Portfolio_by_hasan/tree/refs/heads/main
+                - generic [ref=e360]:
+                  - generic [ref=e361]:
+                    - generic [ref=e362]:
+                      - img [ref=e364]
+                      - generic "Apr 27, 2026, 6:34 PM GMT+4" [ref=e366]: Today at 6:34 PM
+                    - generic [ref=e367]:
+                      - img "Run duration" [ref=e368]
+                      - text: 2m 29s
+                  - group [ref=e371]:
+                    - generic "Show options" [ref=e372] [cursor=pointer]:
+                      - img "Show options" [ref=e373]
+              - generic [ref=e376]:
+                - generic [ref=e377]:
+                  - 'link "failed: Run 63 of Deploy to Firebase Hosting. fix: Add SQL diagnostic logging for Turso selects" [ref=e378] [cursor=pointer]':
+                    - /url: /hasanabbassorathiya/Portfolio_by_hasan/actions/runs/25001251730
+                    - img "failed:" [ref=e380]
+                    - generic [ref=e382]: "fix: Add SQL diagnostic logging for Turso selects"
+                  - generic [ref=e383]:
+                    - text: "Deploy to Firebase Hosting #63:"
+                    - generic [ref=e384]:
+                      - text: Commit
+                      - link "e9bd226" [ref=e385] [cursor=pointer]:
+                        - /url: /hasanabbassorathiya/Portfolio_by_hasan/commit/e9bd226ed9e19975dced6603e6b78113575facef
+                      - text: pushed by
+                      - link "hasanabbassorathiya" [ref=e386] [cursor=pointer]:
+                        - /url: /hasanabbassorathiya
+                - link "main" [ref=e388] [cursor=pointer]:
+                  - /url: /hasanabbassorathiya/Portfolio_by_hasan/tree/refs/heads/main
+                - generic [ref=e390]:
+                  - generic [ref=e391]:
+                    - generic [ref=e392]:
+                      - img [ref=e394]
+                      - generic "Apr 27, 2026, 6:34 PM GMT+4" [ref=e396]: Today at 6:34 PM
+                    - generic [ref=e397]:
+                      - img "Run duration" [ref=e398]
+                      - text: 2m 17s
+                  - group [ref=e401]:
+                    - generic "Show options" [ref=e402] [cursor=pointer]:
+                      - img "Show options" [ref=e403]
+              - generic [ref=e406]:
+                - generic [ref=e407]:
+                  - 'link "failed: Run 62 of Deploy to Firebase Hosting. fix: Add SQL debug logging to TursoService" [ref=e408] [cursor=pointer]':
+                    - /url: /hasanabbassorathiya/Portfolio_by_hasan/actions/runs/25000872004
+                    - img "failed:" [ref=e410]
+                    - generic [ref=e412]: "fix: Add SQL debug logging to TursoService"
+                  - generic [ref=e413]:
+                    - text: "Deploy to Firebase Hosting #62:"
+                    - generic [ref=e414]:
+                      - text: Commit
+                      - link "2079d67" [ref=e415] [cursor=pointer]:
+                        - /url: /hasanabbassorathiya/Portfolio_by_hasan/commit/2079d670d48ac61a3e7c5c1f1bbd51827a2c2ddd
+                      - text: pushed by
+                      - link "hasanabbassorathiya" [ref=e416] [cursor=pointer]:
+                        - /url: /hasanabbassorathiya
+                - link "main" [ref=e418] [cursor=pointer]:
+                  - /url: /hasanabbassorathiya/Portfolio_by_hasan/tree/refs/heads/main
+                - generic [ref=e420]:
+                  - generic [ref=e421]:
+                    - generic [ref=e422]:
+                      - img [ref=e424]
+                      - generic "Apr 27, 2026, 6:26 PM GMT+4" [ref=e426]: Today at 6:26 PM
+                    - generic [ref=e427]:
+                      - img "Run duration" [ref=e428]
+                      - text: 2m 12s
+                  - group [ref=e431]:
+                    - generic "Show options" [ref=e432] [cursor=pointer]:
+                      - img "Show options" [ref=e433]
+              - generic [ref=e436]:
+                - generic [ref=e437]:
+                  - 'link "failed: Run 28 of Deploy to GitHub Pages. fix: Add SQL debug logging to TursoService" [ref=e438] [cursor=pointer]':
+                    - /url: /hasanabbassorathiya/Portfolio_by_hasan/actions/runs/25000871966
+                    - img "failed:" [ref=e440]
+                    - generic [ref=e442]: "fix: Add SQL debug logging to TursoService"
+                  - generic [ref=e443]:
+                    - text: "Deploy to GitHub Pages #28:"
+                    - generic [ref=e444]:
+                      - text: Commit
+                      - link "2079d67" [ref=e445] [cursor=pointer]:
+                        - /url: /hasanabbassorathiya/Portfolio_by_hasan/commit/2079d670d48ac61a3e7c5c1f1bbd51827a2c2ddd
+                      - text: pushed by
+                      - link "hasanabbassorathiya" [ref=e446] [cursor=pointer]:
+                        - /url: /hasanabbassorathiya
+                - link "main" [ref=e448] [cursor=pointer]:
+                  - /url: /hasanabbassorathiya/Portfolio_by_hasan/tree/refs/heads/main
+                - generic [ref=e450]:
+                  - generic [ref=e451]:
+                    - generic [ref=e452]:
+                      - img [ref=e454]
+                      - generic "Apr 27, 2026, 6:26 PM GMT+4" [ref=e456]: Today at 6:26 PM
+                    - generic [ref=e457]:
+                      - img "Run duration" [ref=e458]
+                      - text: 2m 23s
+                  - group [ref=e461]:
+                    - generic "Show options" [ref=e462] [cursor=pointer]:
+                      - img "Show options" [ref=e463]
+              - generic [ref=e466]:
+                - generic [ref=e467]:
+                  - 'link "failed: Run 27 of Deploy to GitHub Pages. fix: Simplify Turso experience query and add raw debug logging" [ref=e468] [cursor=pointer]':
+                    - /url: /hasanabbassorathiya/Portfolio_by_hasan/actions/runs/25000652093
+                    - img "failed:" [ref=e470]
+                    - generic [ref=e472]: "fix: Simplify Turso experience query and add raw debug logging"
+                  - generic [ref=e473]:
+                    - text: "Deploy to GitHub Pages #27:"
+                    - generic [ref=e474]:
+                      - text: Commit
+                      - link "f07fec7" [ref=e475] [cursor=pointer]:
+                        - /url: /hasanabbassorathiya/Portfolio_by_hasan/commit/f07fec7076c484b6f413f6fbae546fb85d9512f7
+                      - text: pushed by
+                      - link "hasanabbassorathiya" [ref=e476] [cursor=pointer]:
+                        - /url: /hasanabbassorathiya
+                - link "main" [ref=e478] [cursor=pointer]:
+                  - /url: /hasanabbassorathiya/Portfolio_by_hasan/tree/refs/heads/main
+                - generic [ref=e480]:
+                  - generic [ref=e481]:
+                    - generic [ref=e482]:
+                      - img [ref=e484]
+                      - generic "Apr 27, 2026, 6:22 PM GMT+4" [ref=e486]: Today at 6:22 PM
+                    - generic [ref=e487]:
+                      - img "Run duration" [ref=e488]
+                      - text: 2m 30s
+                  - group [ref=e491]:
+                    - generic "Show options" [ref=e492] [cursor=pointer]:
+                      - img "Show options" [ref=e493]
+              - generic [ref=e496]:
+                - generic [ref=e497]:
+                  - 'link "failed: Run 61 of Deploy to Firebase Hosting. fix: Simplify Turso experience query and add raw debug logging" [ref=e498] [cursor=pointer]':
+                    - /url: /hasanabbassorathiya/Portfolio_by_hasan/actions/runs/25000652079
+                    - img "failed:" [ref=e500]
+                    - generic [ref=e502]: "fix: Simplify Turso experience query and add raw debug logging"
+                  - generic [ref=e503]:
+                    - text: "Deploy to Firebase Hosting #61:"
+                    - generic [ref=e504]:
+                      - text: Commit
+                      - link "f07fec7" [ref=e505] [cursor=pointer]:
+                        - /url: /hasanabbassorathiya/Portfolio_by_hasan/commit/f07fec7076c484b6f413f6fbae546fb85d9512f7
+                      - text: pushed by
+                      - link "hasanabbassorathiya" [ref=e506] [cursor=pointer]:
+                        - /url: /hasanabbassorathiya
+                - link "main" [ref=e508] [cursor=pointer]:
+                  - /url: /hasanabbassorathiya/Portfolio_by_hasan/tree/refs/heads/main
+                - generic [ref=e510]:
+                  - generic [ref=e511]:
+                    - generic [ref=e512]:
+                      - img [ref=e514]
+                      - generic "Apr 27, 2026, 6:22 PM GMT+4" [ref=e516]: Today at 6:22 PM
+                    - generic [ref=e517]:
+                      - img "Run duration" [ref=e518]
+                      - text: 2m 20s
+                  - group [ref=e521]:
+                    - generic "Show options" [ref=e522] [cursor=pointer]:
+                      - img "Show options" [ref=e523]
+              - generic [ref=e526]:
+                - generic [ref=e527]:
+                  - 'link "failed: Run 26 of Deploy to GitHub Pages. fix: Enhanced Turso diagnostic logging for empty result sets" [ref=e528] [cursor=pointer]':
+                    - /url: /hasanabbassorathiya/Portfolio_by_hasan/actions/runs/24999117989
+                    - img "failed:" [ref=e530]
+                    - generic [ref=e532]: "fix: Enhanced Turso diagnostic logging for empty result sets"
+                  - generic [ref=e533]:
+                    - text: "Deploy to GitHub Pages #26:"
+                    - generic [ref=e534]:
+                      - text: Commit
+                      - link "ed064f4" [ref=e535] [cursor=pointer]:
+                        - /url: /hasanabbassorathiya/Portfolio_by_hasan/commit/ed064f47ad7cc5850df7a4471cd612a60a997493
+                      - text: pushed by
+                      - link "hasanabbassorathiya" [ref=e536] [cursor=pointer]:
+                        - /url: /hasanabbassorathiya
+                - link "main" [ref=e538] [cursor=pointer]:
+                  - /url: /hasanabbassorathiya/Portfolio_by_hasan/tree/refs/heads/main
+                - generic [ref=e540]:
+                  - generic [ref=e541]:
+                    - generic [ref=e542]:
+                      - img [ref=e544]
+                      - generic "Apr 27, 2026, 5:53 PM GMT+4" [ref=e546]: Today at 5:53 PM
+                    - generic [ref=e547]:
+                      - img "Run duration" [ref=e548]
+                      - text: 2m 18s
+                  - group [ref=e551]:
+                    - generic "Show options" [ref=e552] [cursor=pointer]:
+                      - img "Show options" [ref=e553]
+              - generic [ref=e556]:
+                - generic [ref=e557]:
+                  - 'link "failed: Run 60 of Deploy to Firebase Hosting. fix: Enhanced Turso diagnostic logging for empty result sets" [ref=e558] [cursor=pointer]':
+                    - /url: /hasanabbassorathiya/Portfolio_by_hasan/actions/runs/24999117965
+                    - img "failed:" [ref=e560]
+                    - generic [ref=e562]: "fix: Enhanced Turso diagnostic logging for empty result sets"
+                  - generic [ref=e563]:
+                    - text: "Deploy to Firebase Hosting #60:"
+                    - generic [ref=e564]:
+                      - text: Commit
+                      - link "ed064f4" [ref=e565] [cursor=pointer]:
+                        - /url: /hasanabbassorathiya/Portfolio_by_hasan/commit/ed064f47ad7cc5850df7a4471cd612a60a997493
+                      - text: pushed by
+                      - link "hasanabbassorathiya" [ref=e566] [cursor=pointer]:
+                        - /url: /hasanabbassorathiya
+                - link "main" [ref=e568] [cursor=pointer]:
+                  - /url: /hasanabbassorathiya/Portfolio_by_hasan/tree/refs/heads/main
+                - generic [ref=e570]:
+                  - generic [ref=e571]:
+                    - generic [ref=e572]:
+                      - img [ref=e574]
+                      - generic "Apr 27, 2026, 5:53 PM GMT+4" [ref=e576]: Today at 5:53 PM
+                    - generic [ref=e577]:
+                      - img "Run duration" [ref=e578]
+                      - text: 2m 16s
+                  - group [ref=e581]:
+                    - generic "Show options" [ref=e582] [cursor=pointer]:
+                      - img "Show options" [ref=e583]
+              - generic [ref=e586]:
+                - generic [ref=e587]:
+                  - 'link "failed: Run 25 of Deploy to GitHub Pages. fix: Add diagnostic logs to dashboard stats loading" [ref=e588] [cursor=pointer]':
+                    - /url: /hasanabbassorathiya/Portfolio_by_hasan/actions/runs/24993901052
+                    - img "failed:" [ref=e590]
+                    - generic [ref=e592]: "fix: Add diagnostic logs to dashboard stats loading"
+                  - generic [ref=e593]:
+                    - text: "Deploy to GitHub Pages #25:"
+                    - generic [ref=e594]:
+                      - text: Commit
+                      - link "130247b" [ref=e595] [cursor=pointer]:
+                        - /url: /hasanabbassorathiya/Portfolio_by_hasan/commit/130247b8eecb445fdb0cb767476d8f596345c0ea
+                      - text: pushed by
+                      - link "hasanabbassorathiya" [ref=e596] [cursor=pointer]:
+                        - /url: /hasanabbassorathiya
+                - link "main" [ref=e598] [cursor=pointer]:
+                  - /url: /hasanabbassorathiya/Portfolio_by_hasan/tree/refs/heads/main
+                - generic [ref=e600]:
+                  - generic [ref=e601]:
+                    - generic [ref=e602]:
+                      - img [ref=e604]
+                      - generic "Apr 27, 2026, 4:03 PM GMT+4" [ref=e606]: Today at 4:03 PM
+                    - generic [ref=e607]:
+                      - img "Run duration" [ref=e608]
+                      - text: 2m 13s
+                  - group [ref=e611]:
+                    - generic "Show options" [ref=e612] [cursor=pointer]:
+                      - img "Show options" [ref=e613]
+              - generic [ref=e616]:
+                - generic [ref=e617]:
+                  - 'link "failed: Run 59 of Deploy to Firebase Hosting. fix: Add diagnostic logs to dashboard stats loading" [ref=e618] [cursor=pointer]':
+                    - /url: /hasanabbassorathiya/Portfolio_by_hasan/actions/runs/24993901026
+                    - img "failed:" [ref=e620]
+                    - generic [ref=e622]: "fix: Add diagnostic logs to dashboard stats loading"
+                  - generic [ref=e623]:
+                    - text: "Deploy to Firebase Hosting #59:"
+                    - generic [ref=e624]:
+                      - text: Commit
+                      - link "130247b" [ref=e625] [cursor=pointer]:
+                        - /url: /hasanabbassorathiya/Portfolio_by_hasan/commit/130247b8eecb445fdb0cb767476d8f596345c0ea
+                      - text: pushed by
+                      - link "hasanabbassorathiya" [ref=e626] [cursor=pointer]:
+                        - /url: /hasanabbassorathiya
+                - link "main" [ref=e628] [cursor=pointer]:
+                  - /url: /hasanabbassorathiya/Portfolio_by_hasan/tree/refs/heads/main
+                - generic [ref=e630]:
+                  - generic [ref=e631]:
+                    - generic [ref=e632]:
+                      - img [ref=e634]
+                      - generic "Apr 27, 2026, 4:03 PM GMT+4" [ref=e636]: Today at 4:03 PM
+                    - generic [ref=e637]:
+                      - img "Run duration" [ref=e638]
+                      - text: 2m 6s
+                  - group [ref=e641]:
+                    - generic "Show options" [ref=e642] [cursor=pointer]:
+                      - img "Show options" [ref=e643]
+              - generic [ref=e646]:
+                - generic [ref=e647]:
+                  - 'link "failed: Run 58 of Deploy to Firebase Hosting. fix: Admin UI list refresh and feedback fixes" [ref=e648] [cursor=pointer]':
+                    - /url: /hasanabbassorathiya/Portfolio_by_hasan/actions/runs/24993795706
+                    - img "failed:" [ref=e650]
+                    - generic [ref=e652]: "fix: Admin UI list refresh and feedback fixes"
+                  - generic [ref=e653]:
+                    - text: "Deploy to Firebase Hosting #58:"
+                    - generic [ref=e654]:
+                      - text: Commit
+                      - link "f8bd8bd" [ref=e655] [cursor=pointer]:
+                        - /url: /hasanabbassorathiya/Portfolio_by_hasan/commit/f8bd8bd9a75a4521e4087d48b5e65578dd7533c2
+                      - text: pushed by
+                      - link "hasanabbassorathiya" [ref=e656] [cursor=pointer]:
+                        - /url: /hasanabbassorathiya
+                - link "main" [ref=e658] [cursor=pointer]:
+                  - /url: /hasanabbassorathiya/Portfolio_by_hasan/tree/refs/heads/main
+                - generic [ref=e660]:
+                  - generic [ref=e661]:
+                    - generic [ref=e662]:
+                      - img [ref=e664]
+                      - generic "Apr 27, 2026, 4:01 PM GMT+4" [ref=e666]: Today at 4:01 PM
+                    - generic [ref=e667]:
+                      - img "Run duration" [ref=e668]
+                      - text: 2m 10s
+                  - group [ref=e671]:
+                    - generic "Show options" [ref=e672] [cursor=pointer]:
+                      - img "Show options" [ref=e673]
+              - generic [ref=e676]:
+                - generic [ref=e677]:
+                  - 'link "failed: Run 24 of Deploy to GitHub Pages. fix: Admin UI list refresh and feedback fixes" [ref=e678] [cursor=pointer]':
+                    - /url: /hasanabbassorathiya/Portfolio_by_hasan/actions/runs/24993795702
+                    - img "failed:" [ref=e680]
+                    - generic [ref=e682]: "fix: Admin UI list refresh and feedback fixes"
+                  - generic [ref=e683]:
+                    - text: "Deploy to GitHub Pages #24:"
+                    - generic [ref=e684]:
+                      - text: Commit
+                      - link "f8bd8bd" [ref=e685] [cursor=pointer]:
+                        - /url: /hasanabbassorathiya/Portfolio_by_hasan/commit/f8bd8bd9a75a4521e4087d48b5e65578dd7533c2
+                      - text: pushed by
+                      - link "hasanabbassorathiya" [ref=e686] [cursor=pointer]:
+                        - /url: /hasanabbassorathiya
+                - link "main" [ref=e688] [cursor=pointer]:
+                  - /url: /hasanabbassorathiya/Portfolio_by_hasan/tree/refs/heads/main
+                - generic [ref=e690]:
+                  - generic [ref=e691]:
+                    - generic [ref=e692]:
+                      - img [ref=e694]
+                      - generic "Apr 27, 2026, 4:01 PM GMT+4" [ref=e696]: Today at 4:01 PM
+                    - generic [ref=e697]:
+                      - img "Run duration" [ref=e698]
+                      - text: 2m 14s
+                  - group [ref=e701]:
+                    - generic "Show options" [ref=e702] [cursor=pointer]:
+                      - img "Show options" [ref=e703]
+              - generic [ref=e706]:
+                - generic [ref=e707]:
+                  - 'link "failed: Run 23 of Deploy to GitHub Pages. chore: Add diagnostic logging to experience and social link admin scr…" [ref=e708] [cursor=pointer]':
+                    - /url: /hasanabbassorathiya/Portfolio_by_hasan/actions/runs/24993738713
+                    - img "failed:" [ref=e710]
+                    - generic [ref=e712]: "chore: Add diagnostic logging to experience and social link admin scr…"
+                  - generic [ref=e713]:
+                    - text: "Deploy to GitHub Pages #23:"
+                    - generic [ref=e714]:
+                      - text: Commit
+                      - link "ab5dab8" [ref=e715] [cursor=pointer]:
+                        - /url: /hasanabbassorathiya/Portfolio_by_hasan/commit/ab5dab8fbb8f3fa35cdbced425b0d98be166d1b5
+                      - text: pushed by
+                      - link "hasanabbassorathiya" [ref=e716] [cursor=pointer]:
+                        - /url: /hasanabbassorathiya
+                - link "main" [ref=e718] [cursor=pointer]:
+                  - /url: /hasanabbassorathiya/Portfolio_by_hasan/tree/refs/heads/main
+                - generic [ref=e720]:
+                  - generic [ref=e721]:
+                    - generic [ref=e722]:
+                      - img [ref=e724]
+                      - generic "Apr 27, 2026, 4:00 PM GMT+4" [ref=e726]: Today at 4:00 PM
+                    - generic [ref=e727]:
+                      - img "Run duration" [ref=e728]
+                      - text: 2m 22s
+                  - group [ref=e731]:
+                    - generic "Show options" [ref=e732] [cursor=pointer]:
+                      - img "Show options" [ref=e733]
+              - generic [ref=e736]:
+                - generic [ref=e737]:
+                  - 'link "failed: Run 57 of Deploy to Firebase Hosting. chore: Add diagnostic logging to experience and social link admin scr…" [ref=e738] [cursor=pointer]':
+                    - /url: /hasanabbassorathiya/Portfolio_by_hasan/actions/runs/24993738708
+                    - img "failed:" [ref=e740]
+                    - generic [ref=e742]: "chore: Add diagnostic logging to experience and social link admin scr…"
+                  - generic [ref=e743]:
+                    - text: "Deploy to Firebase Hosting #57:"
+                    - generic [ref=e744]:
+                      - text: Commit
+                      - link "ab5dab8" [ref=e745] [cursor=pointer]:
+                        - /url: /hasanabbassorathiya/Portfolio_by_hasan/commit/ab5dab8fbb8f3fa35cdbced425b0d98be166d1b5
+                      - text: pushed by
+                      - link "hasanabbassorathiya" [ref=e746] [cursor=pointer]:
+                        - /url: /hasanabbassorathiya
+                - link "main" [ref=e748] [cursor=pointer]:
+                  - /url: /hasanabbassorathiya/Portfolio_by_hasan/tree/refs/heads/main
+                - generic [ref=e750]:
+                  - generic [ref=e751]:
+                    - generic [ref=e752]:
+                      - img [ref=e754]
+                      - generic "Apr 27, 2026, 4:00 PM GMT+4" [ref=e756]: Today at 4:00 PM
+                    - generic [ref=e757]:
+                      - img "Run duration" [ref=e758]
+                      - text: 2m 8s
+                  - group [ref=e761]:
+                    - generic "Show options" [ref=e762] [cursor=pointer]:
+                      - img "Show options" [ref=e763]
+              - generic [ref=e766]:
+                - generic [ref=e767]:
+                  - 'link "failed: Run 22 of Deploy to GitHub Pages. fix: Patch all database models to prevent UI list crashing" [ref=e768] [cursor=pointer]':
+                    - /url: /hasanabbassorathiya/Portfolio_by_hasan/actions/runs/24967475456
+                    - img "failed:" [ref=e770]
+                    - generic [ref=e772]: "fix: Patch all database models to prevent UI list crashing"
+                  - generic [ref=e773]:
+                    - text: "Deploy to GitHub Pages #22:"
+                    - generic [ref=e774]:
+                      - text: Commit
+                      - link "8304340" [ref=e775] [cursor=pointer]:
+                        - /url: /hasanabbassorathiya/Portfolio_by_hasan/commit/8304340538ecee32a9a589db4b22b3985a70e8d3
+                      - text: pushed by
+                      - link "hasanabbassorathiya" [ref=e776] [cursor=pointer]:
+                        - /url: /hasanabbassorathiya
+                - link "main" [ref=e778] [cursor=pointer]:
+                  - /url: /hasanabbassorathiya/Portfolio_by_hasan/tree/refs/heads/main
+                - generic [ref=e780]:
+                  - generic [ref=e781]:
+                    - generic [ref=e782]:
+                      - img [ref=e784]
+                      - generic "Apr 27, 2026, 1:27 AM GMT+4" [ref=e786]: Apr 27, 1:27 AM GMT+4
+                    - generic [ref=e787]:
+                      - img "Run duration" [ref=e788]
+                      - text: 2m 9s
+                  - group [ref=e791]:
+                    - generic "Show options" [ref=e792] [cursor=pointer]:
+                      - img "Show options" [ref=e793]
+              - generic [ref=e796]:
+                - generic [ref=e797]:
+                  - 'link "failed: Run 56 of Deploy to Firebase Hosting. fix: Patch all database models to prevent UI list crashing" [ref=e798] [cursor=pointer]':
+                    - /url: /hasanabbassorathiya/Portfolio_by_hasan/actions/runs/24967475455
+                    - img "failed:" [ref=e800]
+                    - generic [ref=e802]: "fix: Patch all database models to prevent UI list crashing"
+                  - generic [ref=e803]:
+                    - text: "Deploy to Firebase Hosting #56:"
+                    - generic [ref=e804]:
+                      - text: Commit
+                      - link "8304340" [ref=e805] [cursor=pointer]:
+                        - /url: /hasanabbassorathiya/Portfolio_by_hasan/commit/8304340538ecee32a9a589db4b22b3985a70e8d3
+                      - text: pushed by
+                      - link "hasanabbassorathiya" [ref=e806] [cursor=pointer]:
+                        - /url: /hasanabbassorathiya
+                - link "main" [ref=e808] [cursor=pointer]:
+                  - /url: /hasanabbassorathiya/Portfolio_by_hasan/tree/refs/heads/main
+                - generic [ref=e810]:
+                  - generic [ref=e811]:
+                    - generic [ref=e812]:
+                      - img [ref=e814]
+                      - generic "Apr 27, 2026, 1:27 AM GMT+4" [ref=e816]: Apr 27, 1:27 AM GMT+4
+                    - generic [ref=e817]:
+                      - img "Run duration" [ref=e818]
+                      - text: 2m 10s
+                  - group [ref=e821]:
+                    - generic "Show options" [ref=e822] [cursor=pointer]:
+                      - img "Show options" [ref=e823]
+              - generic [ref=e826]:
+                - generic [ref=e827]:
+                  - 'link "failed: Run 55 of Deploy to Firebase Hosting. fix: Admin UI fixes for empty lists and contact attachments" [ref=e828] [cursor=pointer]':
+                    - /url: /hasanabbassorathiya/Portfolio_by_hasan/actions/runs/24967084483
+                    - img "failed:" [ref=e830]
+                    - generic [ref=e832]: "fix: Admin UI fixes for empty lists and contact attachments"
+                  - generic [ref=e833]:
+                    - text: "Deploy to Firebase Hosting #55:"
+                    - generic [ref=e834]:
+                      - text: Commit
+                      - link "5d12382" [ref=e835] [cursor=pointer]:
+                        - /url: /hasanabbassorathiya/Portfolio_by_hasan/commit/5d123827c681f815fbc4bb027d63b247896bd5c8
+                      - text: pushed by
+                      - link "hasanabbassorathiya" [ref=e836] [cursor=pointer]:
+                        - /url: /hasanabbassorathiya
+                - link "main" [ref=e838] [cursor=pointer]:
+                  - /url: /hasanabbassorathiya/Portfolio_by_hasan/tree/refs/heads/main
+                - generic [ref=e840]:
+                  - generic [ref=e841]:
+                    - generic [ref=e842]:
+                      - img [ref=e844]
+                      - generic "Apr 27, 2026, 1:07 AM GMT+4" [ref=e846]: Apr 27, 1:07 AM GMT+4
+                    - generic [ref=e847]:
+                      - img "Run duration" [ref=e848]
+                      - text: 2m 13s
+                  - group [ref=e851]:
+                    - generic "Show options" [ref=e852] [cursor=pointer]:
+                      - img "Show options" [ref=e853]
+              - generic [ref=e856]:
+                - generic [ref=e857]:
+                  - 'link "failed: Run 21 of Deploy to GitHub Pages. fix: Admin UI fixes for empty lists and contact attachments" [ref=e858] [cursor=pointer]':
+                    - /url: /hasanabbassorathiya/Portfolio_by_hasan/actions/runs/24967084481
+                    - img "failed:" [ref=e860]
+                    - generic [ref=e862]: "fix: Admin UI fixes for empty lists and contact attachments"
+                  - generic [ref=e863]:
+                    - text: "Deploy to GitHub Pages #21:"
+                    - generic [ref=e864]:
+                      - text: Commit
+                      - link "5d12382" [ref=e865] [cursor=pointer]:
+                        - /url: /hasanabbassorathiya/Portfolio_by_hasan/commit/5d123827c681f815fbc4bb027d63b247896bd5c8
+                      - text: pushed by
+                      - link "hasanabbassorathiya" [ref=e866] [cursor=pointer]:
+                        - /url: /hasanabbassorathiya
+                - link "main" [ref=e868] [cursor=pointer]:
+                  - /url: /hasanabbassorathiya/Portfolio_by_hasan/tree/refs/heads/main
+                - generic [ref=e870]:
+                  - generic [ref=e871]:
+                    - generic [ref=e872]:
+                      - img [ref=e874]
+                      - generic "Apr 27, 2026, 1:07 AM GMT+4" [ref=e876]: Apr 27, 1:07 AM GMT+4
+                    - generic [ref=e877]:
+                      - img "Run duration" [ref=e878]
+                      - text: 2m 7s
+                  - group [ref=e881]:
+                    - generic "Show options" [ref=e882] [cursor=pointer]:
+                      - img "Show options" [ref=e883]
+              - generic [ref=e886]:
+                - generic [ref=e887]:
+                  - 'link "completed successfully: Run 54 of Deploy to Firebase Hosting." [ref=e888] [cursor=pointer]':
+                    - /url: /hasanabbassorathiya/Portfolio_by_hasan/actions/runs/24966221842
+                    - img "completed successfully:" [ref=e890]
+                    - generic [ref=e892]: Deploy to Firebase Hosting
+                  - generic [ref=e893]:
+                    - text: "Deploy to Firebase Hosting #54:"
+                    - generic [ref=e894]:
+                      - text: Manually run by
+                      - link "hasanabbassorathiya" [ref=e895] [cursor=pointer]:
+                        - /url: /hasanabbassorathiya
+                - link "main" [ref=e897] [cursor=pointer]:
+                  - /url: /hasanabbassorathiya/Portfolio_by_hasan/tree/refs/heads/main
+                - generic [ref=e899]:
+                  - generic [ref=e900]:
+                    - generic [ref=e901]:
+                      - img [ref=e903]
+                      - generic "Apr 27, 2026, 12:24 AM GMT+4" [ref=e905]: Apr 27, 12:24 AM GMT+4
+                    - generic [ref=e906]:
+                      - img "Run duration" [ref=e907]
+                      - text: 3m 2s
+                  - group [ref=e910]:
+                    - generic "Show options" [ref=e911] [cursor=pointer]:
+                      - img "Show options" [ref=e912]
+              - generic [ref=e915]:
+                - generic [ref=e916]:
+                  - 'link "completed successfully: Run 53 of Deploy to Firebase Hosting." [ref=e917] [cursor=pointer]':
+                    - /url: /hasanabbassorathiya/Portfolio_by_hasan/actions/runs/24966214455
+                    - img "completed successfully:" [ref=e919]
+                    - generic [ref=e921]: Deploy to Firebase Hosting
+                  - generic [ref=e922]:
+                    - text: "Deploy to Firebase Hosting #53:"
+                    - generic [ref=e923]:
+                      - text: Manually run by
+                      - link "hasanabbassorathiya" [ref=e924] [cursor=pointer]:
+                        - /url: /hasanabbassorathiya
+                - link "main" [ref=e926] [cursor=pointer]:
+                  - /url: /hasanabbassorathiya/Portfolio_by_hasan/tree/refs/heads/main
+                - generic [ref=e928]:
+                  - generic [ref=e929]:
+                    - generic [ref=e930]:
+                      - img [ref=e932]
+                      - generic "Apr 27, 2026, 12:23 AM GMT+4" [ref=e934]: Apr 27, 12:23 AM GMT+4
+                    - generic [ref=e935]:
+                      - img "Run duration" [ref=e936]
+                      - text: 2m 43s
+                  - group [ref=e939]:
+                    - generic "Show options" [ref=e940] [cursor=pointer]:
+                      - img "Show options" [ref=e941]
+              - generic [ref=e944]:
+                - generic [ref=e945]:
+                  - 'link "completed successfully: Run 20 of Deploy to GitHub Pages. docs: set Firebase as primary hosting and add portfolio source link t…" [ref=e946] [cursor=pointer]':
+                    - /url: /hasanabbassorathiya/Portfolio_by_hasan/actions/runs/24966208882
+                    - img "completed successfully:" [ref=e948]
+                    - generic [ref=e950]: "docs: set Firebase as primary hosting and add portfolio source link t…"
+                  - generic [ref=e951]:
+                    - text: "Deploy to GitHub Pages #20:"
+                    - generic [ref=e952]:
+                      - text: Commit
+                      - link "d1d2a81" [ref=e953] [cursor=pointer]:
+                        - /url: /hasanabbassorathiya/Portfolio_by_hasan/commit/d1d2a8166ff75c6457fad93acbb733e0f5816bbf
+                      - text: pushed by
+                      - link "hasanabbassorathiya" [ref=e954] [cursor=pointer]:
+                        - /url: /hasanabbassorathiya
+                - link "main" [ref=e956] [cursor=pointer]:
+                  - /url: /hasanabbassorathiya/Portfolio_by_hasan/tree/refs/heads/main
+                - generic [ref=e958]:
+                  - generic [ref=e959]:
+                    - generic [ref=e960]:
+                      - img [ref=e962]
+                      - generic "Apr 27, 2026, 12:23 AM GMT+4" [ref=e964]: Apr 27, 12:23 AM GMT+4
+                    - generic [ref=e965]:
+                      - img "Run duration" [ref=e966]
+                      - text: 2m 18s
+                  - group [ref=e969]:
+                    - generic "Show options" [ref=e970] [cursor=pointer]:
+                      - img "Show options" [ref=e971]
+          - navigation "Pagination" [ref=e975]:
+            - generic "Previous page" [ref=e976]: Previous
+            - emphasis [ref=e977] [cursor=pointer]: "1"
+            - link "Page 2" [ref=e978] [cursor=pointer]:
+              - /url: /hasanabbassorathiya/Portfolio_by_hasan/actions?page=2
+              - text: "2"
+            - link "Page 3" [ref=e979] [cursor=pointer]:
+              - /url: /hasanabbassorathiya/Portfolio_by_hasan/actions?page=3
+              - text: "3"
+            - link "Page 4" [ref=e980] [cursor=pointer]:
+              - /url: /hasanabbassorathiya/Portfolio_by_hasan/actions?page=4
+              - text: "4"
+            - link "Next page" [ref=e981] [cursor=pointer]:
+              - /url: /hasanabbassorathiya/Portfolio_by_hasan/actions?page=2
+              - text: Next

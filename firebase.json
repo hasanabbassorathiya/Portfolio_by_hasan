@@ -13,5 +13,23 @@
         "destination": "/index.html"
       }
     ]
+  },
+  "firestore": {
+    "database": "(default)",
+    "location": "nam5",
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  },
+  "auth": {
+    "providers": {
+      "emailPassword": true,
+      "googleSignIn": {
+        "oAuthBrandDisplayName": "Portfolio",
+        "supportEmail": "hasanabbassorathiya12@gmail.com"
+      }
+    }
+  },
+  "functions": {
+    "source": "functions"
   }
 }

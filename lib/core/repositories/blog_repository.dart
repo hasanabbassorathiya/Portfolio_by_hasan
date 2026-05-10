@@ -20,6 +20,11 @@ class BlogRepository extends BaseRepository {
       return [];
     }
 
+    // Caching check
+    final cacheKey = 'blogs_${limit ?? 'all'}_${offset ?? 'all'}';
+    final cached = getCached<List<BlogModel>>(cacheKey);
+    if (cached != null) return cached;
+
     return await PerformanceService.measureDatabaseQuery(
       _tableName,
       () async {
@@ -38,9 +43,12 @@ class BlogRepository extends BaseRepository {
           }
 
           final response = await queryBuilder;
-          return (response as List)
+          final blogs = (response as List)
               .map((json) => BlogModel.fromMap(json as Map<String, dynamic>))
               .toList();
+
+          setCache(cacheKey, blogs);
+          return blogs;
         } catch (e) {
           // Log error but return empty list instead of throwing
           debugPrint('Error fetching blogs: $e');
@@ -137,6 +145,11 @@ class BlogRepository extends BaseRepository {
       return [];
     }
 
+    // Caching check
+    final cacheKey = 'featured_blogs_$limit';
+    final cached = getCached<List<BlogModel>>(cacheKey);
+    if (cached != null) return cached;
+
     try {
       final response = await client
           .from(_tableName)
@@ -145,9 +158,12 @@ class BlogRepository extends BaseRepository {
           .order('published_at', ascending: false)
           .limit(limit);
 
-      return (response as List)
+      final blogs = (response as List)
           .map((json) => BlogModel.fromMap(json as Map<String, dynamic>))
           .toList();
+
+      setCache(cacheKey, blogs);
+      return blogs;
     } catch (e) {
       // Log error but return empty list instead of throwing
       debugPrint('Error fetching featured blogs: $e');

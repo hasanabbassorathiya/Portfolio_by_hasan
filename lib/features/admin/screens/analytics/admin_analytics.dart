@@ -25,6 +25,7 @@ class _AdminAnalyticsScreenState extends State<AdminAnalyticsScreen> {
   }
 
   Future<void> _loadAnalytics() async {
+    debugPrint('AdminAnalytics: Loading analytics started...');
     try {
       setState(() => _isLoading = true);
 
@@ -45,34 +46,38 @@ class _AdminAnalyticsScreenState extends State<AdminAnalyticsScreen> {
           startDate = DateTime(2020);
       }
 
-      // Load page views
+      // Load summarized page views instead of raw logs
       final pageViewsResponse = await SupabaseService.requiredClient
-          .from('page_views')
-          .select()
-          .gte('created_at', startDate.toIso8601String())
-          .order('created_at', ascending: false);
+          .from('analytics_summary')
+          .select('page_path, view_count, date')
+          .gte('date', startDate.toIso8601String())
+          .order('date', ascending: false);
 
-      debugPrint('Analytics page views response: $pageViewsResponse');
+      debugPrint('Analytics summary response: $pageViewsResponse');
 
-      // Load custom events
+      // Load custom events (raw events table still needed for specific events)
       final eventsResponse = await SupabaseService.requiredClient
           .from('custom_events')
-          .select()
+          .select('event_name, created_at')
           .gte('created_at', startDate.toIso8601String())
           .order('created_at', ascending: false);
 
       debugPrint('Analytics custom events response: $eventsResponse');
 
-      // Calculate statistics
-      final pageViews =
-          (pageViewsResponse as List).cast<Map<String, dynamic>>();
+      // Calculate statistics from summaries
+      final pageViewSummaries = (pageViewsResponse as List).cast<Map<String, dynamic>>();
       final events = (eventsResponse as List).cast<Map<String, dynamic>>();
 
-      // Group page views by path
+      int totalPageViews = 0;
+      for (final row in pageViewSummaries) {
+        totalPageViews += (row['view_count'] as int? ?? 0);
+      }
+
+      // Group page views by path from summaries
       final Map<String, int> pageViewsByPath = {};
-      for (final view in pageViews) {
-        final path = view['page_path'] as String? ?? 'unknown';
-        pageViewsByPath[path] = (pageViewsByPath[path] ?? 0) + 1;
+      for (final row in pageViewSummaries) {
+        final path = row['page_path'] as String? ?? 'unknown';
+        pageViewsByPath[path] = (pageViewsByPath[path] ?? 0) + (row['view_count'] as int? ?? 0);
       }
 
       // Group events by name
@@ -84,17 +89,23 @@ class _AdminAnalyticsScreenState extends State<AdminAnalyticsScreen> {
 
       setState(() {
         _analyticsData = {
-          'totalPageViews': pageViews.length,
+          'totalPageViews': totalPageViews,
           'totalEvents': events.length,
-          'uniqueVisitors': _calculateUniqueVisitors(pageViews),
+          'uniqueVisitors': 0, // uniqueVisitors requires raw logs or additional tracking
           'pageViewsByPath': pageViewsByPath,
           'eventsByName': eventsByName,
-          'recentPageViews': pageViews.take(10).toList(),
+          'recentPageViews': pageViewSummaries.take(10).toList(),
           'recentEvents': events.take(10).toList(),
         };
         _isLoading = false;
       });
     } catch (e) {
+      debugPrint('AdminAnalytics: Error loading analytics: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error loading analytics: $e')),
+        );
+      }
       setState(() => _isLoading = false);
     }
   }

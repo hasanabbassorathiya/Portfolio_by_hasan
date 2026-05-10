@@ -8,10 +8,14 @@ class ProfileRepository extends BaseRepository {
 
   /// Get profile
   Future<ProfileModel?> getProfile() async {
+    final cached = getCached<ProfileModel>('profile');
+    if (cached != null) return cached;
     try {
       final response = await client.from(_tableName).select().maybeSingle();
       if (response == null) return null;
-      return ProfileModel.fromMap(response);
+      final profile = ProfileModel.fromMap(response);
+      setCache('profile', profile);
+      return profile;
     } catch (e) {
       throw Exception('Failed to fetch profile: $e');
     }

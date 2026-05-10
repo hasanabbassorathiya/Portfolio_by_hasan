@@ -52,6 +52,11 @@ class TestimonialRepository extends BaseRepository {
       return [];
     }
 
+    // Caching check
+    final cacheKey = 'testimonials_active';
+    final cached = getCached<List<TestimonialModel>>(cacheKey);
+    if (cached != null) return cached;
+
     try {
       final response = await client
           .from(_tableName)
@@ -59,9 +64,12 @@ class TestimonialRepository extends BaseRepository {
           .eq('is_active', true)
           .order('order_index', ascending: true);
 
-      return (response as List)
+      final testimonials = (response as List)
           .map((json) => TestimonialModel.fromMap(json as Map<String, dynamic>))
           .toList();
+
+      setCache(cacheKey, testimonials);
+      return testimonials;
     } catch (e) {
       // Log error but return empty list instead of throwing
       debugPrint('Error fetching testimonials: $e');

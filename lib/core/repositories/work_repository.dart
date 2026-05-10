@@ -20,6 +20,11 @@ class WorkRepository extends BaseRepository {
       return [];
     }
 
+    // Caching check
+    final cacheKey = 'works_${featured ?? false}_${limit ?? 'all'}_${offset ?? 'all'}';
+    final cached = getCached<List<WorkModel>>(cacheKey);
+    if (cached != null) return cached;
+
     try {
       // Build query: select first, then filters, then transforms
       // Use dynamic to handle type changes in the chain
@@ -39,9 +44,12 @@ class WorkRepository extends BaseRepository {
       }
 
       final response = await query;
-      return (response as List)
+      final works = (response as List)
           .map((json) => WorkModel.fromMap(json as Map<String, dynamic>))
           .toList();
+
+      setCache(cacheKey, works);
+      return works;
     } catch (e) {
       // Log error but return empty list instead of throwing
       debugPrint('Error fetching works: $e');

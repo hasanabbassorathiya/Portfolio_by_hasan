@@ -99,7 +99,7 @@ class _AboutState extends State<About> with SingleTickerProviderStateMixin {
 
   // Changed IconData to FaIconData in signature
   // Changed FaIconData to IconData in signature
-  IconData _getIconForPlatform(String platform) {
+  dynamic _getIconForPlatform(String platform) {
     return PlatformIcons.getIcon(platform);
   }
 
@@ -525,42 +525,48 @@ class _AboutState extends State<About> with SingleTickerProviderStateMixin {
 
   Widget _buildSocialIcon(
     BuildContext context,
-    IconData icon, // Changed from FaIconData
+    dynamic icon,
     String url,
     bool isSmall,
   ) {
-    return InkWell(
-      onTap: () {
-        final platform = _getPlatformFromUrl(url);
-        AnalyticsService.trackEvent(
-          eventName: 'social_link_clicked',
-          eventData: {'platform': platform, 'url': url},
-        );
-        LinkUtils.launchUrl(
-          url,
-          linkType: 'social_$platform',
-          linkName: platform,
-        );
-      },
-      borderRadius: BorderRadius.circular(12),
-      child: Container(
-        width: isSmall ? 44.0 : 50.0,
-        height: isSmall ? 44.0 : 50.0,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: AppColors.bgColor,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
+    return Material(
+      color: Colors.transparent,
+      shape: const CircleBorder(),
+      child: InkWell(
+        customBorder: const CircleBorder(),
+        onTap: () {
+          final platform = _getPlatformFromUrl(url);
+          AnalyticsService.trackEvent(
+            eventName: 'social_link_clicked',
+            eventData: {'platform': platform, 'url': url},
+          );
+          LinkUtils.launchUrl(
+            url,
+            linkType: 'social_$platform',
+            linkName: platform,
+          );
+        },
+        child: Container(
+          width: isSmall ? 44.0 : 50.0,
+          height: isSmall ? 44.0 : 50.0,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: AppColors.bgColor,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                blurRadius: 8,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: Center(
+            child: FaIcon(
+              icon,
+              size: isSmall ? 20 : 24,
+              color: AppColors.primaryColor,
             ),
-          ],
-        ),
-        child: FaIcon(
-          icon,
-          size: isSmall ? 20 : 24,
-          color: AppColors.primaryColor,
+          ),
         ),
       ),
     );

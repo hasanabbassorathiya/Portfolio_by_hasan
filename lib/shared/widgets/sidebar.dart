@@ -169,7 +169,7 @@ class _AppSidebarState extends State<AppSidebar> {
                       else if (platform.contains('email')) iconData = FontAwesomeIcons.envelope;
 
                       return Padding(
-                        padding: const EdgeInsets.only(bottom: 20.0),
+                        padding: const EdgeInsets.only(bottom: 12.0),
                         child: SocialButtons(
                           icon: iconData,
                           link: link['url'],
