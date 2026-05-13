@@ -61,17 +61,7 @@ class _ServiceFormDialogState extends State<ServiceFormDialog> {
     setState(() => _isLoading = true);
 
     try {
-      // Validate icon
-      if (_iconUrl == null || _iconUrl!.isEmpty) {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Please upload an icon')),
-          );
-        }
-        setState(() => _isLoading = false);
-        return;
-      }
-
+      // Removed mandatory icon validation
       final data = {
         'title': _titleController.text.trim(),
         'description':
@@ -94,7 +84,7 @@ class _ServiceFormDialogState extends State<ServiceFormDialog> {
       }
 
       if (mounted) {
-        if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Successfully saved'), backgroundColor: Colors.green));
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Successfully saved'), backgroundColor: Colors.green));
         debugPrint('Successfully saved item');
         Navigator.pop(context, true);
       }
