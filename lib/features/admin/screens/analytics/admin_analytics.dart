@@ -92,7 +92,7 @@ class _AdminAnalyticsScreenState extends State<AdminAnalyticsScreen> {
           'uniqueVisitors': 0, // uniqueVisitors requires raw logs or additional tracking
           'pageViewsByPath': pageViewsByPath,
           'eventsByName': eventsByName,
-          'recentPageViews': pageViewSummaries.take(10).toList(),
+          'recentPageViews': pageViews.take(10).toList(),
           'recentEvents': events.take(10).toList(),
         };
         _isLoading = false;
