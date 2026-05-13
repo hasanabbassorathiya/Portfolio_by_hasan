@@ -68,7 +68,6 @@ class _ServiceFormDialogState extends State<ServiceFormDialog> {
             _descriptionController.text.trim().isEmpty
                 ? null
                 : _descriptionController.text.trim(),
-        'icon_url': _iconUrl,
         'order_index': int.tryParse(_orderIndexController.text) ?? 0,
         'is_active': _isActive,
       };

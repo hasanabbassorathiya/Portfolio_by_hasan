@@ -306,6 +306,7 @@ class _DashboardOverviewState extends State<_DashboardOverview> {
   int _experienceCount = 0;
   int _testimonialCount = 0;
   int _unreadMessagesCount = 0;
+  int _serviceCount = 0;
   bool _isLoading = true;
   Timer? _refreshTimer;
 
@@ -338,6 +339,7 @@ class _DashboardOverviewState extends State<_DashboardOverview> {
         _loadExperienceCount(),
         _loadTestimonialCount(),
         _loadUnreadMessagesCount(),
+        _loadServiceCount(),
       ]);
 
       if (mounted) {
@@ -347,6 +349,7 @@ class _DashboardOverviewState extends State<_DashboardOverview> {
           _experienceCount = results[2];
           _testimonialCount = results[3];
           _unreadMessagesCount = results[4];
+          _serviceCount = results[5];
           _isLoading = false;
         });
       }
@@ -354,6 +357,36 @@ class _DashboardOverviewState extends State<_DashboardOverview> {
       if (mounted) {
         setState(() => _isLoading = false);
       }
+    }
+  }
+
+  Future<int> _loadServiceCount() async {
+    try {
+      if (!SupabaseService.isInitialized) return 0;
+      debugPrint('Fetching count for services...');
+      final response = await SupabaseService.requiredClient
+          .from('services')
+          .select('id');
+      debugPrint('Fetched services: $response');
+      return (response as List).length;
+    } catch (e) {
+      debugPrint('Error loading service count: $e');
+      return 0;
+    }
+  }
+
+  Future<int> _loadServiceCount() async {
+    try {
+      if (!SupabaseService.isInitialized) return 0;
+      debugPrint('Fetching count for services...');
+      final response = await SupabaseService.requiredClient
+          .from('services')
+          .select('id');
+      debugPrint('Fetched services: $response');
+      return (response as List).length;
+    } catch (e) {
+      debugPrint('Error loading service count: $e');
+      return 0;
     }
   }
 
@@ -522,6 +555,17 @@ class _DashboardOverviewState extends State<_DashboardOverview> {
                     onTap: () {
                       parentState?.setState(() {
                         parentState._selectedIndex = 9; // Contacts is index 9
+                      });
+                    },
+                  ),
+                  _StatCard(
+                    title: 'Services',
+                    value: '$_serviceCount',
+                    icon: Icons.build_outlined,
+                    color: Colors.blueGrey,
+                    onTap: () {
+                      parentState?.setState(() {
+                        parentState._selectedIndex = 6; // Services is index 6
                       });
                     },
                   ),
