@@ -362,30 +362,17 @@ class _DashboardOverviewState extends State<_DashboardOverview> {
 
   Future<int> _loadServiceCount() async {
     try {
+      debugPrint('Supabase initialized: ${SupabaseService.isInitialized}');
       if (!SupabaseService.isInitialized) return 0;
       debugPrint('Fetching count for services...');
       final response = await SupabaseService.requiredClient
           .from('services')
           .select('id');
       debugPrint('Fetched services: $response');
+      if (response == null) return 0;
       return (response as List).length;
     } catch (e) {
-      debugPrint('Error loading service count: $e');
-      return 0;
-    }
-  }
-
-  Future<int> _loadServiceCount() async {
-    try {
-      if (!SupabaseService.isInitialized) return 0;
-      debugPrint('Fetching count for services...');
-      final response = await SupabaseService.requiredClient
-          .from('services')
-          .select('id');
-      debugPrint('Fetched services: $response');
-      return (response as List).length;
-    } catch (e) {
-      debugPrint('Error loading service count: $e');
+      debugPrint('Critical error loading service count: $e');
       return 0;
     }
   }
