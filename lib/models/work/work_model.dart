@@ -18,6 +18,8 @@ class WorkModel {
   final String? playStoreUrl;
   final String? appStoreUrl;
   final String? appIconUrl;
+  final bool isActive;
+  final int orderIndex;
 
   const WorkModel({
     required this.id,
@@ -37,6 +39,8 @@ class WorkModel {
     this.playStoreUrl,
     this.appStoreUrl,
     this.appIconUrl,
+    required this.isActive,
+    required this.orderIndex,
   });
 
   /// Create a work model from a map
@@ -82,6 +86,8 @@ class WorkModel {
       playStoreUrl: map['play_store_url'] as String?,
       appStoreUrl: map['app_store_url'] as String?,
       appIconUrl: map['app_icon_url'] as String?,
+      isActive: map['is_active'] as bool? ?? true,
+      orderIndex: map['order_index'] as int? ?? 0,
     );
   }
 
@@ -105,6 +111,8 @@ class WorkModel {
       'play_store_url': playStoreUrl,
       'app_store_url': appStoreUrl,
       'app_icon_url': appIconUrl,
+      'is_active': isActive,
+      'order_index': orderIndex,
     };
   }
 }
@@ -130,6 +138,8 @@ class WorkRepository {
       solution:
           'Conducted extensive user research, created user personas, and redesigned the website with a focus on intuitive navigation and improved product discovery.',
       images: ['assets/work1.png', 'assets/work2.png'],
+      isActive: true,
+      orderIndex: 1,
     ),
     WorkModel(
       id: '2',
@@ -149,6 +159,8 @@ class WorkRepository {
       solution:
           'Conducted extensive user research, created user personas, and redesigned the website with a focus on intuitive navigation and improved product discovery.',
       images: ['assets/work2.png', 'assets/work3.png'],
+      isActive: true,
+      orderIndex: 2,
     ),
     WorkModel(
       id: '3',
@@ -168,6 +180,8 @@ class WorkRepository {
       solution:
           'Conducted extensive user research, created user personas, and redesigned the website with a focus on intuitive navigation and improved product discovery.',
       images: ['assets/work3.png', 'assets/work4.png'],
+      isActive: true,
+      orderIndex: 3,
     ),
     WorkModel(
       id: '4',
@@ -187,6 +201,8 @@ class WorkRepository {
       solution:
           'Conducted extensive user research, created user personas, and redesigned the website with a focus on intuitive navigation and improved product discovery.',
       images: ['assets/work4.png', 'assets/work1.png'],
+      isActive: true,
+      orderIndex: 4,
     ),
     WorkModel(
       id: '5',
