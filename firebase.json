@@ -9,7 +9,7 @@
     ],
     "rewrites": [
       {
-        "source": "**/!(manifest.json|favicon.png|icons/**|flutter_bootstrap.js|flutter.js|main.dart.js|canvaskit/**)",
+        "source": "**",
         "destination": "/index.html"
       }
     ]
