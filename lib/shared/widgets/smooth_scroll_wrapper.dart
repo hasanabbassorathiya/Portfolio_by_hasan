@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/physics.dart';
 
 /// Smooth scroll wrapper with enhanced physics and animations
 class SmoothScrollWrapper extends StatelessWidget {
@@ -21,7 +22,7 @@ class SmoothScrollWrapper extends StatelessWidget {
         controller: controller,
         physics:
             enableSmoothScroll
-                ? const SmoothScrollPhysics()
+                ? const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics())
                 : const ClampingScrollPhysics(),
         child: child,
       ),
@@ -41,35 +42,7 @@ class _SmoothScrollBehavior extends ScrollBehavior {
 
   @override
   ScrollPhysics getScrollPhysics(BuildContext context) {
-    return const SmoothScrollPhysics();
-  }
-}
-
-/// Smooth scroll physics for enhanced scrolling experience
-class SmoothScrollPhysics extends ScrollPhysics {
-  const SmoothScrollPhysics({super.parent});
-
-  @override
-  SmoothScrollPhysics applyTo(ScrollPhysics? ancestor) {
-    return SmoothScrollPhysics(parent: buildParent(ancestor));
-  }
-
-  @override
-  Simulation? createBallisticSimulation(
-    ScrollMetrics position,
-    double velocity,
-  ) {
-    final tolerance = toleranceFor(position);
-
-    if (velocity.abs() >= tolerance.velocity || position.outOfRange) {
-      return ClampingScrollSimulation(
-        position: position.pixels,
-        velocity: velocity,
-        tolerance: tolerance,
-      );
-    }
-
-    return null;
+    return const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics());
   }
 }
 

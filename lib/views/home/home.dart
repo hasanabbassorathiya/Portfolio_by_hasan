@@ -183,8 +183,584 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     super.dispose();
   }
 
+  List<Widget> _buildSmallChildren() {
+    return [
+      Center(
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final double availableWidth = constraints.maxWidth;
+            final double availableHeight = constraints.maxHeight;
+            final double desiredWidth = availableWidth * 0.8;
+            final double maxIllustrationHeight = 300.0;
+            final double desiredHeight =
+                availableHeight < maxIllustrationHeight
+                    ? availableHeight
+                    : maxIllustrationHeight;
+            final double actualSize = math.min(desiredWidth, desiredHeight);
+            return Stack(
+              alignment: Alignment.center,
+              children: [
+                AnimatedContainer(
+                  duration: const Duration(milliseconds: 900),
+                  curve: Curves.easeInOut,
+                  width: actualSize,
+                  height: actualSize,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(30),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.06),
+                        blurRadius: 32,
+                        offset: const Offset(0, 16),
+                      ),
+                    ],
+                    border: Border.all(
+                      color: AppColors.primaryColor.withOpacity(0.1),
+                      width: 2,
+                    ),
+                  ),
+                  child: ProfileImageWidget(
+                    key: _profileImageKey,
+                    fit: BoxFit.cover,
+                    width: actualSize,
+                    height: actualSize,
+                  ),
+                ),
+                Positioned(
+                  top: actualSize * 0.1,
+                  right: actualSize * -0.05,
+                  child: Container(
+                    width: actualSize * 0.2,
+                    height: actualSize * 0.2,
+                    decoration: BoxDecoration(
+                      color: Colors.orange.withOpacity(0.5),
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                ),
+                Positioned(
+                  top: actualSize * 0.05,
+                  right: actualSize * 0.05,
+                  child: Icon(
+                    Icons.star,
+                    color: Colors.yellow,
+                    size: actualSize * 0.08,
+                  ),
+                ),
+                Positioned(
+                  bottom: actualSize * 0.05,
+                  left: actualSize * 0.05,
+                  child: Container(
+                    width: actualSize * 0.12,
+                    height: actualSize * 0.12,
+                    color: Colors.black.withOpacity(0.2),
+                  ),
+                ),
+              ],
+            );
+          },
+        ),
+      ),
+      const SizedBox(height: 40),
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SlideTransition(
+                position: _textSlide,
+                child: FadeTransition(
+                  opacity: _textFadeIn,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'MY NAME',
+                        style: AppStyles.heading(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ).copyWith(color: AppColors.primaryColor),
+                      ),
+                      Text(
+                        'IS HASAN',
+                        style: AppStyles.heading(
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        'ABBAS',
+                        style: AppStyles.heading(
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        'SORATHIYA...',
+                        style: AppStyles.heading(
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
+              SlideTransition(
+                position: _textSlide,
+                child: FadeTransition(
+                  opacity: _textFadeIn,
+                  child: _bio != null && _bio!.isNotEmpty
+                      ? TypewriterText(
+                          key: _typewriterKey,
+                          text: _bio!,
+                          style: AppStyles.subheading(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                          ).copyWith(fontStyle: FontStyle.italic),
+                          speed: const Duration(milliseconds: 30),
+                        )
+                      : Text(
+                          _title ?? 'Software Engineer based in UAE',
+                          style: AppStyles.subheading(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                          ).copyWith(fontStyle: FontStyle.italic),
+                        ),
+                ),
+              ),
+              const SizedBox(height: 30),
+              SlideTransition(
+                position: _ctaSlide,
+                child: FadeTransition(
+                  opacity: _ctaFadeIn,
+                  child: AppButton(
+                    title: 'Resume',
+                    icons: Iconsax.arrow_right_3_copy,
+                    onTap: () {
+                      AnalyticsService.trackDownload(
+                        fileType: 'pdf',
+                        fileName: 'Resume',
+                      );
+                      LinkUtils.launchUrl(
+                        _resumeUrl ?? AppLinks.cvLink,
+                        linkType: 'cv_download',
+                        linkName: 'Resume',
+                      );
+                    },
+                  ),
+                ),
+              ),
+              const SizedBox(height: 48),
+              FadeTransition(
+                opacity: _contactFadeIn,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (_phone != null && _phone!.isNotEmpty) ...[
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Iconsax.call_calling_copy,
+                            size: 18,
+                            color: AppColors.primaryColor,
+                          ),
+                          const SizedBox(width: 8),
+                          InkWell(
+                            onTap: () => LinkUtils.launchPhone(_phone!),
+                            onHover: (value) {
+                              setState(() {
+                                _isHoveringPhoneNumber = value;
+                              });
+                            },
+                            child: Text(
+                              _phone!,
+                              style: AppStyles.regular(
+                                fontWeight: FontWeight.bold,
+                              ).copyWith(
+                                color: _isHoveringPhoneNumber
+                                    ? AppColors.primaryColor
+                                    : Colors.black,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                    ],
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Iconsax.message_text_1_copy,
+                          size: 18,
+                          color: AppColors.primaryColor,
+                        ),
+                        const SizedBox(width: 8),
+                        Flexible(
+                          child: InkWell(
+                            onTap: () => LinkUtils.launchEmail(AppLinks.email),
+                            onHover: (value) {
+                              setState(() {
+                                _isHoveringEmail = value;
+                              });
+                            },
+                            child: Text(
+                              AppLinks.email,
+                              style: AppStyles.regular(
+                                fontWeight: FontWeight.bold,
+                              ).copyWith(
+                                color: _isHoveringEmail
+                                    ? AppColors.primaryColor
+                                    : Colors.black,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    AppUtils().vSpace(size: 24.0),
+                    if (_socialLinks.isNotEmpty)
+                      Wrap(
+                        spacing: 16.0,
+                        runSpacing: 16.0,
+                        children: _socialLinks.map((link) {
+                          return SocialButtons(
+                            icon: _getIconForPlatform(link.platform),
+                            link: link.url,
+                          );
+                        }).toList(),
+                      ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    ];
+  }
+
+  List<Widget> _buildLargeChildren() {
+    return [
+      Expanded(
+        flex: 3,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SlideTransition(
+                  position: _textSlide,
+                  child: FadeTransition(
+                    opacity: _textFadeIn,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'MY NAME',
+                          style: AppStyles.heading(
+                            fontSize: 30,
+                            fontWeight: FontWeight.bold,
+                          ).copyWith(color: AppColors.primaryColor),
+                        ),
+                        Text(
+                          'IS HASAN',
+                          style: AppStyles.heading(
+                            fontSize: 44,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          'ABBAS',
+                          style: AppStyles.heading(
+                            fontSize: 44,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          'SORATHIYA...',
+                          style: AppStyles.heading(
+                            fontSize: 44,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                SlideTransition(
+                  position: _textSlide,
+                  child: FadeTransition(
+                    opacity: _textFadeIn,
+                    child: _bio != null && _bio!.isNotEmpty
+                        ? TypewriterText(
+                            key: _typewriterKey,
+                            text: _bio!,
+                            style: AppStyles.subheading(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w500,
+                            ).copyWith(fontStyle: FontStyle.italic),
+                            speed: const Duration(milliseconds: 30),
+                          )
+                        : Text(
+                            _title ?? 'Software Engineer based in UAE',
+                            style: AppStyles.subheading(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w500,
+                            ).copyWith(fontStyle: FontStyle.italic),
+                          ),
+                  ),
+                ),
+                const SizedBox(height: 30),
+                SlideTransition(
+                  position: _ctaSlide,
+                  child: FadeTransition(
+                    opacity: _ctaFadeIn,
+                    child: AppButton(
+                      title: 'Get in Touch',
+                      icons: Iconsax.arrow_right_3_copy,
+                      onTap: () {
+                        AnalyticsService.trackButtonClick(
+                          buttonName: 'Let\'s talk with me',
+                          location: 'home',
+                        );
+                        context.goNamed(AppRoutes.contact);
+                      },
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 48),
+              ],
+            ),
+            FadeTransition(
+              opacity: _contactFadeIn,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (_phone != null && _phone!.isNotEmpty) ...[
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Iconsax.call_calling_copy,
+                          size: 18,
+                          color: AppColors.primaryColor,
+                        ),
+                        const SizedBox(width: 8),
+                        InkWell(
+                          onTap: () => LinkUtils.launchPhone(_phone!),
+                          onHover: (value) {
+                            setState(() {
+                              _isHoveringPhoneNumber = value;
+                            });
+                          },
+                          child: Text(
+                            _phone!,
+                            style: AppStyles.regular(
+                              fontWeight: FontWeight.bold,
+                            ).copyWith(
+                              color: _isHoveringPhoneNumber
+                                  ? AppColors.primaryColor
+                                  : Colors.black,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                  ],
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Iconsax.message_text_1_copy,
+                        size: 18,
+                        color: AppColors.primaryColor,
+                      ),
+                      const SizedBox(width: 8),
+                      Flexible(
+                        child: InkWell(
+                          onTap: () => LinkUtils.launchEmail(AppLinks.email),
+                          onHover: (value) {
+                            setState(() {
+                              _isHoveringEmail = value;
+                            });
+                          },
+                          child: Text(
+                            AppLinks.email,
+                            style: AppStyles.regular(
+                              fontWeight: FontWeight.bold,
+                            ).copyWith(
+                              color: _isHoveringEmail
+                                  ? AppColors.primaryColor
+                                  : Colors.black,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  AppUtils().vSpace(size: 32.0),
+                  if (_socialLinks.isNotEmpty)
+                    Wrap(
+                      spacing: 16.0,
+                      runSpacing: 16.0,
+                      children: _socialLinks.map((link) {
+                        return SocialButtons(
+                          icon: _getIconForPlatform(link.platform),
+                          link: link.url,
+                        );
+                      }).toList(),
+                    ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+      Expanded(
+        flex: 4,
+        child: Center(
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              final double maxIllustrationWidth = 400.0;
+              final double maxIllustrationHeight = 500.0;
+              final double availableWidth = constraints.maxWidth;
+              final double availableHeight = constraints.maxHeight;
+              final double actualWidth =
+                  availableWidth < maxIllustrationWidth
+                      ? availableWidth
+                      : maxIllustrationWidth;
+              final double actualHeight =
+                  availableHeight < maxIllustrationHeight
+                      ? availableHeight
+                      : maxIllustrationHeight;
+              final double avatarWidth = 320.0;
+              final double avatarHeight = 440.0;
+              final double actualAvatarWidth =
+                  availableWidth < avatarWidth
+                      ? availableWidth * (avatarWidth / maxIllustrationWidth)
+                      : avatarWidth;
+              final double actualAvatarHeight =
+                  availableHeight < avatarHeight
+                      ? availableHeight * (avatarHeight / maxIllustrationHeight)
+                      : avatarHeight;
+
+              return Stack(
+                alignment: Alignment.center,
+                children: [
+                  AnimatedContainer(
+                    duration: const Duration(milliseconds: 900),
+                    curve: Curves.easeInOut,
+                    width: actualWidth,
+                    height: actualHeight,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(30),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.06),
+                          blurRadius: 32,
+                          offset: const Offset(0, 16),
+                        ),
+                      ],
+                      border: Border.all(
+                        color: AppColors.primaryColor.withOpacity(0.1),
+                        width: 2,
+                      ),
+                    ),
+                    child: ProfileImageWidget(
+                      key: _profileImageKey,
+                      width: actualAvatarWidth,
+                      height: actualAvatarHeight,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  Positioned(
+                    top: 50,
+                    right: -20,
+                    child: Container(
+                      width: 100,
+                      height: 100,
+                      decoration: BoxDecoration(
+                        color: Colors.orange.withOpacity(0.5),
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    top: 20,
+                    right: 20,
+                    child: Icon(
+                      Icons.star,
+                      color: Colors.yellow,
+                      size: 30,
+                    ),
+                  ),
+                  Positioned(
+                    bottom: 20,
+                    left: 20,
+                    child: Container(
+                      width: 50,
+                      height: 50,
+                      color: Colors.black.withOpacity(0.2),
+                    ),
+                  ),
+                ],
+              );
+            },
+          ),
+        ),
+      ),
+      Expanded(
+        flex: 1,
+        child: Align(
+          alignment: Alignment.centerRight,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              if (_socialLinks.isNotEmpty)
+                ..._socialLinks.map((link) {
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 12),
+                    child: SocialButtons(
+                      icon: _getIconForPlatform(link.platform),
+                      link: link.url,
+                    ),
+                  );
+                }).toList(),
+              const SizedBox(height: 12),
+              SizedBox(
+                width: 18,
+                child: Divider(
+                  thickness: 1,
+                  color: AppColors.primaryColor,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    ];
+  }
+
   @override
   Widget build(BuildContext context) {
+    debugPrint('DEBUG: Home build');
     final isSmall = MediaQuery.of(context).size.width < 768;
     final isMedium =
         MediaQuery.of(context).size.width >= 768 &&
@@ -202,16 +778,12 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
           builder: (context, constraints) {
             return Padding(
               padding: EdgeInsets.symmetric(
-                horizontal:
-                    isSmall
-                        ? 20 // Increased padding for small screens
-                        : isMedium
-                        ? 60 // Increased padding for medium screens
-                        : 100, // Increased padding for large screens
-                vertical:
-                    isSmall
-                        ? 45
-                        : 80, // Adjusted vertical padding to match Figma more closely
+                horizontal: isSmall
+                    ? 20
+                    : isMedium
+                    ? 60
+                    : 100,
+                vertical: isSmall ? 45 : 80,
               ),
               child: Flex(
                 direction: isSmall ? Axis.vertical : Axis.horizontal,
@@ -220,804 +792,9 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                         ? MainAxisAlignment.start
                         : MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
-                children:
-                    isSmall
-                        ? [
-                          // Order for Small screens (Column)
-                          // Center: Profile/Illustration - Adjust sizing for vertical layout
-                          Center(
-                            // Center horizontally
-                            child: LayoutBuilder(
-                              builder: (context, constraints) {
-                                // Sizing logic for the illustration on small screens
-                                // Use available constraints
-                                final double availableWidth =
-                                    constraints.maxWidth;
-                                final double availableHeight =
-                                    constraints.maxHeight;
-
-                                // Calculate desired size, maybe cap height to prevent taking too much vertical space
-                                final double desiredWidth =
-                                    availableWidth *
-                                    0.8; // Example: 80% of available width
-                                // Cap height at a reasonable value for small screens
-                                final double maxIllustrationHeight = 300.0;
-                                final double desiredHeight =
-                                    availableHeight < maxIllustrationHeight
-                                        ? availableHeight
-                                        : maxIllustrationHeight;
-
-                                // Determine the actual size based on the smaller dimension while maintaining aspect ratio
-                                // Assuming the SVG has an approximately square aspect ratio for this calculation.
-                                // If the SVG has a different aspect ratio, the sizing logic might need adjustment.
-                                final double actualSize = math.min(
-                                  desiredWidth,
-                                  desiredHeight,
-                                );
-
-                                return Stack(
-                                  alignment: Alignment.center,
-                                  children: [
-                                    // Profile Illustration Container
-                                    AnimatedContainer(
-                                      duration: const Duration(
-                                        milliseconds: 900,
-                                      ),
-                                      curve: Curves.easeInOut,
-                                      width: actualSize, // Use calculated size
-                                      height: actualSize, // Use calculated size
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(30),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Colors.black.withOpacity(
-                                              0.06,
-                                            ),
-                                            blurRadius: 32,
-                                            offset: const Offset(0, 16),
-                                          ),
-                                        ],
-                                        border: Border.all(
-                                          color: AppColors.primaryColor
-                                              .withOpacity(0.1),
-                                          width: 2,
-                                        ),
-                                      ),
-                                      child: ProfileImageWidget(
-                                        key: _profileImageKey,
-                                        fit: BoxFit.cover,
-                                        width: actualSize,
-                                        height: actualSize,
-                                      ),
-                                    ),
-
-                                    // TODO: Add Abstract Shapes, Sparkle, and Dot Pattern here using Positioned widgets
-                                    // Adjust positioning and sizes for small screens if needed
-                                    // Placeholder for an abstract shape (adjust positioning and size based on Figma)
-                                    Positioned(
-                                      top:
-                                          actualSize *
-                                          0.1, // Example relative positioning
-                                      right:
-                                          actualSize *
-                                          -0.05, // Example relative positioning
-                                      child: Container(
-                                        width:
-                                            actualSize *
-                                            0.2, // Example relative size
-                                        height:
-                                            actualSize *
-                                            0.2, // Example relative size
-                                        decoration: BoxDecoration(
-                                          color: Colors.orange.withOpacity(
-                                            0.5,
-                                          ), // Placeholder color
-                                          shape:
-                                              BoxShape
-                                                  .circle, // Example shape, replace with asset
-                                        ),
-                                        // TODO: Replace with actual abstract shape asset
-                                      ),
-                                    ),
-
-                                    // Placeholder for Sparkle Icon (adjust positioning and size based on Figma)
-                                    Positioned(
-                                      top:
-                                          actualSize *
-                                          0.05, // Example relative positioning
-                                      right:
-                                          actualSize *
-                                          0.05, // Example relative positioning
-                                      child: Icon(
-                                        Icons.star, // Placeholder icon
-                                        color:
-                                            Colors.yellow, // Placeholder color
-                                        size:
-                                            actualSize *
-                                            0.08, // Example relative size
-                                      ),
-                                      // TODO: Replace with actual sparkle asset
-                                    ),
-
-                                    // Placeholder for Dot Pattern (adjust positioning and size based on Figma)
-                                    Positioned(
-                                      bottom:
-                                          actualSize *
-                                          0.05, // Example relative positioning
-                                      left:
-                                          actualSize *
-                                          0.05, // Example relative positioning
-                                      child: Container(
-                                        width:
-                                            actualSize *
-                                            0.12, // Example relative size
-                                        height:
-                                            actualSize *
-                                            0.12, // Example relative size
-                                        color: Colors.black.withOpacity(
-                                          0.2,
-                                        ), // Placeholder color
-                                        // TODO: Replace with actual dot pattern asset
-                                      ),
-                                    ),
-                                  ],
-                                );
-                              },
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 40,
-                          ), // Add spacing between illustration and text
-                          // Left: Text and CTA - Already wrapped in SingleChildScrollView
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              // Section with Name, Title, and Button
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  SlideTransition(
-                                    position: _textSlide,
-                                    child: FadeTransition(
-                                      opacity: _textFadeIn,
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            'MY NAME',
-                                            style: AppStyles.heading(
-                                              fontSize:
-                                                  isSmall
-                                                      ? 20
-                                                      : isMedium
-                                                      ? 30
-                                                      : 40,
-                                              fontWeight: FontWeight.bold,
-                                            ).copyWith(
-                                              color: AppColors.primaryColor,
-                                            ),
-                                          ),
-                                          Text(
-                                            'IS HASAN',
-                                            style: AppStyles.heading(
-                                              fontSize:
-                                                  isSmall
-                                                      ? 28
-                                                      : isMedium
-                                                      ? 44
-                                                      : 64,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          Text(
-                                            'ABBAS',
-                                            style: AppStyles.heading(
-                                              fontSize:
-                                                  isSmall
-                                                      ? 28
-                                                      : isMedium
-                                                      ? 44
-                                                      : 64,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          Text(
-                                            'SORATHIYA...',
-                                            style: AppStyles.heading(
-                                              fontSize:
-                                                  isSmall
-                                                      ? 28
-                                                      : isMedium
-                                                      ? 44
-                                                      : 64,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(height: 10),
-                                  SlideTransition(
-                                    position: _textSlide,
-                                    child: FadeTransition(
-                                      opacity: _textFadeIn,
-                                      child: _bio != null && _bio!.isNotEmpty
-                                          ? TypewriterText(
-                                              key: _typewriterKey,
-                                              text: _bio!,
-                                              style: AppStyles.subheading(
-                                                fontSize:
-                                                    isSmall
-                                                        ? 14
-                                                        : isMedium
-                                                        ? 18
-                                                        : 24,
-                                                fontWeight: FontWeight.w500,
-                                              ).copyWith(fontStyle: FontStyle.italic),
-                                              speed: const Duration(milliseconds: 30),
-                                            )
-                                          : Text(
-                                              _title ?? 'Software Engineer based in UAE',
-                                              style: AppStyles.subheading(
-                                                fontSize:
-                                                    isSmall
-                                                        ? 14
-                                                        : isMedium
-                                                        ? 18
-                                                        : 24,
-                                                fontWeight: FontWeight.w500,
-                                              ).copyWith(fontStyle: FontStyle.italic),
-                                            ),
-                                    ),
-                                  ),
-                                  const SizedBox(height: 30),
-                                  SlideTransition(
-                                    position: _ctaSlide,
-                                    child: FadeTransition(
-                                      opacity: _ctaFadeIn,
-                                      child: AppButton(
-                                        title: 'Resume',
-                                        icons: Iconsax.arrow_right_3_copy,
-                                        onTap: () {
-                                          AnalyticsService.trackDownload(
-                                            fileType: 'pdf',
-                                            fileName: 'Resume',
-                                          );
-                                          LinkUtils.launchUrl(
-                                            _resumeUrl ?? AppLinks.cvLink,
-                                            linkType: 'cv_download',
-                                            linkName: 'Resume',
-                                          );
-                                        },
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    height: 48,
-                                  ), // Spacing after button
-                                  // Section with Contact Info and Social Buttons
-                                  FadeTransition(
-                                    opacity:
-                                        _contactFadeIn, // Apply contact specific fade
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        // Contact Info (Rows)
-                                        if (_phone != null && _phone!.isNotEmpty) ...[
-                                          Row(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              Icon(
-                                                Iconsax.call_calling_copy,
-                                                size: 18,
-                                                color: AppColors.primaryColor,
-                                              ),
-                                              const SizedBox(width: 8),
-                                              InkWell(
-                                                onTap:
-                                                    () => LinkUtils.launchPhone(
-                                                      _phone!,
-                                                    ),
-                                                onHover: (value) {
-                                                  setState(() {
-                                                    _isHoveringPhoneNumber = value;
-                                                  });
-                                                },
-                                                child: Text(
-                                                  _phone!,
-                                                  style: AppStyles.regular(
-                                                    fontWeight: FontWeight.bold,
-                                                  ).copyWith(
-                                                    color:
-                                                        _isHoveringPhoneNumber
-                                                            ? AppColors.primaryColor
-                                                            : Colors.black,
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          const SizedBox(height: 8),
-                                        ],
-                                        Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            Icon(
-                                              Iconsax.message_text_1_copy,
-                                              size: 18,
-                                              color: AppColors.primaryColor,
-                                            ),
-                                            const SizedBox(width: 8),
-                                            Flexible(
-                                              child: InkWell(
-                                                onTap:
-                                                    () => LinkUtils.launchEmail(
-                                                      AppLinks.email,
-                                                    ),
-                                                onHover: (value) {
-                                                  setState(() {
-                                                    _isHoveringEmail = value;
-                                                  });
-                                                },
-                                                child: Text(
-                                                  AppLinks.email,
-                                                  style: AppStyles.regular(
-                                                    fontWeight: FontWeight.bold,
-                                                  ).copyWith(
-                                                    color:
-                                                        _isHoveringEmail
-                                                            ? AppColors.primaryColor
-                                                            : Colors.black,
-                                                  ),
-                                                  overflow: TextOverflow.ellipsis,
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        // Social Buttons from admin
-                                        AppUtils().vSpace(
-                                          size: isSmall ? 24.0 : 32.0,
-                                        ),
-                                        if (_socialLinks.isNotEmpty)
-                                          Wrap(
-                                            spacing: 16.0,
-                                            runSpacing: 16.0,
-                                            children: _socialLinks.map((link) {
-                                              return SocialButtons(
-                                                icon: _getIconForPlatform(link.platform),
-                                                link: link.url,
-                                              );
-                                            }).toList(),
-                                          ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                          // Right: Socials - Excluded on small screens
-                        ]
-                        : [
-                          // Order for Medium and Large screens (Row)
-                          // Left: Text and CTA
-                          Expanded(
-                            flex: isMedium ? 3 : 4,
-                            child: SingleChildScrollView(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                              // Section with Name, Title, and Button
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  SlideTransition(
-                                    position: _textSlide,
-                                    child: FadeTransition(
-                                      opacity: _textFadeIn,
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            'MY NAME',
-                                            style: AppStyles.heading(
-                                              fontSize:
-                                                  isSmall
-                                                      ? 20
-                                                      : isMedium
-                                                      ? 30
-                                                      : 40,
-                                              fontWeight: FontWeight.bold,
-                                            ).copyWith(
-                                              color: AppColors.primaryColor,
-                                            ),
-                                          ),
-                                          Text(
-                                            'IS HASAN',
-                                            style: AppStyles.heading(
-                                              fontSize:
-                                                  isSmall
-                                                      ? 28
-                                                      : isMedium
-                                                      ? 44
-                                                      : 64,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          Text(
-                                            'ABBAS',
-                                            style: AppStyles.heading(
-                                              fontSize:
-                                                  isSmall
-                                                      ? 28
-                                                      : isMedium
-                                                      ? 44
-                                                      : 64,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          Text(
-                                            'SORATHIYA...',
-                                            style: AppStyles.heading(
-                                              fontSize:
-                                                  isSmall
-                                                      ? 28
-                                                      : isMedium
-                                                      ? 44
-                                                      : 64,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(height: 10),
-                                  SlideTransition(
-                                    position: _textSlide,
-                                    child: FadeTransition(
-                                      opacity: _textFadeIn,
-                                      child: _bio != null && _bio!.isNotEmpty
-                                          ? TypewriterText(
-                                              key: _typewriterKey,
-                                              text: _bio!,
-                                              style: AppStyles.subheading(
-                                                fontSize:
-                                                    isSmall
-                                                        ? 14
-                                                        : isMedium
-                                                        ? 18
-                                                        : 24,
-                                                fontWeight: FontWeight.w500,
-                                              ).copyWith(fontStyle: FontStyle.italic),
-                                              speed: const Duration(milliseconds: 30),
-                                            )
-                                          : Text(
-                                              _title ?? 'Software Engineer based in UAE',
-                                              style: AppStyles.subheading(
-                                                fontSize:
-                                                    isSmall
-                                                        ? 14
-                                                        : isMedium
-                                                        ? 18
-                                                        : 24,
-                                                fontWeight: FontWeight.w500,
-                                              ).copyWith(fontStyle: FontStyle.italic),
-                                            ),
-                                    ),
-                                  ),
-                                  const SizedBox(height: 30),
-                                  SlideTransition(
-                                    position: _ctaSlide,
-                                    child: FadeTransition(
-                                      opacity: _ctaFadeIn,
-                                        child: AppButton(
-                                        title: 'Get in Touch',
-                                        icons: Iconsax.arrow_right_3_copy,
-                                        onTap: () {
-                                          AnalyticsService.trackButtonClick(
-                                            buttonName: 'Let\'s talk with me',
-                                            location: 'home',
-                                          );
-                                          // Navigate to contact route by name to ensure correctness
-                                          context.goNamed(AppRoutes.contact);
-                                        },
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    height: 48,
-                                  ), // Spacing after button
-                                ],
-                              ),
-
-                              // Section with Contact Info and Social Buttons
-                              FadeTransition(
-                                opacity:
-                                    _contactFadeIn, // Apply contact specific fade
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    // Contact Info (Rows)
-                                    if (_phone != null && _phone!.isNotEmpty) ...[
-                                      Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Icon(
-                                            Iconsax.call_calling_copy,
-                                            size: 18,
-                                            color: AppColors.primaryColor,
-                                          ),
-                                          const SizedBox(width: 8),
-                                          InkWell(
-                                            onTap:
-                                                () => LinkUtils.launchPhone(
-                                                  _phone!,
-                                                ),
-                                            onHover: (value) {
-                                              setState(() {
-                                                _isHoveringPhoneNumber = value;
-                                              });
-                                            },
-                                            child: Text(
-                                              _phone!,
-                                              style: AppStyles.regular(
-                                                fontWeight: FontWeight.bold,
-                                              ).copyWith(
-                                                color:
-                                                    _isHoveringPhoneNumber
-                                                        ? AppColors.primaryColor
-                                                        : Colors.black,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      const SizedBox(height: 8),
-                                    ],
-                                    Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Icon(
-                                          Iconsax.message_text_1_copy,
-                                          size: 18,
-                                          color: AppColors.primaryColor,
-                                        ),
-                                        const SizedBox(width: 8),
-                                        Flexible(
-                                          child: InkWell(
-                                            onTap:
-                                                () => LinkUtils.launchEmail(
-                                                  AppLinks.email,
-                                                ),
-                                            onHover: (value) {
-                                              setState(() {
-                                                _isHoveringEmail = value;
-                                              });
-                                            },
-                                            child: Text(
-                                              AppLinks.email,
-                                              style: AppStyles.regular(
-                                                fontWeight: FontWeight.bold,
-                                              ).copyWith(
-                                                color:
-                                                    _isHoveringEmail
-                                                        ? AppColors.primaryColor
-                                                        : Colors.black,
-                                              ),
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    // Social Buttons from admin
-                                    AppUtils().vSpace(
-                                      size: isSmall ? 24.0 : 32.0,
-                                    ),
-                                    if (_socialLinks.isNotEmpty)
-                                      Wrap(
-                                        spacing: 16.0,
-                                        runSpacing: 16.0,
-                                        children: _socialLinks.map((link) {
-                                          return SocialButtons(
-                                            icon: _getIconForPlatform(link.platform),
-                                            link: link.url,
-                                          );
-                                        }).toList(),
-                                      ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                            ),
-                          ),
-                          // Center: Profile/Illustration
-                          Expanded(
-                            flex: isMedium ? 4 : 3,
-                            child: Center(
-                              child: LayoutBuilder(
-                                builder: (context, constraints) {
-                                  final double maxIllustrationWidth =
-                                      isMedium ? 300 : 400;
-                                  final double maxIllustrationHeight =
-                                      isMedium ? 380 : 500;
-
-                                  // Calculate available width and height
-                                  final double availableWidth =
-                                      constraints.maxWidth;
-                                  final double availableHeight =
-                                      constraints.maxHeight;
-
-                                  // Determine the actual size, scaling down if necessary
-                                  final double actualWidth =
-                                      availableWidth < maxIllustrationWidth
-                                          ? availableWidth
-                                          : maxIllustrationWidth;
-                                  final double actualHeight =
-                                      availableHeight < maxIllustrationHeight
-                                          ? availableHeight
-                                          : maxIllustrationHeight;
-
-                                  // Also scale the SVG down proportionally within the container
-                                  final double avatarWidth =
-                                      isMedium ? 220 : 320;
-                                  final double avatarHeight =
-                                      isMedium ? 320 : 440;
-
-                                  final double actualAvatarWidth =
-                                      availableWidth < avatarWidth
-                                          ? availableWidth *
-                                              (avatarWidth /
-                                                  maxIllustrationWidth)
-                                          : avatarWidth;
-                                  final double actualAvatarHeight =
-                                      availableHeight < avatarHeight
-                                          ? availableHeight *
-                                              (avatarHeight /
-                                                  maxIllustrationHeight)
-                                          : avatarHeight;
-
-                                  return Stack(
-                                    alignment: Alignment.center,
-                                    children: [
-                                      // Profile Illustration Container
-                                      AnimatedContainer(
-                                        duration: const Duration(
-                                          milliseconds: 900,
-                                        ),
-                                        curve: Curves.easeInOut,
-                                        width:
-                                            actualWidth, // Use calculated width
-                                        height:
-                                            actualHeight, // Use calculated height
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius: BorderRadius.circular(
-                                            30,
-                                          ),
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: Colors.black.withOpacity(
-                                                0.06,
-                                              ),
-                                              blurRadius: 32,
-                                              offset: const Offset(0, 16),
-                                            ),
-                                          ],
-                                          border: Border.all(
-                                            color: AppColors.primaryColor
-                                                .withOpacity(0.1),
-                                            width: 2,
-                                          ),
-                                        ),
-                                        child: ProfileImageWidget(
-                                          key: _profileImageKey,
-                                          width: actualAvatarWidth,
-                                          height: actualAvatarHeight,
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ),
-
-                                      // TODO: Add Abstract Shapes, Sparkle, and Dot Pattern here using Positioned widgets
-                                      // Placeholder for an abstract shape (adjust positioning and size based on Figma)
-                                      Positioned(
-                                        top: isMedium ? 40 : 50,
-                                        right: isMedium ? -10 : -20,
-                                        child: Container(
-                                          width: isMedium ? 80 : 100,
-                                          height: isMedium ? 80 : 100,
-                                          decoration: BoxDecoration(
-                                            color: Colors.orange.withOpacity(
-                                              0.5,
-                                            ),
-                                            shape: BoxShape.circle,
-                                          ), // TODO: Replace with actual abstract shape asset
-                                        ),
-                                      ),
-
-                                      // Placeholder for Sparkle Icon (adjust positioning and size based on Figma)
-                                      Positioned(
-                                        top: isMedium ? 15 : 20,
-                                        right: isMedium ? 15 : 20,
-                                        child: Icon(
-                                          Icons.star,
-                                          color: Colors.yellow,
-                                          size: isMedium ? 25 : 30,
-                                        ), // TODO: Replace with actual sparkle asset
-                                      ),
-
-                                      // Placeholder for Dot Pattern (adjust positioning and size based on Figma)
-                                      Positioned(
-                                        bottom: isMedium ? 15 : 20,
-                                        left: isMedium ? 15 : 20,
-                                        child: Container(
-                                          width: isMedium ? 40 : 50,
-                                          height: isMedium ? 40 : 50,
-                                          color: Colors.black.withOpacity(
-                                            0.2,
-                                          ), // TODO: Replace with actual dot pattern asset
-                                        ),
-                                      ),
-                                    ],
-                                  );
-                                },
-                              ),
-                            ),
-                          ),
-                          // Right: Socials
-                          Expanded(
-                            flex: isSmall ? 1 : (isMedium ? 1 : 1),
-                            child: Align(
-                              alignment:
-                                  isSmall
-                                      ? Alignment.center
-                                      : Alignment.centerRight,
-                              child: Column(
-                                mainAxisAlignment:
-                                    isSmall
-                                        ? MainAxisAlignment.start
-                                        : MainAxisAlignment.center,
-                                crossAxisAlignment:
-                                    isSmall
-                                        ? CrossAxisAlignment.center
-                                        : CrossAxisAlignment.end,
-                                children: [
-                                  // Social buttons from admin
-                                  if (_socialLinks.isNotEmpty)
-                                    ..._socialLinks.map((link) {
-                                      return Padding(
-                                        padding: const EdgeInsets.only(bottom: 12),
-                                        child: SocialButtons(
-                                          icon: _getIconForPlatform(link.platform),
-                                          link: link.url,
-                                        ),
-                                      );
-                                    }).toList(),
-                                  const SizedBox(height: 12),
-                                  if (!isSmall)
-                                    SizedBox(
-                                      width: 18,
-                                      child: Divider(
-                                        thickness: 1,
-                                        color: AppColors.primaryColor,
-                                      ),
-                                    ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
+                children: isSmall
+                    ? _buildSmallChildren()
+                    : _buildLargeChildren(),
               ),
             );
           },
