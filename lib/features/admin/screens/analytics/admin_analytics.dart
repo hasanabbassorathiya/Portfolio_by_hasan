@@ -46,16 +46,16 @@ class _AdminAnalyticsScreenState extends State<AdminAnalyticsScreen> {
           startDate = DateTime(2020);
       }
 
-      // Load summarized page views instead of raw logs
+      // Load page views from the page_views table
       final pageViewsResponse = await SupabaseService.requiredClient
-          .from('analytics_summary')
-          .select('page_path, view_count, date')
-          .gte('date', startDate.toIso8601String())
-          .order('date', ascending: false);
+          .from('page_views')
+          .select('page_path, created_at')
+          .gte('created_at', startDate.toIso8601String())
+          .order('created_at', ascending: false);
 
-      debugPrint('Analytics summary response: $pageViewsResponse');
+      debugPrint('Analytics page_views response: $pageViewsResponse');
 
-      // Load custom events (raw events table still needed for specific events)
+      // Load custom events
       final eventsResponse = await SupabaseService.requiredClient
           .from('custom_events')
           .select('event_name, created_at')
@@ -64,21 +64,19 @@ class _AdminAnalyticsScreenState extends State<AdminAnalyticsScreen> {
 
       debugPrint('Analytics custom events response: $eventsResponse');
 
-      // Calculate statistics from summaries
-      final pageViewSummaries = (pageViewsResponse as List).cast<Map<String, dynamic>>();
+      // Calculate statistics
+      final pageViews = (pageViewsResponse as List).cast<Map<String, dynamic>>();
       final events = (eventsResponse as List).cast<Map<String, dynamic>>();
 
-      int totalPageViews = 0;
-      for (final row in pageViewSummaries) {
-        totalPageViews += (row['view_count'] as int? ?? 0);
+      int totalPageViews = pageViews.length;
+
+      // Manually aggregate page views by path
+      final Map<String, int> pageViewsByPath = {};
+      for (final row in pageViews) {
+        final path = row['page_path'] as String? ?? 'unknown';
+        pageViewsByPath[path] = (pageViewsByPath[path] ?? 0) + 1;
       }
 
-      // Group page views by path from summaries
-      final Map<String, int> pageViewsByPath = {};
-      for (final row in pageViewSummaries) {
-        final path = row['page_path'] as String? ?? 'unknown';
-        pageViewsByPath[path] = (pageViewsByPath[path] ?? 0) + (row['view_count'] as int? ?? 0);
-      }
 
       // Group events by name
       final Map<String, int> eventsByName = {};
