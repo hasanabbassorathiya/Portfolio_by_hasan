@@ -1,5 +1,6 @@
 /// Service repository
 /// Handles service-related database operations
+import 'package:flutter/foundation.dart';
 import '../../models/service/service_model.dart';
 import 'base_repository.dart';
 

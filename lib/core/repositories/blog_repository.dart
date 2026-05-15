@@ -167,9 +167,16 @@ class BlogRepository extends BaseRepository {
           .order('published_at', ascending: false)
           .limit(limit);
 
-      final blogs = (response as List)
-          .map((json) => BlogModel.fromMap(json as Map<String, dynamic>))
-          .toList();
+      final blogs = <BlogModel>[];
+      if (response is List) {
+        for (var i = 0; i < response.length; i++) {
+          try {
+            blogs.add(BlogModel.fromMap(response[i] as Map<String, dynamic>));
+          } catch (e) {
+            debugPrint('BlogRepository: Error parsing featured blog at index $i: $e');
+          }
+        }
+      }
 
       setCache(cacheKey, blogs);
       return blogs;
