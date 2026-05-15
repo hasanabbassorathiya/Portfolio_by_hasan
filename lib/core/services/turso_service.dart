@@ -274,24 +274,29 @@ class TursoQueryBuilder implements Future<dynamic> {
       final parsedRows = rows.map((row) {
         final map = <String, dynamic>{};
         for (int i = 0; i < cols.length; i++) {
-          final cell = row[i] as Map<String, dynamic>;
-          final val = cell['value'];
-          final type = cell['type'];
+          try {
+            final cell = row[i] as Map;
+            final val = cell['value'];
+            final type = cell['type'];
 
-          if (type == 'integer') {
-            map[cols[i]] = val is int ? val : int.tryParse(val.toString());
-          } else if (type == 'float') {
-            map[cols[i]] = val is double ? val : double.tryParse(val.toString());
-          } else if (type == 'null') {
+            if (type == 'integer') {
+              map[cols[i]] = val is int ? val : int.tryParse(val.toString());
+            } else if (type == 'float') {
+              map[cols[i]] = val is double ? val : double.tryParse(val.toString());
+            } else if (type == 'null') {
+              map[cols[i]] = null;
+            } else {
+              map[cols[i]] = val;
+            }
+
+            // Boolean conversion since SQLite uses 1/0
+            if (cols[i].startsWith('is_')) {
+               final v = map[cols[i]];
+               map[cols[i]] = v == 1 || v == '1' || v == true || v == 'true';
+            }
+          } catch (e) {
+            debugPrint('TursoService: Error parsing cell at column ${cols[i]}: $e');
             map[cols[i]] = null;
-          } else {
-            map[cols[i]] = val;
-          }
-
-          // Boolean conversion since SQLite uses 1/0
-          if (cols[i].startsWith('is_')) {
-             final v = map[cols[i]];
-             map[cols[i]] = v == 1 || v == '1' || v == true || v == 'true';
           }
         }
         return map;
