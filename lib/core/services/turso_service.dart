@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../config/app_config.dart';
@@ -259,44 +260,57 @@ class TursoQueryBuilder implements Future<dynamic> {
         return [];
       }
 
-      debugPrint('Turso execResult: $execResult');
+      debugPrint('Turso execResult cols: ${execResult['cols']}');
+      debugPrint('Turso execResult rows: ${execResult['rows']?.length} rows found');
 
-      if (execResult['cols'] == null) {
-        debugPrint('Turso Error: cols is null');
-        return []; // no rows
+      if (execResult['cols'] == null || execResult['rows'] == null) {
+        debugPrint('Turso Error: cols or rows is null');
+        return [];
       }
 
       final cols = (execResult['cols'] as List).map((c) => c['name'] as String).toList();
       final rows = execResult['rows'] as List;
 
-      return rows.map((row) {
+      final parsedRows = rows.map((row) {
         final map = <String, dynamic>{};
         for (int i = 0; i < cols.length; i++) {
-          final cell = row[i];
+          final cell = row[i] as Map<String, dynamic>;
           final val = cell['value'];
           final type = cell['type'];
-          if (type == 'integer') map[cols[i]] = int.tryParse(val.toString()) ?? val;
-          else if (type == 'float') map[cols[i]] = double.tryParse(val.toString()) ?? val;
-          else map[cols[i]] = val;
+
+          if (type == 'integer') {
+            map[cols[i]] = val is int ? val : int.tryParse(val.toString());
+          } else if (type == 'float') {
+            map[cols[i]] = val is double ? val : double.tryParse(val.toString());
+          } else if (type == 'null') {
+            map[cols[i]] = null;
+          } else {
+            map[cols[i]] = val;
+          }
 
           // Boolean conversion since SQLite uses 1/0
           if (cols[i].startsWith('is_')) {
-             map[cols[i]] = map[cols[i]] == 1 || map[cols[i]] == '1';
+             final v = map[cols[i]];
+             map[cols[i]] = v == 1 || v == '1' || v == true || v == 'true';
           }
         }
         return map;
       }).toList();
-    } catch(e) {
+
+      debugPrint('Turso parsed ${parsedRows.length} rows successfully');
+      return parsedRows;
+    } catch(e, stack) {
       debugPrint('Turso error: $e');
+      debugPrint('Turso stack trace: $stack');
       throw Exception('Turso execute failed: $e');
     }
   }
 
   Future<dynamic> _toFuture() => _execute();
 
-    @override
-  Future<R> then<R>(dynamic Function(dynamic value) onValue, {Function? onError}) {
-    return _toFuture().then((v) => onValue(v), onError: onError);
+  @override
+  Future<R> then<R>(FutureOr<R> Function(dynamic value) onValue, {Function? onError}) {
+    return _toFuture().then(onValue, onError: onError);
   }
 
   @override
@@ -305,12 +319,10 @@ class TursoQueryBuilder implements Future<dynamic> {
   }
 
   @override
-  Future<dynamic> whenComplete(dynamic Function() action) {
+  Future<dynamic> whenComplete(FutureOr<void> Function() action) {
     return _toFuture().whenComplete(action);
   }
 
-  @override
-  
   @override
   Stream<dynamic> asStream() {
     return Stream.fromFuture(_toFuture());

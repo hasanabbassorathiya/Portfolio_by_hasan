@@ -26,39 +26,42 @@ class BlogModel {
   /// Create a blog model from a map
   factory BlogModel.fromMap(Map<String, dynamic> map) {
     // Handle both Supabase format and legacy format
-    final publishedAt = map['published_at'] as String?;
-    final createdAt = map['created_at'] as String?;
-    
+    final publishedAt = map['published_at'];
+    final createdAt = map['created_at'];
+
     // Format date from ISO string or use provided date
-    String formattedDate = map['date'] as String? ?? '';
+    String formattedDate = map['date']?.toString() ?? '';
     if (publishedAt != null) {
       try {
         final date = (DateTime.tryParse(publishedAt.toString()) ?? DateTime.now());
         formattedDate = '${date.day} ${_getMonthName(date.month)}, ${date.year}';
       } catch (e) {
-        formattedDate = publishedAt;
+        formattedDate = publishedAt.toString();
       }
     } else if (createdAt != null && formattedDate.isEmpty) {
       try {
         final date = (DateTime.tryParse(createdAt.toString()) ?? DateTime.now());
         formattedDate = '${date.day} ${_getMonthName(date.month)}, ${date.year}';
       } catch (e) {
-        formattedDate = createdAt;
+        formattedDate = createdAt.toString();
       }
     }
 
     return BlogModel(
       id: map['id']?.toString() ?? DateTime.now().millisecondsSinceEpoch.toString(),
-      title: map['title'] as String,
+      title: map['title']?.toString() ?? 'Untitled Post',
       date: formattedDate,
-      imageAsset: map['image_url'] as String? ?? map['imageAsset'] as String? ?? '',
-      content: map['content'] as String,
-      author: map['author'] as String? ?? 'Hasan Abbas Sorathiya',
+      imageAsset: map['image_url']?.toString() ?? map['imageAsset']?.toString() ?? '',
+      content: map['content']?.toString() ?? '',
+      author: map['author']?.toString() ?? 'Hasan Abbas Sorathiya',
       tags:
-          (map['tags'] as List<dynamic>?)?.map((e) => e.toString()).toList() ??
-          [],
-      readTime: map['read_time'] as String? ?? map['readTime'] as String?,
-      category: map['category'] as String?,
+          (map['tags'] is List)
+              ? (map['tags'] as List<dynamic>).map((e) => e.toString()).toList()
+              : (map['tags'] is String)
+              ? (map['tags'] as String).split(',').map((e) => e.trim()).toList()
+              : [],
+      readTime: map['read_time']?.toString() ?? map['readTime']?.toString(),
+      category: map['category']?.toString(),
     );
   }
 

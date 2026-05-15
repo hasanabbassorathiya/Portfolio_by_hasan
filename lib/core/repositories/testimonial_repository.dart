@@ -30,14 +30,14 @@ class TestimonialModel {
   factory TestimonialModel.fromMap(Map<String, dynamic> map) {
     return TestimonialModel(
       id: map['id']?.toString() ?? DateTime.now().millisecondsSinceEpoch.toString(),
-      clientName: map['client_name'] as String,
-      clientRole: map['client_role'] as String?,
-      clientCompany: map['client_company'] as String?,
-      clientImageUrl: map['client_image_url'] as String?,
-      quote: map['quote'] as String,
-      rating: map['rating'] as int?,
-      orderIndex: map['order_index'] as int? ?? 0,
-      isActive: map['is_active'] as bool? ?? true,
+      clientName: map['client_name']?.toString() ?? 'Anonymous',
+      clientRole: map['client_role']?.toString(),
+      clientCompany: map['client_company']?.toString(),
+      clientImageUrl: map['client_image_url']?.toString(),
+      quote: map['quote']?.toString() ?? '',
+      rating: map['rating'] is int ? map['rating'] as int : (int.tryParse(map['rating']?.toString() ?? '')),
+      orderIndex: map['order_index'] is int ? map['order_index'] as int : (int.tryParse(map['order_index']?.toString() ?? '') ?? 0),
+      isActive: map['is_active'] == true || map['is_active'] == 1 || map['is_active'] == 'true' || map['is_active'] == '1',
     );
   }
 }
@@ -64,9 +64,16 @@ class TestimonialRepository extends BaseRepository {
           .eq('is_active', true)
           .order('order_index', ascending: true);
 
-      final testimonials = (response as List)
-          .map((json) => TestimonialModel.fromMap(json as Map<String, dynamic>))
-          .toList();
+      final testimonials = <TestimonialModel>[];
+      if (response is List) {
+        for (var i = 0; i < response.length; i++) {
+          try {
+            testimonials.add(TestimonialModel.fromMap(response[i] as Map<String, dynamic>));
+          } catch (e) {
+            debugPrint('TestimonialRepository: Error parsing testimonial at index $i: $e');
+          }
+        }
+      }
 
       setCache(cacheKey, testimonials);
       return testimonials;

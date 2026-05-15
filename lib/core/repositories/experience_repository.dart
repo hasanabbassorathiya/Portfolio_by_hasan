@@ -62,16 +62,25 @@ class ExperienceRepository extends BaseRepository {
           .select('id, company, position, description, start_date, end_date, is_current, order_index')
           .order('order_index', ascending: true);
 
-      debugPrint('Raw Experiences Response: $response');
-      // Added logging to diagnose empty list issue
-      debugPrint('Raw Data from experiences table: $response');
+      debugPrint('ExperienceRepository: Received ${response is List ? response.length : "non-list"} results');
 
-      return (response as List)
-          .map((json) => ExperienceModel.fromMap(json as Map<String, dynamic>))
-          .toList();
+      final experiences = <ExperienceModel>[];
+      if (response is List) {
+        for (var i = 0; i < response.length; i++) {
+          try {
+            final json = response[i] as Map<String, dynamic>;
+            experiences.add(ExperienceModel.fromMap(json));
+          } catch (e) {
+            debugPrint('ExperienceRepository: Error parsing experience at index $i: $e');
+          }
+        }
+      }
+
+      debugPrint('ExperienceRepository: Successfully parsed ${experiences.length} experiences');
+      return experiences;
     } catch (e) {
       debugPrint('Failed to fetch experiences: $e');
-      throw Exception('Failed to fetch experiences: $e');
+      return []; // Return empty list instead of throwing
     }
   }
 }

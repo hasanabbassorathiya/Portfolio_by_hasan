@@ -15,11 +15,20 @@ class ServiceRepository extends BaseRepository {
           .eq('is_active', true)
           .order('order_index', ascending: true);
 
-      return (response as List)
-          .map((json) => ServiceModel.fromMap(json as Map<String, dynamic>))
-          .toList();
+      final services = <ServiceModel>[];
+      if (response is List) {
+        for (var i = 0; i < response.length; i++) {
+          try {
+            services.add(ServiceModel.fromMap(response[i] as Map<String, dynamic>));
+          } catch (e) {
+            debugPrint('ServiceRepository: Error parsing service at index $i: $e');
+          }
+        }
+      }
+      return services;
     } catch (e) {
-      throw Exception('Failed to fetch services: $e');
+      debugPrint('Failed to fetch services: $e');
+      return [];
     }
   }
 
@@ -31,11 +40,20 @@ class ServiceRepository extends BaseRepository {
           .select()
           .order('order_index', ascending: true);
 
-      return (response as List)
-          .map((json) => ServiceModel.fromMap(json as Map<String, dynamic>))
-          .toList();
+      final services = <ServiceModel>[];
+      if (response is List) {
+        for (var i = 0; i < response.length; i++) {
+          try {
+            services.add(ServiceModel.fromMap(response[i] as Map<String, dynamic>));
+          } catch (e) {
+            debugPrint('ServiceRepository: Error parsing service at index $i: $e');
+          }
+        }
+      }
+      return services;
     } catch (e) {
-      throw Exception('Failed to fetch services: $e');
+      debugPrint('Failed to fetch services: $e');
+      return [];
     }
   }
 }

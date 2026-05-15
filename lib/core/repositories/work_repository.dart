@@ -44,9 +44,22 @@ class WorkRepository extends BaseRepository {
       }
 
       final response = await query;
-      final works = (response as List)
-          .map((json) => WorkModel.fromMap(json as Map<String, dynamic>))
-          .toList();
+      debugPrint('WorkRepository: Received ${response is List ? response.length : "non-list"} results');
+
+      final works = <WorkModel>[];
+      if (response is List) {
+        for (var i = 0; i < response.length; i++) {
+          try {
+            final json = response[i] as Map<String, dynamic>;
+            works.add(WorkModel.fromMap(json));
+          } catch (e) {
+            debugPrint('WorkRepository: Error parsing work at index $i: $e');
+            // Continue with other works instead of failing entire list
+          }
+        }
+      }
+
+      debugPrint('WorkRepository: Successfully parsed ${works.length} works');
 
       setCache(cacheKey, works);
       return works;

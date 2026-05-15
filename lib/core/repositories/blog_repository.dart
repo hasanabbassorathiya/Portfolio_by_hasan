@@ -43,9 +43,18 @@ class BlogRepository extends BaseRepository {
           }
 
           final response = await queryBuilder;
-          final blogs = (response as List)
-              .map((json) => BlogModel.fromMap(json as Map<String, dynamic>))
-              .toList();
+          debugPrint('BlogRepository: Received ${response is List ? response.length : "non-list"} results');
+
+          final blogs = <BlogModel>[];
+          if (response is List) {
+            for (var i = 0; i < response.length; i++) {
+              try {
+                blogs.add(BlogModel.fromMap(response[i] as Map<String, dynamic>));
+              } catch (e) {
+                debugPrint('BlogRepository: Error parsing blog at index $i: $e');
+              }
+            }
+          }
 
           setCache(cacheKey, blogs);
           return blogs;

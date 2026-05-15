@@ -20,11 +20,11 @@ class ServiceModel {
   factory ServiceModel.fromMap(Map<String, dynamic> map) {
     return ServiceModel(
       id: map['id']?.toString() ?? DateTime.now().millisecondsSinceEpoch.toString(),
-      title: map['title'] as String,
-      description: map['description'] as String?,
-      iconUrl: map['icon_url'] as String?,
-      orderIndex: map['order_index'] as int? ?? 0,
-      isActive: map['is_active'] as bool? ?? true,
+      title: map['title']?.toString() ?? 'Unknown Service',
+      description: map['description']?.toString(),
+      iconUrl: map['icon_url']?.toString(),
+      orderIndex: map['order_index'] is int ? map['order_index'] as int : (int.tryParse(map['order_index']?.toString() ?? '') ?? 0),
+      isActive: map['is_active'] == true || map['is_active'] == 1 || map['is_active'] == 'true' || map['is_active'] == '1',
     );
   }
 

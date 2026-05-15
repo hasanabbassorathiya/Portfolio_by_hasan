@@ -47,26 +47,37 @@ class WorkModel {
   factory WorkModel.fromMap(Map<String, dynamic> map) {
     return WorkModel(
       id: map['id']?.toString() ?? DateTime.now().millisecondsSinceEpoch.toString(),
-      title: map['title'] as String,
-      category: map['category'] as String,
-      imageAsset: map['image_url'] as String? ?? map['imageAsset'] as String? ?? '',
-      description: map['description'] as String,
-      projectUrl: map['project_url'] as String? ?? map['projectUrl'] as String?,
+      title: map['title']?.toString() ?? '',
+      category: map['category']?.toString() ?? '',
+      imageAsset: map['image_url']?.toString() ?? map['imageAsset']?.toString() ?? '',
+      description: map['description']?.toString() ?? '',
+      projectUrl: map['project_url']?.toString() ?? map['projectUrl']?.toString(),
       tags:
           (map['tags'] is List)
               ? (map['tags'] as List<dynamic>).map((e) => e.toString()).toList()
               : (map['tags'] is String)
               ? (map['tags'] as String).split(',').map((e) => e.trim()).toList()
               : [],
-      client: map['client'] as String?,
-      year: map['year'] as String?,
-      role: map['role'] as String?,
-      technologies:
-          (map['technologies'] as List<dynamic>?)
-              ?.map((e) => e.toString())
-              .toList(),
-      challenge: map['challenge'] as String?,
-      solution: map['solution'] as String?,
+      client: map['client']?.toString(),
+      year: map['year']?.toString(),
+      role: map['role']?.toString(),
+      technologies: () {
+        final techData = map['technologies'];
+        if (techData == null) return null;
+        if (techData is List) {
+          return techData.map((e) => e.toString()).toList();
+        }
+        if (techData is String) {
+          return techData
+              .split(',')
+              .map((e) => e.trim())
+              .where((e) => e.isNotEmpty)
+              .toList();
+        }
+        return null;
+      }(),
+      challenge: map['challenge']?.toString(),
+      solution: map['solution']?.toString(),
       images: () {
         final imagesData = map['images'];
         if (imagesData == null) return null;
@@ -83,11 +94,11 @@ class WorkModel {
         }
         return null;
       }(),
-      playStoreUrl: map['play_store_url'] as String?,
-      appStoreUrl: map['app_store_url'] as String?,
-      appIconUrl: map['app_icon_url'] as String?,
-      isActive: map['is_active'] as bool? ?? true,
-      orderIndex: map['order_index'] as int? ?? 0,
+      playStoreUrl: map['play_store_url']?.toString(),
+      appStoreUrl: map['app_store_url']?.toString(),
+      appIconUrl: map['app_icon_url']?.toString(),
+      isActive: map['is_active'] == true || map['is_active'] == 1 || map['is_active'] == 'true' || map['is_active'] == '1',
+      orderIndex: map['order_index'] is int ? map['order_index'] as int : (int.tryParse(map['order_index']?.toString() ?? '') ?? 0),
     );
   }
 
