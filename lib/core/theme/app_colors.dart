@@ -10,11 +10,11 @@ class AppColors {
   static const Color muted = Color(0xFF3F3F46);
   static const Color border = Color(0xFF52525B);
 
-  // Accent — Acid Yellow
-  static const Color accent = Color(0xFFDFE104);
-  static const Color accentHover = Color(0xFFFACC15);
-  static const Color accentSubtle = Color(0x1ADFE104);
-  static const Color accentGlow = Color(0x33DFE104);
+  // Accent — Electric Blue
+  static const Color accent = Color(0xFF38BDF8);
+  static const Color accentHover = Color(0xFF60A5FA);
+  static const Color accentSubtle = Color(0x1A38BDF8);
+  static const Color accentGlow = Color(0x3338BDF8);
 
   // Text
   static const Color textPrimary = Color(0xFFFAFAFA);
@@ -27,13 +27,13 @@ class AppColors {
 
   // Gradients
   static const LinearGradient accentGradient = LinearGradient(
-    colors: [Color(0xFFDFE104), Color(0xFFFACC15)],
+    colors: [Color(0xFF38BDF8), Color(0xFF818CF8)],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
 
   static const LinearGradient heroGlow = LinearGradient(
-    colors: [Color(0x33DFE104), Color(0x00DFE104)],
+    colors: [Color(0x3338BDF8), Color(0x0038BDF8)],
     begin: Alignment.center,
     end: Alignment.bottomCenter,
   );

@@ -3,6 +3,36 @@ class AppProjectsData {
 
   static const List<Map<String, dynamic>> featuredProjects = [
     {
+      'id': 'duas-and-aamal',
+      'title': 'Duas and Aamal',
+      'category': 'Mobile',
+      'description':
+          'Devotional and spiritual companion app — multi-language support, daily prayers, '
+          'and structured spiritual routines across Android and iOS.',
+      'client': 'Independent',
+      'year': '2023',
+      'role': 'Flutter Developer',
+      'technologies': [
+        'Flutter',
+        'Dart',
+        'Multi-Language',
+        'Android',
+        'iOS',
+        'Push Notifications',
+      ],
+      'challenge':
+          'Creating a culturally sensitive, multi-language devotional app that feels '
+          'authentic while being technically robust.',
+      'solution':
+          'Built a cross-platform Flutter app with full multi-language support, structured '
+          'daily routines, and push notification reminders for spiritual practices.',
+      'tags': ['flutter', 'mobile', 'multilingual', 'devotional'],
+      'is_featured': true,
+      'ios_url': 'https://apps.apple.com/ae/app/duas-and-aamal/id6478907381',
+      'android_url':
+          'https://play.google.com/store/apps/details?id=app.duasandaamal.com&hl=en',
+    },
+    {
       'id': 'carvan-e-hind',
       'title': 'Carvan-e-Hind',
       'category': 'Mobile',
@@ -31,6 +61,34 @@ class AppProjectsData {
       'is_featured': true,
       'ios_url': 'https://apps.apple.com/in/app/carvan-e-hind/id6745079091',
       'android_url': 'https://play.google.com/store/apps/details?id=com.carvanehind.app&hl=en_US',
+    },
+    {
+      'id': 'lumio-iptv',
+      'title': 'Lumio IPTV',
+      'category': 'Mobile',
+      'description':
+          'IPTV streaming application for Android — live TV, channel management, '
+          'and smooth playback experience.',
+      'client': 'Lumio',
+      'year': '2024',
+      'role': 'Flutter Developer',
+      'technologies': [
+        'Flutter',
+        'Dart',
+        'Android',
+        'Streaming',
+        'Video Player',
+        'REST APIs',
+      ],
+      'challenge':
+          'Building a reliable IPTV player that handles live streaming, '
+          'channel organization, and smooth video playback across devices.',
+      'solution':
+          'Developed a Flutter Android application with robust video playback, '
+          'intuitive channel navigation, and optimized streaming performance.',
+      'tags': ['flutter', 'mobile', 'streaming', 'android'],
+      'is_featured': true,
+      'android_url': 'https://play.google.com/store/apps/details?id=app.lumioiptv.com&hl=en',
     },
     {
       'id': 'evlab',
@@ -236,36 +294,6 @@ class AppProjectsData {
       'web_url': 'https://nutrabay.com/',
     },
     {
-      'id': 'duas-and-aamal',
-      'title': 'Duas and Aamal',
-      'category': 'Mobile',
-      'description':
-          'Devotional and spiritual companion app — multi-language support, daily prayers, '
-          'and structured spiritual routines across Android and iOS.',
-      'client': 'Independent',
-      'year': '2023',
-      'role': 'Flutter Developer',
-      'technologies': [
-        'Flutter',
-        'Dart',
-        'Multi-Language',
-        'Android',
-        'iOS',
-        'Push Notifications',
-      ],
-      'challenge':
-          'Creating a culturally sensitive, multi-language devotional app that feels '
-          'authentic while being technically robust.',
-      'solution':
-          'Built a cross-platform Flutter app with full multi-language support, structured '
-          'daily routines, and push notification reminders for spiritual practices.',
-      'tags': ['flutter', 'mobile', 'multilingual', 'devotional'],
-      'is_featured': true,
-      'ios_url': 'https://apps.apple.com/ae/app/duas-and-aamal/id6478907381',
-      'android_url':
-          'https://play.google.com/store/apps/details?id=app.duasandaamal.com&hl=en',
-    },
-    {
       'id': 'hoda',
       'title': 'Hoda',
       'category': 'Mobile',
@@ -321,34 +349,6 @@ class AppProjectsData {
       'is_featured': true,
       'ios_url':
           'https://apps.apple.com/ae/app/fragrance-of-mastership/id6480333197',
-    },
-    {
-      'id': 'lumio-iptv',
-      'title': 'Lumio IPTV',
-      'category': 'Mobile',
-      'description':
-          'IPTV streaming application for Android — live TV, channel management, '
-          'and smooth playback experience.',
-      'client': 'Lumio',
-      'year': '2024',
-      'role': 'Flutter Developer',
-      'technologies': [
-        'Flutter',
-        'Dart',
-        'Android',
-        'Streaming',
-        'Video Player',
-        'REST APIs',
-      ],
-      'challenge':
-          'Building a reliable IPTV player that handles live streaming, '
-          'channel organization, and smooth video playback across devices.',
-      'solution':
-          'Developed a Flutter Android application with robust video playback, '
-          'intuitive channel navigation, and optimized streaming performance.',
-      'tags': ['flutter', 'mobile', 'streaming', 'android'],
-      'is_featured': true,
-      'android_url': 'https://play.google.com/store/apps/details?id=app.lumioiptv.com&hl=en',
     },
     {
       'id': 'kokoro-michi',

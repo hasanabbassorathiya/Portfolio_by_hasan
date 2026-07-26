@@ -205,7 +205,7 @@ class _HeroSectionState extends State<HeroSection>
               ),
               boxShadow: const [
                 BoxShadow(
-                  color: Color(0x40DFE104),
+                  color: Color(0x4038BDF8),
                   offset: Offset(8, 8),
                 ),
               ],
