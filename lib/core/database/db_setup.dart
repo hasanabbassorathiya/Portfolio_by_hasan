@@ -245,9 +245,10 @@ class DbSetup {
   // ── Seed Certifications ──
   static Future<void> seedCertifications() async {
     final items = [
-      {'id': 'cert_digital_mktg', 'name': 'The Fundamentals of Digital Marketing', 'issuer': 'Google', 'date': '', 'url': '', 'display_order': 0},
-      {'id': 'cert_flutter_bootcamp', 'name': 'The Complete Flutter Development Bootcamp with Dart', 'issuer': 'Udemy', 'date': '', 'url': '', 'display_order': 1},
-      {'id': 'cert_nodejs', 'name': 'Node.js, Express, MongoDB & More: The Complete Bootcamp 2024', 'issuer': 'Udemy', 'date': '', 'url': '', 'display_order': 2},
+      {'id': 'cert_digital_mktg', 'name': 'The Fundamentals of Digital Marketing', 'issuer': 'Google Digital Garage', 'date': 'Apr 2022', 'url': '', 'display_order': 0},
+      {'id': 'cert_flutter_bootcamp', 'name': 'The Complete Flutter Development Bootcamp with Dart', 'issuer': 'The App Brewery', 'date': 'Jan 2020', 'url': '', 'display_order': 1},
+      {'id': 'cert_nodejs', 'name': 'Node.js, Express, MongoDB & More: The Complete Bootcamp 2024', 'issuer': 'Udemy', 'date': 'Nov 2023', 'url': '', 'display_order': 2},
+      {'id': 'cert_dale_carnegie', 'name': 'Executive Certification', 'issuer': 'Dale Carnegie', 'date': 'Jul 2016', 'url': '', 'display_order': 3},
     ];
     for (final item in items) {
       try {
