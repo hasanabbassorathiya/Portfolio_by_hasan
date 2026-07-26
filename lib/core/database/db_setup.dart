@@ -233,7 +233,7 @@ class DbSetup {
   // ── Seed Education ──
   static Future<void> seedEducation() async {
     final items = [
-      {'id': 'edu_mca', 'degree': 'Master of Computer Applications (MCA)', 'institution': 'Saurashtra University', 'period': '2016 – 2019', 'details': '', 'display_order': 0},
+      {'id': 'edu_bsc', 'degree': 'Bachelor of Science - BS, Information Technology', 'institution': 'Vidyalankar School of Information Technology', 'period': '2017 – 2019', 'details': '', 'display_order': 0},
     ];
     for (final item in items) {
       try {
@@ -245,9 +245,9 @@ class DbSetup {
   // ── Seed Certifications ──
   static Future<void> seedCertifications() async {
     final items = [
-      {'id': 'cert_gad', 'name': 'Google Associate Android Developer', 'issuer': 'Google', 'date': '', 'url': '', 'display_order': 0},
-      {'id': 'cert_flutter', 'name': 'Flutter Development Specialization', 'issuer': 'Google / Udacity', 'date': '', 'url': '', 'display_order': 1},
-      {'id': 'cert_aws', 'name': 'AWS Cloud Practitioner', 'issuer': 'Amazon Web Services', 'date': '', 'url': '', 'display_order': 2},
+      {'id': 'cert_digital_mktg', 'name': 'The Fundamentals of Digital Marketing', 'issuer': 'Google', 'date': '', 'url': '', 'display_order': 0},
+      {'id': 'cert_flutter_bootcamp', 'name': 'The Complete Flutter Development Bootcamp with Dart', 'issuer': 'Udemy', 'date': '', 'url': '', 'display_order': 1},
+      {'id': 'cert_nodejs', 'name': 'Node.js, Express, MongoDB & More: The Complete Bootcamp 2024', 'issuer': 'Udemy', 'date': '', 'url': '', 'display_order': 2},
     ];
     for (final item in items) {
       try {
@@ -263,29 +263,33 @@ class DbSetup {
       {'id': 'sk_dart', 'name': 'Dart', 'category': 'Mobile & Cross-Platform', 'level': 'Expert', 'display_order': 1},
       {'id': 'sk_android', 'name': 'Android', 'category': 'Mobile & Cross-Platform', 'level': 'Advanced', 'display_order': 2},
       {'id': 'sk_ios', 'name': 'iOS', 'category': 'Mobile & Cross-Platform', 'level': 'Advanced', 'display_order': 3},
-      {'id': 'sk_clean', 'name': 'Clean Architecture', 'category': 'Architecture & Patterns', 'level': 'Expert', 'display_order': 4},
-      {'id': 'sk_solid', 'name': 'SOLID', 'category': 'Architecture & Patterns', 'level': 'Expert', 'display_order': 5},
-      {'id': 'sk_bloc', 'name': 'BLoC', 'category': 'Architecture & Patterns', 'level': 'Advanced', 'display_order': 6},
-      {'id': 'sk_riverpod', 'name': 'Riverpod', 'category': 'Architecture & Patterns', 'level': 'Advanced', 'display_order': 7},
-      {'id': 'sk_mvvm', 'name': 'MVVM', 'category': 'Architecture & Patterns', 'level': 'Advanced', 'display_order': 8},
-      {'id': 'sk_rest', 'name': 'REST APIs', 'category': 'Backend & APIs', 'level': 'Advanced', 'display_order': 9},
+      {'id': 'sk_react', 'name': 'React', 'category': 'Frontend', 'level': 'Advanced', 'display_order': 4},
+      {'id': 'sk_nodejs', 'name': 'Node.js', 'category': 'Backend & APIs', 'level': 'Advanced', 'display_order': 5},
+      {'id': 'sk_express', 'name': 'Express.js', 'category': 'Backend & APIs', 'level': 'Advanced', 'display_order': 6},
+      {'id': 'sk_mongodb', 'name': 'MongoDB', 'category': 'Backend & APIs', 'level': 'Advanced', 'display_order': 7},
+      {'id': 'sk_rest', 'name': 'REST APIs', 'category': 'Backend & APIs', 'level': 'Advanced', 'display_order': 8},
+      {'id': 'sk_graphql', 'name': 'GraphQL', 'category': 'Backend & APIs', 'level': 'Intermediate', 'display_order': 9},
       {'id': 'sk_firebase', 'name': 'Firebase', 'category': 'Backend & APIs', 'level': 'Advanced', 'display_order': 10},
-      {'id': 'sk_supabase', 'name': 'Supabase', 'category': 'Backend & APIs', 'level': 'Intermediate', 'display_order': 11},
-      {'id': 'sk_node', 'name': 'Node.js', 'category': 'Backend & APIs', 'level': 'Intermediate', 'display_order': 12},
-      {'id': 'sk_python', 'name': 'Python', 'category': 'Backend & APIs', 'level': 'Intermediate', 'display_order': 13},
-      {'id': 'sk_cicd', 'name': 'CI/CD', 'category': 'DevOps & Tools', 'level': 'Advanced', 'display_order': 14},
-      {'id': 'sk_codemagic', 'name': 'Codemagic', 'category': 'DevOps & Tools', 'level': 'Advanced', 'display_order': 15},
-      {'id': 'sk_github_actions', 'name': 'GitHub Actions', 'category': 'DevOps & Tools', 'level': 'Advanced', 'display_order': 16},
-      {'id': 'sk_git', 'name': 'Git', 'category': 'DevOps & Tools', 'level': 'Expert', 'display_order': 17},
-      {'id': 'sk_docker', 'name': 'Docker', 'category': 'DevOps & Tools', 'level': 'Intermediate', 'display_order': 18},
-      {'id': 'sk_fastlane', 'name': 'Fastlane', 'category': 'DevOps & Tools', 'level': 'Intermediate', 'display_order': 19},
-      {'id': 'sk_provider', 'name': 'Provider', 'category': 'State & Data', 'level': 'Expert', 'display_order': 20},
-      {'id': 'sk_hive', 'name': 'Hive', 'category': 'State & Data', 'level': 'Intermediate', 'display_order': 21},
-      {'id': 'sk_sqlite', 'name': 'SQLite', 'category': 'State & Data', 'level': 'Advanced', 'display_order': 22},
-      {'id': 'sk_sharedpref', 'name': 'SharedPreferences', 'category': 'State & Data', 'level': 'Advanced', 'display_order': 23},
-      {'id': 'sk_material', 'name': 'Material Design 3', 'category': 'UI & Design', 'level': 'Expert', 'display_order': 24},
-      {'id': 'sk_animations', 'name': 'Custom Animations', 'category': 'UI & Design', 'level': 'Advanced', 'display_order': 25},
-      {'id': 'sk_responsive', 'name': 'Responsive Design', 'category': 'UI & Design', 'level': 'Advanced', 'display_order': 26},
+      {'id': 'sk_langchain', 'name': 'LangChain', 'category': 'AI & LLMs', 'level': 'Advanced', 'display_order': 11},
+      {'id': 'sk_openai', 'name': 'OpenAI API', 'category': 'AI & LLMs', 'level': 'Advanced', 'display_order': 12},
+      {'id': 'sk_rag', 'name': 'RAG Systems', 'category': 'AI & LLMs', 'level': 'Advanced', 'display_order': 13},
+      {'id': 'sk_llm', 'name': 'LLM Integration', 'category': 'AI & LLMs', 'level': 'Advanced', 'display_order': 14},
+      {'id': 'sk_n8n', 'name': 'n8n Automation', 'category': 'AI & LLMs', 'level': 'Intermediate', 'display_order': 15},
+      {'id': 'sk_prompt_eng', 'name': 'Prompt Engineering', 'category': 'AI & LLMs', 'level': 'Advanced', 'display_order': 16},
+      {'id': 'sk_aws', 'name': 'AWS', 'category': 'Cloud & DevOps', 'level': 'Intermediate', 'display_order': 17},
+      {'id': 'sk_gcp', 'name': 'GCP', 'category': 'Cloud & DevOps', 'level': 'Intermediate', 'display_order': 18},
+      {'id': 'sk_cicd', 'name': 'CI/CD', 'category': 'Cloud & DevOps', 'level': 'Advanced', 'display_order': 19},
+      {'id': 'sk_codemagic', 'name': 'Codemagic', 'category': 'Cloud & DevOps', 'level': 'Advanced', 'display_order': 20},
+      {'id': 'sk_github_actions', 'name': 'GitHub Actions', 'category': 'Cloud & DevOps', 'level': 'Advanced', 'display_order': 21},
+      {'id': 'sk_docker', 'name': 'Docker', 'category': 'Cloud & DevOps', 'level': 'Intermediate', 'display_order': 22},
+      {'id': 'sk_git', 'name': 'Git', 'category': 'Cloud & DevOps', 'level': 'Expert', 'display_order': 23},
+      {'id': 'sk_clean', 'name': 'Clean Architecture', 'category': 'Architecture', 'level': 'Expert', 'display_order': 24},
+      {'id': 'sk_solid', 'name': 'SOLID Principles', 'category': 'Architecture', 'level': 'Expert', 'display_order': 25},
+      {'id': 'sk_bloc', 'name': 'BLoC', 'category': 'Architecture', 'level': 'Advanced', 'display_order': 26},
+      {'id': 'sk_riverpod', 'name': 'Riverpod', 'category': 'Architecture', 'level': 'Advanced', 'display_order': 27},
+      {'id': 'sk_mvvm', 'name': 'MVVM', 'category': 'Architecture', 'level': 'Advanced', 'display_order': 28},
+      {'id': 'sk_shopify', 'name': 'Shopify', 'category': 'E-Commerce', 'level': 'Intermediate', 'display_order': 29},
+      {'id': 'sk_ecommerce', 'name': 'E-Commerce', 'category': 'E-Commerce', 'level': 'Advanced', 'display_order': 30},
     ];
     for (final item in items) {
       try {
