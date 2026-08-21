@@ -62,3 +62,34 @@ ui-debug.log
 service-account.json
 # Firebase service account JSON files (contains private keys)
 hasan-abbas-portfolio-*.json
+
+# Local tooling / scratch
+node_modules/
+.playwright-mcp/
+.agents/
+.opencode/
+.claude-flow/
+skills-lock.json
+*.png
+/*_check*.md
+/*_verify*.md
+/final_*.md
+/admin_works_check_current.md
+/apple_*.md
+/portfolio_final_check.md
+/works_*.md
+tests/e2e/shots/
+tests/e2e/report.json
+.claude/skills/brandkit
+.claude/skills/design-taste-frontend
+.claude/skills/design-taste-frontend-v1
+.claude/skills/full-output-enforcement
+.claude/skills/gpt-taste
+.claude/skills/high-end-visual-design
+.claude/skills/image-to-code
+.claude/skills/imagegen-frontend-mobile
+.claude/skills/imagegen-frontend-web
+.claude/skills/industrial-brutalist-ui
+.claude/skills/minimalist-ui
+.claude/skills/redesign-existing-projects
+.claude/skills/stitch-design-taste

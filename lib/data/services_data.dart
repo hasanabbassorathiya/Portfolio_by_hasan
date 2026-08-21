@@ -6,7 +6,7 @@ class AppServicesData {
   static const List<Map<String, dynamic>> services = [
     {
       'title': 'Mobile App Development',
-      'description': 'Cross-platform mobile applications with Flutter — from concept to App Store deployment.',
+      'description': 'Cross-platform mobile applications with Flutter, from concept to App Store deployment.',
       'icon': Icons.phone_android,
     },
     {
@@ -21,12 +21,12 @@ class AppServicesData {
     },
     {
       'title': 'FinTech Solutions',
-      'description': 'Secure financial applications — payment workflows, lending platforms, and transaction systems.',
+      'description': 'Secure financial applications, payment workflows, lending platforms, and transaction systems.',
       'icon': Icons.account_balance,
     },
     {
       'title': 'Custom Solutions',
-      'description': 'Enterprise-grade custom software — APIs, cloud architecture, and scalable systems.',
+      'description': 'Enterprise-grade custom software, APIs, cloud architecture, and scalable systems.',
       'icon': Icons.build,
     },
     {

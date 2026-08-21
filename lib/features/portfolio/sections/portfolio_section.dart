@@ -144,9 +144,11 @@ class _PortfolioSectionState extends State<PortfolioSection> {
             child: ScrollReveal(
               direction: RevealDirection.up,
               delay: Duration(milliseconds: 100 * i),
-              child: _ProjectCard(
-                project: projects[i],
-                onTap: () => context.push('/project/${projects[i]['id']}'),
+              child: IntrinsicHeight(
+                child: _ProjectCard(
+                  project: projects[i],
+                  onTap: () => context.push('/project/${projects[i]['id']}'),
+                ),
               ),
             ),
           );
@@ -156,79 +158,83 @@ class _PortfolioSectionState extends State<PortfolioSection> {
 
     return Column(
       children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: projects.isNotEmpty
-                  ? ScrollReveal(
-                      direction: RevealDirection.left,
-                      delay: const Duration(milliseconds: 100),
-                      child: _ProjectCard(
-                        project: projects[0],
-                        onTap: () => context.push('/project/${projects[0]['id']}'),
-                      ),
-                    )
-                  : const SizedBox.shrink(),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                children: [
-                  if (projects.length > 1)
-                    ScrollReveal(
-                      direction: RevealDirection.right,
-                      delay: const Duration(milliseconds: 200),
-                      child: _ProjectCard(
-                        project: projects[1],
-                        onTap: () => context.push('/project/${projects[1]['id']}'),
-                      ),
-                    ),
-                ],
+        IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: projects.isNotEmpty
+                    ? ScrollReveal(
+                        direction: RevealDirection.left,
+                        delay: const Duration(milliseconds: 100),
+                        child: _ProjectCard(
+                          project: projects[0],
+                          onTap: () => context.push('/project/${projects[0]['id']}'),
+                        ),
+                      )
+                    : const SizedBox.shrink(),
               ),
-            ),
-          ],
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  children: [
+                    if (projects.length > 1)
+                      ScrollReveal(
+                        direction: RevealDirection.right,
+                        delay: const Duration(milliseconds: 200),
+                        child: _ProjectCard(
+                          project: projects[1],
+                          onTap: () => context.push('/project/${projects[1]['id']}'),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
         const SizedBox(height: 16),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (projects.length > 2)
-              Expanded(
-                child: ScrollReveal(
-                  direction: RevealDirection.left,
-                  delay: const Duration(milliseconds: 300),
-                  child: _ProjectCard(
-                    project: projects[2],
-                    onTap: () => context.push('/project/${projects[2]['id']}'),
+        IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (projects.length > 2)
+                Expanded(
+                  child: ScrollReveal(
+                    direction: RevealDirection.left,
+                    delay: const Duration(milliseconds: 300),
+                    child: _ProjectCard(
+                      project: projects[2],
+                      onTap: () => context.push('/project/${projects[2]['id']}'),
+                    ),
                   ),
                 ),
-              ),
-            const SizedBox(width: 16),
-            if (projects.length > 3)
-              Expanded(
-                child: ScrollReveal(
-                  direction: RevealDirection.up,
-                  delay: const Duration(milliseconds: 400),
-                  child: _ProjectCard(
-                    project: projects[3],
-                    onTap: () => context.push('/project/${projects[3]['id']}'),
+              const SizedBox(width: 16),
+              if (projects.length > 3)
+                Expanded(
+                  child: ScrollReveal(
+                    direction: RevealDirection.up,
+                    delay: const Duration(milliseconds: 400),
+                    child: _ProjectCard(
+                      project: projects[3],
+                      onTap: () => context.push('/project/${projects[3]['id']}'),
+                    ),
                   ),
                 ),
-              ),
-            const SizedBox(width: 16),
-            if (projects.length > 4)
-              Expanded(
-                child: ScrollReveal(
-                  direction: RevealDirection.right,
-                  delay: const Duration(milliseconds: 500),
-                  child: _ProjectCard(
-                    project: projects[4],
-                    onTap: () => context.push('/project/${projects[4]['id']}'),
+              const SizedBox(width: 16),
+              if (projects.length > 4)
+                Expanded(
+                  child: ScrollReveal(
+                    direction: RevealDirection.right,
+                    delay: const Duration(milliseconds: 500),
+                    child: _ProjectCard(
+                      project: projects[4],
+                      onTap: () => context.push('/project/${projects[4]['id']}'),
+                    ),
                   ),
                 ),
-              ),
-          ],
+            ],
+          ),
         ),
       ],
     );
@@ -273,7 +279,7 @@ class _ProjectCardState extends State<_ProjectCard> {
           transformAlignment: Alignment.center,
           padding: const EdgeInsets.all(28),
           decoration: BoxDecoration(
-            color: _hovered ? AppColors.accent : AppColors.base,
+            color: _hovered ? AppColors.surface : AppColors.base,
             border: Border.all(
               color: _hovered ? AppColors.accent : AppColors.border,
               width: 2,
@@ -281,7 +287,7 @@ class _ProjectCardState extends State<_ProjectCard> {
             boxShadow: [
               if (!_pressed && _hovered)
                 BoxShadow(
-                  color: AppColors.accent.withValues(alpha: 0.3),
+                  color: AppColors.accent.withValues(alpha: 0.15),
                   offset: const Offset(4, 4),
                 ),
               if (!_pressed && !_hovered)
@@ -299,15 +305,13 @@ class _ProjectCardState extends State<_ProjectCard> {
                 children: [
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
-                    decoration: BoxDecoration(
-                      color: _hovered ? AppColors.deep : AppColors.accent,
-                    ),
+                    decoration: const BoxDecoration(color: AppColors.accent),
                     child: Text(
                       (widget.project['category'] ?? '') as String,
                       style: TextStyle(
                         fontSize: 11,
                         fontWeight: FontWeight.w700,
-                        color: _hovered ? AppColors.accent : AppColors.deep,
+                        color: AppColors.deep,
                         letterSpacing: 1,
                       ),
                     ),
@@ -316,7 +320,7 @@ class _ProjectCardState extends State<_ProjectCard> {
                     (widget.project['year'] ?? '') as String,
                     style: TextStyle(
                       fontSize: 12,
-                      color: _hovered ? AppColors.deep.withValues(alpha: 0.7) : AppColors.textMuted,
+                      color: AppColors.textMuted,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -328,7 +332,7 @@ class _ProjectCardState extends State<_ProjectCard> {
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.w800,
-                  color: _hovered ? AppColors.deep : AppColors.textPrimary,
+                  color: AppColors.textPrimary,
                   letterSpacing: -0.5,
                 ),
               ),
@@ -337,7 +341,7 @@ class _ProjectCardState extends State<_ProjectCard> {
                 (widget.project['client'] ?? '') as String,
                 style: TextStyle(
                   fontSize: 13,
-                  color: _hovered ? AppColors.deep.withValues(alpha: 0.7) : AppColors.textMuted,
+                  color: AppColors.textMuted,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -347,7 +351,7 @@ class _ProjectCardState extends State<_ProjectCard> {
                   (widget.project['description'] ?? '') as String,
                   style: TextStyle(
                     fontSize: 14,
-                    color: _hovered ? AppColors.deep.withValues(alpha: 0.8) : AppColors.textSecondary,
+                    color: AppColors.textSecondary,
                     height: 1.6,
                   ),
                   maxLines: 3,
@@ -362,15 +366,15 @@ class _ProjectCardState extends State<_ProjectCard> {
                   return Container(
                     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                     decoration: BoxDecoration(
-                      color: _hovered ? AppColors.deep : AppColors.surface,
-                      border: Border.all(color: _hovered ? AppColors.deep : AppColors.border, width: 1),
+                      color: AppColors.surface,
+                      border: Border.all(color: AppColors.border, width: 1),
                     ),
                     child: Text(
                       t.toString(),
                       style: TextStyle(
                         fontSize: 11,
                         fontWeight: FontWeight.w600,
-                        color: _hovered ? AppColors.accent : AppColors.textMuted,
+                        color: AppColors.textMuted,
                       ),
                     ),
                   );
@@ -385,10 +389,10 @@ class _ProjectCardState extends State<_ProjectCard> {
               const SizedBox(height: 16),
               Text(
                 'VIEW PROJECT →',
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w700,
-                  color: _hovered ? AppColors.deep : AppColors.accent,
+                  color: AppColors.accent,
                   letterSpacing: 1,
                 ),
               ),

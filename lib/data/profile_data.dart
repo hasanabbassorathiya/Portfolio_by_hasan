@@ -18,10 +18,10 @@ class AppProfileData {
       'and AI-powered applications across e-commerce, mobility, banking, and enterprise platforms.\n\n'
       'I specialize in:\n'
       '• Flutter & cross-platform mobile development\n'
-      '• Full Stack development (MERN — MongoDB, Express, React, Node.js)\n'
+      '• Full Stack development (MERN: MongoDB, Express, React, Node.js)\n'
       '• Backend systems & API architecture\n'
       '• AI/LLM integration (OpenAI, LangChain, RAG, automation workflows)\n\n'
-      'Over the past few years, I\'ve built and scaled systems used by 10K–100K+ users, '
+      'Over the past few years, I\'ve built and scaled systems used by 10K-100K+ users, '
       'improved performance by ~20%, reduced production issues by ~30%, and delivered '
       'measurable business impact including 25% conversion uplift and ~\$20K annual cost savings.\n\n'
       'Recently, I\'ve been focused on applying Generative AI in real-world systems:\n'
@@ -38,7 +38,7 @@ class AppProfileData {
       '→ AI / GenAI / LLM Engineering\n\n'
       'If you\'re building scalable products or AI-powered systems, let\'s connect.';
 
-  static const String quote = 'Engineering excellence is not just about code — it is about the impact it creates.';
+  static const String quote = 'Engineering excellence is not just about code; it is about the impact it creates.';
 
   static const List<Map<String, dynamic>> stats = [
     {'label': 'Years Experience', 'value': '6+'},

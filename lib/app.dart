@@ -8,7 +8,7 @@ class PortfolioApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      title: 'Hasan Abbas Sorathiya — Mobile Engineering Lead | Flutter Architect',
+      title: 'Hasan Abbas Sorathiya · Mobile Engineering Lead | Flutter Architect',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.dark,
       routerConfig: router,

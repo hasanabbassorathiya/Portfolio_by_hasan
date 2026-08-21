@@ -22,6 +22,9 @@ class _ContactSectionState extends State<ContactSection> {
   final _messageController = TextEditingController();
   bool _sending = false;
   bool _sent = false;
+  String? _error;
+
+  static final RegExp _emailRegex = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$');
 
   @override
   void dispose() {
@@ -32,17 +35,33 @@ class _ContactSectionState extends State<ContactSection> {
   }
 
   void _submit() async {
-    setState(() => _sending = true);
+    final name = _nameController.text.trim();
+    final email = _emailController.text.trim();
+    final message = _messageController.text.trim();
+
+    if (name.isEmpty || message.isEmpty || !_emailRegex.hasMatch(email)) {
+      setState(() => _error =
+          'Please fill in every field using a valid email address.');
+      return;
+    }
+
+    setState(() {
+      _sending = true;
+      _error = null;
+    });
 
     final success = await ContactService.submit(
-      name: _nameController.text,
-      email: _emailController.text,
-      message: _messageController.text,
+      name: name,
+      email: email,
+      message: message,
     );
 
     setState(() {
       _sending = false;
       _sent = success;
+      if (!success) {
+        _error = 'Something went wrong. Please try again or book a call instead.';
+      }
     });
 
     if (success) {
@@ -191,6 +210,17 @@ class _ContactSectionState extends State<ContactSection> {
                 icon: Icons.send,
               ),
             ),
+            if (_error != null) ...[
+              const SizedBox(height: 16),
+              Text(
+                _error!,
+                style: const TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                  color: Color(0xFFF87171),
+                ),
+              ),
+            ],
           ],
         ],
       ),

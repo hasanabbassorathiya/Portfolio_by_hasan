@@ -73,7 +73,7 @@ class _BentoCardState extends State<BentoCard> {
                   : Matrix4.identity()),
           transformAlignment: Alignment.center,
           decoration: BoxDecoration(
-            color: _hovered ? accent : AppColors.base,
+            color: _hovered ? AppColors.surface : AppColors.base,
             border: Border.all(
               color: _hovered ? accent : AppColors.border,
               width: 2,
@@ -81,7 +81,7 @@ class _BentoCardState extends State<BentoCard> {
             boxShadow: [
               if (!_pressed && _hovered)
                 BoxShadow(
-                  color: accent.withValues(alpha: 0.2),
+                  color: accent.withValues(alpha: 0.15),
                   offset: const Offset(4, 4),
                 ),
               if (!_pressed && !_hovered)
@@ -91,12 +91,7 @@ class _BentoCardState extends State<BentoCard> {
                 ),
             ],
           ),
-          child: DefaultTextStyle(
-            style: TextStyle(
-              color: _hovered ? AppColors.deep : AppColors.textPrimary,
-            ),
-            child: widget.child,
-          ),
+          child: widget.child,
         ),
       ),
     );

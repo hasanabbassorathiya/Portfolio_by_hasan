@@ -7,7 +7,7 @@ class AppProjectsData {
       'title': 'Duas and Aamal',
       'category': 'Mobile',
       'description':
-          'Devotional and spiritual companion app — multi-language support, daily prayers, '
+          'Devotional and spiritual companion app, multi-language support, daily prayers, '
           'and structured spiritual routines across Android and iOS.',
       'client': 'Independent',
       'year': '2023',
@@ -37,7 +37,7 @@ class AppProjectsData {
       'title': 'Carvan-e-Hind',
       'category': 'Mobile',
       'description':
-          'Cultural and community platform — maintained repository, added multi-language support, '
+          'Cultural and community platform, maintained repository, added multi-language support, '
           'managed data pipelines, and shipped continuous updates across iOS and Android.',
       'client': 'Carvan-e-Hind',
       'year': '2024-2026',
@@ -55,7 +55,7 @@ class AppProjectsData {
           'Maintaining and evolving a culturally rich application with multi-language support '
           'while keeping the app current with regular data and feature updates.',
       'solution':
-          'Took ownership of the full repository — implemented multi-language infrastructure, '
+          'Took ownership of the full repository, implemented multi-language infrastructure, '
           'streamlined data management, and delivered consistent updates across both platforms.',
       'tags': ['flutter', 'mobile', 'multilingual'],
       'is_featured': true,
@@ -67,7 +67,7 @@ class AppProjectsData {
       'title': 'Lumio IPTV',
       'category': 'Mobile',
       'description':
-          'IPTV streaming application for Android — live TV, channel management, '
+          'IPTV streaming application for Android, live TV, channel management, '
           'and smooth playback experience.',
       'client': 'Lumio',
       'year': '2024',
@@ -198,7 +198,7 @@ class AppProjectsData {
       'challenge':
           'Delivering a high-quality, performant mobile application with a refined user experience.',
       'solution':
-          'Built with Flutter targeting iOS — focused on smooth animations, clean navigation, and '
+          'Built with Flutter targeting iOS, focused on smooth animations, clean navigation, and '
           'a polished finish that reflects strong design sensibility.',
       'tags': ['flutter', 'mobile', 'ios'],
       'is_featured': true,
@@ -209,7 +209,7 @@ class AppProjectsData {
       'title': 'Automover',
       'category': 'Mobile',
       'description':
-          'Transport and moving management solution — native iOS app with a companion web dashboard '
+          'Transport and moving management solution, native iOS app with a companion web dashboard '
           'for end-to-end operations.',
       'client': 'Automover',
       'year': '2021',
@@ -269,7 +269,7 @@ class AppProjectsData {
       'title': 'Nutrabay',
       'category': 'Mobile',
       'description':
-          'Premium health and supplement e-commerce platform — web storefront and native iOS app '
+          'Premium health and supplement e-commerce platform, web storefront and native iOS app '
           'for seamless shopping experiences.',
       'client': 'Nutrabay',
       'year': '2022',
@@ -287,7 +287,7 @@ class AppProjectsData {
           'while maintaining feature parity with the web platform.',
       'solution':
           'Developed the iOS application with smooth product browsing, cart management, '
-          'secure checkout, and order tracking — all optimized for performance.',
+          'secure checkout, and order tracking, all optimized for performance.',
       'tags': ['flutter', 'ecommerce', 'mobile'],
       'is_featured': true,
       'ios_url': 'https://apps.apple.com/am/app/nutrabay-shop-supplements/id1583551779',
@@ -298,7 +298,7 @@ class AppProjectsData {
       'title': 'Hoda',
       'category': 'Mobile',
       'description':
-          'Community and lifestyle application with multi-language support — '
+          'Community and lifestyle application with multi-language support, '
           'available on both Android and iOS.',
       'client': 'Independent',
       'year': '2024',
@@ -327,7 +327,7 @@ class AppProjectsData {
       'title': 'Fragrance of Mastership',
       'category': 'Mobile',
       'description':
-          'iOS application delivering a curated, immersive experience — '
+          'iOS application delivering a curated, immersive experience, '
           'crafted with attention to design and cultural sensitivity.',
       'client': 'Independent',
       'year': '2023',
@@ -355,7 +355,7 @@ class AppProjectsData {
       'title': 'Kokoro Michi',
       'category': 'Mobile',
       'description':
-          'Cultural and lifestyle Android application — immersive content experience '
+          'Cultural and lifestyle Android application, immersive content experience '
           'with thoughtful design.',
       'client': 'Independent',
       'year': '2024',

@@ -55,28 +55,33 @@ class TestimonialsSection extends StatelessWidget {
                   child: ScrollReveal(
                     direction: RevealDirection.up,
                     delay: Duration(milliseconds: 150 * i),
-                    child: _TestimonialCard(testimonial: testimonials[i]),
-                  ),
-                );
-              }),
-            )
-          else
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: List.generate(testimonials.length, (i) {
-                return Expanded(
-                  child: Padding(
-                    padding: EdgeInsets.only(
-                      right: i < testimonials.length - 1 ? 16 : 0,
-                    ),
-                    child: ScrollReveal(
-                      direction: i.isEven ? RevealDirection.left : RevealDirection.right,
-                      delay: Duration(milliseconds: 200 * i),
+                    child: IntrinsicHeight(
                       child: _TestimonialCard(testimonial: testimonials[i]),
                     ),
                   ),
                 );
               }),
+            )
+          else
+            IntrinsicHeight(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: List.generate(testimonials.length, (i) {
+                  return Expanded(
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                        right: i < testimonials.length - 1 ? 16 : 0,
+                      ),
+                      child: ScrollReveal(
+                        direction:
+                            i.isEven ? RevealDirection.left : RevealDirection.right,
+                        delay: Duration(milliseconds: 200 * i),
+                        child: _TestimonialCard(testimonial: testimonials[i]),
+                      ),
+                    ),
+                  );
+                }),
+              ),
             ),
         ],
       ),
@@ -118,7 +123,7 @@ class _TestimonialCardState extends State<_TestimonialCard> {
               : Matrix4.identity(),
           padding: const EdgeInsets.all(28),
           decoration: BoxDecoration(
-            color: _hovered ? AppColors.accent : AppColors.base,
+            color: _hovered ? AppColors.surface : AppColors.base,
             border: Border.all(
               color: _hovered ? AppColors.accent : AppColors.border,
               width: 2,
@@ -126,7 +131,7 @@ class _TestimonialCardState extends State<_TestimonialCard> {
             boxShadow: [
               if (!_pressed && _hovered)
                 BoxShadow(
-                  color: AppColors.accent.withValues(alpha: 0.3),
+                  color: AppColors.accent.withValues(alpha: 0.15),
                   offset: const Offset(4, 4),
                 ),
               if (!_pressed && !_hovered)
@@ -142,12 +147,12 @@ class _TestimonialCardState extends State<_TestimonialCard> {
               Container(
                 width: 32,
                 height: 32,
-                decoration: BoxDecoration(
-                  color: _hovered ? AppColors.deep : AppColors.accent,
+                decoration: const BoxDecoration(
+                  color: AppColors.accent,
                 ),
-                child: Icon(
+                child: const Icon(
                   Icons.format_quote,
-                  color: _hovered ? AppColors.accent : AppColors.deep,
+                  color: AppColors.deep,
                   size: 18,
                 ),
               ),
@@ -155,9 +160,9 @@ class _TestimonialCardState extends State<_TestimonialCard> {
               Expanded(
                 child: Text(
                   (t['quote'] ?? '') as String,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 14,
-                    color: _hovered ? AppColors.deep : AppColors.textSecondary,
+                    color: AppColors.textSecondary,
                     height: 1.7,
                     fontStyle: FontStyle.italic,
                   ),
@@ -167,7 +172,7 @@ class _TestimonialCardState extends State<_TestimonialCard> {
               Container(
                 width: double.infinity,
                 height: 2,
-                color: _hovered ? AppColors.deep.withValues(alpha: 0.3) : AppColors.border,
+                color: AppColors.border,
               ),
               const SizedBox(height: 20),
               Row(
@@ -175,16 +180,16 @@ class _TestimonialCardState extends State<_TestimonialCard> {
                   Container(
                     width: 40,
                     height: 40,
-                    decoration: BoxDecoration(
-                      color: _hovered ? AppColors.deep : AppColors.accent,
+                    decoration: const BoxDecoration(
+                      color: AppColors.accent,
                     ),
                     child: Center(
                       child: Text(
                         clientName.isNotEmpty ? clientName[0] : '?',
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w900,
-                          color: _hovered ? AppColors.accent : AppColors.deep,
+                          color: AppColors.deep,
                         ),
                       ),
                     ),
@@ -196,17 +201,17 @@ class _TestimonialCardState extends State<_TestimonialCard> {
                       children: [
                         Text(
                           clientName,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w700,
-                            color: _hovered ? AppColors.deep : AppColors.textPrimary,
+                            color: AppColors.textPrimary,
                           ),
                         ),
                         Text(
-                          '$clientRole — $clientCompany',
-                          style: TextStyle(
+                          '$clientRole · $clientCompany',
+                          style: const TextStyle(
                             fontSize: 12,
-                            color: _hovered ? AppColors.deep.withValues(alpha: 0.7) : AppColors.textMuted,
+                            color: AppColors.textMuted,
                           ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,

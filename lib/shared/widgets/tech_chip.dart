@@ -35,7 +35,7 @@ class _TechChipState extends State<TechChip> {
               : Matrix4.identity(),
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
           decoration: BoxDecoration(
-            color: _hovered ? AppColors.accent : AppColors.surface,
+            color: _hovered ? AppColors.surface : AppColors.surface,
             border: Border.all(
               color: _hovered ? AppColors.accent : AppColors.border,
               width: 1,
@@ -43,7 +43,7 @@ class _TechChipState extends State<TechChip> {
             boxShadow: [
               if (!_pressed && _hovered)
                 BoxShadow(
-                  color: AppColors.accent.withValues(alpha: 0.2),
+                  color: AppColors.accent.withValues(alpha: 0.15),
                   offset: const Offset(2, 2),
                 ),
               if (!_pressed && !_hovered)
@@ -60,7 +60,7 @@ class _TechChipState extends State<TechChip> {
                 width: 5,
                 height: 5,
                 decoration: BoxDecoration(
-                  color: _hovered ? AppColors.deep : AppColors.accent,
+                  color: _hovered ? AppColors.accent : AppColors.accent,
                 ),
               ),
               const SizedBox(width: 8),
@@ -69,7 +69,7 @@ class _TechChipState extends State<TechChip> {
                 style: TextStyle(
                   fontSize: 11,
                   fontWeight: FontWeight.w700,
-                  color: _hovered ? AppColors.deep : AppColors.textSecondary,
+                  color: _hovered ? AppColors.accent : AppColors.textSecondary,
                   letterSpacing: 1,
                 ),
               ),
@@ -78,14 +78,14 @@ class _TechChipState extends State<TechChip> {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
                   decoration: BoxDecoration(
-                    color: _hovered ? AppColors.deep.withValues(alpha: 0.2) : AppColors.accent.withValues(alpha: 0.15),
+                    color: AppColors.accent.withValues(alpha: 0.15),
                   ),
                   child: Text(
                     widget.level!,
                     style: TextStyle(
                       fontSize: 9,
                       fontWeight: FontWeight.w700,
-                      color: _hovered ? AppColors.deep : AppColors.accent,
+                      color: AppColors.accent,
                     ),
                   ),
                 ),

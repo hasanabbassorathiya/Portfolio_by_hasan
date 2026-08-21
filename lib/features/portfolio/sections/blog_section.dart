@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
-import '../../../data/blog_data.dart';
+import '../../../core/database/portfolio_repository.dart';
 import '../../../shared/widgets/scroll_reveal.dart';
 import '../../../shared/layouts/section_wrapper.dart';
 
 class BlogSection extends StatelessWidget {
   const BlogSection({super.key});
+
+  List<Map<String, dynamic>> get _posts => PortfolioRepository().posts;
 
   @override
   Widget build(BuildContext context) {
@@ -61,15 +63,17 @@ class BlogSection extends StatelessWidget {
             const SizedBox(height: 64),
             if (isMobile)
               Column(
-                children: List.generate(AppBlogData.posts.length, (i) {
+                children: List.generate(_posts.length, (i) {
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 16),
                     child: ScrollReveal(
                       direction: RevealDirection.up,
                       delay: Duration(milliseconds: 150 * i),
-                      child: _BlogCard(
-                        post: AppBlogData.posts[i],
-                        onTap: () => context.push('/blog/${AppBlogData.posts[i]['slug']}'),
+                      child: IntrinsicHeight(
+                        child: _BlogCard(
+                          post: _posts[i],
+                          onTap: () => context.push('/blog/${_posts[i]['slug']}'),
+                        ),
                       ),
                     ),
                   );
@@ -84,7 +88,7 @@ class BlogSection extends StatelessWidget {
   }
 
   Widget _buildGrid(BuildContext context, bool isTablet) {
-    final posts = AppBlogData.posts;
+    final posts = _posts;
 
     if (isTablet) {
       return Column(
@@ -96,24 +100,26 @@ class BlogSection extends StatelessWidget {
 
             return Padding(
               padding: const EdgeInsets.only(bottom: 16),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: List.generate(remaining, (colIdx) {
-                  final idx = startIdx + colIdx;
-                  return Expanded(
-                    child: Padding(
-                      padding: EdgeInsets.only(right: colIdx < remaining - 1 ? 16 : 0),
-                      child: ScrollReveal(
-                        direction: colIdx.isEven ? RevealDirection.left : RevealDirection.right,
-                        delay: Duration(milliseconds: 200 * idx),
-                        child: _BlogCard(
-                          post: posts[idx],
-                          onTap: () => context.push('/blog/${posts[idx]['slug']}'),
+              child: IntrinsicHeight(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: List.generate(remaining, (colIdx) {
+                    final idx = startIdx + colIdx;
+                    return Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.only(right: colIdx < remaining - 1 ? 16 : 0),
+                        child: ScrollReveal(
+                          direction: colIdx.isEven ? RevealDirection.left : RevealDirection.right,
+                          delay: Duration(milliseconds: 200 * idx),
+                          child: _BlogCard(
+                            post: posts[idx],
+                            onTap: () => context.push('/blog/${posts[idx]['slug']}'),
+                          ),
                         ),
                       ),
-                    ),
-                  );
-                }),
+                    );
+                  }),
+                ),
               ),
             );
           },
@@ -121,23 +127,25 @@ class BlogSection extends StatelessWidget {
       );
     }
 
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: List.generate(posts.length, (i) {
-        return Expanded(
-          child: Padding(
-            padding: EdgeInsets.only(right: i < posts.length - 1 ? 16 : 0),
-            child: ScrollReveal(
-              direction: RevealDirection.up,
-              delay: Duration(milliseconds: 200 * i),
-              child: _BlogCard(
-                post: posts[i],
-                onTap: () => context.push('/blog/${posts[i]['slug']}'),
+    return IntrinsicHeight(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: List.generate(posts.length, (i) {
+          return Expanded(
+            child: Padding(
+              padding: EdgeInsets.only(right: i < posts.length - 1 ? 16 : 0),
+              child: ScrollReveal(
+                direction: RevealDirection.up,
+                delay: Duration(milliseconds: 200 * i),
+                child: _BlogCard(
+                  post: posts[i],
+                  onTap: () => context.push('/blog/${posts[i]['slug']}'),
+                ),
               ),
             ),
-          ),
-        );
-      }),
+          );
+        }),
+      ),
     );
   }
 }
@@ -176,7 +184,7 @@ class _BlogCardState extends State<_BlogCard> {
               : Matrix4.identity(),
           padding: const EdgeInsets.all(28),
           decoration: BoxDecoration(
-            color: _hovered ? AppColors.accent : AppColors.base,
+            color: _hovered ? AppColors.surface : AppColors.base,
             border: Border.all(
               color: _hovered ? AppColors.accent : AppColors.border,
               width: 2,
@@ -184,7 +192,7 @@ class _BlogCardState extends State<_BlogCard> {
             boxShadow: [
               if (!_pressed && _hovered)
                 BoxShadow(
-                  color: AppColors.accent.withValues(alpha: 0.3),
+                  color: AppColors.accent.withValues(alpha: 0.15),
                   offset: const Offset(4, 4),
                 ),
               if (!_pressed && !_hovered)
@@ -199,15 +207,15 @@ class _BlogCardState extends State<_BlogCard> {
             children: [
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
-                decoration: BoxDecoration(
-                  color: _hovered ? AppColors.deep : AppColors.accent,
+                decoration: const BoxDecoration(
+                  color: AppColors.accent,
                 ),
                 child: Text(
                   widget.post['category'].toString().toUpperCase(),
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 11,
                     fontWeight: FontWeight.w700,
-                    color: _hovered ? AppColors.accent : AppColors.deep,
+                    color: AppColors.deep,
                     letterSpacing: 1,
                   ),
                 ),
@@ -216,10 +224,10 @@ class _BlogCardState extends State<_BlogCard> {
               Expanded(
                 child: Text(
                   widget.post['title'],
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.w700,
-                    color: _hovered ? AppColors.deep : AppColors.textPrimary,
+                    color: AppColors.textPrimary,
                     height: 1.2,
                     letterSpacing: -0.3,
                   ),
@@ -228,9 +236,9 @@ class _BlogCardState extends State<_BlogCard> {
               const SizedBox(height: 12),
               Text(
                 widget.post['excerpt'],
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 13,
-                  color: _hovered ? AppColors.deep.withValues(alpha: 0.8) : AppColors.textSecondary,
+                  color: AppColors.textSecondary,
                   height: 1.6,
                 ),
                 maxLines: 3,
@@ -241,22 +249,22 @@ class _BlogCardState extends State<_BlogCard> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    widget.post['readTime'] ?? '',
-                    style: TextStyle(
+                    widget.post['read_time'] ?? '',
+                    style: const TextStyle(
                       fontSize: 12,
-                      color: _hovered ? AppColors.deep.withValues(alpha: 0.6) : AppColors.textMuted,
+                      color: AppColors.textMuted,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                  Text(
-                    'READ →',
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w700,
-                      color: _hovered ? AppColors.deep : AppColors.accent,
-                      letterSpacing: 1,
-                    ),
-                  ),
+                   Text(
+                     'READ →',
+                     style: TextStyle(
+                       fontSize: 12,
+                       fontWeight: FontWeight.w700,
+                       color: AppColors.accent,
+                       letterSpacing: 1,
+                     ),
+                   ),
                 ],
               ),
             ],

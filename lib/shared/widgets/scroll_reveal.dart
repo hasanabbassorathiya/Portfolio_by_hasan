@@ -34,6 +34,14 @@ class _ScrollRevealState extends State<ScrollReveal>
     super.initState();
     _controller = AnimationController(vsync: this, duration: widget.duration);
     _animation = CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic);
+
+    // Fallback: ensure content becomes visible even if VisibilityDetector fails (common on web)
+    Future.delayed(const Duration(milliseconds: 800), () {
+      if (mounted && !_visible) {
+        _visible = true;
+        _controller.forward();
+      }
+    });
   }
 
   @override
@@ -47,7 +55,7 @@ class _ScrollRevealState extends State<ScrollReveal>
     return VisibilityDetector(
       key: Key('reveal_${widget.key ?? widget.hashCode}'),
       onVisibilityChanged: (info) {
-        if (info.visibleFraction > 0.15 && !_visible) {
+        if (info.visibleFraction > 0.1 && !_visible) {
           _visible = true;
           Future.delayed(widget.delay, () {
             if (mounted) _controller.forward();

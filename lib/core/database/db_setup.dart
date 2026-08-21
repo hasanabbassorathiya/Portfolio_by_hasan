@@ -3,6 +3,8 @@ import '../services/turso_service.dart';
 import '../../data/profile_data.dart';
 import '../../data/projects_data.dart';
 import '../../data/experience_data.dart';
+import '../../data/blog_data.dart';
+import '../../data/social_data.dart';
 
 class DbSetup {
   static final List<String> _schemas = [
@@ -146,6 +148,28 @@ class DbSetup {
       page TEXT DEFAULT '',
       visitor_id TEXT DEFAULT '',
       timestamp TEXT DEFAULT (datetime('now'))
+    )''',
+    // ── Blog Posts ──
+    '''CREATE TABLE IF NOT EXISTS posts (
+      id TEXT PRIMARY KEY,
+      title TEXT NOT NULL,
+      slug TEXT NOT NULL DEFAULT '',
+      excerpt TEXT DEFAULT '',
+      category TEXT DEFAULT '',
+      read_time TEXT DEFAULT '',
+      published_at TEXT DEFAULT '',
+      tags TEXT DEFAULT '[]',
+      display_order INTEGER DEFAULT 0,
+      created_at TEXT DEFAULT (datetime('now'))
+    )''',
+    // ── Social Links ──
+    '''CREATE TABLE IF NOT EXISTS social_links (
+      id TEXT PRIMARY KEY,
+      platform TEXT NOT NULL,
+      url TEXT NOT NULL DEFAULT '',
+      icon TEXT DEFAULT '',
+      display_order INTEGER DEFAULT 0,
+      created_at TEXT DEFAULT (datetime('now'))
     )''',
   ];
 
@@ -313,6 +337,42 @@ class DbSetup {
     }
   }
 
+  // ── Seed Blog Posts ──
+  static Future<void> seedPosts() async {
+    for (var i = 0; i < AppBlogData.posts.length; i++) {
+      final p = AppBlogData.posts[i];
+      try {
+        await TursoService.insert('posts', {
+          'id': 'post_${p['id']}',
+          'title': p['title'],
+          'slug': p['slug'],
+          'excerpt': p['excerpt'],
+          'category': p['category'],
+          'read_time': p['readTime'],
+          'published_at': p['publishedAt'],
+          'tags': jsonEncode(p['tags']),
+          'display_order': i,
+        });
+      } catch (_) {}
+    }
+  }
+
+  // ── Seed Social Links ──
+  static Future<void> seedSocialLinks() async {
+    for (var i = 0; i < AppSocialData.links.length; i++) {
+      final s = AppSocialData.links[i];
+      try {
+        await TursoService.insert('social_links', {
+          'id': 'social_${s['icon']}',
+          'platform': s['platform'],
+          'url': s['url'],
+          'icon': s['icon'],
+          'display_order': i,
+        });
+      } catch (_) {}
+    }
+  }
+
   // ── Master Seed ──
   static Future<void> seedAll() async {
     await createAllTables();
@@ -323,5 +383,7 @@ class DbSetup {
     await seedCertifications();
     await seedSkills();
     await seedLanguages();
+    await seedPosts();
+    await seedSocialLinks();
   }
 }

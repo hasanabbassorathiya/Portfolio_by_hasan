@@ -34,7 +34,7 @@ jobs:
           echo "DEFAULT_LOCALE=en" >> .env
 
       - name: Build Web App
-        run: flutter build web --release --base-href "/Portfolio_by_hasan/" --dart-define=TURSO_URL="${{ secrets.TURSO_URL }}" --dart-define=TURSO_TOKEN="${{ secrets.TURSO_TOKEN }}"
+        run: flutter build web --release --base-href "/Portfolio_by_hasan/" --no-tree-shake-icons --dart-define=TURSO_URL="${{ secrets.TURSO_URL }}" --dart-define=TURSO_TOKEN="${{ secrets.TURSO_TOKEN }}" --dart-define=BREVO_API_KEY="${{ secrets.BREVO_API_KEY }}" --dart-define=BREVO_NEWSLETTER_LIST_ID="${{ secrets.BREVO_NEWSLETTER_LIST_ID || '2' }}"
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

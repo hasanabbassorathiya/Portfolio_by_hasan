@@ -226,7 +226,7 @@ class AboutSection extends StatelessWidget {
                 Row(children: [
                   const Icon(Icons.calendar_today_outlined, size: 12, color: AppColors.textMuted),
                   const SizedBox(width: 6),
-                  Text('${exp['start_date'] ?? ''} – ${exp['end_date'] ?? ''}', style: const TextStyle(fontSize: 12, color: AppColors.textMuted)),
+                  Text('${exp['start_date'] ?? ''} - ${exp['end_date'] ?? ''}', style: const TextStyle(fontSize: 12, color: AppColors.textMuted)),
                   const SizedBox(width: 16),
                   const Icon(Icons.location_on_outlined, size: 12, color: AppColors.textMuted),
                   const SizedBox(width: 6),
@@ -244,7 +244,8 @@ class AboutSection extends StatelessWidget {
                 children: highlightList.map((h) => Padding(
                   padding: const EdgeInsets.only(bottom: 8),
                   child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                    const Text('— ', style: TextStyle(color: AppColors.accent, fontSize: 13, fontWeight: FontWeight.w900)),
+                    Container(width: 8, height: 8, margin: const EdgeInsets.only(top: 5), decoration: const BoxDecoration(color: AppColors.accent)),
+                    const SizedBox(width: 10),
                     Expanded(child: Text(h, style: const TextStyle(fontSize: 13, color: AppColors.textSecondary, height: 1.5))),
                   ]),
                 )).toList(),

@@ -44,7 +44,7 @@ class AppExperienceData {
       'highlights': [
         'Revamped the iKllix e-commerce mobile app (imports from Japan & Korea) with a modern UX/UI redesign, boosting conversion rates by ~25%.',
         'Implemented OAuth-based encryption protocols to enhance user data security and trust.',
-        'Led Agile sprint planning, retrospectives and cross-functional collaboration among mobile, backend, QA and UX teams — improved on-time delivery by ~20%.',
+        'Led Agile sprint planning, retrospectives and cross-functional collaboration among mobile, backend, QA and UX teams, improved on-time delivery by ~20%.',
         'Defined and enforced mobile architecture and best practices for cross-platform Flutter development, improving maintainability and scalability.',
         'Partnered with analytics/marketing teams to integrate user-analytics and A/B testing workflows into the mobile app lifecycle.',
         'Directed a continuous Debugging, utilizing Flutter DevTools and Firebase Crashlytics to reduce production crash rates by 40%, support bi-weekly release cycles, and maintain app stability for an active user base of 20,000+.',
@@ -76,7 +76,7 @@ class AppExperienceData {
         'Led development of a government-approved Pool Inspection mobile app in Australia that achieved 10,000+ downloads within 30 days.',
         'Delivered the Good2GoLoans mobile banking app in New Zealand with 50,000+ active users; implemented deep-linking, in-app messaging and push notifications to raise engagement by ~12%.',
         'Designed the mobile architecture using Flutter and Dart, managed state, feature rollout and performance optimisation across platforms.',
-        'Mentored team members via code reviews and architecture sessions — improved team output, code clarity and maintainability.',
+        'Mentored team members via code reviews and architecture sessions, improved team output, code clarity and maintainability.',
         'Managed cross-regional release workflows (Australia/NZ/India) for localization, QA, store deployments and post-launch analytics.',
         'Facilitated cross-functional teamwork among distributed Flutter teams across 3 countries over 18+ months using Jira, Slack, and GitHub, resulting in 25% faster delivery of multi-locale releases and a 15-point increase in QA pass rates.',
       ],

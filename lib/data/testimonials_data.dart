@@ -29,7 +29,7 @@ class AppTestimonialsData {
     {
       'id': 'mohammedali-carvan',
       'quote':
-          'Hasan maintains the Carvan-e-Hind app repository with exceptional dedication — adding '
+          'Hasan maintains the Carvan-e-Hind app repository with exceptional dedication, adding '
           'multi-language support, managing data updates, and ensuring the app stays current and '
           'reliable. His Flutter expertise and proactive approach make him an invaluable part of '
           'the team. Highly recommended for any mobile engineering initiative.',

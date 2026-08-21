@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/database/portfolio_repository.dart';
 import '../../../shared/layouts/section_wrapper.dart';
-import '../../../data/blog_data.dart';
 
 class BlogDetailScreen extends StatelessWidget {
   final String slug;
@@ -11,9 +11,10 @@ class BlogDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final post = AppBlogData.posts.firstWhere(
+    final posts = PortfolioRepository().posts;
+    final post = posts.firstWhere(
       (p) => p['slug'] == slug,
-      orElse: () => AppBlogData.posts.first,
+      orElse: () => posts.first,
     );
 
     return Scaffold(
@@ -57,7 +58,7 @@ class BlogDetailScreen extends StatelessWidget {
                       ),
                       const SizedBox(width: 12),
                       Text(
-                        post['readTime'] ?? '',
+                        post['read_time'] ?? '',
                         style: GoogleFonts.montserrat(
                           fontSize: 13,
                           color: AppColors.textMuted,
@@ -65,7 +66,7 @@ class BlogDetailScreen extends StatelessWidget {
                       ),
                       const SizedBox(width: 12),
                       Text(
-                        post['publishedAt'] ?? '',
+                        post['published_at'] ?? '',
                         style: GoogleFonts.montserrat(
                           fontSize: 13,
                           color: AppColors.textMuted,

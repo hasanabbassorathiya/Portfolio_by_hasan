@@ -216,7 +216,7 @@ class _TimelineItemState extends State<_TimelineItem> {
                               const Icon(Icons.calendar_today_outlined, size: 14, color: AppColors.textMuted),
                               const SizedBox(width: 6),
                               Text(
-                                '$startDate — $endDate',
+                                '$startDate - $endDate',
                                 style: const TextStyle(fontSize: 13, color: AppColors.textMuted),
                               ),
                             ],

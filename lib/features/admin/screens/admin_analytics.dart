@@ -14,24 +14,25 @@ class _AdminAnalyticsState extends State<AdminAnalytics> {
   Map<String, int> _stats = {};
   List<Map<String, dynamic>> _analyticsData = [];
   bool _loading = true;
+  late PortfolioRepository _repo;
 
   @override
   void initState() {
     super.initState();
+    _repo = PortfolioRepository();
     _loadData();
   }
 
   Future<void> _loadData() async {
-    final repo = PortfolioRepository();
-    _stats = await repo.getStats();
-    _analyticsData = await repo.getAnalyticsSummary();
+    _stats = await _repo.getStats();
+    _analyticsData = await _repo.getAnalyticsSummary();
     if (mounted) setState(() => _loading = false);
   }
 
   @override
   Widget build(BuildContext context) {
     if (_loading) {
-      return const Center(child: CircularProgressIndicator(color: AppColors.accent));
+      return const Center(child: CircularProgressIndicator(color: AppColors.accent, strokeWidth: 2));
     }
 
     return SingleChildScrollView(
@@ -39,48 +40,46 @@ class _AdminAnalyticsState extends State<AdminAnalytics> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Analytics', style: GoogleFonts.cormorant(fontSize: 36, fontWeight: FontWeight.w700, color: AppColors.textPrimary)),
+          Text('ANALYTICS', style: GoogleFonts.spaceGrotesk(fontSize: 28, fontWeight: FontWeight.w900, color: AppColors.textPrimary, letterSpacing: 1)),
+          const SizedBox(height: 8),
+          Container(width: 24, height: 3, color: AppColors.accent),
           const SizedBox(height: 32),
 
-          // ── Stat Cards ──
           Row(
             children: [
-              Expanded(child: _statCard('Total Views', '${_stats['views'] ?? 0}', Icons.visibility_outlined, AppColors.accent)),
+              Expanded(child: _statCard('TOTAL VIEWS', '${_stats['views'] ?? 0}', Icons.visibility_outlined, AppColors.accent)),
               const SizedBox(width: 16),
-              Expanded(child: _statCard('Contacts', '${_stats['contacts'] ?? 0}', Icons.mail_outline, Colors.blue)),
+              Expanded(child: _statCard('CONTACTS', '${_stats['contacts'] ?? 0}', Icons.mail_outline, AppColors.accentHover)),
               const SizedBox(width: 16),
-              Expanded(child: _statCard('Subscribers', '${_stats['subscribers'] ?? 0}', Icons.people_outline, Colors.purple)),
+              Expanded(child: _statCard('SUBSCRIBERS', '${_stats['subscribers'] ?? 0}', Icons.people_outline, AppColors.accent)),
               const SizedBox(width: 16),
-              Expanded(child: _statCard('Projects', '${_stats['projects'] ?? 0}', Icons.work_outline, Colors.orange)),
+              Expanded(child: _statCard('PROJECTS', '${_stats['projects'] ?? 0}', Icons.work_outline, AppColors.accentHover)),
             ],
           ),
           const SizedBox(height: 16),
           Row(
             children: [
-              Expanded(child: _statCard('Experience', '${_stats['experience'] ?? 0}', Icons.timeline, Colors.teal)),
+              Expanded(child: _statCard('EXPERIENCE', '${_stats['experience'] ?? 0}', Icons.timeline, AppColors.accent)),
               const SizedBox(width: 16),
-              Expanded(child: _statCard('Skills', '${_stats['skills'] ?? 0}', Icons.code_outlined, Colors.pink)),
+              Expanded(child: _statCard('SKILLS', '${_stats['skills'] ?? 0}', Icons.code_outlined, AppColors.accentHover)),
               const SizedBox(width: 16),
-              Expanded(child: _statCard('DB Status', PortfolioRepository().usesDatabase ? 'Connected' : 'Fallback', Icons.storage, PortfolioRepository().usesDatabase ? AppColors.accent : Colors.orange)),
+              Expanded(child: _statCard('DB STATUS', _repo.usesDatabase ? 'CONNECTED' : 'FALLBACK', Icons.storage, _repo.usesDatabase ? AppColors.accent : AppColors.warning)),
               const SizedBox(width: 16),
               const Expanded(child: SizedBox()),
             ],
           ),
           const SizedBox(height: 48),
 
-          // ── Views Chart (Simple Bar) ──
           _buildSectionLabel('PAGE VIEWS (LAST 30 DAYS)'),
           const SizedBox(height: 16),
           _buildSimpleChart(),
           const SizedBox(height: 48),
 
-          // ── Recent Activity ──
           _buildSectionLabel('RECENT CONTACTS'),
           const SizedBox(height: 16),
           _buildRecentContacts(),
           const SizedBox(height: 48),
 
-          // ── Recent Subscribers ──
           _buildSectionLabel('RECENT SUBSCRIBERS'),
           const SizedBox(height: 16),
           _buildRecentSubscribers(),
@@ -94,17 +93,17 @@ class _AdminAnalyticsState extends State<AdminAnalytics> {
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: AppColors.base,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.surface),
+        border: Border.all(color: AppColors.border, width: 2),
+        boxShadow: const [BoxShadow(color: Color(0x40000000), offset: Offset(4, 4))],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, color: color, size: 24),
+          Icon(icon, color: color, size: 22),
           const SizedBox(height: 16),
-          Text(value, style: GoogleFonts.cormorant(fontSize: 32, fontWeight: FontWeight.w700, color: AppColors.textPrimary)),
+          Text(value, style: GoogleFonts.spaceGrotesk(fontSize: 32, fontWeight: FontWeight.w900, color: AppColors.textPrimary)),
           const SizedBox(height: 4),
-          Text(title, style: GoogleFonts.montserrat(fontSize: 12, color: AppColors.textMuted)),
+          Text(title, style: GoogleFonts.spaceGrotesk(fontSize: 11, fontWeight: FontWeight.w700, color: AppColors.textMuted, letterSpacing: 1)),
         ],
       ),
     );
@@ -113,9 +112,9 @@ class _AdminAnalyticsState extends State<AdminAnalytics> {
   Widget _buildSectionLabel(String text) {
     return Row(
       children: [
-        Container(width: 24, height: 2, color: AppColors.accent),
+        Container(width: 24, height: 3, color: AppColors.accent),
         const SizedBox(width: 12),
-        Text(text, style: GoogleFonts.montserrat(fontSize: 11, fontWeight: FontWeight.w600, color: AppColors.textMuted, letterSpacing: 2)),
+        Text(text, style: GoogleFonts.spaceGrotesk(fontSize: 11, fontWeight: FontWeight.w800, color: AppColors.textMuted, letterSpacing: 2)),
       ],
     );
   }
@@ -128,17 +127,17 @@ class _AdminAnalyticsState extends State<AdminAnalytics> {
         padding: const EdgeInsets.all(48),
         decoration: BoxDecoration(
           color: AppColors.base,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: AppColors.surface),
+          border: Border.all(color: AppColors.border, width: 2),
+          boxShadow: const [BoxShadow(color: Color(0x30000000), offset: Offset(4, 4))],
         ),
         child: Center(
           child: Column(
             children: [
               const Icon(Icons.analytics_outlined, size: 48, color: AppColors.textMuted),
               const SizedBox(height: 16),
-              Text('No analytics data yet', style: GoogleFonts.montserrat(color: AppColors.textMuted)),
+              Text('NO ANALYTICS DATA YET', style: GoogleFonts.spaceGrotesk(fontSize: 12, fontWeight: FontWeight.w800, color: AppColors.textMuted, letterSpacing: 2)),
               const SizedBox(height: 8),
-              Text('Page views will appear here as visitors browse your portfolio', style: GoogleFonts.montserrat(fontSize: 12, color: AppColors.textMuted)),
+              Text('Page views will appear here as visitors browse your portfolio', style: GoogleFonts.spaceGrotesk(fontSize: 12, color: AppColors.textMuted)),
             ],
           ),
         ),
@@ -154,8 +153,8 @@ class _AdminAnalyticsState extends State<AdminAnalytics> {
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
         color: AppColors.base,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.surface),
+        border: Border.all(color: AppColors.border, width: 2),
+        boxShadow: const [BoxShadow(color: Color(0x30000000), offset: Offset(4, 4))],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -176,17 +175,16 @@ class _AdminAnalyticsState extends State<AdminAnalytics> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        Text('$count', style: GoogleFonts.montserrat(fontSize: 10, color: AppColors.textMuted)),
+                        Text('$count', style: GoogleFonts.spaceGrotesk(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textMuted)),
                         const SizedBox(height: 4),
                         Container(
                           height: height.clamp(4.0, 180.0),
                           decoration: BoxDecoration(
                             color: AppColors.accent,
-                            borderRadius: BorderRadius.circular(4),
                           ),
                         ),
                         const SizedBox(height: 8),
-                        Text(shortDate, style: GoogleFonts.montserrat(fontSize: 9, color: AppColors.textMuted), overflow: TextOverflow.ellipsis),
+                        Text(shortDate, style: GoogleFonts.spaceGrotesk(fontSize: 9, fontWeight: FontWeight.w600, color: AppColors.textMuted), overflow: TextOverflow.ellipsis),
                       ],
                     ),
                   ),
@@ -200,11 +198,10 @@ class _AdminAnalyticsState extends State<AdminAnalytics> {
   }
 
   Widget _buildRecentContacts() {
-    final repo = PortfolioRepository();
-    final contacts = repo.contactSubmissions.take(5).toList();
+    final contacts = _repo.contactSubmissions.take(5).toList();
 
     if (contacts.isEmpty) {
-      return _emptyCard('No contact submissions yet');
+      return _emptyCard('NO CONTACT SUBMISSIONS YET');
     }
 
     return Column(
@@ -215,8 +212,11 @@ class _AdminAnalyticsState extends State<AdminAnalytics> {
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
             color: AppColors.base,
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: isUnread ? AppColors.accent.withValues(alpha: 0.3) : AppColors.surface),
+            border: Border.all(
+              color: isUnread ? AppColors.accent : AppColors.border,
+              width: 2,
+            ),
+            boxShadow: const [BoxShadow(color: Color(0x30000000), offset: Offset(3, 3))],
           ),
           child: Row(
             children: [
@@ -228,13 +228,13 @@ class _AdminAnalyticsState extends State<AdminAnalytics> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('${c['name']} — ${c['email']}', style: GoogleFonts.montserrat(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
+                    Text('${c['name']} · ${c['email']}', style: GoogleFonts.spaceGrotesk(fontSize: 13, fontWeight: FontWeight.w800, color: AppColors.textPrimary)),
                     const SizedBox(height: 4),
-                    Text(c['message']?.toString() ?? '', style: GoogleFonts.montserrat(fontSize: 12, color: AppColors.textMuted), maxLines: 1, overflow: TextOverflow.ellipsis),
+                    Text(c['message']?.toString() ?? '', style: GoogleFonts.spaceGrotesk(fontSize: 12, color: AppColors.textMuted), maxLines: 1, overflow: TextOverflow.ellipsis),
                   ],
                 ),
               ),
-              Text(c['submitted_at']?.toString() ?? '', style: GoogleFonts.montserrat(fontSize: 11, color: AppColors.textMuted)),
+              Text(c['submitted_at']?.toString() ?? '', style: GoogleFonts.spaceGrotesk(fontSize: 11, color: AppColors.textMuted)),
             ],
           ),
         );
@@ -243,11 +243,10 @@ class _AdminAnalyticsState extends State<AdminAnalytics> {
   }
 
   Widget _buildRecentSubscribers() {
-    final repo = PortfolioRepository();
-    final subs = repo.subscribers.take(5).toList();
+    final subs = _repo.subscribers.take(5).toList();
 
     if (subs.isEmpty) {
-      return _emptyCard('No subscribers yet');
+      return _emptyCard('NO SUBSCRIBERS YET');
     }
 
     return Column(
@@ -256,17 +255,17 @@ class _AdminAnalyticsState extends State<AdminAnalytics> {
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: AppColors.base,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: AppColors.surface),
+          border: Border.all(color: AppColors.border, width: 2),
+          boxShadow: const [BoxShadow(color: Color(0x30000000), offset: Offset(3, 3))],
         ),
         child: Row(
           children: [
             const Icon(Icons.email_outlined, color: AppColors.accent, size: 18),
             const SizedBox(width: 12),
             Expanded(
-              child: Text(s['email']?.toString() ?? '', style: GoogleFonts.montserrat(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
+              child: Text(s['email']?.toString() ?? '', style: GoogleFonts.spaceGrotesk(fontSize: 13, fontWeight: FontWeight.w800, color: AppColors.textPrimary)),
             ),
-            Text(s['subscribed_at']?.toString() ?? '', style: GoogleFonts.montserrat(fontSize: 11, color: AppColors.textMuted)),
+            Text(s['subscribed_at']?.toString() ?? '', style: GoogleFonts.spaceGrotesk(fontSize: 11, color: AppColors.textMuted)),
           ],
         ),
       )).toList(),
@@ -278,10 +277,10 @@ class _AdminAnalyticsState extends State<AdminAnalytics> {
       padding: const EdgeInsets.all(32),
       decoration: BoxDecoration(
         color: AppColors.base,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.surface),
+        border: Border.all(color: AppColors.border, width: 2),
+        boxShadow: const [BoxShadow(color: Color(0x30000000), offset: Offset(3, 3))],
       ),
-      child: Center(child: Text(text, style: GoogleFonts.montserrat(color: AppColors.textMuted))),
+      child: Center(child: Text(text, style: GoogleFonts.spaceGrotesk(fontSize: 12, fontWeight: FontWeight.w700, color: AppColors.textMuted, letterSpacing: 2))),
     );
   }
 }

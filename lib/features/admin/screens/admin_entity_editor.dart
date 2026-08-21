@@ -83,9 +83,23 @@ class _AdminEntityEditorState extends State<AdminEntityEditor> {
       EntityField('description', label: 'Description', multiline: true, required: true),
       EntityField('features', label: 'Features', isJsonList: true, hint: 'One per line'),
     ],
+    'blog': [
+      EntityField('title', label: 'Title', required: true),
+      EntityField('slug', label: 'Slug', required: true, hint: 'e.g. my-post-url'),
+      EntityField('excerpt', label: 'Excerpt', multiline: true),
+      EntityField('category', label: 'Category', hint: 'e.g. Engineering, AI'),
+      EntityField('read_time', label: 'Read Time', hint: 'e.g. 8 min read'),
+      EntityField('published_at', label: 'Published At', hint: 'e.g. 2026-01-15'),
+      EntityField('tags', label: 'Tags', isJsonList: true, hint: 'One per line'),
+    ],
+    'social': [
+      EntityField('platform', label: 'Platform', required: true),
+      EntityField('url', label: 'URL', required: true),
+      EntityField('icon', label: 'Icon Key', hint: 'linkedin, email, coffee, github'),
+    ],
   };
 
-  String get _title => widget.entityType[0].toUpperCase() + widget.entityType.substring(1);
+  String get _title => widget.entityType.toUpperCase();
 
   void _startEditing([Map<String, dynamic>? item]) {
     _editingItem = item;
@@ -114,7 +128,7 @@ class _AdminEntityEditorState extends State<AdminEntityEditor> {
       final text = _controllers[f.key]?.text.trim() ?? '';
       if (f.required && text.isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('${f.label} is required'), backgroundColor: AppColors.error),
+          SnackBar(content: Text('${f.label.toUpperCase()} IS REQUIRED'), backgroundColor: AppColors.error),
         );
         return;
       }
@@ -145,13 +159,13 @@ class _AdminEntityEditorState extends State<AdminEntityEditor> {
       _cancelEditing();
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('$_title saved'), backgroundColor: AppColors.accent),
+          SnackBar(content: Text('$_title SAVED'), backgroundColor: AppColors.accent),
         );
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: $e'), backgroundColor: AppColors.error),
+          SnackBar(content: Text('ERROR: $e'), backgroundColor: AppColors.error),
         );
       }
     } finally {
@@ -165,13 +179,17 @@ class _AdminEntityEditorState extends State<AdminEntityEditor> {
       context: context,
       builder: (ctx) => AlertDialog(
         backgroundColor: AppColors.base,
-        title: Text('Delete $_title', style: GoogleFonts.montserrat(color: AppColors.textPrimary)),
-        content: Text('Delete "$name"? This cannot be undone.', style: GoogleFonts.montserrat(color: AppColors.textSecondary)),
+        shape: const RoundedRectangleBorder(side: BorderSide(color: AppColors.border, width: 2)),
+        title: Text('DELETE $_title', style: GoogleFonts.spaceGrotesk(color: AppColors.textPrimary, fontWeight: FontWeight.w900, letterSpacing: 1)),
+        content: Text('Delete "$name"? This cannot be undone.', style: GoogleFonts.spaceGrotesk(color: AppColors.textSecondary)),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancel')),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: Text('CANCEL', style: GoogleFonts.spaceGrotesk(color: AppColors.textMuted, fontWeight: FontWeight.w700, letterSpacing: 1)),
+          ),
           TextButton(
             onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('Delete', style: TextStyle(color: Colors.redAccent)),
+            child: Text('DELETE', style: GoogleFonts.spaceGrotesk(color: AppColors.error, fontWeight: FontWeight.w800, letterSpacing: 1)),
           ),
         ],
       ),
@@ -204,26 +222,37 @@ class _AdminEntityEditorState extends State<AdminEntityEditor> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(_title, style: GoogleFonts.cormorant(fontSize: 36, fontWeight: FontWeight.w700, color: AppColors.textPrimary)),
-              Row(
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('${widget.items.length} items', style: GoogleFonts.montserrat(fontSize: 14, color: AppColors.textMuted)),
-                  const SizedBox(width: 16),
-                  ElevatedButton.icon(
-                    onPressed: () => _startEditing(),
-                    icon: const Icon(Icons.add, size: 18),
-                    label: Text('Add $_title', style: GoogleFonts.montserrat(fontWeight: FontWeight.w600)),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.accent,
-                      foregroundColor: AppColors.deep,
-                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                    ),
-                  ),
+                  Text(_title, style: GoogleFonts.spaceGrotesk(fontSize: 28, fontWeight: FontWeight.w900, color: AppColors.textPrimary, letterSpacing: 1)),
+                  const SizedBox(height: 4),
+                  Text('${widget.items.length} ITEMS', style: GoogleFonts.spaceGrotesk(fontSize: 11, fontWeight: FontWeight.w700, color: AppColors.textMuted, letterSpacing: 1)),
                 ],
+              ),
+              InkWell(
+                onTap: () => _startEditing(),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                  decoration: BoxDecoration(
+                    color: AppColors.accent,
+                    border: Border.all(color: AppColors.accent, width: 2),
+                    boxShadow: const [BoxShadow(color: Color(0x40000000), offset: Offset(3, 3))],
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(Icons.add, size: 16, color: AppColors.deep),
+                      const SizedBox(width: 8),
+                      Text('ADD $_title', style: GoogleFonts.spaceGrotesk(fontSize: 11, fontWeight: FontWeight.w800, color: AppColors.deep, letterSpacing: 1)),
+                    ],
+                  ),
+                ),
               ),
             ],
           ),
+          const SizedBox(height: 8),
+          Container(width: 24, height: 3, color: AppColors.accent),
           const SizedBox(height: 24),
           if (widget.items.isEmpty)
             _buildEmptyState()
@@ -239,25 +268,26 @@ class _AdminEntityEditorState extends State<AdminEntityEditor> {
       padding: const EdgeInsets.all(48),
       decoration: BoxDecoration(
         color: AppColors.base,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: AppColors.surface),
+        border: Border.all(color: AppColors.border, width: 2),
+        boxShadow: const [BoxShadow(color: Color(0x30000000), offset: Offset(4, 4))],
       ),
       child: Center(
         child: Column(
           children: [
             Icon(_getIcon(), size: 48, color: AppColors.textMuted),
             const SizedBox(height: 16),
-            Text('No ${widget.entityType} yet', style: GoogleFonts.montserrat(fontSize: 16, color: AppColors.textMuted)),
+            Text('NO ${widget.entityType.toUpperCase()} YET', style: GoogleFonts.spaceGrotesk(fontSize: 13, fontWeight: FontWeight.w800, color: AppColors.textMuted, letterSpacing: 2)),
             const SizedBox(height: 16),
-            ElevatedButton.icon(
-              onPressed: () => _startEditing(),
-              icon: const Icon(Icons.add, size: 18),
-              label: Text('Add First $_title', style: GoogleFonts.montserrat(fontWeight: FontWeight.w600)),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.accent,
-                foregroundColor: AppColors.deep,
+            InkWell(
+              onTap: () => _startEditing(),
+              child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                decoration: BoxDecoration(
+                  color: AppColors.accent,
+                  border: Border.all(color: AppColors.accent, width: 2),
+                  boxShadow: const [BoxShadow(color: Color(0x40000000), offset: Offset(3, 3))],
+                ),
+                child: Text('ADD FIRST $_title', style: GoogleFonts.spaceGrotesk(fontSize: 11, fontWeight: FontWeight.w800, color: AppColors.deep, letterSpacing: 1)),
               ),
             ),
           ],
@@ -267,16 +297,16 @@ class _AdminEntityEditorState extends State<AdminEntityEditor> {
   }
 
   Widget _buildItemCard(Map<String, dynamic> item) {
-    final displayName = item['name'] ?? item['title'] ?? item['company'] ?? item['degree'] ?? item['quote'] ?? item['id'];
-    final subtitle = item['position'] ?? item['institution'] ?? item['issuer'] ?? item['description'] ?? item['client_name'] ?? '';
+    final displayName = item['name'] ?? item['title'] ?? item['company'] ?? item['degree'] ?? item['quote'] ?? item['platform'] ?? item['id'];
+    final subtitle = item['position'] ?? item['institution'] ?? item['issuer'] ?? item['description'] ?? item['client_name'] ?? item['excerpt'] ?? item['url'] ?? '';
 
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: AppColors.base,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.surface),
+        border: Border.all(color: AppColors.border, width: 2),
+        boxShadow: const [BoxShadow(color: Color(0x30000000), offset: Offset(3, 3))],
       ),
       child: Row(
         children: [
@@ -284,23 +314,30 @@ class _AdminEntityEditorState extends State<AdminEntityEditor> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(displayName.toString(), style: GoogleFonts.montserrat(fontSize: 15, fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
+                Text(displayName.toString(), style: GoogleFonts.spaceGrotesk(fontSize: 14, fontWeight: FontWeight.w800, color: AppColors.textPrimary, letterSpacing: 0.5)),
                 if (subtitle.toString().isNotEmpty) ...[
                   const SizedBox(height: 4),
-                  Text(subtitle.toString(), style: GoogleFonts.montserrat(fontSize: 12, color: AppColors.textMuted), maxLines: 2, overflow: TextOverflow.ellipsis),
+                  Text(subtitle.toString(), style: GoogleFonts.spaceGrotesk(fontSize: 12, color: AppColors.textMuted), maxLines: 2, overflow: TextOverflow.ellipsis),
                 ],
               ],
             ),
           ),
-          IconButton(
-            onPressed: () => _startEditing(item),
-            icon: const Icon(Icons.edit_outlined, color: AppColors.accent, size: 20),
-            tooltip: 'Edit',
+          InkWell(
+            onTap: () => _startEditing(item),
+            child: Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(border: Border.all(color: AppColors.border, width: 1)),
+              child: const Icon(Icons.edit_outlined, color: AppColors.accent, size: 18),
+            ),
           ),
-          IconButton(
-            onPressed: () => _confirmDelete(item),
-            icon: const Icon(Icons.delete_outline, color: Colors.redAccent, size: 20),
-            tooltip: 'Delete',
+          const SizedBox(width: 8),
+          InkWell(
+            onTap: () => _confirmDelete(item),
+            child: Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(border: Border.all(color: AppColors.error, width: 1)),
+              child: const Icon(Icons.delete_outline, color: AppColors.error, size: 18),
+            ),
           ),
         ],
       ),
@@ -315,17 +352,23 @@ class _AdminEntityEditorState extends State<AdminEntityEditor> {
         children: [
           Row(
             children: [
-              IconButton(
-                onPressed: _cancelEditing,
-                icon: const Icon(Icons.arrow_back, color: AppColors.textMuted),
+              InkWell(
+                onTap: _cancelEditing,
+                child: Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(border: Border.all(color: AppColors.border, width: 2)),
+                  child: const Icon(Icons.arrow_back, color: AppColors.textMuted, size: 18),
+                ),
               ),
-              const SizedBox(width: 8),
+              const SizedBox(width: 16),
               Text(
-                _editingItem != null ? 'Edit $_title' : 'New $_title',
-                style: GoogleFonts.cormorant(fontSize: 32, fontWeight: FontWeight.w700, color: AppColors.textPrimary),
+                _editingItem != null ? 'EDIT $_title' : 'NEW $_title',
+                style: GoogleFonts.spaceGrotesk(fontSize: 24, fontWeight: FontWeight.w900, color: AppColors.textPrimary, letterSpacing: 1),
               ),
             ],
           ),
+          const SizedBox(height: 8),
+          Container(width: 24, height: 3, color: AppColors.accent),
           const SizedBox(height: 32),
           for (int i = 0; i < _fields.length; i++) ...[
             _buildField(_fields[i]),
@@ -334,22 +377,28 @@ class _AdminEntityEditorState extends State<AdminEntityEditor> {
           const SizedBox(height: 32),
           Row(
             children: [
-              ElevatedButton(
-                onPressed: _saving ? null : _save,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.accent,
-                  foregroundColor: AppColors.deep,
+              InkWell(
+                onTap: _saving ? null : _save,
+                child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  decoration: BoxDecoration(
+                    color: _saving ? AppColors.muted : AppColors.accent,
+                    border: Border.all(color: _saving ? AppColors.muted : AppColors.accent, width: 2),
+                    boxShadow: const [BoxShadow(color: Color(0x40000000), offset: Offset(4, 4))],
+                  ),
+                  child: _saving
+                      ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2, color: AppColors.deep))
+                      : Text('SAVE', style: GoogleFonts.spaceGrotesk(fontSize: 13, fontWeight: FontWeight.w800, color: AppColors.deep, letterSpacing: 1)),
                 ),
-                child: _saving
-                    ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2, color: AppColors.deep))
-                    : Text('Save', style: GoogleFonts.montserrat(fontWeight: FontWeight.w600)),
               ),
               const SizedBox(width: 16),
-              TextButton(
-                onPressed: _cancelEditing,
-                child: Text('Cancel', style: GoogleFonts.montserrat(color: AppColors.textMuted)),
+              InkWell(
+                onTap: _cancelEditing,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                  decoration: BoxDecoration(border: Border.all(color: AppColors.border, width: 2)),
+                  child: Text('CANCEL', style: GoogleFonts.spaceGrotesk(fontSize: 12, fontWeight: FontWeight.w700, color: AppColors.textMuted, letterSpacing: 1)),
+                ),
               ),
             ],
           ),
@@ -364,21 +413,21 @@ class _AdminEntityEditorState extends State<AdminEntityEditor> {
       children: [
         Text(
           field.label.toUpperCase(),
-          style: GoogleFonts.montserrat(fontSize: 11, fontWeight: FontWeight.w600, color: AppColors.textMuted, letterSpacing: 2),
+          style: GoogleFonts.spaceGrotesk(fontSize: 10, fontWeight: FontWeight.w800, color: AppColors.textMuted, letterSpacing: 2),
         ),
         const SizedBox(height: 8),
         TextField(
           controller: _controllers[field.key],
           maxLines: field.multiline ? 5 : 1,
-          style: GoogleFonts.montserrat(color: AppColors.textPrimary),
+          style: GoogleFonts.spaceGrotesk(color: AppColors.textPrimary, fontWeight: FontWeight.w500),
           decoration: InputDecoration(
             filled: true,
-            fillColor: AppColors.deep,
+            fillColor: AppColors.base,
             hintText: field.hint,
-            hintStyle: TextStyle(color: AppColors.textMuted.withValues(alpha: 0.5)),
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: AppColors.glassBorder)),
-            enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: AppColors.glassBorder)),
-            focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: AppColors.accent)),
+            hintStyle: GoogleFonts.spaceGrotesk(color: AppColors.textMuted.withValues(alpha: 0.5), fontSize: 12),
+            border: const OutlineInputBorder(borderRadius: BorderRadius.zero, borderSide: BorderSide(color: AppColors.border, width: 2)),
+            enabledBorder: const OutlineInputBorder(borderRadius: BorderRadius.zero, borderSide: BorderSide(color: AppColors.border, width: 2)),
+            focusedBorder: const OutlineInputBorder(borderRadius: BorderRadius.zero, borderSide: BorderSide(color: AppColors.accent, width: 2)),
             contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
           ),
         ),
@@ -396,6 +445,8 @@ class _AdminEntityEditorState extends State<AdminEntityEditor> {
       case 'projects': return Icons.folder_outlined;
       case 'testimonials': return Icons.format_quote;
       case 'services': return Icons.build_outlined;
+      case 'blog': return Icons.article_outlined;
+      case 'social': return Icons.share_outlined;
       default: return Icons.article_outlined;
     }
   }

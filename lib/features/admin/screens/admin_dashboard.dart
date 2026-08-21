@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/database/portfolio_repository.dart';
@@ -19,11 +20,29 @@ class _AdminDashboardState extends State<AdminDashboard> {
   Map<String, int> _stats = {};
   late PortfolioRepository _repo;
 
+  // ── Profile editors ──────────────────────────────────────────
+  final Map<String, TextEditingController> _profileCtrls = {};
+
   @override
   void initState() {
     super.initState();
     _repo = PortfolioRepository();
     _loadData();
+  }
+
+  @override
+  void dispose() {
+    for (final c in _profileCtrls.values) {
+      c.dispose();
+    }
+    super.dispose();
+  }
+
+  TextEditingController _ctrl(String key, {String? fallback}) {
+    return _profileCtrls.putIfAbsent(key, () {
+      final val = _repo.profile[key]?.toString() ?? fallback ?? '';
+      return TextEditingController(text: val);
+    });
   }
 
   Future<void> _loadData() async {
@@ -59,7 +78,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
   Drawer? _buildMobileDrawer() {
     return Drawer(
       backgroundColor: AppColors.base,
-      child: _buildSidebarContent(),
+      child: _buildSidebarContent(popOnTap: true),
     );
   }
 
@@ -67,90 +86,107 @@ class _AdminDashboardState extends State<AdminDashboard> {
     return SizedBox(width: 220, child: _buildSidebarContent());
   }
 
-  Widget _buildSidebarContent() {
+  Widget _buildSidebarContent({bool popOnTap = false}) {
     final items = [
-      _SidebarItem(Icons.dashboard_outlined, 'Dashboard'),
-      _SidebarItem(Icons.person_outline, 'Profile'),
-      _SidebarItem(Icons.work_outline, 'Projects'),
-      _SidebarItem(Icons.timeline, 'Experience'),
-      _SidebarItem(Icons.school_outlined, 'Education'),
-      _SidebarItem(Icons.verified_outlined, 'Certifications'),
-      _SidebarItem(Icons.code_outlined, 'Skills'),
-      _SidebarItem(Icons.translate_outlined, 'Languages'),
-      _SidebarItem(Icons.format_quote, 'Testimonials'),
-      _SidebarItem(Icons.build_outlined, 'Services'),
-      _SidebarItem(Icons.mail_outline, 'Contacts'),
-      _SidebarItem(Icons.people_outline, 'Subscribers'),
-      _SidebarItem(Icons.analytics_outlined, 'Analytics'),
+      _SidebarItem(Icons.dashboard_outlined, 'DASHBOARD'),
+      _SidebarItem(Icons.person_outline, 'PROFILE'),
+      _SidebarItem(Icons.work_outline, 'PROJECTS'),
+      _SidebarItem(Icons.timeline, 'EXPERIENCE'),
+      _SidebarItem(Icons.school_outlined, 'EDUCATION'),
+      _SidebarItem(Icons.verified_outlined, 'CERTIFICATIONS'),
+      _SidebarItem(Icons.code_outlined, 'SKILLS'),
+      _SidebarItem(Icons.translate_outlined, 'LANGUAGES'),
+      _SidebarItem(Icons.format_quote, 'TESTIMONIALS'),
+      _SidebarItem(Icons.build_outlined, 'SERVICES'),
+      _SidebarItem(Icons.article_outlined, 'BLOG'),
+      _SidebarItem(Icons.share_outlined, 'SOCIAL'),
+      _SidebarItem(Icons.mail_outline, 'CONTACTS'),
+      _SidebarItem(Icons.people_outline, 'SUBSCRIBERS'),
+      _SidebarItem(Icons.analytics_outlined, 'ANALYTICS'),
     ];
 
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(20),
-          child: Row(
-            children: [
-              Container(
-                width: 32,
-                height: 32,
-                decoration: BoxDecoration(
-                  color: AppColors.accent,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: const Center(child: Text('HS', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: AppColors.deep))),
-              ),
-              const SizedBox(width: 10),
-              Text('Admin', style: GoogleFonts.montserrat(fontSize: 15, fontWeight: FontWeight.w700, color: AppColors.textPrimary)),
-            ],
-          ),
-        ),
-        const Divider(color: AppColors.glassBorder, height: 1),
-        Expanded(
-          child: ListView.builder(
-            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-            itemCount: items.length,
-            itemBuilder: (context, index) {
-              final item = items[index];
-              final isSelected = _selectedTab == index;
-              return ListTile(
-                leading: Icon(item.icon, color: isSelected ? AppColors.accent : AppColors.textMuted, size: 20),
-                title: Text(
-                  item.label,
-                  style: GoogleFonts.montserrat(
-                    fontSize: 13,
-                    fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
-                    color: isSelected ? AppColors.textPrimary : AppColors.textMuted,
+    return Container(
+      color: AppColors.base,
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(20),
+            child: Row(
+              children: [
+                Container(
+                  width: 32,
+                  height: 32,
+                  decoration: BoxDecoration(
+                    color: AppColors.accent,
+                    border: Border.all(color: AppColors.accent, width: 2),
+                  ),
+                  child: const Center(
+                    child: Text('HS', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: AppColors.deep)),
                   ),
                 ),
-                selected: isSelected,
-                selectedTileColor: AppColors.accent.withValues(alpha: 0.08),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                contentPadding: const EdgeInsets.symmetric(horizontal: 12),
-                dense: true,
-                onTap: () {
-                  setState(() => _selectedTab = index);
-                  Navigator.pop(context); // close mobile drawer
-                },
-              );
-            },
+                const SizedBox(width: 10),
+                Text('ADMIN', style: GoogleFonts.spaceGrotesk(fontSize: 13, fontWeight: FontWeight.w800, color: AppColors.textPrimary, letterSpacing: 2)),
+              ],
+            ),
           ),
-        ),
-      ],
+          const Divider(color: AppColors.border, thickness: 2, height: 2),
+          Expanded(
+            child: ListView.builder(
+              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+              itemCount: items.length,
+              itemBuilder: (context, index) {
+                final item = items[index];
+                final isSelected = _selectedTab == index;
+                return Container(
+                  margin: const EdgeInsets.only(bottom: 2),
+                  child: Material(
+                    color: isSelected ? AppColors.accent.withValues(alpha: 0.12) : Colors.transparent,
+                    child: InkWell(
+                      onTap: () {
+                        setState(() => _selectedTab = index);
+                        if (popOnTap) Navigator.pop(context);
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                        child: Row(
+                          children: [
+                            Icon(item.icon, color: isSelected ? AppColors.accent : AppColors.textMuted, size: 18),
+                            const SizedBox(width: 12),
+                            Text(
+                              item.label,
+                              style: GoogleFonts.spaceGrotesk(
+                                fontSize: 11,
+                                fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
+                                color: isSelected ? AppColors.accent : AppColors.textMuted,
+                                letterSpacing: 1,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
     );
   }
 
   Widget _buildAppBar(User? user, bool isWide) {
     final titles = [
-      'Dashboard', 'Profile', 'Projects', 'Experience', 'Education',
-      'Certifications', 'Skills', 'Languages', 'Testimonials', 'Services',
-      'Contacts', 'Subscribers', 'Analytics',
+      'DASHBOARD', 'PROFILE', 'PROJECTS', 'EXPERIENCE', 'EDUCATION',
+      'CERTIFICATIONS', 'SKILLS', 'LANGUAGES', 'TESTIMONIALS', 'SERVICES',
+      'BLOG', 'SOCIAL', 'CONTACTS', 'SUBSCRIBERS', 'ANALYTICS',
     ];
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
       decoration: const BoxDecoration(
         color: AppColors.base,
-        border: Border(bottom: BorderSide(color: AppColors.glassBorder)),
+        border: Border(bottom: BorderSide(color: AppColors.border, width: 2)),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -166,20 +202,17 @@ class _AdminDashboardState extends State<AdminDashboard> {
                 ),
               if (!isWide) const SizedBox(width: 8),
               Text(
-                _loading ? 'Loading...' : titles[_selectedTab.clamp(0, titles.length - 1)],
-                style: GoogleFonts.cormorant(fontSize: 28, fontWeight: FontWeight.w700, color: AppColors.textPrimary),
+                _loading ? 'LOADING...' : titles[_selectedTab.clamp(0, titles.length - 1)],
+                style: GoogleFonts.spaceGrotesk(fontSize: 24, fontWeight: FontWeight.w900, color: AppColors.textPrimary, letterSpacing: 1),
               ),
             ],
           ),
           Row(
             children: [
-              if (_repo.usesDatabase)
-                _badge('DB Connected', AppColors.accent)
-              else
-                _badge('Fallback', Colors.orange),
+              _badge(_repo.usesDatabase ? 'DB CONNECTED' : 'FALLBACK', _repo.usesDatabase ? AppColors.accent : AppColors.warning),
               if (isWide) ...[
                 const SizedBox(width: 16),
-                Text(user?.email ?? '', style: GoogleFonts.montserrat(fontSize: 13, color: AppColors.textMuted)),
+                Text(user?.email ?? '', style: GoogleFonts.spaceGrotesk(fontSize: 12, color: AppColors.textMuted)),
               ],
               const SizedBox(width: 16),
               IconButton(
@@ -196,8 +229,8 @@ class _AdminDashboardState extends State<AdminDashboard> {
   Widget _badge(String text, Color color) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-      decoration: BoxDecoration(color: color.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(8)),
-      child: Text(text, style: TextStyle(fontSize: 11, color: color, fontWeight: FontWeight.w600)),
+      decoration: BoxDecoration(color: color.withValues(alpha: 0.12), border: Border.all(color: color, width: 2)),
+      child: Text(text, style: GoogleFonts.spaceGrotesk(fontSize: 10, color: color, fontWeight: FontWeight.w800, letterSpacing: 1)),
     );
   }
 
@@ -213,9 +246,11 @@ class _AdminDashboardState extends State<AdminDashboard> {
       case 7: return AdminEntityEditor(entityType: 'languages', items: _repo.languages, onSave: _repo.saveLanguage, onDelete: (id) async { await _repo.deleteLanguage(id); await _loadData(); });
       case 8: return AdminEntityEditor(entityType: 'testimonials', items: _repo.testimonials, onSave: _repo.saveTestimonial, onDelete: (id) async { await _repo.deleteTestimonial(id); await _loadData(); });
       case 9: return AdminEntityEditor(entityType: 'services', items: _repo.services, onSave: _repo.saveService, onDelete: (id) async { await _repo.deleteService(id); await _loadData(); });
-      case 10: return _buildContacts();
-      case 11: return _buildSubscribers();
-      case 12: return const AdminAnalytics();
+      case 10: return AdminEntityEditor(entityType: 'blog', items: _repo.posts, onSave: _repo.savePost, onDelete: (id) async { await _repo.deletePost(id); await _loadData(); });
+      case 11: return AdminEntityEditor(entityType: 'social', items: _repo.socialLinks, onSave: _repo.saveSocialLink, onDelete: (id) async { await _repo.deleteSocialLink(id); await _loadData(); });
+      case 12: return _buildContacts();
+      case 13: return _buildSubscribers();
+      case 14: return const AdminAnalytics();
       default: return _buildOverview();
     }
   }
@@ -226,46 +261,47 @@ class _AdminDashboardState extends State<AdminDashboard> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Overview', style: GoogleFonts.cormorant(fontSize: 36, fontWeight: FontWeight.w700, color: AppColors.textPrimary)),
+          Text('OVERVIEW', style: GoogleFonts.spaceGrotesk(fontSize: 28, fontWeight: FontWeight.w900, color: AppColors.textPrimary, letterSpacing: 1)),
+          const SizedBox(height: 8),
+          Container(width: 24, height: 3, color: AppColors.accent),
           const SizedBox(height: 32),
           Row(children: [
-            Expanded(child: _overviewCard('Projects', '${_stats['projects'] ?? 0}', Icons.work_outline)),
+            Expanded(child: _overviewCard('PROJECTS', '${_stats['projects'] ?? 0}', Icons.work_outline)),
             const SizedBox(width: 16),
-            Expanded(child: _overviewCard('Experience', '${_stats['experience'] ?? 0}', Icons.timeline)),
+            Expanded(child: _overviewCard('EXPERIENCE', '${_stats['experience'] ?? 0}', Icons.timeline)),
             const SizedBox(width: 16),
-            Expanded(child: _overviewCard('Skills', '${_stats['skills'] ?? 0}', Icons.code_outlined)),
+            Expanded(child: _overviewCard('SKILLS', '${_stats['skills'] ?? 0}', Icons.code_outlined)),
             const SizedBox(width: 16),
-            Expanded(child: _overviewCard('Views', '${_stats['views'] ?? 0}', Icons.visibility_outlined)),
+            Expanded(child: _overviewCard('VIEWS', '${_stats['views'] ?? 0}', Icons.visibility_outlined)),
           ]),
           const SizedBox(height: 16),
           Row(children: [
-            Expanded(child: _overviewCard('Contacts', '${_stats['contacts'] ?? 0}', Icons.mail_outline)),
+            Expanded(child: _overviewCard('CONTACTS', '${_stats['contacts'] ?? 0}', Icons.mail_outline)),
             const SizedBox(width: 16),
-            Expanded(child: _overviewCard('Subscribers', '${_stats['subscribers'] ?? 0}', Icons.people_outline)),
+            Expanded(child: _overviewCard('SUBSCRIBERS', '${_stats['subscribers'] ?? 0}', Icons.people_outline)),
             const SizedBox(width: 16),
-            Expanded(child: _overviewCard('DB', _repo.usesDatabase ? 'Connected' : 'Fallback', Icons.storage)),
+            Expanded(child: _overviewCard('DB STATUS', _repo.usesDatabase ? 'CONNECTED' : 'FALLBACK', Icons.storage)),
             const SizedBox(width: 16),
             const Expanded(child: SizedBox()),
           ]),
           const SizedBox(height: 48),
-          // Quick actions
-          Text('Quick Actions', style: GoogleFonts.montserrat(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.textSecondary)),
+          Text('QUICK ACTIONS', style: GoogleFonts.spaceGrotesk(fontSize: 11, fontWeight: FontWeight.w800, color: AppColors.textMuted, letterSpacing: 2)),
           const SizedBox(height: 16),
           Wrap(
             spacing: 12,
             runSpacing: 12,
             children: [
-              _quickAction('View Portfolio', Icons.open_in_new, () {
-                Navigator.pushReplacementNamed(context, '/');
+              _quickAction('VIEW PORTFOLIO', Icons.open_in_new, () {
+                context.go('/');
               }),
-              _quickAction('Analytics', Icons.analytics_outlined, () {
-                setState(() => _selectedTab = 12);
+              _quickAction('ANALYTICS', Icons.analytics_outlined, () {
+                setState(() => _selectedTab = 14);
               }),
-              _quickAction('Refresh Data', Icons.refresh, () async {
+              _quickAction('REFRESH DATA', Icons.refresh, () async {
                 await _loadData();
                 if (mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Data refreshed'), backgroundColor: AppColors.accent),
+                    const SnackBar(content: Text('DATA REFRESHED'), backgroundColor: AppColors.accent),
                   );
                 }
               }),
@@ -281,17 +317,17 @@ class _AdminDashboardState extends State<AdminDashboard> {
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: AppColors.base,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.surface),
+        border: Border.all(color: AppColors.border, width: 2),
+        boxShadow: const [BoxShadow(color: Color(0x40000000), offset: Offset(4, 4))],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, color: AppColors.accent, size: 24),
+          Icon(icon, color: AppColors.accent, size: 22),
           const SizedBox(height: 16),
-          Text(value, style: GoogleFonts.cormorant(fontSize: 32, fontWeight: FontWeight.w700, color: AppColors.textPrimary)),
+          Text(value, style: GoogleFonts.spaceGrotesk(fontSize: 32, fontWeight: FontWeight.w900, color: AppColors.textPrimary)),
           const SizedBox(height: 4),
-          Text(title, style: GoogleFonts.montserrat(fontSize: 13, color: AppColors.textMuted)),
+          Text(title, style: GoogleFonts.spaceGrotesk(fontSize: 11, fontWeight: FontWeight.w700, color: AppColors.textMuted, letterSpacing: 1)),
         ],
       ),
     );
@@ -300,20 +336,19 @@ class _AdminDashboardState extends State<AdminDashboard> {
   Widget _quickAction(String label, IconData icon, VoidCallback onTap) {
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(12),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
         decoration: BoxDecoration(
           color: AppColors.base,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: AppColors.surface),
+          border: Border.all(color: AppColors.border, width: 2),
+          boxShadow: const [BoxShadow(color: Color(0x30000000), offset: Offset(3, 3))],
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, size: 18, color: AppColors.accent),
+            Icon(icon, size: 16, color: AppColors.accent),
             const SizedBox(width: 8),
-            Text(label, style: GoogleFonts.montserrat(fontSize: 13, fontWeight: FontWeight.w500, color: AppColors.textSecondary)),
+            Text(label, style: GoogleFonts.spaceGrotesk(fontSize: 11, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 1)),
           ],
         ),
       ),
@@ -321,102 +356,89 @@ class _AdminDashboardState extends State<AdminDashboard> {
   }
 
   Widget _buildProfileEditor() {
-    final p = _repo.profile;
-    final nameCtrl = TextEditingController(text: p['name']?.toString());
-    final titleCtrl = TextEditingController(text: p['title']?.toString());
-    final subtitleCtrl = TextEditingController(text: p['subtitle']?.toString());
-    final locationCtrl = TextEditingController(text: p['location']?.toString());
-    final emailCtrl = TextEditingController(text: p['email']?.toString());
-    final phoneCtrl = TextEditingController(text: p['phone']?.toString());
-    final bioCtrl = TextEditingController(text: p['bio']?.toString());
-    final aboutCtrl = TextEditingController(text: p['about']?.toString());
-    final quoteCtrl = TextEditingController(text: p['quote']?.toString());
-    final avatarCtrl = TextEditingController(text: p['avatar_url']?.toString());
-    final resumeCtrl = TextEditingController(text: p['resume_url']?.toString());
-    final linkedinCtrl = TextEditingController(text: p['linkedin_url']?.toString());
-    final githubCtrl = TextEditingController(text: p['github_url']?.toString());
-    final coffeeCtrl = TextEditingController(text: p['buy_me_a_coffee_url']?.toString());
-    final calCtrl = TextEditingController(text: p['calcom_username']?.toString());
-
     return SingleChildScrollView(
       padding: const EdgeInsets.all(24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Profile', style: GoogleFonts.cormorant(fontSize: 36, fontWeight: FontWeight.w700, color: AppColors.textPrimary)),
+          Text('PROFILE', style: GoogleFonts.spaceGrotesk(fontSize: 28, fontWeight: FontWeight.w900, color: AppColors.textPrimary, letterSpacing: 1)),
+          const SizedBox(height: 8),
+          Container(width: 24, height: 3, color: AppColors.accent),
           const SizedBox(height: 32),
-          _field('NAME', nameCtrl),
+          _field('NAME', _ctrl('name')),
           const SizedBox(height: 16),
           Row(children: [
-            Expanded(child: _field('TITLE', titleCtrl)),
+            Expanded(child: _field('TITLE', _ctrl('title'))),
             const SizedBox(width: 16),
-            Expanded(child: _field('SUBTITLE', subtitleCtrl)),
+            Expanded(child: _field('SUBTITLE', _ctrl('subtitle'))),
           ]),
           const SizedBox(height: 16),
           Row(children: [
-            Expanded(child: _field('LOCATION', locationCtrl)),
+            Expanded(child: _field('LOCATION', _ctrl('location'))),
             const SizedBox(width: 16),
-            Expanded(child: _field('EMAIL', emailCtrl)),
+            Expanded(child: _field('EMAIL', _ctrl('email'))),
             const SizedBox(width: 16),
-            Expanded(child: _field('PHONE', phoneCtrl)),
+            Expanded(child: _field('PHONE', _ctrl('phone'))),
           ]),
           const SizedBox(height: 16),
-          _field('BIO', bioCtrl, maxLines: 3),
+          _field('BIO', _ctrl('bio'), maxLines: 3),
           const SizedBox(height: 16),
-          _field('ABOUT', aboutCtrl, maxLines: 6),
+          _field('ABOUT', _ctrl('about'), maxLines: 6),
           const SizedBox(height: 16),
-          _field('QUOTE', quoteCtrl),
+          _field('QUOTE', _ctrl('quote')),
           const SizedBox(height: 24),
-          Text('Links', style: GoogleFonts.montserrat(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.textSecondary)),
+          Text('LINKS', style: GoogleFonts.spaceGrotesk(fontSize: 11, fontWeight: FontWeight.w800, color: AppColors.textMuted, letterSpacing: 2)),
           const SizedBox(height: 16),
-          _field('AVATAR URL', avatarCtrl),
+          _field('AVATAR URL', _ctrl('avatar_url')),
           const SizedBox(height: 16),
-          _field('RESUME URL', resumeCtrl),
+          _field('RESUME URL', _ctrl('resume_url')),
           const SizedBox(height: 16),
           Row(children: [
-            Expanded(child: _field('LINKEDIN URL', linkedinCtrl)),
+            Expanded(child: _field('LINKEDIN URL', _ctrl('linkedin_url'))),
             const SizedBox(width: 16),
-            Expanded(child: _field('GITHUB URL', githubCtrl)),
+            Expanded(child: _field('GITHUB URL', _ctrl('github_url'))),
           ]),
           const SizedBox(height: 16),
           Row(children: [
-            Expanded(child: _field('BUY ME A COFFEE URL', coffeeCtrl)),
+            Expanded(child: _field('BUY ME A COFFEE URL', _ctrl('buy_me_a_coffee_url'))),
             const SizedBox(width: 16),
-            Expanded(child: _field('CAL.COM USERNAME', calCtrl)),
+            Expanded(child: _field('CAL.COM USERNAME', _ctrl('calcom_username'))),
           ]),
           const SizedBox(height: 32),
-          ElevatedButton(
-            onPressed: () async {
+          InkWell(
+            onTap: () async {
               await _repo.updateProfile({
-                'name': nameCtrl.text,
-                'title': titleCtrl.text,
-                'subtitle': subtitleCtrl.text,
-                'location': locationCtrl.text,
-                'email': emailCtrl.text,
-                'phone': phoneCtrl.text,
-                'bio': bioCtrl.text,
-                'about': aboutCtrl.text,
-                'quote': quoteCtrl.text,
-                'avatar_url': avatarCtrl.text,
-                'resume_url': resumeCtrl.text,
-                'linkedin_url': linkedinCtrl.text,
-                'github_url': githubCtrl.text,
-                'buy_me_a_coffee_url': coffeeCtrl.text,
-                'calcom_username': calCtrl.text,
+                'name': _ctrl('name').text,
+                'title': _ctrl('title').text,
+                'subtitle': _ctrl('subtitle').text,
+                'location': _ctrl('location').text,
+                'email': _ctrl('email').text,
+                'phone': _ctrl('phone').text,
+                'bio': _ctrl('bio').text,
+                'about': _ctrl('about').text,
+                'quote': _ctrl('quote').text,
+                'avatar_url': _ctrl('avatar_url').text,
+                'resume_url': _ctrl('resume_url').text,
+                'linkedin_url': _ctrl('linkedin_url').text,
+                'github_url': _ctrl('github_url').text,
+                'buy_me_a_coffee_url': _ctrl('buy_me_a_coffee_url').text,
+                'calcom_username': _ctrl('calcom_username').text,
               });
               if (mounted) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Profile updated'), backgroundColor: AppColors.accent),
+                  const SnackBar(content: Text('PROFILE UPDATED'), backgroundColor: AppColors.accent),
                 );
               }
             },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.accent,
-              foregroundColor: AppColors.deep,
+            child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              decoration: BoxDecoration(
+                color: AppColors.accent,
+                border: Border.all(color: AppColors.accent, width: 2),
+                boxShadow: const [BoxShadow(color: Color(0x40000000), offset: Offset(4, 4))],
+              ),
+              child: Text('SAVE PROFILE', style: GoogleFonts.spaceGrotesk(fontSize: 13, fontWeight: FontWeight.w800, color: AppColors.deep, letterSpacing: 1)),
             ),
-            child: Text('Save Profile', style: GoogleFonts.montserrat(fontWeight: FontWeight.w600)),
           ),
         ],
       ),
@@ -433,13 +455,15 @@ class _AdminDashboardState extends State<AdminDashboard> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Contacts', style: GoogleFonts.cormorant(fontSize: 36, fontWeight: FontWeight.w700, color: AppColors.textPrimary)),
-              Text('${contacts.length} submissions', style: GoogleFonts.montserrat(fontSize: 14, color: AppColors.textMuted)),
+              Text('CONTACTS', style: GoogleFonts.spaceGrotesk(fontSize: 28, fontWeight: FontWeight.w900, color: AppColors.textPrimary, letterSpacing: 1)),
+              Text('${contacts.length} SUBMISSIONS', style: GoogleFonts.spaceGrotesk(fontSize: 11, fontWeight: FontWeight.w700, color: AppColors.textMuted, letterSpacing: 1)),
             ],
           ),
+          const SizedBox(height: 8),
+          Container(width: 24, height: 3, color: AppColors.accent),
           const SizedBox(height: 24),
           if (contacts.isEmpty)
-            _emptyState('No contact submissions yet')
+            _emptyState('NO CONTACT SUBMISSIONS YET')
           else
             ...contacts.map((c) {
               final isUnread = c['status'] == 'unread';
@@ -448,8 +472,11 @@ class _AdminDashboardState extends State<AdminDashboard> {
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
                   color: AppColors.base,
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: isUnread ? AppColors.accent.withValues(alpha: 0.3) : AppColors.surface),
+                  border: Border.all(
+                    color: isUnread ? AppColors.accent : AppColors.border,
+                    width: 2,
+                  ),
+                  boxShadow: const [BoxShadow(color: Color(0x30000000), offset: Offset(3, 3))],
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -461,43 +488,38 @@ class _AdminDashboardState extends State<AdminDashboard> {
                           children: [
                             if (isUnread)
                               Container(width: 8, height: 8, margin: const EdgeInsets.only(right: 8), decoration: const BoxDecoration(shape: BoxShape.circle, color: AppColors.accent)),
-                            Text('${c['name']}', style: GoogleFonts.montserrat(fontSize: 15, fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
-                            Text(' — ${c['email']}', style: GoogleFonts.montserrat(fontSize: 13, color: AppColors.textMuted)),
+                            Text('${c['name']}', style: GoogleFonts.spaceGrotesk(fontSize: 14, fontWeight: FontWeight.w800, color: AppColors.textPrimary, letterSpacing: 0.5)),
+                            Text(' · ${c['email']}', style: GoogleFonts.spaceGrotesk(fontSize: 12, color: AppColors.textMuted)),
                           ],
                         ),
                         Row(
                           children: [
                             if (!isUnread)
-                              TextButton(
-                                onPressed: () async {
-                                  await _repo.updateContactStatus(c['id'], 'unread');
-                                  await _loadData();
-                                },
-                                child: const Text('Mark Unread', style: TextStyle(fontSize: 12)),
-                              ),
+                              _smallButton('MARK UNREAD', () async {
+                                await _repo.updateContactStatus(c['id'], 'unread');
+                                await _loadData();
+                              }),
                             if (isUnread)
-                              TextButton(
-                                onPressed: () async {
-                                  await _repo.updateContactStatus(c['id'], 'read');
-                                  await _loadData();
-                                },
-                                child: const Text('Mark Read', style: TextStyle(fontSize: 12)),
-                              ),
+                              _smallButton('MARK READ', () async {
+                                await _repo.updateContactStatus(c['id'], 'read');
+                                await _loadData();
+                              }),
+                            const SizedBox(width: 8),
                             IconButton(
                               onPressed: () async {
                                 await _repo.deleteContactSubmission(c['id']);
                                 await _loadData();
                               },
-                              icon: const Icon(Icons.delete_outline, color: Colors.redAccent, size: 18),
+                              icon: const Icon(Icons.delete_outline, color: AppColors.error, size: 18),
                             ),
                           ],
                         ),
                       ],
                     ),
                     const SizedBox(height: 12),
-                    Text(c['message'] ?? '', style: GoogleFonts.montserrat(fontSize: 13, color: AppColors.textSecondary)),
+                    Text(c['message'] ?? '', style: GoogleFonts.spaceGrotesk(fontSize: 13, color: AppColors.textSecondary)),
                     const SizedBox(height: 8),
-                    Text(c['submitted_at'] ?? '', style: GoogleFonts.montserrat(fontSize: 11, color: AppColors.textMuted)),
+                    Text(c['submitted_at'] ?? '', style: GoogleFonts.spaceGrotesk(fontSize: 11, color: AppColors.textMuted)),
                   ],
                 ),
               );
@@ -517,32 +539,34 @@ class _AdminDashboardState extends State<AdminDashboard> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Subscribers', style: GoogleFonts.cormorant(fontSize: 36, fontWeight: FontWeight.w700, color: AppColors.textPrimary)),
-              Text('${subs.length} subscribers', style: GoogleFonts.montserrat(fontSize: 14, color: AppColors.textMuted)),
+              Text('SUBSCRIBERS', style: GoogleFonts.spaceGrotesk(fontSize: 28, fontWeight: FontWeight.w900, color: AppColors.textPrimary, letterSpacing: 1)),
+              Text('${subs.length} SUBSCRIBERS', style: GoogleFonts.spaceGrotesk(fontSize: 11, fontWeight: FontWeight.w700, color: AppColors.textMuted, letterSpacing: 1)),
             ],
           ),
+          const SizedBox(height: 8),
+          Container(width: 24, height: 3, color: AppColors.accent),
           const SizedBox(height: 24),
           if (subs.isEmpty)
-            _emptyState('No subscribers yet')
+            _emptyState('NO SUBSCRIBERS YET')
           else
             ...subs.map((s) => Container(
               margin: const EdgeInsets.only(bottom: 8),
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
                 color: AppColors.base,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: AppColors.surface),
+                border: Border.all(color: AppColors.border, width: 2),
+                boxShadow: const [BoxShadow(color: Color(0x30000000), offset: Offset(3, 3))],
               ),
               child: Row(
                 children: [
-                  const Icon(Icons.email_outlined, color: AppColors.accent, size: 20),
+                  const Icon(Icons.email_outlined, color: AppColors.accent, size: 18),
                   const SizedBox(width: 16),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(s['email']?.toString() ?? '', style: GoogleFonts.montserrat(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
-                        Text('${s['source'] ?? 'website'} • ${s['subscribed_at'] ?? ''}', style: GoogleFonts.montserrat(fontSize: 11, color: AppColors.textMuted)),
+                        Text(s['email']?.toString() ?? '', style: GoogleFonts.spaceGrotesk(fontSize: 13, fontWeight: FontWeight.w800, color: AppColors.textPrimary)),
+                        Text('${s['source'] ?? 'website'} • ${s['subscribed_at'] ?? ''}', style: GoogleFonts.spaceGrotesk(fontSize: 11, color: AppColors.textMuted)),
                       ],
                     ),
                   ),
@@ -551,7 +575,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
                       await _repo.deleteSubscriber(s['id']);
                       await _loadData();
                     },
-                    icon: const Icon(Icons.delete_outline, color: Colors.redAccent, size: 18),
+                    icon: const Icon(Icons.delete_outline, color: AppColors.error, size: 18),
                   ),
                 ],
               ),
@@ -565,22 +589,35 @@ class _AdminDashboardState extends State<AdminDashboard> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: GoogleFonts.montserrat(fontSize: 11, fontWeight: FontWeight.w600, color: AppColors.textMuted, letterSpacing: 2)),
+        Text(label, style: GoogleFonts.spaceGrotesk(fontSize: 10, fontWeight: FontWeight.w800, color: AppColors.textMuted, letterSpacing: 2)),
         const SizedBox(height: 8),
         TextField(
           controller: ctrl,
           maxLines: maxLines,
-          style: GoogleFonts.montserrat(color: AppColors.textPrimary),
+          style: GoogleFonts.spaceGrotesk(color: AppColors.textPrimary, fontWeight: FontWeight.w500),
           decoration: InputDecoration(
             filled: true,
-            fillColor: AppColors.deep,
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: AppColors.glassBorder)),
-            enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: AppColors.glassBorder)),
-            focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: AppColors.accent)),
+            fillColor: AppColors.base,
+            border: const OutlineInputBorder(borderRadius: BorderRadius.zero, borderSide: BorderSide(color: AppColors.border, width: 2)),
+            enabledBorder: const OutlineInputBorder(borderRadius: BorderRadius.zero, borderSide: BorderSide(color: AppColors.border, width: 2)),
+            focusedBorder: const OutlineInputBorder(borderRadius: BorderRadius.zero, borderSide: BorderSide(color: AppColors.accent, width: 2)),
             contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
           ),
         ),
       ],
+    );
+  }
+
+  Widget _smallButton(String label, VoidCallback onTap) {
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+        decoration: BoxDecoration(
+          border: Border.all(color: AppColors.border, width: 1),
+        ),
+        child: Text(label, style: GoogleFonts.spaceGrotesk(fontSize: 9, fontWeight: FontWeight.w700, color: AppColors.textMuted, letterSpacing: 1)),
+      ),
     );
   }
 
@@ -589,11 +626,11 @@ class _AdminDashboardState extends State<AdminDashboard> {
       padding: const EdgeInsets.all(48),
       decoration: BoxDecoration(
         color: AppColors.base,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: AppColors.surface),
+        border: Border.all(color: AppColors.border, width: 2),
+        boxShadow: const [BoxShadow(color: Color(0x30000000), offset: Offset(4, 4))],
       ),
       child: Center(
-        child: Text(text, style: GoogleFonts.montserrat(color: AppColors.textMuted)),
+        child: Text(text, style: GoogleFonts.spaceGrotesk(fontSize: 12, fontWeight: FontWeight.w700, color: AppColors.textMuted, letterSpacing: 2)),
       ),
     );
   }

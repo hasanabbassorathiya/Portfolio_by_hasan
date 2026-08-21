@@ -43,6 +43,7 @@ class _HeroSectionState extends State<HeroSection>
     final h = MediaQuery.sizeOf(context).height;
     final isMobile = w < 600;
     final isTablet = w < 1200;
+    final compact = h < 780;
 
     return SizedBox(
       height: h,
@@ -74,7 +75,7 @@ class _HeroSectionState extends State<HeroSection>
             child: Container(
               margin: EdgeInsets.symmetric(
                 horizontal: isMobile ? 20 : (isTablet ? 48 : 80),
-                vertical: isMobile ? 80 : 100,
+                vertical: isMobile ? 48 : (compact ? 64 : 100),
               ),
               child: Row(
                 children: [
@@ -118,12 +119,12 @@ class _HeroSectionState extends State<HeroSection>
                             ),
                           ),
                         ),
-                        const SizedBox(height: 32),
+                        SizedBox(height: compact ? 16 : 32),
                         if (!isMobile && w > 900)
-                          _buildDesktopHero(w, h)
+                          _buildDesktopHero(w, h, compact)
                         else
-                          _buildMobileHero(w, h),
-                        const SizedBox(height: 48),
+                          _buildMobileHero(w, h, compact),
+                        SizedBox(height: compact ? 24 : 48),
                         _DelayedSlide(
                           delay: 800,
                           entered: _entered,
@@ -133,18 +134,6 @@ class _HeroSectionState extends State<HeroSection>
                             opacity: _entered ? 1.0 : 0.0,
                             duration: const Duration(milliseconds: 800),
                             child: _buildCTAButtons(isMobile),
-                          ),
-                        ),
-                        const SizedBox(height: 64),
-                        _DelayedSlide(
-                          delay: 1000,
-                          entered: _entered,
-                          offset: const Offset(0, 1),
-                          duration: const Duration(milliseconds: 1200),
-                          child: AnimatedOpacity(
-                            opacity: _entered ? 1.0 : 0.0,
-                            duration: const Duration(milliseconds: 800),
-                            child: _buildScrollIndicator(),
                           ),
                         ),
                       ],
@@ -249,7 +238,7 @@ class _HeroSectionState extends State<HeroSection>
     );
   }
 
-  Widget _buildDesktopHero(double w, double h) {
+  Widget _buildDesktopHero(double w, double h, bool compact) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -324,11 +313,11 @@ class _HeroSectionState extends State<HeroSection>
     );
   }
 
-  Widget _buildMobileHero(double w, double h) {
+  Widget _buildMobileHero(double w, double h, bool compact) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (_avatarUrl.isNotEmpty || true)
+        if (!compact)
           Padding(
             padding: const EdgeInsets.only(bottom: 24),
             child: Center(
@@ -421,24 +410,6 @@ class _HeroSectionState extends State<HeroSection>
           ),
         ),
       ],
-    );
-  }
-
-  Widget _buildScrollIndicator() {
-    return Center(
-      child: Column(
-        children: [
-          GlowLine(width: 1, height: 40),
-          const SizedBox(height: 8),
-          Text(
-            'SCROLL',
-            style: AppTypography.small().copyWith(
-              letterSpacing: 4,
-              fontSize: 10,
-            ),
-          ),
-        ],
-      ),
     );
   }
 

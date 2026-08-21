@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "npkill": "^0.12.2"
+  },
+  "devDependencies": {
+    "playwright-core": "^1.62.1"
+  }
+}

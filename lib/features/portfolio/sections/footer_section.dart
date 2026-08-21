@@ -3,14 +3,30 @@ import '../../../core/theme/app_colors.dart';
 import '../../../shared/layouts/section_wrapper.dart';
 import '../../../shared/widgets/social_icon_button.dart';
 import '../../../shared/widgets/decorative_effects.dart';
-import '../../../core/config/app_config.dart';
+import '../../../core/database/portfolio_repository.dart';
 import '../../../data/profile_data.dart';
 
 class FooterSection extends StatelessWidget {
   const FooterSection({super.key});
 
+  static IconData _iconForKey(String key) {
+    switch (key) {
+      case 'linkedin':
+        return Icons.link;
+      case 'email':
+        return Icons.email_outlined;
+      case 'coffee':
+        return Icons.coffee;
+      case 'github':
+        return Icons.code;
+      default:
+        return Icons.public;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final socials = PortfolioRepository().socialLinks;
     return Container(
       decoration: const BoxDecoration(
         border: Border(top: BorderSide(color: AppColors.border, width: 2)),
@@ -21,23 +37,14 @@ class FooterSection extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SocialIconButton(
-                  icon: Icons.link,
-                  url: AppConfig.linkedInUrl,
-                  tooltip: 'LinkedIn',
-                ),
-                const SizedBox(width: 12),
-                SocialIconButton(
-                  icon: Icons.email_outlined,
-                  url: 'mailto:${AppProfileData.email}',
-                  tooltip: 'Email',
-                ),
-                const SizedBox(width: 12),
-                SocialIconButton(
-                  icon: Icons.coffee,
-                  url: AppConfig.buyMeACoffeeUrl,
-                  tooltip: 'Buy Me a Coffee',
-                ),
+                for (var i = 0; i < socials.length; i++) ...[
+                  if (i > 0) const SizedBox(width: 12),
+                  SocialIconButton(
+                    icon: _iconForKey(socials[i]['icon']?.toString() ?? ''),
+                    url: socials[i]['url']?.toString() ?? '',
+                    tooltip: socials[i]['platform']?.toString() ?? '',
+                  ),
+                ],
               ],
             ),
             const SizedBox(height: 32),
@@ -66,7 +73,7 @@ class FooterSection extends StatelessWidget {
               '© ${DateTime.now().year} ${AppProfileData.name.toUpperCase()}. ALL RIGHTS RESERVED.',
               style: TextStyle(
                 fontSize: 11,
-                color: AppColors.textMuted.withValues(alpha: 0.6),
+                color: AppColors.textMuted,
                 letterSpacing: 1,
                 fontWeight: FontWeight.w600,
               ),

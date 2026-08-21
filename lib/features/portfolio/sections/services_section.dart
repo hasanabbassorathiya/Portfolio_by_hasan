@@ -150,7 +150,7 @@ class _ServiceCardState extends State<_ServiceCard> {
               : Matrix4.identity(),
           padding: const EdgeInsets.all(28),
           decoration: BoxDecoration(
-            color: _hovered ? AppColors.accent : AppColors.base,
+            color: _hovered ? AppColors.surface : AppColors.base,
             border: Border.all(
               color: _hovered ? AppColors.accent : AppColors.border,
               width: 2,
@@ -158,7 +158,7 @@ class _ServiceCardState extends State<_ServiceCard> {
             boxShadow: [
               if (!_pressed && _hovered)
                 BoxShadow(
-                  color: AppColors.accent.withValues(alpha: 0.3),
+                  color: AppColors.accent.withValues(alpha: 0.15),
                   offset: const Offset(4, 4),
                 ),
               if (!_pressed && !_hovered)
@@ -175,8 +175,8 @@ class _ServiceCardState extends State<_ServiceCard> {
                 width: 52,
                 height: 52,
                 decoration: BoxDecoration(
-                  color: _hovered ? AppColors.deep : AppColors.surface,
-                  border: Border.all(color: _hovered ? AppColors.deep : AppColors.border, width: 2),
+                  color: _hovered ? AppColors.accent.withValues(alpha: 0.1) : AppColors.surface,
+                  border: Border.all(color: _hovered ? AppColors.accent : AppColors.border, width: 2),
                 ),
                 child: Icon(
                   iconData,
@@ -190,7 +190,7 @@ class _ServiceCardState extends State<_ServiceCard> {
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w700,
-                  color: _hovered ? AppColors.deep : AppColors.textPrimary,
+                  color: AppColors.textPrimary,
                   letterSpacing: -0.3,
                 ),
               ),
@@ -200,7 +200,7 @@ class _ServiceCardState extends State<_ServiceCard> {
                   (widget.service['description'] ?? '') as String,
                   style: TextStyle(
                     fontSize: 14,
-                    color: _hovered ? AppColors.deep.withValues(alpha: 0.8) : AppColors.textSecondary,
+                    color: AppColors.textSecondary,
                     height: 1.6,
                   ),
                 ),
@@ -219,7 +219,7 @@ class _ServiceCardState extends State<_ServiceCard> {
                         style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w700,
-                          color: _hovered ? AppColors.deep : AppColors.accent,
+                          color: AppColors.accent,
                           letterSpacing: 1,
                         ),
                       ),

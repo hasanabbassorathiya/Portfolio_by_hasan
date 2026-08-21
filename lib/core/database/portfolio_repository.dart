@@ -6,7 +6,8 @@ import '../../data/profile_data.dart';
 import '../../data/projects_data.dart';
 import '../../data/experience_data.dart';
 import '../../data/testimonials_data.dart';
-import '../../data/services_data.dart';
+import '../../data/blog_data.dart';
+import '../../data/social_data.dart';
 
 class PortfolioRepository {
   static final PortfolioRepository _instance = PortfolioRepository._();
@@ -28,6 +29,8 @@ class PortfolioRepository {
   List<Map<String, dynamic>> _contactSubmissions = [];
   List<Map<String, dynamic>> _subscribers = [];
   List<Map<String, dynamic>> _analyticsEvents = [];
+  List<Map<String, dynamic>> _posts = [];
+  List<Map<String, dynamic>> _socialLinks = [];
 
   bool get isInitialized => _initialized;
   bool get usesDatabase => _usesDb;
@@ -44,6 +47,8 @@ class PortfolioRepository {
   List<Map<String, dynamic>> get contactSubmissions => _contactSubmissions;
   List<Map<String, dynamic>> get subscribers => _subscribers;
   List<Map<String, dynamic>> get analyticsEvents => _analyticsEvents;
+  List<Map<String, dynamic>> get posts => _posts;
+  List<Map<String, dynamic>> get socialLinks => _socialLinks;
 
   List<Map<String, dynamic>> get featuredProjects =>
       _projects.where((p) => p['is_featured'] == 1 || p['is_featured'] == true).toList();
@@ -99,6 +104,8 @@ class PortfolioRepository {
       "CREATE TABLE IF NOT EXISTS contact_submissions (id TEXT PRIMARY KEY, name TEXT NOT NULL, email TEXT NOT NULL, message TEXT NOT NULL, submitted_at TEXT DEFAULT (datetime('now')), status TEXT DEFAULT 'unread')",
       "CREATE TABLE IF NOT EXISTS newsletter_subscribers (id TEXT PRIMARY KEY, email TEXT NOT NULL, name TEXT DEFAULT '', source TEXT DEFAULT 'website', subscribed_at TEXT DEFAULT (datetime('now')), is_active INTEGER DEFAULT 1)",
       "CREATE TABLE IF NOT EXISTS analytics_events (id INTEGER PRIMARY KEY AUTOINCREMENT, event_type TEXT NOT NULL, event_data TEXT DEFAULT '{}', page TEXT DEFAULT '', visitor_id TEXT DEFAULT '', timestamp TEXT DEFAULT (datetime('now')))",
+      "CREATE TABLE IF NOT EXISTS posts (id TEXT PRIMARY KEY, title TEXT NOT NULL, slug TEXT NOT NULL DEFAULT '', excerpt TEXT DEFAULT '', category TEXT DEFAULT '', read_time TEXT DEFAULT '', published_at TEXT DEFAULT '', tags TEXT DEFAULT '[]', display_order INTEGER DEFAULT 0, created_at TEXT DEFAULT (datetime('now')))",
+      "CREATE TABLE IF NOT EXISTS social_links (id TEXT PRIMARY KEY, platform TEXT NOT NULL, url TEXT NOT NULL DEFAULT '', icon TEXT DEFAULT '', display_order INTEGER DEFAULT 0, created_at TEXT DEFAULT (datetime('now')))",
     ];
     for (final sql in schemas) {
       try { await TursoService.query(sql); } catch (_) {}
@@ -208,13 +215,39 @@ class PortfolioRepository {
     }).toList();
 
     _services = [
-      {'id': 'svc_mobile', 'title': 'Mobile App Development', 'description': 'Cross-platform mobile applications with Flutter — from concept to App Store deployment.', 'icon_codepoint': 59530, 'features': jsonEncode(['Flutter & Dart', 'iOS & Android', 'App Store Deployment']), 'display_order': 0},
+      {'id': 'svc_mobile', 'title': 'Mobile App Development', 'description': 'Cross-platform mobile applications with Flutter, from concept to App Store deployment.', 'icon_codepoint': 59530, 'features': jsonEncode(['Flutter & Dart', 'iOS & Android', 'App Store Deployment']), 'display_order': 0},
       {'id': 'svc_web', 'title': 'Web Application Development', 'description': 'Modern, responsive web applications with Flutter Web and full-stack capabilities.', 'icon_codepoint': 59526, 'features': jsonEncode(['Flutter Web', 'Responsive Design', 'Full-Stack']), 'display_order': 1},
       {'id': 'svc_ai', 'title': 'AI & Agentic App Development', 'description': 'AI-powered applications with LLM integration, intelligent automation, and agentic workflows.', 'icon_codepoint': 59601, 'features': jsonEncode(['LLM Integration', 'Agentic Workflows', 'Intelligent Automation']), 'display_order': 2},
-      {'id': 'svc_fintech', 'title': 'FinTech Solutions', 'description': 'Secure financial applications — payment workflows, lending platforms, and transaction systems.', 'icon_codepoint': 59484, 'features': jsonEncode(['Payment Systems', 'Lending Platforms', 'Security']), 'display_order': 3},
-      {'id': 'svc_custom', 'title': 'Custom Solutions', 'description': 'Enterprise-grade custom software — APIs, cloud architecture, and scalable systems.', 'icon_codepoint': 59536, 'features': jsonEncode(['Enterprise', 'Cloud Architecture', 'Scalable Systems']), 'display_order': 4},
+      {'id': 'svc_fintech', 'title': 'FinTech Solutions', 'description': 'Secure financial applications, payment workflows, lending platforms, and transaction systems.', 'icon_codepoint': 59484, 'features': jsonEncode(['Payment Systems', 'Lending Platforms', 'Security']), 'display_order': 3},
+      {'id': 'svc_custom', 'title': 'Custom Solutions', 'description': 'Enterprise-grade custom software, APIs, cloud architecture, and scalable systems.', 'icon_codepoint': 59536, 'features': jsonEncode(['Enterprise', 'Cloud Architecture', 'Scalable Systems']), 'display_order': 4},
       {'id': 'svc_consulting', 'title': 'Consulting & Architecture', 'description': 'Technical leadership, Clean Architecture adoption, team mentoring, and code review.', 'icon_codepoint': 59461, 'features': jsonEncode(['Architecture Review', 'Team Mentoring', 'Code Review']), 'display_order': 5},
     ];
+
+    _posts = AppBlogData.posts.asMap().entries.map((entry) {
+      final p = entry.value;
+      return {
+        'id': 'post_${p['id']}',
+        'title': p['title'],
+        'slug': p['slug'],
+        'excerpt': p['excerpt'],
+        'category': p['category'],
+        'read_time': p['readTime'],
+        'published_at': p['publishedAt'],
+        'tags': jsonEncode(p['tags']),
+        'display_order': entry.key,
+      };
+    }).toList();
+
+    _socialLinks = AppSocialData.links.asMap().entries.map((entry) {
+      final s = entry.value;
+      return {
+        'id': 'social_${s['icon']}',
+        'platform': s['platform'],
+        'url': s['url'],
+        'icon': s['icon'],
+        'display_order': entry.key,
+      };
+    }).toList();
   }
 
   Future<void> _loadAllFromDb() async {
@@ -229,6 +262,8 @@ class PortfolioRepository {
     try { final r = await TursoService.query("SELECT * FROM services ORDER BY display_order ASC"); if (r.isNotEmpty) _services = r.map((e) => _parseRow(e)).toList(); } catch (_) {}
     try { final r = await TursoService.query("SELECT * FROM contact_submissions ORDER BY submitted_at DESC"); if (r.isNotEmpty) _contactSubmissions = r.map((e) => _parseRow(e)).toList(); } catch (_) {}
     try { final r = await TursoService.query("SELECT * FROM newsletter_subscribers ORDER BY subscribed_at DESC"); if (r.isNotEmpty) _subscribers = r.map((e) => _parseRow(e)).toList(); } catch (_) {}
+    try { final r = await TursoService.query("SELECT * FROM posts ORDER BY display_order ASC"); if (r.isNotEmpty) _posts = r.map((e) => _parseRow(e)).toList(); } catch (_) {}
+    try { final r = await TursoService.query("SELECT * FROM social_links ORDER BY display_order ASC"); if (r.isNotEmpty) _socialLinks = r.map((e) => _parseRow(e)).toList(); } catch (_) {}
   }
 
   Map<String, dynamic> _parseRow(Map<String, dynamic> row) {
@@ -326,6 +361,16 @@ class PortfolioRepository {
   Future<void> saveService(Map<String, dynamic> s) async =>
       _saveEntity('services', _services, s, jsonFields: ['features']);
   Future<void> deleteService(String id) async => _deleteEntity('services', _services, id);
+
+  // ── Blog Posts CRUD ───────────────────────────────────────────
+  Future<void> savePost(Map<String, dynamic> p) async =>
+      _saveEntity('posts', _posts, p, jsonFields: ['tags']);
+  Future<void> deletePost(String id) async => _deleteEntity('posts', _posts, id);
+
+  // ── Social Links CRUD ─────────────────────────────────────────
+  Future<void> saveSocialLink(Map<String, dynamic> s) async =>
+      _saveEntity('social_links', _socialLinks, s);
+  Future<void> deleteSocialLink(String id) async => _deleteEntity('social_links', _socialLinks, id);
 
   // ── Contact & Newsletter ──────────────────────────────────────
   Future<void> saveContactSubmission(Map<String, dynamic> submission) async {

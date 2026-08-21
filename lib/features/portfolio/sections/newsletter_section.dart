@@ -16,6 +16,9 @@ class _NewsletterSectionState extends State<NewsletterSection> {
   final _emailController = TextEditingController();
   bool _subscribed = false;
   bool _loading = false;
+  String? _error;
+
+  static final RegExp _emailRegex = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$');
 
   @override
   void dispose() {
@@ -24,14 +27,25 @@ class _NewsletterSectionState extends State<NewsletterSection> {
   }
 
   Future<void> _subscribe() async {
-    if (_emailController.text.isEmpty) return;
-    setState(() => _loading = true);
+    final email = _emailController.text.trim();
+    if (!_emailRegex.hasMatch(email)) {
+      setState(() => _error = 'Enter a valid email address.');
+      return;
+    }
 
-    final success = await NewsletterService.subscribe(_emailController.text);
+    setState(() {
+      _loading = true;
+      _error = null;
+    });
+
+    final success = await NewsletterService.subscribe(email);
 
     setState(() {
       _loading = false;
       _subscribed = success;
+      if (!success) {
+        _error = 'Subscription failed. Please try again.';
+      }
     });
 
     if (success) _emailController.clear();
@@ -133,6 +147,27 @@ class _NewsletterSectionState extends State<NewsletterSection> {
       );
     }
 
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildEmailRow(),
+        if (_error != null) ...[
+          const SizedBox(height: 8),
+          Text(
+            _error!,
+            style: const TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+              color: Color(0xFFF87171),
+            ),
+          ),
+        ],
+      ],
+    );
+  }
+
+  Widget _buildEmailRow() {
     return SizedBox(
       width: 360,
       child: Row(
