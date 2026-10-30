@@ -1,0 +1,24 @@
+{
+  "name": "Portfolio API — Local",
+  "values": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8099/api",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "adminEmail",
+      "value": "you@example.com",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "adminPassword",
+      "value": "",
+      "type": "secret",
+      "enabled": true
+    }
+  ],
+  "_postman_variable_scope": "environment"
+}

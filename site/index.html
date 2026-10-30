@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#f3efe6" />
+    <meta name="color-scheme" content="light dark" />
+    <script>
+      (function () {
+        var stored = null;
+        try { stored = localStorage.getItem('hs-theme'); } catch (e) {}
+        var dark = stored ? stored === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+        var theme = dark ? 'dark' : 'light';
+        document.documentElement.dataset.theme = theme;
+        document.documentElement.style.colorScheme = theme;
+        var meta = document.querySelector('meta[name="theme-color"]');
+        if (meta) meta.setAttribute('content', theme === 'dark' ? '#12100c' : '#f3efe6');
+      })();
+    </script>
+    <title>Hasan Abbas Sorathiya · Senior Software &amp; AI Engineer</title>
+    <meta
+      name="description"
+      content="Senior mobile & AI engineer in Dubai. Native iOS and Android, Flutter as my primary stack, plus MERN full-stack, RAG and AI agents. 7+ years, 15 apps, 100K+ users."
+    />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="canonical" href="https://hasanabbassorathiya.tech/" />
+    <link rel="alternate" type="application/rss+xml" title="Hasan Abbas Sorathiya — Writing" href="/rss.xml" />
+    <link rel="preload" href="/fonts/Geist-400.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/Geist-600.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/InstrumentSerif-Regular.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/InstrumentSerif-Italic.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/hasan.webp" as="image" type="image/webp" fetchpriority="high" />
+    <!-- Above-the-fold faces declared before the stylesheet so the browser (and
+         Lighthouse's dependency graph) starts them with the document. -->
+    <style>
+      @font-face { font-family: 'Geist'; src: url('/fonts/Geist-400.woff2') format('woff2'); font-weight: 400; font-display: swap; }
+      @font-face { font-family: 'Geist'; src: url('/fonts/Geist-600.woff2') format('woff2'); font-weight: 600; font-display: swap; }
+      @font-face { font-family: 'Instrument Serif'; src: url('/fonts/InstrumentSerif-Regular.woff2') format('woff2'); font-weight: 400; font-display: swap; }
+      @font-face { font-family: 'Instrument Serif'; src: url('/fonts/InstrumentSerif-Italic.woff2') format('woff2'); font-weight: 400; font-style: italic; font-display: swap; }
+    </style>
+
+    <meta property="og:site_name" content="Hasan Abbas Sorathiya" />
+    <meta property="og:title" content="Hasan Abbas Sorathiya · Senior Software & AI Engineer" />
+    <meta property="og:description" content="Native iOS and Android, Flutter as my primary stack, MERN full-stack, RAG and AI agents. 7+ years shipping products used by 100K+ people." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://hasanabbassorathiya.tech/" />
+    <meta property="og:image" content="https://hasanabbassorathiya.tech/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Hasan Abbas Sorathiya · Senior Software & AI Engineer" />
+    <meta name="twitter:description" content="Native iOS and Android, Flutter as my primary stack, MERN full-stack, RAG and AI agents. 7+ years shipping products used by 100K+ people." />
+    <meta name="twitter:image" content="https://hasanabbassorathiya.tech/og.png" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "@id": "https://hasanabbassorathiya.tech/#person",
+        "name": "Hasan Abbas Sorathiya",
+        "jobTitle": "Senior Software & AI Engineer",
+        "url": "https://hasanabbassorathiya.tech",
+        "image": "https://hasanabbassorathiya.tech/hasan.png",
+        "email": "mailto:hasanabbassorathiya12@gmail.com",
+        "address": { "@type": "PostalAddress", "addressLocality": "Dubai", "addressCountry": "AE" },
+        "sameAs": [
+          "https://www.linkedin.com/in/hasanabbassorathiya/",
+          "https://github.com/hasanabbassorathiya",
+          "https://www.instagram.com/hasanabbassorathiya",
+          "https://play.google.com/store/apps/dev?id=5895887615343030170",
+          "https://apps.apple.com/us/developer/hasan-abbas-sorathiya/id1734376366"
+        ]
+      }
+    </script>
+    <!-- Boot frame monogram painted before JS -->
+    <style id="boot-frame">#boot{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:#f3efe6;z-index:9999;transition:opacity .2s}#boot span{color:#16130f;font:600 clamp(1.6rem,4vw,3rem)/1 Geist,sans-serif;letter-spacing:.18em;text-transform:uppercase}#boot.hidden{opacity:0;pointer-events:none}html[data-theme='dark'] #boot{background:#12100c}html[data-theme='dark'] #boot span{color:#f3efe6}</style>
+  </head>
+  <body>
+    <div id="boot"><span>H S</span></div>
+    <div id="root"></div>
+    <noscript>
+      <div style="padding:2rem;font-family:system-ui;color:#16130f;background:#f3efe6;min-height:100vh">
+        <h1>Hasan Abbas Sorathiya — Senior Software &amp; AI Engineer</h1>
+        <p>Native iOS and Android, Flutter, MERN full-stack, RAG and AI agents. Dubai, UAE.</p>
+        <p>This site needs JavaScript for the full experience. Reach me at
+          <a style="color:#1d3cff" href="mailto:hasanabbassorathiya12@gmail.com">hasanabbassorathiya12@gmail.com</a>.</p>
+      </div>
+    </noscript>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

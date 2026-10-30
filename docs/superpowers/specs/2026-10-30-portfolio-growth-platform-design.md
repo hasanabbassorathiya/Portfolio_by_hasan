@@ -24,7 +24,7 @@ Turn the portfolio into a self-serve growth platform:
 - No live deploy, DB migration on production, DNS change or credential change without explicit owner approval at that moment.
 - Don't disturb the owner's Hostinger / Play Console browser tabs.
 - Owner-blocked inputs (never invent): Cal.com URL, GA4 measurement ID + consent decision, Discord invite URL, referral URLs, mail credentials, publication/deploy approval.
-- All public copy keeps existing verified claims only (7+ years, 15 apps, 100K+ users).
+- All public copy keeps existing verified claims only (7+ years, 16 apps, 100K+ users).
 
 ## Approved decisions
 
@@ -83,8 +83,9 @@ New tables:
 
 Column additions (nullable, no data rewrite):
 
-- `apps.seo JSON`, `apps.aso JSON`
-- `clients.seo JSON`, `posts.seo JSON`
+Flattened SEO columns (not JSON, so editors and SQL can filter on them): `apps.seo_title,
+apps.seo_description, apps.seo_image, apps.noindex`; the same four on `clients` and `posts`; and
+ASO columns on `apps` only: `aso_category, aso_keywords, aso_subtitle, aso_promo_text`.
 
 Seed (empty values) settings keys: `ga4_id, gsc_verification, indexnow_key, calcom_url,
 discord_invite, linkedin_url, github_url, x_url, instagram_url, play_dev_url, appstore_dev_url,
@@ -94,8 +95,9 @@ contact_email, default_og_image, community_enabled, announcement`.
 
 - `GET /api/index.php?entity=settings` → `{entity:"settings", data:{k:v}}`, only rows with
   `is_public = 1`; never secrets.
-- Existing entities unchanged; `apps/clients/posts` gain `seo` (object) and `apps` gains `aso`
-  (object) in their row payloads.
+- Existing entities unchanged; `apps/clients/posts` rows gain the flattened `seo_*`/`noindex`
+  columns and `apps` rows gain the `aso_*` columns. The site reads them as `app.seo.title`-style
+  objects only inside the page components.
 
 ### Admin API hardening
 

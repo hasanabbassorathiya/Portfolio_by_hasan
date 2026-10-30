@@ -1,4 +1,6 @@
 
+> **Current production site:** the React 18 + Vite + PHP site in [`site/`](site/README.md), documented in [`site/DELIVERY.md`](site/DELIVERY.md). The Flutter Web app described below is the earlier version of this portfolio, kept in the repository.
+
 <div align="center">
   <img src="assets/icons/appstore.png" alt="Logo" width="120">
   <h1 align="center">Hasan Abbas Sorathiya | Portfolio</h1>

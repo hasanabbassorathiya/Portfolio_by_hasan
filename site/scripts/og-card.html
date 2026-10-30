@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="robots" content="noindex" />
+<title>OG card</title>
+<style>
+  @font-face { font-family: 'Bricolage Grotesque'; src: url('/fonts/BricolageGrotesque-VF.woff2') format('woff2'); font-weight: 400 800; font-display: block; }
+  @font-face { font-family: 'Geist'; src: url('/fonts/Geist-400.woff2') format('woff2'); font-weight: 400; font-display: block; }
+  @font-face { font-family: 'Geist'; src: url('/fonts/Geist-500.woff2') format('woff2'); font-weight: 500; font-display: block; }
+  @font-face { font-family: 'Geist Mono'; src: url('/fonts/GeistMono-400.woff2') format('woff2'); font-weight: 400; font-display: block; }
+  @font-face { font-family: 'Instrument Serif'; src: url('/fonts/InstrumentSerif-Italic.woff2') format('woff2'); font-weight: 400; font-style: italic; font-display: block; }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1200px; height: 630px; overflow: hidden; }
+  body { background: #201c2a; color: #ede8f6; font-family: Geist, sans-serif; }
+  .card {
+    position: relative;
+    width: 1200px;
+    height: 630px;
+    padding: 60px 64px 56px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background:
+      radial-gradient(720px 420px at 88% 112%, rgba(241, 207, 120, 0.16), transparent 68%),
+      radial-gradient(560px 360px at 8% -12%, rgba(241, 207, 120, 0.08), transparent 70%),
+      linear-gradient(160deg, #241f31 0%, #1a1629 62%, #14101f 100%);
+    overflow: hidden;
+  }
+  .grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(to right, rgba(237, 232, 246, 0.055) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(237, 232, 246, 0.055) 1px, transparent 1px);
+    background-size: 80px 80px;
+    mask-image: linear-gradient(to bottom, rgba(0,0,0,0.85), rgba(0,0,0,0.16));
+  }
+  .monogram {
+    position: absolute;
+    right: -26px;
+    top: 118px;
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-weight: 700;
+    font-size: 430px;
+    line-height: 1;
+    letter-spacing: -0.06em;
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(241, 207, 120, 0.14);
+    user-select: none;
+  }
+  header, .body, footer { position: relative; }
+  header { display: flex; align-items: center; justify-content: space-between; }
+  .identity { display: flex; align-items: center; gap: 18px; }
+  .mark {
+    width: 54px; height: 54px;
+    display: grid; place-items: center;
+    border: 1px solid rgba(241, 207, 120, 0.5);
+    border-radius: 12px;
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-weight: 700; font-size: 19px; letter-spacing: 0.08em;
+    color: #f1cf78;
+  }
+  .name {
+    font-family: 'Geist Mono', monospace;
+    font-size: 13px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: #ede8f6;
+  }
+  .place {
+    margin-top: 7px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #9d94b8;
+  }
+  .url {
+    font-family: 'Geist Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    color: #9d94b8;
+  }
+  .body { max-width: 900px; }
+  .eyebrow {
+    display: flex; align-items: center; gap: 14px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.26em;
+    text-transform: uppercase;
+    color: #f1cf78;
+    margin-bottom: 26px;
+  }
+  .eyebrow::before {
+    content: '';
+    width: 34px; height: 1px;
+    background: #f1cf78;
+    opacity: 0.65;
+  }
+  h1 {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-weight: 600;
+    font-size: 76px;
+    line-height: 1.02;
+    letter-spacing: -0.035em;
+    color: #ede8f6;
+  }
+  h1 em {
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-weight: 400;
+    color: #f1cf78;
+    letter-spacing: -0.015em;
+  }
+  .sub {
+    margin-top: 24px;
+    max-width: 660px;
+    font-size: 18px;
+    line-height: 1.6;
+    color: #9d94b8;
+  }
+  footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 1px solid rgba(237, 232, 246, 0.16);
+    padding-top: 24px;
+  }
+  .proof {
+    display: flex;
+    gap: 28px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #9d94b8;
+  }
+  .proof strong { color: #ede8f6; font-weight: 400; }
+  .tags { display: flex; gap: 8px; }
+  .tag {
+    border: 1px solid rgba(241, 207, 120, 0.32);
+    border-radius: 999px;
+    padding: 7px 14px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #f1cf78;
+  }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="grid"></div>
+    <div class="monogram">HS</div>
+
+    <header>
+      <div class="identity">
+        <div class="mark">HS</div>
+        <div>
+          <div class="name">Hasan Abbas Sorathiya</div>
+          <div class="place">Senior Flutter &amp; AI Engineer · Dubai, UAE</div>
+        </div>
+      </div>
+      <div class="url">hasanabbassorathiya.tech</div>
+    </header>
+
+    <div class="body">
+      <p class="eyebrow">Portfolio · Writing · Product engineering</p>
+      <h1>Apps that ship.<br /><em>And keep people coming back.</em></h1>
+      <p class="sub">
+        Fourteen shipped products, 100K+ users, and the Flutter architecture to keep them
+        stable after launch. I build AI-native apps — and write about how.
+      </p>
+    </div>
+
+    <footer>
+      <div class="proof">
+        <span><strong>14+</strong> apps shipped</span>
+        <span><strong>100K+</strong> users reached</span>
+        <span><strong>7+</strong> years</span>
+      </div>
+      <div class="tags">
+        <span class="tag">Flutter</span>
+        <span class="tag">AI</span>
+        <span class="tag">Architecture</span>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>

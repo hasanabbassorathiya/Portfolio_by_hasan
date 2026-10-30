@@ -1,0 +1,27 @@
+{
+  "name": "Hasan Abbas Sorathiya — Senior Software & AI Engineer",
+  "short_name": "Hasan A. Sorathiya",
+  "description": "Flutter specialist, MERN full-stack, RAG and AI agents. 7+ years, 15 apps, products used by 100K+ people.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f3efe6",
+  "theme_color": "#f3efe6",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ]
+}

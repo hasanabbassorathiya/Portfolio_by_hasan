@@ -1,0 +1,7 @@
+# Deny direct access to the SQL schema and config
+<FilesMatch "\.(sql|sample\.php)$">
+  Require all denied
+</FilesMatch>
+<Files "config.php">
+  Require all denied
+</Files>

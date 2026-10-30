@@ -1,0 +1,293 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Self-hosted fonts — pre-paint boot uses Geist Mono, so faces must be in the base CSS */
+/* Geist 400/600 and Instrument Serif are declared in index.html so the browser
+   starts those faces with the document, before the stylesheet is parsed. */
+@font-face { font-family: 'Geist'; src: url('/fonts/Geist-500.woff2') format('woff2'); font-weight: 500; font-display: swap; }
+@font-face { font-family: 'Geist Mono'; src: url('/fonts/GeistMono-400.woff2') format('woff2'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'Geist Mono'; src: url('/fonts/GeistMono-600.woff2') format('woff2'); font-weight: 600; font-display: swap; }
+@font-face { font-family: 'Bricolage Grotesque'; src: url('/fonts/BricolageGrotesque-VF.woff2') format('woff2'); font-weight: 500 800; font-display: swap; }
+
+:root {
+  color-scheme: light;
+  --canvas: 243 239 230;
+  --surface: 251 248 242;
+  --deep: 233 226 213;
+  --monogram: 232 225 211;
+  --accent: 29 60 255;
+  --accent-bright: 0 38 255;
+  --accent-solid: 29 60 255;
+  --on-accent: 251 248 242;
+  --text: 22 19 15;
+  --text-muted: 102 95 82;
+  --border: rgba(22, 19, 15, 0.13);
+  --ink: 20 17 13;
+  --ink-soft: 28 24 17;
+  --band: 20 17 13;
+  --band-soft: 28 24 17;
+  --band-fg: 243 239 230;
+  --light-lav: 245 240 230;
+  --hl-a: 163 63 28;
+  --hl-a-ink: 224 138 95;
+  --hl-b: 29 60 255;
+}
+
+/*
+  Dark theme: same Bone & Ink language, inverted. `ink` flips to bone so all
+  neutral hairlines and the monogram invert automatically; the fixed dark bands
+  (work, footer, case-study hero) use dedicated band tokens so they stay dark
+  wells instead of turning into light slabs.
+*/
+html[data-theme='dark'] {
+  color-scheme: dark;
+  --canvas: 18 16 12;
+  --surface: 27 23 18;
+  --deep: 38 33 25;
+  --monogram: 34 29 22;
+  --accent: 139 155 255;
+  --accent-bright: 170 182 255;
+  --accent-solid: 47 73 255;
+  --on-accent: 247 243 234;
+  --text: 243 239 230;
+  --text-muted: 169 161 147;
+  --border: rgba(243, 239, 230, 0.15);
+  --ink: 243 239 230;
+  --ink-soft: 36 31 24;
+  --band: 11 9 6;
+  --band-soft: 22 18 13;
+  --band-fg: 236 230 218;
+  --light-lav: 30 26 20;
+  --hl-a: 224 138 95;
+  --hl-b: 139 155 255;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { background: rgb(var(--canvas)); color: rgb(var(--text)); font-family: Geist, sans-serif; scroll-padding-top: 104px; }
+body { min-height: 100dvh; }
+img { max-width: 100%; display: block; }
+a { color: inherit; }
+button { font: inherit; }
+::selection { background: rgb(var(--accent-solid)); color: rgb(var(--on-accent)); }
+
+/* Paper grain — barely there, fixed, pointer-events none */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  pointer-events: none;
+  opacity: 0.024;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Reference palette — warm and cool highlight spans */
+.hl-a { color: rgb(var(--hl-a)); }
+/* The light-theme accent only clears 3:1 on cream; dark bands need the lighter tone. */
+.bg-band .text-hl-a { color: rgb(var(--hl-a-ink)); }
+.hl-b { color: rgb(var(--hl-b)); }
+.hl-a-soft { background: color-mix(in srgb, rgb(var(--hl-a)) 12%, transparent); }
+.hl-b-soft { background: color-mix(in srgb, rgb(var(--hl-b)) 12%, transparent); }
+
+@keyframes marquee-x {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(-50%, 0, 0); }
+}
+.marquee-track { animation: marquee-x 42s linear infinite; }
+.marquee:hover .marquee-track { animation-play-state: paused; }
+.marquee-fade {
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+
+@keyframes rise-in {
+  from { transform: translate3d(0, 26px, 0); }
+  to { transform: translate3d(0, 0, 0); }
+}
+.rise { animation: rise-in 0.9s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.rise-1 { animation-delay: 0.05s; }
+.rise-2 { animation-delay: 0.14s; }
+.rise-3 { animation-delay: 0.24s; }
+.rise-4 { animation-delay: 0.34s; }
+
+.rule-link {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  background-size: 100% 1px;
+  transition: background-size 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.rule-link:hover { background-size: 0% 1px; background-position: 100% 100%; }
+
+:focus-visible {
+  outline: 2px solid rgb(var(--accent));
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* Long-form article typography */
+.prose-hs {
+  font-size: 1.0625rem;
+  line-height: 1.85;
+  color: rgb(var(--text-muted));
+}
+.prose-hs > :first-child { margin-top: 0; }
+.prose-hs p { margin: 1.15em 0; }
+.prose-hs h2 {
+  font-family: 'Instrument Serif', serif;
+  font-size: clamp(1.75rem, 3vw, 2.35rem);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+  color: rgb(var(--text));
+  margin: 2.3em 0 0.65em;
+}
+.prose-hs h3 {
+  font-family: 'Instrument Serif', serif;
+  font-size: 1.5rem;
+  font-weight: 400;
+  line-height: 1.2;
+  color: rgb(var(--text));
+  margin: 1.9em 0 0.5em;
+}
+.prose-hs strong { color: rgb(var(--text)); font-weight: 600; }
+.prose-hs em { font-style: italic; }
+.prose-hs a {
+  color: rgb(var(--accent));
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, rgb(var(--accent)) 35%, transparent);
+  text-underline-offset: 3px;
+  transition: text-decoration-color 0.2s ease;
+}
+.prose-hs a:hover { text-decoration-color: rgb(var(--accent)); }
+.prose-hs ul, .prose-hs ol {
+  margin: 1.2em 0;
+  padding-left: 1.3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55em;
+}
+.prose-hs li { line-height: 1.75; }
+.prose-hs li::marker { color: rgb(var(--accent)); }
+.prose-hs blockquote {
+  margin: 1.9em 0;
+  padding-left: 1.25rem;
+  border-left: 2px solid rgb(var(--accent));
+  font-family: 'Instrument Serif', serif;
+  font-style: italic;
+  font-size: 1.3rem;
+  line-height: 1.55;
+  color: rgb(var(--text));
+}
+.prose-hs code {
+  font-family: 'Geist Mono', monospace;
+  font-size: 0.86em;
+  background: color-mix(in srgb, rgb(var(--text)) 7%, transparent);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  padding: 0.12em 0.4em;
+  color: rgb(var(--accent));
+}
+.prose-hs pre {
+  margin: 1.7em 0;
+  background: rgb(var(--deep));
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.1rem 1.25rem;
+  overflow-x: auto;
+}
+.prose-hs pre code {
+  background: none;
+  border: 0;
+  padding: 0;
+  color: rgb(var(--text));
+  font-size: 0.84rem;
+  line-height: 1.75;
+  white-space: pre;
+}
+.prose-hs .table-wrap {
+  margin: 1.8em 0;
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+.prose-hs table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+}
+.prose-hs th {
+  text-align: left;
+  font-family: 'Geist Mono', monospace;
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgb(var(--accent));
+  background: rgb(var(--deep));
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+.prose-hs td {
+  padding: 0.7rem 1rem;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+  line-height: 1.6;
+}
+.prose-hs tbody tr:last-child td { border-bottom: 0; }
+.prose-hs hr {
+  border: 0;
+  border-top: 1px solid var(--border);
+  margin: 2.6em 0;
+}
+
+/* Lenis */
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+.lenis.lenis-stopped { overflow: hidden; }
+.lenis.lenis-smooth iframe { pointer-events: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track { animation: none; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Resume: the PDF is printed from /resume, so only the sheet may survive. */
+@page { size: A4; margin: 13mm 14mm; }
+
+@media print {
+  html, body { background: #fff !important; }
+  body {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+  body::after { display: none !important; }
+  .resume-sheet {
+    max-width: none !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: #fff !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+    font-size: 10.5pt;
+    line-height: 1.45;
+  }
+  .resume-sheet section { margin-top: 13pt; }
+  .resume-role { padding-top: 7pt; padding-bottom: 7pt; }
+  .resume-sheet a {
+    color: inherit !important;
+    text-decoration: none !important;
+  }
+  .resume-role, .resume-block { break-inside: avoid; }
+  .resume-section-title { break-after: avoid; }
+  .resume-sheet h1, .resume-sheet h2, .resume-sheet h3 { break-after: avoid; }
+}
+
