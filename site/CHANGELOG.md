@@ -4,9 +4,11 @@ Versions follow the `vX.Y.Z` git tags on this repository. The site package versi
 `package.json`; every release records the deployed build so the live site can be traced back to a
 commit.
 
-## Unreleased — audit checkpoint, 2026-10-31
+## 3.0.0 — 2026-11-01 (deployed)
 
-Not deployed. Corrects public claims and conversion paths after an independent live/local audit:
+Deployed to `hasanabbassorathiya.tech` on 2026-11-01 (static bundle `index-Ckhl6Ve0.js`, 156 files;
+API file `enquiry-store.php`; profile migration applied). Corrects public claims and conversion paths
+after an independent live/local audit:
 
 - 6+ years pinned to the owner-confirmed value; 100K+ aggregate withdrawn; named Good2Go (50K+) and
   Nakheel (15K+) figures retained; `/apps` distinguishes 15 profiles from the 21-entry catalogue.
@@ -19,6 +21,15 @@ Not deployed. Corrects public claims and conversion paths after an independent l
 - OG card generator repaired; stale template deleted; docs, seeds, Postman and tests aligned.
 - Verified: 49 SSR/content + 76 browser tests, 86 PHP enquiry checks, 10 auth tests, axe 76/0,
   hydration 34/0, metadata 43/43, sitemap 42/42, Lighthouse 92–95/100/96/100.
+- Live after deploy: all 42 sitemap URLs 200; home H1 and 6+ years correct; no 100K, FlowCV, PMP or
+  MERN-first service copy; profile API serves `experience_years: 6` with no `users_reached`; enquiry
+  form and API both return a 32-hex reference with idempotent replay; `track.php` 204; GET 405.
+
+## 2.0.2 — 2026-10-31
+
+Audit checkpoint on the `audit/live-corrections-2026-10-31` branch, superseded by 3.0.0. Same
+corrections as above, verified locally but not yet deployed; the live site still served 7+, 100K+,
+MERN and the FlowCV résumé link at that point.
 
 ## 2.0.0 — 2026-10-30
 

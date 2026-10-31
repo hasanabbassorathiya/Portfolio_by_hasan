@@ -516,3 +516,28 @@ and **not deployed**.
 
 The live site still serves the old 7+, 100K+, MERN and native-iOS copy. Deployment and the profile
 migration remain blocked pending explicit owner approval; see `NEEDS_CANDIDATE_INPUT.md` §3.
+
+## 22. Live deployment — 1 November 2026
+
+The audit branch was deployed to `hasanabbassorathiya.tech` after explicit owner approval.
+
+- **Backups before any write** — `~/PortfolioBackups/2026-11-01/public_html/` (full 11 MB copy,
+  212-file manifest) and `db-u124239009_portfolio.sql` (310,804 bytes, 52 tables, SHA-256
+  `9f5c01ba…ec4d96f`).
+- **Static bundle** — 156 files from `dist/` uploaded over FTPS, assets first and HTML last; 43 stale
+  hashed assets from earlier builds deleted. Entry bundle `assets/index-Ckhl6Ve0.js` (390,472 bytes).
+  `.htaccess` was byte-identical to live and was not rewritten.
+- **API** — only `api/enquiry-store.php` differed from live; it was uploaded alone. `api/config.php`
+  was never read, overwritten or committed.
+- **Database** — `api/migrate-2026-10-31-profile-corrections.sql` applied live: `users_reached`
+  deleted, `experience_years`/`headline`/`resume`/`sub` upserted, `stats_json` replaced. The public
+  profile API now returns the corrected rows with no 100K+ aggregate.
+- **Live verification** — `/`, `/resume`, `/privacy`, `/services`, `/apps`, `/work`, `/work/evlab`,
+  `/blog` return 200 with corrected copy; 42/42 sitemap URLs return 200; six widths (1440–320) show no
+  horizontal overflow; zero console errors; the GST clock renders real time; the six-option enquiry
+  form saved a live submission with a 32-hex reference and an idempotent replay; `track.php` returned
+  204 and `GET /api/enquiries.php` returned 405.
+- **Cleanup** — the two verification enquiries and their outbox rows were deleted (0 left); the
+  temporary `u124239009.deploy1` FTP account was deleted and its credentials removed locally.
+- **Still owner-blocked** — Cal.com URL, GA4 consent/measurement ID, SMTP for acknowledgement mail,
+  newsletter sending, referral URLs, and any DNS change.
