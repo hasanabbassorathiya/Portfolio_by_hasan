@@ -65,9 +65,11 @@ export function SiteHeader() {
           }`}
         >
           <Link to="/" className="flex items-center gap-2.5" aria-label="HS Hasan Abbas Sorathiya — home">
-            <span className="flex h-8 w-8 items-center justify-center rounded-[10px] bg-ink font-mono text-[10px] tracking-[0.08em] text-canvas">
-              HS{' '}
-            </span>
+            {/* Decorative "HS"; rendered via CSS so axe's visible-text check only sees the name. */}
+            <span
+              aria-hidden="true"
+              className="flex h-8 w-8 items-center justify-center rounded-[10px] bg-ink font-mono text-[10px] tracking-[0.08em] text-canvas before:content-['HS']"
+            />
             <span className="hidden text-[14px] font-medium tracking-[-0.01em] text-text sm:inline">
               Hasan Abbas Sorathiya
             </span>
