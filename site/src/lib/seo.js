@@ -116,7 +116,9 @@ export const personJsonLd = {
   sameAs: [
     'https://www.linkedin.com/in/hasanabbassorathiya/',
     'https://github.com/hasanabbassorathiya',
-    'https://www.instagram.com/hasanabbassorathiya',
+    'https://www.youtube.com/channel/UCSGwYKSUJb7sX4-BI12WB_Q',
+    'https://www.instagram.com/hasanabbassorathiya/',
+    'https://hasanabbassorathiya.medium.com/',
     'https://play.google.com/store/apps/dev?id=5895887615343030170',
     'https://apps.apple.com/us/developer/hasan-abbas-sorathiya/id1734376366',
   ],

@@ -2,18 +2,23 @@ import React from 'react';
 import { Link } from '../lib/router';
 import { useReveal } from '../lib/motion';
 import { trackCta, trackOutbound, trackResume } from '../lib/analytics';
-
-const channels = [
-  { label: 'Email', value: 'hasanabbassorathiya12@gmail.com', href: 'mailto:hasanabbassorathiya12@gmail.com' },
-  { label: 'LinkedIn', value: '/in/hasanabbassorathiya', href: 'https://www.linkedin.com/in/hasanabbassorathiya/' },
-  { label: 'GitHub', value: '@hasanabbassorathiya', href: 'https://github.com/hasanabbassorathiya' },
-  { label: 'Phone', value: '+971 58 960 2320', href: 'tel:+971589602320' },
-  { label: 'Résumé', value: 'hasanabbassorathiya.tech/resume', href: '/resume' },
-  { label: 'Support the work', value: 'buymeacoffee.com', href: 'https://buymeacoffee.com/hasanabbassorathiya' },
-];
+import { useProfile } from '../lib/live-content';
 
 export function Contact() {
+  const profile = useProfile();
   const { ref, style } = useReveal(0);
+  const channels = [
+    { label: 'Email', value: profile.email, href: `mailto:${profile.email}` },
+    { label: 'LinkedIn', value: '/in/hasanabbassorathiya', href: profile.linkedin },
+    { label: 'GitHub', value: '@hasanabbassorathiya', href: profile.github },
+    { label: 'YouTube', value: 'Watch the channel', href: profile.youtube },
+    { label: 'Instagram', value: '@hasanabbassorathiya', href: profile.instagram },
+    { label: 'Medium', value: 'hasanabbassorathiya.medium.com', href: profile.medium },
+    { label: 'Certificate', value: 'Udemy certificate (PDF)', href: profile.certificate },
+    { label: 'Phone', value: profile.phone, href: `tel:${(profile.phone || '').replace(/[^+\d]/g, '')}` },
+    { label: 'Résumé', value: 'hasanabbassorathiya.tech/resume', href: '/resume' },
+    { label: 'Support the work', value: 'buymeacoffee.com', href: 'https://buymeacoffee.com/hasanabbassorathiya' },
+  ].filter((channel) => channel.href);
   return (
     <section id="contact" className="mx-auto max-w-[1360px] px-[clamp(1.25rem,5vw,4rem)] py-[clamp(5rem,12vw,9rem)]">
       <div ref={ref} style={style} className="grid gap-12 lg:grid-cols-[1.15fr_0.85fr] lg:gap-20">

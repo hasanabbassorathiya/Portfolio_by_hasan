@@ -1,19 +1,24 @@
 import React from 'react';
 import { Link } from '../lib/router';
 import { trackCta, trackOutbound } from '../lib/analytics';
-
-const profiles = [
-  ['LinkedIn', 'https://www.linkedin.com/in/hasanabbassorathiya/'],
-  ['GitHub', 'https://github.com/hasanabbassorathiya'],
-];
-
-const elsewhere = [
-  ['Résumé', '/resume'],
-  ['Instagram', 'https://www.instagram.com/hasanabbassorathiya'],
-  ['Buy me a coffee', 'https://buymeacoffee.com/hasanabbassorathiya'],
-];
+import { useProfile } from '../lib/live-content';
 
 export function SiteFooter() {
+  const profile = useProfile();
+  const profiles = [
+    ['LinkedIn', profile.linkedin],
+    ['GitHub', profile.github],
+  ].filter(([, href]) => href);
+
+  const elsewhere = [
+    ['Résumé', '/resume'],
+    ['YouTube', profile.youtube],
+    ['Instagram', profile.instagram],
+    ['Medium', profile.medium],
+    ['Certificate', profile.certificate],
+    ['Buy me a coffee', 'https://buymeacoffee.com/hasanabbassorathiya'],
+  ].filter(([, href]) => href);
+
   return (
     <footer className="border-t border-band-fg/15 bg-band text-band-fg print:hidden">
       <div className="mx-auto max-w-[1180px] px-5 pb-7 pt-12">
@@ -26,7 +31,7 @@ export function SiteFooter() {
           </div>
           <div className="flex shrink-0 flex-wrap items-center gap-5">
             <a
-              href="mailto:hasanabbassorathiya12@gmail.com"
+              href={`mailto:${profile.email}`}
               onClick={() => trackCta('email', 'footer')}
               className="inline-flex min-h-12 items-center rounded-full bg-accent-solid px-6 text-sm font-medium text-on-accent transition-colors hover:bg-accent-solid/90"
             >

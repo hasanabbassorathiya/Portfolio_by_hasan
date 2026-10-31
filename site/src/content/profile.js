@@ -18,6 +18,10 @@ export const profile = {
   email: 'hasanabbassorathiya12@gmail.com',
   linkedin: 'https://www.linkedin.com/in/hasanabbassorathiya/',
   github: 'https://github.com/hasanabbassorathiya',
+  youtube: 'https://www.youtube.com/channel/UCSGwYKSUJb7sX4-BI12WB_Q',
+  instagram: 'https://www.instagram.com/hasanabbassorathiya/',
+  medium: 'https://hasanabbassorathiya.medium.com/',
+  certificate: 'https://udemy-certificate.s3.amazonaws.com/pdf/UC-d1d229bb-81e1-46bf-b8cd-123655f406cc.pdf',
   footnote: 'Ex-Chalhoub Group · Mobile Engineering Lead',
   education: 'BSc IT, University of Mumbai',
 };
