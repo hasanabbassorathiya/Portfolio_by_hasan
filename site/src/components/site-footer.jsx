@@ -19,6 +19,15 @@ export function SiteFooter() {
     ['Buy me a coffee', 'https://buymeacoffee.com/hasanabbassorathiya'],
   ].filter(([, href]) => href);
 
+  const stack = [
+    ['React', 'https://react.dev'],
+    ['Vite', 'https://vite.dev'],
+    ['Tailwind CSS', 'https://tailwindcss.com'],
+    ['PHP', 'https://www.php.net'],
+    ['MySQL', 'https://www.mysql.com'],
+    ['Directus', 'https://directus.io'],
+  ];
+
   return (
     <footer className="border-t border-band-fg/15 bg-band text-band-fg print:hidden">
       <div className="mx-auto max-w-[1180px] px-5 pb-7 pt-12">
@@ -68,6 +77,21 @@ export function SiteFooter() {
               );
             })}
           </div>
+        </div>
+        <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-1 text-xs text-band-fg/70">
+          <span className="font-mono text-[10px] uppercase tracking-[0.12em]">Built with</span>
+          {stack.map(([label, href]) => (
+            <a
+              key={label}
+              href={href}
+              target="_blank"
+              rel="noreferrer"
+              onClick={() => trackOutbound(label, href)}
+              className="inline-flex min-h-11 items-center hover:text-band-fg"
+            >
+              {label}
+            </a>
+          ))}
         </div>
       </div>
     </footer>
