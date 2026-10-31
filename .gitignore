@@ -102,4 +102,6 @@ site/dist/
 site/deploy-public_html.zip
 site/deploy-directus.zip
 site/evidence/
+site/reports/
+site/.lighthouseci/
 site/vite.config.js.timestamp-*.mjs

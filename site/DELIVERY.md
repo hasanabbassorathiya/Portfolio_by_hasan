@@ -180,6 +180,20 @@ Honest variance note: simulated Lighthouse LCP is bimodal on this machine (0.9 s
 
 Remaining Lighthouse notes: best practices stays at 96 because the static harness has no PHP API, so the client's three content fetches log 404s; the production build serves those from `api/index.php`. Real-device measurement and screen-reader testing remain pre-launch tasks.
 
+### Real-host measurement (2026-10-31)
+
+The live site (`https://hasanabbassorathiya.tech`, bundle `assets/index-Ciw2u65_.js`) was measured with Lighthouse 12.8.2 on Chrome 156 attached to a real browser. A fresh headless Lighthouse run is refused with 403 by the Hostinger CDN's `hcdn` browser check, so the run primed that challenge cookie in a debuggable Chrome and attached with `--port=9333 --disable-storage-reset`. Raw JSON: `site/evidence/2026-10-31/lighthouse/` (index in `summary.json`).
+
+| Route | Form | Perf | A11y | BP | SEO | FCP | LCP | TBT | CLS |
+|---|---|---|---|---|---|---|---|---|---|
+| `/` run 1 | mobile | 99 | 100 | 96 | 100 | 0.9 s | 1.0 s | 100 ms | 0 |
+| `/` run 2 | mobile | 100 | 100 | 96 | 100 | 1.0 s | 1.1 s | 60 ms | 0.001 |
+| `/` | desktop | 100 | 100 | 96 | 100 | 0.3 s | 0.3 s | 0 ms | 0 |
+| `/services` | mobile | 100 | 100 | 96 | 100 | 0.9 s | 1.0 s | 20 ms | 0 |
+| `/resume` | desktop | 100 | 100 | 96 | 100 | 0.3 s | 0.3 s | 0 ms | 0 |
+
+Live scores match the harness. Best practices is 96 on every live route because the deployed `api/` is a stale snapshot: `GET /api/index.php?entity=settings` returns 400 and `GET /api/track.php` returns 404, and those failed fetches are the only console errors. The page degrades to seed content, but analytics does not record until the current `api/*.php` and the `v2-schema.sql` tables are deployed (owner approval; `config.php` is never uploaded). `uses-long-cache-ttl` flags four unhashed images at a 7-day TTL; that is deliberate because CMS media filenames are stable and a longer TTL would pin replaced icons for returning visitors. The `hcdn` check is also why automated monitors should expect a challenge instead of a direct HTML response; if real visitors report the interstitial, review the CDN bot-protection setting in hPanel.
+
 INP is a field metric and no CrUX/Real User Monitoring data exists before launch, so no INP number is claimed here. The lab proxy is Total Blocking Time: 0 ms in both recorded runs, and the hydration sweep drives client-side navigation and a theme toggle without long tasks. Real INP becomes measurable in Search Console/CrUX after deployment.
 
 axe-core 4.14.0 sweep (`npm run a11y`, 2026-10-29): 16 routes × 1440/390 × light/dark = 64 checks against the WCAG 2.0/2.1/2.2 A+AA tags. **0 violations**, and the same run asserts a single `h1` plus no skipped heading levels inside `main` (0 issues in 64 checks). Raw results: `site/evidence/2026-10-29/a11y.json`. The first run surfaced 70 serious violations, all fixed at the source:
@@ -399,6 +413,8 @@ Node suites are run from `site/` because `resume.test.mjs` resolves `public/` an
 | Store rosters | Playwright on the public Play developer page; `itunes.apple.com/lookup` for artist `1734376366` | Play: 5 apps; App Store: 4 apps; all match `apps.js` |
 | Public profile and store links | `curl -L` against every LinkedIn, GitHub, FlowCV, pub.dev, BuyMeACoffee, App Store and Play link in `apps.js` and the contact section | 19/19 returned 200 on 2026-10-29; the site's own Résumé links now point at `/resume` instead of FlowCV |
 | Lighthouse (mobile, simulated) | `npx lighthouse http://127.0.0.1:8099/ …`, two consecutive clean runs | Performance 100, Accessibility 100, Best practices 96, SEO 100; FCP 0.9 s, LCP 0.9 s, TBT 0 ms, CLS 0.001. Observed trace FCP=LCP ≈0.12–0.15 s; CDP-throttled LCP = `h1` at 1.09–1.17 s. Under CPU contention one run scored 95/TBT 250 ms; simulated LCP occasionally reports ~3.1 s (Lantern font modelling) with identical trace values. Best practices 96 is the harness's API 404s |
+| Lighthouse (live host, 2026-10-31) | Lighthouse 12.8.2/Chrome 156 attached to a real Chrome with a primed `hcdn` cookie (`--port=9333 --disable-storage-reset`); a fresh headless run is 403'd by the Hostinger CDN | `/` mobile 99/100/96/100 then 100/100/96/100; `/` desktop 100/100/96/100; `/services` mobile 100/100/96/100; `/resume` desktop 100/100/96/100; FCP 0.3–1.0 s, LCP 0.3–1.1 s, TBT 0–100 ms, CLS ≤0.001. Best practices 96 is the stale live `api/` (`settings` 400, `track.php` 404); raw JSON in `site/evidence/2026-10-31/lighthouse/` |
+| Lighthouse CI (new) | `npx @lhci/cli@0.14 autorun` from `site/`, the same command as `.github/workflows/site-ci.yml` | 3 URLs × 2 runs: performance 92–95, accessibility 100, SEO 100; budgets 0.85 / 0.95 / 0.90. The 0.85 performance floor covers the plain `serve` harness (no CDN HTTP/2; Lantern's font model lands at 2.7–3.1 s LCP, while the live host measures 0.3–1.1 s). Reports in `site/reports/lighthouse/` (gitignored) and uploaded as a workflow artifact |
 | Deployment package | `cp .htaccess dist/ && zip -qr deploy-public_html.zip .` from `dist/` | 138 files, 7,126,982 bytes uncompressed, 5,678,327 bytes zipped, SHA-256 `bbc307a1be60d9319944bdb418a74aa6bd20fcb1be7bb33b46d23e7361f1bedf`; built from a minified `npm run build` (single entry chunk `index-aK233QuH.js`, 358,966 bytes, plus per-route lazy chunks); `unzip` into a temp directory and `diff -r` against `dist/` reports no differences; `index.html` references only that entry; includes `.htaccess`, the `/privacy` and `/resume` shells and the résumé PDF; no `api/`, `admin/` or `config.php` inside |
 
 Every result above was re-run against the final package (`deploy-public_html.zip`, SHA-256 `bbc307a1…`) after the BlankSpace and BULB VPN catalogue additions, the Petassy source-CTA removal and the regenerated CMS seed: Node checks 119/119 (app catalogue 29, live content 21, content/services/contact/résumé 41, interaction QA 6, SEO browser 4, site browser 14, prerender/build 4), PHP 195/195 enquiry checks against a disposable MariaDB socket plus 10/10 auth checks, CMS smoke PASS (dashboard, editors, subscribers, API, intake 201, CSRF update 303, newsletter 201 + token unsubscribe), hydration 30/30 (LCP 56–160 ms; slowest is the home hero image), axe 64 checks / 0 violations, the sitemap crawl returned 39/39, and Lighthouse re-measured 100/100/96/100 on the packaged home route (FCP=LCP 0.9 s, TBT 0 ms, CLS 0.001). The 50 six-width captures cover the same eight routes, none of which this pass changed. `index.html` loads a single entry script; no `hero-`/`reel-` chunks are emitted. The prerender suite rebuilt `dist/`; a fresh minified rebuild afterwards was byte-identical in content to the packaged zip (the zip hash differs only by embedded timestamps).
@@ -429,7 +445,7 @@ performed on the owner's behalf.
 | 12 | Four-week content calendar | §14 | Done |
 | 13 | SEO and analytics report | §8, `llms.txt`, JSON-LD, sitemap | Done; GA4 pending |
 | 14 | Playwright screenshots and test results | `evidence/2026-10-29/`, §10, §18 | Done |
-| 15 | Performance and accessibility findings | §9, Lighthouse before/after | Done; real host pending |
+| 15 | Performance and accessibility findings | §9, Lighthouse before/after, real-host run 2026-10-31 | Done; real device pending |
 | 16 | Security and deployment checklist | §11, `LAUNCH_CHECKLIST.md`, `.htaccess` | Done |
 | 17 | Backup and rollback instructions | §12 | Done |
 | 18 | Modified files and architecture decisions | §16 | Done |
