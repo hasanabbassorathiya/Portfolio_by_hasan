@@ -539,5 +539,14 @@ The audit branch was deployed to `hasanabbassorathiya.tech` after explicit owner
   204 and `GET /api/enquiries.php` returned 405.
 - **Cleanup** — the two verification enquiries and their outbox rows were deleted (0 left); the
   temporary `u124239009.deploy1` FTP account was deleted and its credentials removed locally.
-- **Still owner-blocked** — Cal.com URL, GA4 consent/measurement ID, SMTP for acknowledgement mail,
-  newsletter sending, referral URLs, and any DNS change.
+- **IndexNow** — a 32-hex key (`c0947a3c…`) was generated, written to `settings.indexnow_key`
+  (`is_public=1`) and published as `/<key>.txt` at the live docroot, verified over HTTPS (200, body
+  equals key). All 42 sitemap URLs were submitted to `https://api.indexnow.org/indexnow` → 202
+  Accepted. Evidence: `evidence/2026-11-01/live/indexnow-submission.txt`. The admin UI's IndexNow
+  button remains the supported path; this run configured the same three artefacts directly because
+  the admin session is owner-held.
+- **Hosting note** — the live docroot is `/domains/hasanabbassorathiya.tech/public_html/`; the
+  account-home `/public_html` is a stale copy and is not served.
+- **Still owner-blocked** — Cal.com URL, GA4 consent/measurement ID, Google Search Console token,
+  Discord invite, SMTP for acknowledgement mail, newsletter sending, referral URLs, and any DNS
+  change.

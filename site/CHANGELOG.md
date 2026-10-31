@@ -24,6 +24,8 @@ after an independent live/local audit:
 - Live after deploy: all 42 sitemap URLs 200; home H1 and 6+ years correct; no 100K, FlowCV, PMP or
   MERN-first service copy; profile API serves `experience_years: 6` with no `users_reached`; enquiry
   form and API both return a 32-hex reference with idempotent replay; `track.php` 204; GET 405.
+- Server-side config after deploy: IndexNow key stored in `settings`, published at `/<key>.txt`
+  (200), all 42 sitemap URLs submitted to `api.indexnow.org` (202 Accepted).
 
 ## 2.0.2 — 2026-10-31
 
