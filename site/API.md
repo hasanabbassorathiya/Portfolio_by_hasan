@@ -269,7 +269,7 @@ Strict, write-only intake. No lookup, no email sending in the request path.
 {
   "name": "Sara Ahmed",
   "email": "sara@example.com",
-  "type": "App build",
+  "type": "New application",
   "message": "We need a Flutter + FastAPI app for field inspections…",
   "website": "",
   "consent": true,
@@ -281,7 +281,7 @@ Strict, write-only intake. No lookup, no email sending in the request path.
 | --- | --- |
 | `name` | 1–120 chars |
 | `email` | valid address, ≤190 chars |
-| `type` | one of `App build`, `Embedded engineer`, `AI automation / integration`, `Full-stack / MERN`, `UI/UX`, `Advisory / audit`, `Full-time role`, `Something else` |
+| `type` | one of `Employment`, `New application`, `Existing improvement`, `AI integration`, `Technical consultation`, `Other` |
 | `message` | 20–10 000 chars |
 | `website` | honeypot — must be `""` |
 | `consent` | must be exactly `true` |

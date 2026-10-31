@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from '../lib/router';
 import { useApps, useProfile } from '../lib/live-content';
 import { interpolate, platformLine, tickerLine, useSiteMetrics } from '../lib/site-metrics';
 import { trackCta, trackOutbound, trackResume } from '../lib/analytics';
@@ -59,7 +60,7 @@ const socials = [
     ),
   },
   {
-    label: 'Certificate',
+    label: 'Udemy certificate',
     key: 'certificate',
     icon: (
       <>
@@ -82,8 +83,8 @@ const socials = [
 ];
 
 const platforms = [
-  { label: 'Native iOS' },
-  { label: 'Native Android' },
+  { label: 'iOS delivery' },
+  { label: 'Android delivery' },
   { label: 'Flutter', primary: true },
   { label: 'AI systems' },
 ];
@@ -126,7 +127,7 @@ export function Hero() {
               id="hero-title"
               className="rise rise-1 max-w-[13ch] font-serif text-[clamp(2.85rem,5.8vw,5.35rem)] font-normal leading-[0.97] tracking-[-0.02em] text-text"
             >
-              I build <em className="italic text-accent">mobile apps</em> and AI systems that{' '}
+              I build <em className="italic text-accent">Flutter apps</em> and AI systems that{' '}
               <em className="italic text-hl-a">survive production</em>.
             </h1>
 
@@ -166,6 +167,14 @@ export function Hero() {
                 See selected work
                 <Arrow />
               </a>
+              <Link
+                to="/resume"
+                onClick={() => trackResume('hero-cta')}
+                className="inline-flex items-center gap-2 py-2.5 text-sm font-medium text-text-muted transition-colors duration-300 hover:text-text"
+              >
+                Hiring? Explore my experience
+                <Arrow />
+              </Link>
             </div>
 
             <div className="rise rise-4 mt-10 flex flex-wrap items-center justify-between gap-5 border-t border-ink/10 pt-5">

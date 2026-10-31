@@ -27,6 +27,29 @@ export const apps = [
     ],
     story:
       'Most religious apps treat Gujarati as a translation afterthought. I built Duas and Aamal around the opposite assumption: Gujarati-speaking families should get a first-class experience, with Arabic text rendered correctly and prayer times calculated properly rather than approximated. The content pipeline runs through a small custom CMS (duas-crm), so updates ship without an app release. Five languages, offline access, and a 4.9-star rating on Google Play came from listening to the community that uses it daily.',
+    decisions: [
+      {
+        title: 'Gujarati-first content model, not a translation layer',
+        rationale:
+          'Content is authored and structured per language with Arabic as the canonical text, so Gujarati, Urdu, Swahili and Persian are real editions rather than machine overlays.',
+        tradeoff:
+          'Every content update needs editorial workflow per language, and offline bundles are larger.',
+      },
+      {
+        title: 'Offline-first delivery with a custom CMS',
+        rationale:
+          'The app is used in daily practice, often without reliable connectivity. Content ships with the app and updates through duas-crm without an app-store release.',
+        tradeoff:
+          'Sync, versioning and bundle size become first-class engineering problems.',
+      },
+      {
+        title: 'Calculated Jafari prayer times with moon-sighting adjustment',
+        rationale:
+          'Fixed timestamps would have been simpler but wrong for the community this app serves. The calculation follows Jafari methodology and exposes how the result was derived.',
+        tradeoff:
+          'Domain-specific calculations need their own test fixtures and review, not just UI testing.',
+      },
+    ],
     metrics: [
       ['4.9★', 'Google Play rating'],
       ['1,058', 'Play reviews'],
@@ -94,6 +117,29 @@ export const apps = [
     ],
     story:
       'IPTV is a hostile environment: providers change formats, streams stall, and users expect television-grade reliability. I built Lumio TV around a tolerant parser, explicit playback states, and a remote-first TV interface, then reused the same core for mobile and web. The interesting engineering was not the player — it was making failure legible so users know whether the network, the provider, or the stream is the problem.',
+    decisions: [
+      {
+        title: 'A tolerant parser for M3U and Xtream differences',
+        rationale:
+          'Providers publish inconsistent playlists and API responses. Parsing was isolated from playback and permissive where the format allows, so one provider quirk does not break the whole catalogue.',
+        tradeoff:
+          'More fixtures and edge cases to maintain, and some invalid input is accepted by design.',
+      },
+      {
+        title: 'Explicit playback states instead of silent retries',
+        rationale:
+          'Users need to know whether the network, provider or stream failed. Buffering, retrying, ended and error states are distinct and visible rather than collapsed into a spinner.',
+        tradeoff:
+          'More UI states to design and test on every platform.',
+      },
+      {
+        title: 'One shared Flutter core with a TV-first interaction layer',
+        rationale:
+          'Mobile, web and Android TV reuse the same catalogue and playback core, while focus navigation and remote input stay platform-specific.',
+        tradeoff:
+          'Each platform still needs its own interaction testing; sharing code does not share the remote control.',
+      },
+    ],
     metrics: [
       ['4', 'Platforms'],
       ['M3U + Xtream', 'Provider formats'],

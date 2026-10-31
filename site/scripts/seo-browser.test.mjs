@@ -36,13 +36,30 @@ test('Apache serves readable services and contact links with JavaScript disabled
   const page = await context.newPage();
   const response = await page.goto(`${apache}/services/full-stack-api-development`);
   assert.equal(response.status(), 200);
-  assert.ok(await page.getByRole('heading', { level: 1, name: 'MERN & full-stack API development' }).isVisible());
+  assert.ok(await page.getByRole('heading', { level: 1, name: 'Backend, API & full-stack integrations' }).isVisible());
   await page.getByRole('link', { name: 'Discuss your project', exact: true }).click();
   const email = page.locator('#contact').getByRole('link', { name: 'Email me', exact: true });
   assert.ok(await email.isVisible());
   assert.equal(await email.getAttribute('href'), 'mailto:hasanabbassorathiya12@gmail.com');
   assert.equal(await page.locator('form').filter({ visible: true }).count(), 0);
   assert.equal(await page.getByRole('heading', { level: 1 }).count(), 1);
+});
+
+test('Apache keeps a direct email fallback when JavaScript is disabled', async (t) => {
+  const context = await browser.newContext({ javaScriptEnabled: false, viewport: { width: 390, height: 844 } });
+  t.after(() => context.close());
+  const page = await context.newPage();
+  await page.goto(`${apache}/`);
+  const fallback = page.locator('#contact noscript');
+  assert.ok(await fallback.isVisible());
+  assert.match(await fallback.innerText(), /JavaScript is off/);
+  const fallbackEmail = fallback.getByRole('link', { name: 'hasanabbassorathiya12@gmail.com' });
+  assert.ok(await fallbackEmail.isVisible());
+  assert.equal(await fallbackEmail.getAttribute('href'), 'mailto:hasanabbassorathiya12@gmail.com');
+  assert.equal(await page.locator('#contact form').isVisible(), false);
+  const directEmail = page.locator('#contact').getByRole('link', { name: 'Email me', exact: true });
+  assert.ok(await directEmail.isVisible());
+  assert.equal(await directEmail.getAttribute('href'), 'mailto:hasanabbassorathiya12@gmail.com');
 });
 
 test('Apache returns genuine 404 status for unknown static routes and missing assets', async (t) => {

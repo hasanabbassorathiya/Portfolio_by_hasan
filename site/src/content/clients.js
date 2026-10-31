@@ -24,6 +24,29 @@ export const clients = [
     ],
     outcome:
       'Mobile shipped as one platform instead of three parallel apps: shared architecture, shared components, and a release process the wider team could run. Ownership covered the full lifecycle — planning, development, testing, store releases, and production support — through the end of the engagement in January 2026.',
+    decisions: [
+      {
+        title: 'One Flutter codebase for rentals, leasing and marketplace',
+        rationale:
+          'All three models share accounts, payments and authentication, so separate apps would have tripled release overhead and split the customer record. The product shipped as one app with modular boundaries instead.',
+        tradeoff:
+          'More feature-flag and navigation discipline up front, and a shared release train for every business unit.',
+      },
+      {
+        title: 'Clean Architecture with Riverpod instead of a lighter state layer',
+        rationale:
+          'Chalhoub Group standards and a multi-team delivery expected testable domain logic, clear dependency boundaries and components other engineers could reuse.',
+        tradeoff:
+          'More structure than a small app needs, and onboarding has to explain the boundaries, not just the screens.',
+      },
+      {
+        title: 'Owned CI/CD and release management, not a handoff',
+        rationale:
+          'Codemagic pipelines, store submission and production support stayed with mobile engineering, so release quality and incident response had one owner.',
+        tradeoff:
+          'Pipeline maintenance and on-call responsibility stayed on the mobile side as well.',
+      },
+    ],
     stack: ['Flutter', 'Dart', 'Clean Architecture', 'Riverpod', 'REST APIs', 'Codemagic', 'iOS', 'Android'],
     facts: [
       ['Engagement', 'Jul 2023 — Jan 2026'],
@@ -60,6 +83,29 @@ export const clients = [
     ],
     outcome:
       'The product reached 50,000+ users across New Zealand, and the architecture became the base the team kept extending rather than rewriting. Releases stayed predictable on both platforms for the life of the engagement.',
+    decisions: [
+      {
+        title: 'Clean Architecture and SOLID boundaries from the first release',
+        rationale:
+          'Lending rules, eligibility checks and identity requirements change with regulation and product policy. Keeping domain logic away from UI code made those changes local instead of app-wide.',
+        tradeoff:
+          'More files and interfaces than a screen-first build, and the team had to agree on the boundaries.',
+      },
+      {
+        title: 'Authentication and account access treated as core journeys',
+        rationale:
+          'Trust is won or lost in the first minutes of a lending product. Errors, retries and session expiry received as much design attention as the happy path.',
+        tradeoff:
+          'Closer coordination with backend and compliance, and slower iteration on those flows.',
+      },
+      {
+        title: 'Own both store pipelines through production',
+        rationale:
+          'Shipping Android and iOS ourselves kept release timing and rollback decisions with the team that wrote the code.',
+        tradeoff:
+          'Release engineering and store review work never sat with QA or a separate release team.',
+      },
+    ],
     stack: ['Flutter', 'Dart', 'Clean Architecture', 'SOLID', 'REST APIs', 'Push notifications', 'iOS', 'Android'],
     facts: [
       ['Engagement', 'Aug 2019 — Mar 2021'],

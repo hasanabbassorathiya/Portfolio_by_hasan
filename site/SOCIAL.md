@@ -13,13 +13,13 @@ https://hasanabbassorathiya.tech/blog/<slug>?utm_source=linkedin&utm_medium=soci
 
 ### A. Hiring managers and recruiters
 
-> Seven years of mobile work, and my portfolio was still a PDF and a list of logos.
+> Six-plus years of mobile work, and my portfolio was still a PDF and a list of logos.
 >
 > So I rebuilt it as a system: the apps, the numbers, the architecture decisions, the essays. One place.
 >
-> - 16 apps shipped across iOS, Android, web, and Android TV
-> - 100K+ users, including a 4.6★ prayer app and a TV-first IPTV player
-> - 7+ years, most recently leading mobile delivery for an electric mobility platform in Dubai
+> - 15 app profiles across iOS, Android, and Android TV
+> - 50,000+ users on a lending platform in New Zealand, 15K+ first-month downloads for a marina app, and a 4.9★ prayer app
+> - 6+ years, most recently leading mobile delivery for an electric mobility platform in Dubai
 >
 > I am open to senior or lead Flutter and AI engineering roles — Dubai-based, remote-friendly, available immediately.
 >
@@ -41,14 +41,14 @@ https://hasanabbassorathiya.tech/blog/<slug>?utm_source=linkedin&utm_medium=soci
 
 > I am not a Google Developer Expert. This site is the work I am putting in to become one.
 >
-> Eight essays from production, not tutorials:
+> Nine essays from production, not tutorials:
 >
 > - Clean Architecture that survives team changes
 > - Riverpod patterns I use — and three I avoid
 > - RAG that survives real users
 > - Localization lessons from a 4.6★ app
 >
-> Plus 16 shipped apps and the decisions behind them.
+> Plus 15 app profiles and the decisions behind them.
 >
 > If you are on the same path, the writing is free and the RSS feed is there:
 > https://hasanabbassorathiya.tech/blog?utm_source=linkedin&utm_medium=social&utm_campaign=site-launch

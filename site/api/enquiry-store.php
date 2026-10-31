@@ -3,7 +3,7 @@ declare(strict_types=1);
 // Shared enquiry logic. No configuration loading, runtime DDL, or public data route.
 if (realpath($_SERVER['SCRIPT_FILENAME'] ?? '') === __FILE__) { http_response_code(404); exit; }
 
-const ENQUIRY_TYPES = ['App build', 'Embedded engineer', 'AI automation / integration', 'Full-stack / MERN', 'UI/UX', 'Advisory / audit', 'Full-time role', 'Something else'];
+const ENQUIRY_TYPES = ['Employment', 'New application', 'Existing improvement', 'AI integration', 'Technical consultation', 'Other'];
 const ENQUIRY_STATUSES = ['new', 'contacted', 'qualified', 'proposal', 'won', 'closed', 'spam'];
 const ENQUIRY_MAX_BODY = 20480;
 const ENQUIRY_MAX_ATTEMPTS = 5;

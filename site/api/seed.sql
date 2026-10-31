@@ -2,14 +2,15 @@
 -- Profile (key→value) — drives hero/contact from DB when wired to API.
 REPLACE INTO profile (k, v) VALUES
 ('name', 'Hasan Abbas Sorathiya'),
-('headline', 'Flutter / Mobile, Full-Stack (MERN, Node.js), and AI / GenAI engineering'),
+('headline', 'Flutter / Mobile, Backend & API integrations, and AI / GenAI engineering'),
 ('location', 'Dubai, UAE'),
 ('email', 'hasanabbassorathiya12@gmail.com'),
 ('linkedin', 'https://linkedin.com/in/hasanabbassorathiya'),
 ('resume', 'https://hasanabbassorathiya.tech/resume'),
 ('currently_building', 'Carvan-e-Hind v2 — community platform for the trust — and a handful of AI agents in private beta'),
 ('creed', 'Engineering excellence is not just about code; it is about the impact it creates.'),
-('stats_json', '[{"label":"Years Experience","value":6,"suffix":"+"},{"label":"Projects Delivered","value":14,"suffix":"+"},{"label":"Users Impacted","value":100,"suffix":"K+"},{"label":"Cost Savings","value":20,"prefix":"$","suffix":"K"}]');
+('experience_years', '6'),
+('stats_json', '[{"label":"Years Experience","value":6,"suffix":"+"},{"label":"App Profiles","value":15},{"label":"Client Engagements","value":3},{"label":"Good2Go Users","value":50,"suffix":"K+"}]');
 
 -- Featured projects
 REPLACE INTO projects (slug, title, category, year, client, role, description, stack, store_urls, is_featured, sort_order) VALUES

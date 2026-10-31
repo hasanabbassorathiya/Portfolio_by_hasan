@@ -1,8 +1,8 @@
 export const resume = {
-  updated: '2026-10-29',
+  updated: '2026-10-31',
   name: 'Hasan Abbas Sorathiya',
   title: 'Senior Software & AI Engineer',
-  subtitle: 'Mobile engineering · native iOS & Android · Flutter · AI integration & automation · full-stack (MERN)',
+  subtitle: 'Flutter & Dart · iOS and Android delivery · AI integration & automation · backend, API & full-stack integrations',
   location: 'Dubai, United Arab Emirates',
   email: 'hasanabbassorathiya12@gmail.com',
   phone: '+971 58 960 2320',
@@ -194,12 +194,9 @@ export const resume = {
     year: '2019',
     detail: 'Final project: AI-powered customer support chatbot (Python, TensorFlow, NLP).',
   },
-  certifications: [
-    'Google Flutter Developer Certification',
-    'AI & NLP Fundamentals Certification',
-    'Advanced Android Development Certification',
-    'Project Management Foundations (PMP)',
-    'Digital Marketing Strategy Certification',
-  ],
+  certificate: {
+    label: 'Udemy course certificate',
+    href: 'https://udemy-certificate.s3.amazonaws.com/pdf/UC-d1d229bb-81e1-46bf-b8cd-123655f406cc.pdf',
+  },
   languages: ['English', 'Hindi', 'Gujarati', 'Urdu'],
 };

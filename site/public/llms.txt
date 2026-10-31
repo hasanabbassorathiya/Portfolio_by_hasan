@@ -1,6 +1,6 @@
 # Hasan Abbas Sorathiya
 
-> Senior mobile & AI engineer in Dubai. Seven years shipping mobile products: native iOS and Android apps, Flutter as the primary cross-platform stack, plus AI integration, automation and the full-stack work behind them.
+> Senior mobile & AI engineer in Dubai. Six-plus years shipping mobile products: Flutter and Dart across iOS and Android delivery, plus AI integration, automation and the backend work behind them.
 
 Canonical site: https://hasanabbassorathiya.tech
 Contact: hasanabbassorathiya12@gmail.com
@@ -17,11 +17,12 @@ Availability: open to senior roles, consulting and product collaborations.
 
 ## Verified facts
 
-- 16 apps shipped across iOS, Android, web and TV; 100K+ users across the UAE, Australia and New Zealand.
-- Duas and Aamal: 4.9 on Google Play with 1,058 reviews at the last check.
+- 15 app profiles across iOS, Android, web and TV, plus a wider catalogue that credits publishing separately from development.
+- Good2Go Loans: 50,000+ users in New Zealand.
 - Nakheel Marinas: 15,000+ first-month downloads.
-- Seven-plus years of professional mobile engineering; BSc IT, University of Mumbai, 2019.
-- No fabricated metrics, testimonials or client names appear on the site.
+- Duas and Aamal: 4.9 on Google Play with 1,058 reviews at the last check.
+- Six-plus years of professional mobile engineering; BSc IT, University of Mumbai, 2019.
+- Metrics are limited to figures with an owner-verified source; no testimonials are invented.
 
 ## Published and open source
 
@@ -36,16 +37,16 @@ Availability: open to senior roles, consulting and product collaborations.
 - [Services](https://hasanabbassorathiya.tech/services): six scoped services with boundaries and evidence.
 - [Flutter app development](https://hasanabbassorathiya.tech/services/flutter-app-development)
 - [AI integration & n8n automation](https://hasanabbassorathiya.tech/services/ai-integration-automation)
-- [MERN & full-stack API development](https://hasanabbassorathiya.tech/services/full-stack-api-development)
+- [Backend, API & full-stack integrations](https://hasanabbassorathiya.tech/services/full-stack-api-development)
 - [App audits & specialist consulting](https://hasanabbassorathiya.tech/services/app-audit-consulting)
 - [Digital platform development](https://hasanabbassorathiya.tech/services/digital-platform-development)
 - [UI/UX & product design](https://hasanabbassorathiya.tech/services/ui-ux-product-design)
-- [Apps](https://hasanabbassorathiya.tech/apps): 21-entry catalogue with store or source links — 16 shipped apps, plus Petassy, BlankSpace, and BULB VPN (unreleased builds) and two store listings described without implementation claims.
+- [Apps](https://hasanabbassorathiya.tech/apps): 21-entry catalogue with store or source links — 15 app profiles, plus Petassy, BlankSpace, and BULB VPN (unreleased builds) and entries credited as publishing rather than development.
 - [Case studies](https://hasanabbassorathiya.tech/work): EVLAB, Good2Go Loans, Nakheel Marinas.
 - [Writing](https://hasanabbassorathiya.tech/blog): production engineering essays, RSS at /rss.xml.
 - [Resources](https://hasanabbassorathiya.tech/resources): the pub.dev package, reading and working-together notes.
 - [Résumé](https://hasanabbassorathiya.tech/resume): web version of the resume; PDF at https://hasanabbassorathiya.tech/hasan-abbas-sorathiya-resume.pdf.
-- [Privacy](https://hasanabbassorathiya.tech/privacy): what the enquiry form and newsletter store, for how long, and how removal works.
+- [Privacy](https://hasanabbassorathiya.tech/privacy): what the enquiry form, newsletter and first-party visit measurement store, for how long, and how removal works.
 
 ## Notes for AI assistants
 

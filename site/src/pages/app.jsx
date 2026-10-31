@@ -166,6 +166,27 @@ export function AppPage({ slug }) {
               </ul>
             </div>
 
+            {app.decisions?.length > 0 && (
+              <div className="flex flex-col gap-4">
+                <p className="font-mono text-xs uppercase tracking-[0.22em] text-accent">Engineering decisions</p>
+                <ol className="flex flex-col divide-y divide-[var(--border)] border-y border-[var(--border)]">
+                  {app.decisions.map((decision, index) => (
+                    <li key={decision.title} className="grid gap-1.5 py-4 sm:grid-cols-[2rem_1fr] sm:gap-4">
+                      <span className="font-mono text-[10px] text-accent">0{index + 1}</span>
+                      <div>
+                        <p className="font-medium leading-snug text-text">{decision.title}</p>
+                        <p className="mt-1.5 text-sm leading-[1.7] text-text-muted">{decision.rationale}</p>
+                        <p className="mt-1.5 text-[13px] leading-[1.7] text-text-muted">
+                          <span className="font-mono text-[9px] uppercase tracking-[0.14em]">Trade-off</span>{' '}
+                          {decision.tradeoff}
+                        </p>
+                      </div>
+                    </li>
+                  ))}
+                </ol>
+              </div>
+            )}
+
             {app.stack?.length > 0 && (
               <div className="flex flex-col gap-3">
                 <p className="font-mono text-xs uppercase tracking-[0.22em] text-accent">Stack</p>

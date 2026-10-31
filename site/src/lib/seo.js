@@ -5,7 +5,7 @@ export const SITE_URL = 'https://hasanabbassorathiya.tech';
 export const SITE_NAME = 'Hasan Abbas Sorathiya';
 const DEFAULT_TITLE = 'Hasan Abbas Sorathiya · Senior Software & AI Engineer';
 const DEFAULT_DESCRIPTION =
-  'Senior mobile & AI engineer in Dubai. Native iOS and Android, Flutter as my primary cross-platform stack, plus MERN full-stack, RAG and AI agents. Shipping production apps end to end.';
+  'Senior mobile & AI engineer in Dubai. Six-plus years shipping Flutter, iOS and Android products, backend and API integrations, plus RAG and AI agents. Built for production.';
 
 function upsertMeta(selector, attrs) {
   let el = document.head.querySelector(selector);
@@ -105,13 +105,6 @@ export const personJsonLd = {
     '@type': 'CollegeOrUniversity',
     name: 'University of Mumbai',
   },
-  hasCredential: [
-    'Google Flutter Developer Certification',
-    'AI & NLP Fundamentals Certification',
-    'Advanced Android Development Certification',
-    'Project Management Foundations (PMP)',
-    'Digital Marketing Strategy Certification',
-  ].map((name) => ({ '@type': 'EducationalOccupationalCredential', name })),
   knowsLanguage: ['English', 'Hindi', 'Gujarati', 'Urdu'],
   sameAs: [
     'https://www.linkedin.com/in/hasanabbassorathiya/',

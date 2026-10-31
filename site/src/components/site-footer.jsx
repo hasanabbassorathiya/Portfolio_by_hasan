@@ -15,7 +15,7 @@ export function SiteFooter() {
     ['YouTube', profile.youtube],
     ['Instagram', profile.instagram],
     ['Medium', profile.medium],
-    ['Certificate', profile.certificate],
+    ['Udemy certificate', profile.certificate],
     ['Buy me a coffee', 'https://buymeacoffee.com/hasanabbassorathiya'],
   ].filter(([, href]) => href);
 

@@ -182,5 +182,5 @@ export const trackCommunity = (target) => track('community_join', { target });
 // No name, email or message copy — only the selected enquiry type.
 export const trackEnquiry = (type) => track('enquiry_submit', {
   type,
-  category: type === 'Full-time role' ? 'recruitment' : 'project',
+  category: type === 'Employment' ? 'recruitment' : type === 'Technical consultation' ? 'consulting' : 'project',
 });

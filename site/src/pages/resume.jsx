@@ -201,7 +201,7 @@ export function ResumePage() {
             </ul>
           </Section>
 
-          <Section title="Education & certifications">
+          <Section title="Education & credentials">
             <div className="mt-2 grid gap-6 border-t border-[#16130f]/10 pt-4 sm:grid-cols-2">
               <div className="resume-block">
                 <h3 className="text-[13.5px] font-semibold">{resume.education.degree}</h3>
@@ -217,12 +217,16 @@ export function ResumePage() {
                 <p className="mt-1 text-[12.5px] text-[#16130f]/80">{resume.languages.join(' · ')}</p>
               </div>
               <div className="resume-block">
-                <h3 className="text-[13.5px] font-semibold">Certifications</h3>
-                <ul className="mt-1.5 list-disc space-y-1 pl-4 text-[12.5px] leading-[1.55] text-[#16130f]/75">
-                  {resume.certifications.map((certification) => (
-                    <li key={certification}>{certification}</li>
-                  ))}
-                </ul>
+                <h3 className="text-[13.5px] font-semibold">Verifiable credential</h3>
+                <p className="mt-1.5 text-[12.5px] leading-[1.55] text-[#16130f]/75">
+                  <ContactLink href={resume.certificate.href} external>
+                    {resume.certificate.label}
+                  </ContactLink>{' '}
+                  — certificate PDF issued on completion.
+                </p>
+                <p className="mt-2 text-[12px] leading-[1.55] text-[#16130f]/70">
+                  Only credentials with a checkable issuer link are listed.
+                </p>
               </div>
             </div>
           </Section>

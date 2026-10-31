@@ -26,7 +26,7 @@ Legend: ⬜ todo · ✅ done · N/A not applicable
 - ✅ Core Web Vitals budget (local harness, 2026-10-29): LCP 0.9 s, TBT 0 ms, CLS 0.001 under Lighthouse mobile simulated throttling, reproduced twice; CDP-throttled observation puts the real `h1` LCP at ~1.1 s; total home weight 414 KB (was 1.6 MB before webp art and bundle splitting); ⬜ field data re-check in Search Console after launch
 
 ## 3. Content & Conversion
-- ⬜ Hero one-liner matches positioning (AI/GenAI + MERN + Flutter)
+- ⬜ Hero one-liner matches positioning (Flutter & Dart + AI + backend/API integrations)
 - ✅ Every featured app: store deep-links, feature bullets, screenshots — all 24 external app/repo/store links return 200 (incl. the App Store developer page and Google Play publisher page, whose URLs in hasan.md were dead and got corrected)
 - ✅ Résumé lives on the site: `/resume` (web version, Person JSON-LD, sitemap + llms.txt) plus a 3-page A4 PDF generated from the same page by `npm run resume:pdf`; PDF opens over HTTPS, link annotations verified, `resume.test.mjs` green
 - ✅ Contact CTA (mailto + LinkedIn) on CTA section, hero, header, and footer

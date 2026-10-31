@@ -21,7 +21,7 @@ assert.match(
 );
 assert.match(html, /<title>Résumé · Hasan Abbas Sorathiya/, 'resume title is missing');
 assert.equal((html.match(/<h1\b/g) || []).length, 1, 'resume needs exactly one h1');
-assert.ok(html.includes('Updated 29 October 2026'), 'resume update date is missing');
+assert.ok(html.includes('Updated 31 October 2026'), 'resume update date is missing');
 assert.ok(html.includes('/hasan-abbas-sorathiya-resume.pdf'), 'resume PDF link is missing');
 assert.doesNotMatch(html, /flowcv\.com/, 'old FlowCV link should not appear in the resume shell');
 for (const role of resume.roles) {

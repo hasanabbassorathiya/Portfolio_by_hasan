@@ -20,7 +20,7 @@ function rejects(callable $fn, int $status, string $label): void {
     throw new RuntimeException('FAIL: ' . $label . ' was accepted');
 }
 function fixture(int $n = 1): array {
-    return ['name' => 'Test Person', 'email' => 'person@example.test', 'type' => 'App build',
+    return ['name' => 'Test Person', 'email' => 'person@example.test', 'type' => 'New application',
         'message' => 'Please discuss an application build.', 'website' => '', 'consent' => true,
         'requestId' => sprintf('12345678-1234-4234-8234-%012d', $n)];
 }
@@ -32,7 +32,7 @@ function request_headers(): array {
 
 try {
     check(validated(fixture())['name'] === 'Test Person', 'valid contract accepted');
-    foreach (['App build', 'Embedded engineer', 'AI automation / integration', 'Full-stack / MERN', 'UI/UX', 'Advisory / audit', 'Full-time role', 'Something else'] as $type) {
+    foreach (['Employment', 'New application', 'Existing improvement', 'AI integration', 'Technical consultation', 'Other'] as $type) {
         check(validated(array_replace(fixture(), ['type' => $type]))['type'] === $type, 'allowed type ' . $type);
     }
     foreach (['name', 'email', 'type', 'message', 'website', 'requestId'] as $field) {

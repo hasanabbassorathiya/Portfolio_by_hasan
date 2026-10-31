@@ -11,7 +11,7 @@ export function HomePage() {
   const metrics = useSiteMetrics();
   useSeo({
     path: '/',
-    description: `Senior mobile & AI engineer in Dubai. ${metrics.yearsLabel ? `${metrics.yearsLabel} years shipping` : 'Shipping'} iOS, Android and Flutter products${metrics.users ? ` used by ${metrics.users} people` : ''}, plus MERN full-stack, RAG and AI agents.`,
+    description: `Senior mobile & AI engineer in Dubai. ${metrics.yearsLabel ? `${metrics.yearsLabel} years shipping` : 'Shipping'} Flutter, iOS and Android products, backend integrations and AI systems — with named outcomes at Good2Go Loans and Nakheel Marinas.`,
     jsonLd: [
       personJsonLd,
       {

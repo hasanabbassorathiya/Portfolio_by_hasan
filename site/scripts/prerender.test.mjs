@@ -24,7 +24,7 @@ test('home, navigation and service content render without browser globals', asyn
   assert.match(html, /<header\b/);
   assert.match(html, /<main\b/);
   assert.match(html, /Ready to/);
-  assert.match(renderToStaticMarkup(React.createElement(ServicePage, { slug: 'full-stack-api-development' })), /MERN &amp; full-stack API development/);
+  assert.match(renderToStaticMarkup(React.createElement(ServicePage, { slug: 'full-stack-api-development' })), /Backend, API &amp; full-stack integrations/);
 });
 
 test('resources page renders the pub.dev package and only real links', async () => {
@@ -59,7 +59,8 @@ test('privacy notice matches what the enquiry form and newsletter actually store
   assert.equal((html.match(/<h1\b/g) || []).length, 1);
   assert.match(html, /What this site/);
   assert.match(html, /keyed hash of your IP/);
-  assert.match(html, /Google Analytics 4 with IP anonymisation/);
+  assert.match(html, /Google Analytics 4 is optional/);
+  assert.match(html, /IP anonymisation/);
   assert.match(html, /first-party cookies/);
   assert.match(html, /_ga/);
   assert.match(html, /unsubscribe link/);
@@ -77,7 +78,7 @@ test('build emits readable route bodies, real metadata, service sitemap and a no
     ['resources.html', /Useful things/],
     ['privacy.html', /What this site/],
     ['community.html', /A room for people who/],
-    ['_views/services/full-stack-api-development.html', /MERN &amp; full-stack API development/],
+    ['_views/services/full-stack-api-development.html', /Backend, API &amp; full-stack integrations/],
     ['_views/apps/hoda.html', /Hoda/],
     ['_views/work/good2go-loans.html', /Good2Go/],
     ['blog.html', /Notes/],

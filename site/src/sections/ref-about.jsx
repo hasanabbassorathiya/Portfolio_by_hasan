@@ -31,7 +31,7 @@ const channels = [
   ['Résumé', 'hasanabbassorathiya.tech/resume', '/resume'],
 ];
 
-const projectTypes = ['App build', 'Embedded engineer', 'AI automation / integration', 'Full-stack / MERN', 'UI/UX', 'Advisory / audit', 'Full-time role', 'Something else'];
+const projectTypes = ['Employment', 'New application', 'Existing improvement', 'AI integration', 'Technical consultation', 'Other'];
 const emptyEnquiry = { name: '', email: '', type: projectTypes[0], message: '', website: '', consent: false };
 const enquiryTimeoutMs = 15000;
 const uncertainEnquiry = 'We could not confirm whether your enquiry was saved. Retry without editing to safely check the same enquiry, or email me directly.';
@@ -50,7 +50,7 @@ export function About() {
   const facts = [
     ['Based in', profile.location],
     ['Experience', metrics.yearsLabel && `${metrics.yearsLabel} years`],
-    ['Apps shipped', metrics.appsCount > 0 && String(metrics.appsCount)],
+    ['App profiles', metrics.appsCount > 0 && String(metrics.appsCount)],
     ['Languages', 'English · Hindi · Gujarati · Urdu'],
     ['Education', profile.education],
     ['Availability', profile.availability_detail || profile.availability],
@@ -67,9 +67,10 @@ export function About() {
           <div className="mt-7 flex flex-col gap-5 text-[15px] leading-[1.8] text-text-muted">
             <p className="text-text">not just launch, forget, and rewrite a year later.</p>
             <p>
-              I&apos;m a senior software and AI engineer in Dubai. For the last {metrics.years} years I
-              have shipped mobile products across fintech, e-commerce, mobility, and community
-              platforms, reaching {metrics.users} users across the UAE, Australia, and New Zealand.
+              I&apos;m a senior software and AI engineer in Dubai. For more than {metrics.years} years
+              I have shipped mobile products across fintech, e-commerce, mobility, and community
+              platforms, with named outcomes such as Good2Go Loans reaching 50,000+ users in
+              New Zealand.
             </p>
             <p>
               Most recently I led mobile engineering at Chalhoub Group for EVLAB: architecture,
@@ -78,11 +79,11 @@ export function About() {
               {good2go ? ` for ${good2go.metric} users` : ''} in New Zealand.
             </p>
             <p>
-              Now I work independently across mobile products — native iOS and Android, with
-              Flutter as my primary cross-platform stack — plus MERN full-stack development, AI
-              integrations and automation. From product UI/UX to APIs and app audits, the focus is
-              useful software with clear ownership. I am also working toward Google Developer Expert
-              in Flutter through writing, talks, and open source.
+              Now I work independently across mobile products — iOS and Android delivery, with
+              Flutter as my primary cross-platform stack — plus backend, API and full-stack
+              integrations, AI systems and automation. From product UI/UX to APIs and app audits,
+              the focus is useful software with clear ownership. I am also working toward Google
+              Developer Expert in Flutter through writing, talks, and open source.
             </p>
             <p className="text-text/90">
               Open to senior and lead roles, consulting, and product collaborations.
@@ -249,7 +250,7 @@ export function WritingSection() {
 export function Contact() {
   const [form, setForm] = useState(emptyEnquiry);
   const [submission, setSubmission] = useState({ phase: 'idle' });
-  const [time, setTime] = useState('');
+  const [time, setTime] = useState(null);
   const attempt = useRef(null);
   const activeRequest = useRef(null);
   const pending = submission.phase === 'pending';
@@ -352,6 +353,14 @@ export function Contact() {
               Email me at <span className="break-all text-band-fg">hasanabbassorathiya12@gmail.com</span>
             </p>
             <p className="mt-2 text-sm text-band-fg/75">A new product, a team to join, or a system to improve. Let&apos;s talk.</p>
+            <Link
+              to="/resume"
+              onClick={() => trackResume('contact')}
+              className="mt-3 inline-flex items-center gap-2 text-sm font-medium text-band-fg underline decoration-band-fg/30 underline-offset-4 transition-colors hover:decoration-band-fg"
+            >
+              Hiring for a role? Explore my experience
+              <span aria-hidden="true">↗</span>
+            </Link>
           </div>
           <div className="flex shrink-0 flex-col items-start gap-2 md:items-end">
             <a
@@ -425,12 +434,25 @@ export function Contact() {
 
           <div className="mt-7 inline-flex w-fit items-center gap-2 rounded-full border border-band-fg/15 px-3.5 py-1.5 font-mono text-[9px] uppercase tracking-[0.14em] text-band-fg/55">
             <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" aria-hidden="true" />
-            Dubai · {time || '--:--'} GST · Available now
+            Dubai · {time ? `${time} GST` : 'GST (UTC+4)'} · Available now
           </div>
+
+          <noscript>
+            <p className="mt-7 max-w-[46ch] rounded-xl border border-band-fg/20 px-4 py-3 text-sm leading-relaxed text-band-fg/85">
+              JavaScript is off, so the enquiry form is hidden. Email{' '}
+              <a href="mailto:hasanabbassorathiya12@gmail.com" className="underline underline-offset-2">
+                hasanabbassorathiya12@gmail.com
+              </a>{' '}
+              directly and your message will reach the same inbox.
+            </p>
+          </noscript>
         </div>
 
         <form
           onSubmit={onSubmit}
+          action="mailto:hasanabbassorathiya12@gmail.com"
+          method="post"
+          encType="text/plain"
           aria-busy={pending}
           className="flex flex-col gap-4 rounded-[1.75rem] bg-canvas p-6 text-text ring-1 ring-band-fg/10 shadow-[0_40px_120px_-60px_rgba(0,0,0,0.8)] md:p-8"
         >

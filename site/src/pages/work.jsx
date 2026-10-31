@@ -12,14 +12,14 @@ export function WorkPage() {
   const metrics = useSiteMetrics();
   const stats = [
     [String(metrics.clientsCount), 'Client engagements'],
-    [String(metrics.appsCount), 'Apps shipped'],
-    [metrics.users, 'Users impacted'],
+    [String(metrics.appsCount), 'App profiles'],
+    [String(metrics.platforms.length), 'Platforms'],
     [metrics.yearsLabel, 'Years in production'],
   ].filter(([value]) => value);
   useSeo({
     title: 'Work · Hasan Abbas Sorathiya',
     description:
-      `Client engagements and shipped apps: EVLAB at Chalhoub Group, Good2Go Loans, Nakheel Marinas, and ${metrics.appsCount} production apps across ${metrics.platformsLabel}.`,
+      `Client engagements and app profiles: EVLAB at Chalhoub Group, Good2Go Loans, Nakheel Marinas, and ${metrics.appsCount} app profiles across ${metrics.platformsLabel}.`,
     path: '/work',
     type: 'website',
     image: '/og/work.png',
@@ -61,7 +61,7 @@ export function WorkPage() {
           <Kicker>Selected work · {metrics.rangeLabel}</Kicker>
           <div className="mt-7 grid gap-8 lg:grid-cols-[1.2fr_0.8fr] lg:items-end lg:gap-16">
             <h1 className="max-w-[24ch] font-serif text-[clamp(2.6rem,6.4vw,4.9rem)] leading-[0.98] tracking-[-0.02em] text-text">
-              Client platforms and shipped apps, with the{' '}
+              Client platforms and app profiles, with the{' '}
               <em className="italic text-accent">decisions</em> behind them.
             </h1>
             <p className="max-w-[48ch] text-[15px] leading-[1.78] text-text-muted">

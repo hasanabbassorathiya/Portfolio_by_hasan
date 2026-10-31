@@ -11,10 +11,10 @@ import { chromium } from 'playwright-core';
 const base = 'http://127.0.0.1:5173';
 const reference = '0123456789abcdef0123456789abcdef';
 const details = {
-  name: 'Enquiry Test', email: 'enquiry@example.test', type: 'App build',
+  name: 'Enquiry Test', email: 'enquiry@example.test', type: 'New application',
   message: 'Please help build an accessible mobile application.', website: '', consent: true,
 };
-const types = ['App build', 'Embedded engineer', 'AI automation / integration', 'Full-stack / MERN', 'UI/UX', 'Advisory / audit', 'Full-time role', 'Something else'];
+const types = ['Employment', 'New application', 'Existing improvement', 'AI integration', 'Technical consultation', 'Other'];
 let browser;
 before(async () => { browser = await chromium.launch({ channel: 'chrome', headless: true }); });
 after(async () => { await browser?.close(); });
@@ -147,21 +147,26 @@ test('201 durable success posts the exact contract and records success only afte
   assert.doesNotMatch(await form.getByRole('status').innerText(), /inbox|delivered|24 hours/i);
   const events = await formEvents(page);
   assert.equal(events.length, 1);
-  assert.deepEqual(events[0][2], { type: 'App build', category: 'project' });
+  assert.deepEqual(events[0][2], { type: 'New application', category: 'project' });
   assert.doesNotMatch(JSON.stringify(events[0][2]), /Enquiry Test|enquiry@example/i, 'No personal data in telemetry');
   await page.clock.fastForward(16000);
   assert.equal(await page.evaluate(() => window.__enquirySignals[0].aborted), false, 'Success clears its timeout');
 });
 
-test('a recruitment enquiry is measured separately from a client project enquiry', async (t) => {
-  const { page, form } = await contact(t);
-  await fill(page, { type: 'Full-time role' });
-  await submit(form);
-  await form.getByRole('status').filter({ hasText: reference }).waitFor();
-  const events = await formEvents(page);
-  assert.equal(events.length, 1);
-  assert.deepEqual(events[0][2], { type: 'Full-time role', category: 'recruitment' });
-});
+for (const [type, category] of [
+  ['Employment', 'recruitment'],
+  ['Technical consultation', 'consulting'],
+]) {
+  test(`${type} enquiries are measured separately from client project work`, async (t) => {
+    const { page, form } = await contact(t);
+    await fill(page, { type });
+    await submit(form);
+    await form.getByRole('status').filter({ hasText: reference }).waitFor();
+    const events = await formEvents(page);
+    assert.equal(events.length, 1);
+    assert.deepEqual(events[0][2], { type, category });
+  });
+}
 
 test('pending disables every field and synchronously guards duplicate submissions', async (t) => {
   let release;
@@ -331,7 +336,8 @@ test('Contact renders on the server without window/document or creating a reques
     const html = renderToStaticMarkup(React.createElement(Contact));
     assert.match(html, /id="contact-consent"/);
     assert.match(html, /mailto:hasanabbassorathiya12@gmail.com/);
-    assert.doesNotMatch(html, /Sending|Enquiry saved/);
+    assert.match(html, />Send message</);
+    assert.doesNotMatch(html, /aria-busy="true"|Enquiry saved/);
   } finally {
     if (original) Object.defineProperty(globalThis, 'crypto', original);
     else delete globalThis.crypto;

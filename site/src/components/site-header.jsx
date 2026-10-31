@@ -12,6 +12,7 @@ const links = [
   { label: 'Community', to: '/community' },
   { label: 'Writing', to: '/#writing' },
   { label: 'About', to: '/#about' },
+  { label: 'Résumé', to: '/resume' },
 ];
 
 export function SiteHeader() {

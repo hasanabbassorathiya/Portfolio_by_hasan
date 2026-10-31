@@ -35,9 +35,9 @@ test('visitors can follow the full-stack offer, navigate services, and return to
   const errors = [];
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto(base);
-  const link = page.locator('#services').getByRole('link', { name: /MERN & full-stack/ });
+  const link = page.locator('#services').getByRole('link', { name: /Backend, API & full-stack/ });
   await link.click();
-  await page.getByRole('heading', { level: 1, name: 'MERN & full-stack API development' }).waitFor();
+  await page.getByRole('heading', { level: 1, name: 'Backend, API & full-stack integrations' }).waitFor();
   assert.equal(new URL(page.url()).pathname, '/services/full-stack-api-development');
   await page.getByRole('link', { name: 'All services', exact: true }).click();
   for (const service of services) {

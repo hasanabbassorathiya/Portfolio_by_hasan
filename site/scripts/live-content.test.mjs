@@ -61,7 +61,7 @@ for (const width of [390, 1440]) {
   test(`${width}px: empty CMS apps leave home, portrait and contact intact without old app cards or ratings`, async (t) => {
     const page = await pageFor(t, { apps: empty }, width);
     await visit(page);
-    assert.match(await page.locator('h1').innerText(), /I build mobile apps/);
+    assert.match(await page.locator('h1').innerText(), /I build Flutter apps/);
     assert.ok(await page.getByAltText('Portrait of Hasan Abbas Sorathiya').isVisible());
     assert.ok(await page.locator('#contact').getByRole('link', { name: 'Email me', exact: true }).isVisible());
     assert.equal(await page.locator('main a[href^="/apps/"]').count(), 0);

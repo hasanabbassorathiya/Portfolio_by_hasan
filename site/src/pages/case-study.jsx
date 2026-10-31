@@ -194,6 +194,27 @@ export function CaseStudyPage({ slug }) {
               </ul>
             </div>
 
+            {client.decisions?.length > 0 && (
+              <div>
+                <Kicker>Engineering decisions</Kicker>
+                <ol className="mt-5 flex flex-col divide-y divide-ink/10 border-y border-ink/10">
+                  {client.decisions.map((decision, index) => (
+                    <li key={decision.title} className="grid gap-1.5 py-4 sm:grid-cols-[2rem_1fr] sm:gap-4">
+                      <span className="font-mono text-[10px] text-accent">0{index + 1}</span>
+                      <div>
+                        <p className="text-[15px] font-medium leading-snug text-text">{decision.title}</p>
+                        <p className="mt-1.5 text-[14px] leading-[1.7] text-text/75">{decision.rationale}</p>
+                        <p className="mt-1.5 text-[13px] leading-[1.7] text-text-muted">
+                          <span className="font-mono text-[9px] uppercase tracking-[0.14em]">Trade-off</span>{' '}
+                          {decision.tradeoff}
+                        </p>
+                      </div>
+                    </li>
+                  ))}
+                </ol>
+              </div>
+            )}
+
             <div>
               <Kicker>Outcome</Kicker>
               <h2 className="mt-4 font-serif text-[clamp(1.8rem,3.2vw,2.5rem)] leading-[1.08] tracking-[-0.015em] text-text">

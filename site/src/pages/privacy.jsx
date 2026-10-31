@@ -4,7 +4,7 @@ import { SITE_NAME, useSeo } from '../lib/seo';
 import { Kicker } from '../sections/ref-ui';
 
 const EMAIL = 'hasanabbassorathiya12@gmail.com';
-const UPDATED = '29 October 2026';
+const UPDATED = '31 October 2026';
 
 function Section({ id, title, children }) {
   return (
@@ -36,9 +36,9 @@ export function PrivacyPage() {
           What this site <em className="italic text-accent">stores.</em>
         </h1>
         <p className="mt-5 max-w-[60ch] text-[16px] leading-[1.8] text-text-muted">
-          This site has no visitor accounts, no advertising trackers and no data resale. The only
-          personal data it stores is what you choose to send through the enquiry form or the essay
-          signup. This page explains exactly what that is.
+          This site has no visitor accounts, no advertising trackers and no data resale. It measures
+          visits with a first-party, cookieless beacon, and stores personal data only when you
+          choose to send an enquiry or sign up for essays. This page explains exactly what that is.
         </p>
 
         <div className="mt-10 space-y-7">
@@ -68,24 +68,30 @@ export function PrivacyPage() {
           </Section>
 
           <Section id="newsletter" title="If you sign up for essays">
-            <p>Only your email address, the page you signed up from and the same keyed IP hash are stored. If you receive a subscriber email, its unsubscribe link deletes your address from the database immediately. You can also email me to be removed.</p>
+            <p>Only your email address, the page you signed up from and a one-way hash of your IP address are stored. If you receive a subscriber email, its unsubscribe link deletes your address from the database immediately. You can also email me to be removed.</p>
+          </Section>
+
+          <Section id="analytics" title="Visit measurement">
+            <p>The public site sends page views and anonymous interaction events — section views, button clicks, résumé opens, store-link clicks and the selected enquiry type — to its own endpoint at <span className="font-mono text-[13px]">/api/track.php</span>. No name, email address or message text is ever sent to it.</p>
+            <p>Each visit gets a random session ID kept in your browser&apos;s sessionStorage. The server derives a daily keyed hash from your IP address and browser string to count unique visitors and limit abuse; the raw IP address is never stored. It also records coarse device, browser and operating-system categories, a country code when the network provides one, the referring host, and campaign labels from <span className="font-mono text-[13px]">utm_</span> parameters if present.</p>
+            <p>If your browser sends Do Not Track or Global Privacy Control, the beacon is not loaded at all. Raw events are deleted after 180 days; daily aggregate counts with no visitor identifier are kept for traffic reporting.</p>
           </Section>
 
           <Section id="not-collected" title="What is not collected">
             <p>No visitor accounts, no passwords, no payment details, no advertising or cross-site tracking pixels, and no data sold or shared with list brokers. The light/dark preference and the boot animation flag are stored in your own browser (localStorage and sessionStorage) and are never sent to the server.</p>
-            <p>If analytics is enabled on the deployed site, it is Google Analytics 4 with IP anonymisation, recording page views and anonymous interaction events such as button clicks, résumé opens and store-link clicks. Form contents and message text are never sent to analytics. Visitors who block analytics scripts are not tracked in any other way.</p>
+            <p>Google Analytics 4 is optional and only runs when it has been configured. When it does, it records page views with IP anonymisation, and the first-party beacon described above continues to be the primary measurement. Visitors who block analytics scripts are not tracked in any other way.</p>
           </Section>
 
           <Section id="cookies" title="Cookies">
-            <p>The public site sets no cookies of its own. The admin area uses a PHP session cookie after login, for the owner only. If Google Analytics is configured, it sets its own first-party cookies (<span className="font-mono text-[13px]">_ga</span> and <span className="font-mono text-[13px]">_ga_&lt;id&gt;</span>) to distinguish sessions, with IP anonymisation enabled. Newsletter unsubscribe links carry a random token in the URL so the right address is removed.</p>
+            <p>The public site sets no cookies of its own; visit measurement uses sessionStorage, not cookies. The owner-only admin areas (the PHP admin and the Directus CMS on its own subdomain) use login session cookies after authentication. If Google Analytics is configured, it sets its own first-party cookies (<span className="font-mono text-[13px]">_ga</span> and <span className="font-mono text-[13px]">_ga_&lt;id&gt;</span>) to distinguish sessions, with IP anonymisation enabled. Newsletter unsubscribe links carry a random token in the URL so the right address is removed.</p>
           </Section>
 
           <Section id="retention" title="How long it is kept">
-            <p>Enquiries are kept until they have been handled and reviewed, with no automatic deletion, so a conversation is not lost mid-thread. Newsletter addresses are kept until you unsubscribe. Ask me to delete an enquiry or address at any time and it is removed; the only reason to keep anything longer would be a legal obligation.</p>
+            <p>Enquiries are kept until they have been handled and reviewed, with no automatic deletion, so a conversation is not lost mid-thread. Newsletter addresses are kept until you unsubscribe. Raw analytics events are deleted after 180 days; daily aggregates contain no visitor identifier. Ask me to delete an enquiry or address at any time and it is removed; the only reason to keep anything longer would be a legal obligation.</p>
           </Section>
 
           <Section id="third-parties" title="Where it is processed">
-            <p>The site and its database run on Hostinger web hosting. If analytics is configured, page-view data is processed by Google Analytics as described above. Links to LinkedIn, GitHub, the app stores, pub.dev and other external sites are governed by those sites&apos; own privacy policies.</p>
+            <p>The site and its database run on Hostinger web hosting. If configured, Google Analytics processes page-view data as described above. Links to LinkedIn, GitHub, the app stores, pub.dev and other external sites are governed by those sites&apos; own privacy policies.</p>
           </Section>
 
           <Section id="choices" title="Your choices">

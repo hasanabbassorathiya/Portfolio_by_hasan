@@ -50,7 +50,7 @@ check 'admin/edit.php?entity=experiences' 'Mobile Engineering Lead'
 check 'admin/edit.php?entity=skills' 'Mobile'
 check admin/subscribers.php 'Subscribers'
 check 'api/index.php?entity=apps' '"Duas and Aamal"'
-REQ=$(php -r 'echo json_encode(["name"=>"Harness Person","email"=>"harness@example.test","type"=>"App build","message"=>"Please discuss an application build for a harness check.","website"=>"","consent"=>true,"requestId"=>"12345678-1234-4234-8234-123456789012"]);')
+REQ=$(php -r 'echo json_encode(["name"=>"Harness Person","email"=>"harness@example.test","type"=>"New application","message"=>"Please discuss an application build for a harness check.","website"=>"","consent"=>true,"requestId"=>"12345678-1234-4234-8234-123456789012"]);')
 RESP=$(curl -s -w '\n%{http_code}' -X POST -H 'Content-Type: application/json' -H 'Origin: http://127.0.0.1:8097' -H 'Host: 127.0.0.1:8097' --data "$REQ" http://127.0.0.1:8097/api/enquiries.php)
 CODE=$(echo "$RESP" | tail -1); BODY=$(echo "$RESP" | sed '$d')
 echo "POST enquiries -> $CODE $BODY"

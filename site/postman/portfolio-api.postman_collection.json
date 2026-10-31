@@ -1768,7 +1768,7 @@
             "description": "Origin must equal the host when sent from a browser. Rate limit: 5/hour/IP. reference is saved as enquiryReference.",
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"Postman Tester\",\n  \"email\": \"postman@example.com\",\n  \"type\": \"App build\",\n  \"message\": \"This enquiry was created from the Postman collection to verify the intake contract.\",\n  \"website\": \"\",\n  \"consent\": true,\n  \"requestId\": \"{{$guid}}\"\n}",
+              "raw": "{\n  \"name\": \"Postman Tester\",\n  \"email\": \"postman@example.com\",\n  \"type\": \"New application\",\n  \"message\": \"This enquiry was created from the Postman collection to verify the intake contract.\",\n  \"website\": \"\",\n  \"consent\": true,\n  \"requestId\": \"{{$guid}}\"\n}",
               "options": {
                 "raw": {
                   "language": "json"

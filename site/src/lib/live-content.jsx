@@ -91,7 +91,12 @@ export function loadLiveContent() {
     hydrate('posts', controller.signal, (value) => { state.posts = mapPosts(value, seedPosts); }),
     hydrate('experience', controller.signal, (value) => { state.experiences = mapExperiences(value); }, true),
     hydrate('skills', controller.signal, (value) => { state.skills = groupSkills(value); }, true),
-    hydrate('profile', controller.signal, (value) => { state.profile = { ...seedProfile, ...mapProfile(value) }; }, true),
+    hydrate('profile', controller.signal, (value) => {
+      const mapped = mapProfile(value);
+      // The retired aggregate token stays out of production until the CMS row is migrated.
+      if (typeof mapped.sub === 'string' && mapped.sub.includes('{{users}}')) delete mapped.sub;
+      state.profile = { ...seedProfile, ...mapped };
+    }, true),
   ]).then((results) => {
     clearTimeout(timer);
     state.live = results.some((result) => result.status === 'fulfilled' && result.value === true);

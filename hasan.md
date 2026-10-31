@@ -1,7 +1,7 @@
 # Hasan Abbas Sorathiya — Canonical Profile
 
 > Single source of truth for the portfolio site (`site/`), blog, and app store copy.
-> Last verified: 2026-10-28 (GitHub profile + API, App Store listing, workspace docs).
+> Last verified: 2026-10-31 (GitHub profile + API, App Store listing, workspace docs, owner-confirmed experience duration).
 
 ## 1. Identity
 
@@ -9,7 +9,7 @@
 |-------|-------|
 | **Full name** | Hasan Abbas Sorathiya |
 | **Positioning** | Senior Software & AI Engineer — Flutter Specialist, AI & Automation Architect |
-| **Experience** | 7+ years mobile engineering; 6+ years Flutter in production |
+| **Experience** | 6+ years mobile engineering; 6+ years Flutter in production |
 | **Location** | Dubai, United Arab Emirates (secondary: Mumbai, India) |
 | **Email** | hasanabbassorathiya12@gmail.com |
 | **Phone** | +971 589602320 |
@@ -19,8 +19,8 @@
 
 ### Hero copy
 - **Title:** Senior Software & AI Engineer
-- **One-liner:** LLMs, RAG & Agents · Flutter & MERN · Cloud
-- **Status line:** Open to opportunities — building AI-powered Flutter & full-stack products. Available for senior engineering roles, consulting, and product collaborations.
+- **One-liner:** LLMs, RAG & Agents · Flutter & Dart · Backend & API integrations
+- **Status line:** Open to opportunities — building AI-powered Flutter products and the backend integrations behind them. Available for senior engineering roles, consulting, and product collaborations.
 - **Quote:** "Engineering excellence is not just about code; it is about the impact it creates."
 
 ### Positioning goals (why the site exists)
@@ -47,7 +47,7 @@
 
 ## 3. Professional Summary
 
-Mobile Engineering Lead with 7+ years designing, building, and shipping high-performance mobile applications across FinTech, digital lending, enterprise mobility, e-commerce, and consumer platforms. Deep expertise in Flutter/Dart, mobile architecture, Clean Architecture, MVVM, REST API integration, Firebase, AWS, CI/CD, and secure mobile development. Leads mobile teams, owns technical decisions, and manages Android + iOS delivery end to end alongside Product, Backend, QA, DevOps, Security, and UX. Delivered financial applications, transactional workflows, authentication systems, and production platforms supporting 50K+ users across the UAE, Australia, and New Zealand.
+Mobile Engineering Lead with 6+ years designing, building, and shipping high-performance mobile applications across FinTech, digital lending, enterprise mobility, e-commerce, and consumer platforms. Deep expertise in Flutter/Dart, mobile architecture, Clean Architecture, MVVM, REST API integration, Firebase, AWS, CI/CD, and secure mobile development. Leads mobile teams, owns technical decisions, and manages Android and iOS delivery end to end alongside Product, Backend, QA, DevOps, Security, and UX. Delivered financial applications, transactional workflows, authentication systems, and production platforms, including Good2Go Loans (50,000+ users in New Zealand) and EVLAB's electric mobility platform in the UAE.
 
 Also builds AI systems: LLM applications, RAG pipelines, agents, and automation (LangChain, OpenAI/Claude APIs, n8n, MCP servers) applied to real product and delivery problems.
 
@@ -101,9 +101,9 @@ Also builds AI systems: LLM applications, RAG pipelines, agents, and automation 
 
 | Metric | Value | Source |
 |--------|-------|--------|
-| Years experience | 7+ | Career history |
-| Apps shipped | 15 | Enumeration in §6 (6 own + 9 client/contributed) |
-| Users impacted | 100K+ | Good2Go 50K, EVLAB, Nutrabay, Duas |
+| Years experience | 6+ | Owner-confirmed; earlier route Jan 2019 |
+| App profiles | 15 | Enumeration in §6 (6 own + 9 client/contributed) |
+| Good2Go Loans users | 50,000+ | Client outcome, New Zealand |
 | Conversion lift | ~25% | Masaar re-architecture |
 | First-month downloads | 15K+ | Nakheel Marinas |
 | GitHub contributions (12 mo) | 565 | github.com/hasanabbassorathiya |
@@ -176,11 +176,8 @@ Shia prayer-time calculation (Jafari method, moon-sighting adjustment) — autho
 
 - **BSc Information Technology** — University of Mumbai, 2019
   - Final project: AI-powered customer support chatbot (Python, TensorFlow, NLP)
-- Google Flutter Developer Certification
-- AI & NLP Fundamentals Certification
-- Advanced Android Development Certification
-- Project Management Foundations (PMP)
-- Digital Marketing Strategy Certification
+- **Udemy course certificate** — verifiable PDF: https://udemy-certificate.s3.amazonaws.com/pdf/UC-d1d229bb-81e1-46bf-b8cd-123655f406cc.pdf
+- No other certifications are listed: earlier site copy named five credentials that could not be verified from an issuer link, including a PMP foundations course that is not the PMP credential. They were removed; do not reintroduce them without proof.
 
 ## 10. Content Strategy (blog → growth → GDE)
 

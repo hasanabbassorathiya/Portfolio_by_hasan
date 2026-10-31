@@ -75,9 +75,9 @@ export function Stats() {
   const metrics = useSiteMetrics();
   const stats = [
     metrics.yearsLabel && { value: metrics.yearsLabel, label: 'Years shipping' },
-    metrics.appsCount > 0 && { value: String(metrics.appsCount), label: 'Apps shipped' },
-    metrics.users && { value: metrics.users, label: 'Users impacted' },
+    metrics.appsCount > 0 && { value: String(metrics.appsCount), label: 'App profiles' },
     metrics.clientsCount > 0 && { value: String(metrics.clientsCount), label: 'Client engagements' },
+    metrics.platforms.length > 0 && { value: String(metrics.platforms.length), label: 'Platforms shipped' },
   ].filter(Boolean);
 
   return (
@@ -266,6 +266,27 @@ export function AiWorkflow() {
             </div>
           </article>
         ))}
+      </div>
+
+      <div className="mt-5 grid gap-3 sm:grid-cols-3">
+        {[
+          ['AI engagement scope', '/services/ai-integration-automation', 'Work I take on: RAG, assistants, agents and automation.'],
+          ['RAG design write-up', '/blog/rag-that-survives-real-users', 'How retrieval, permissions and failure modes are handled.'],
+          ['MCP server source', 'https://github.com/hasanabbassorathiya/wp-mcp-server', 'TypeScript integration exposing content operations through MCP.'],
+        ].map(([label, href, copy]) => {
+          const external = href.startsWith('http');
+          const Tag = external ? 'a' : Link;
+          return (
+            <Tag
+              key={label}
+              {...(external ? { href, target: '_blank', rel: 'noreferrer' } : { to: href })}
+              className="group rounded-[1.2rem] border border-ink/10 bg-surface p-5 transition duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-ink/25"
+            >
+              <span className="font-mono text-[9px] uppercase tracking-[0.18em] text-accent">{label}</span>
+              <span className="mt-2 block text-sm leading-[1.6] text-text-muted">{copy}</span>
+            </Tag>
+          );
+        })}
       </div>
 
       <div className="mt-5 flex flex-col gap-3 rounded-[1.4rem] border border-accent/25 bg-accent/[0.04] p-6 sm:flex-row sm:items-center sm:justify-between">

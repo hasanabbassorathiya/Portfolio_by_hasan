@@ -48,11 +48,12 @@ function platformUnion(apps) {
 // and the profile kv store. Nothing on the site should restate these by hand.
 export function computeMetrics({ apps = [], clients = [], experiences = [], profile = {} } = {}, now = new Date()) {
   const start = earliestStart(experiences);
-  const years = start
+  const derivedYears = start
     ? Math.max(0, now.getFullYear() - start.year - (now.getMonth() + 1 < start.month ? 1 : 0))
     : null;
+  const statedYears = Number(profile.experience_years);
+  const years = Number.isFinite(statedYears) && statedYears > 0 ? statedYears : derivedYears;
   const platforms = platformUnion(apps);
-  const usersReached = typeof profile.users_reached === 'string' ? profile.users_reached.trim() : '';
 
   const metrics = {
     years,
@@ -61,7 +62,6 @@ export function computeMetrics({ apps = [], clients = [], experiences = [], prof
     clientsCount: clients.length,
     platforms,
     platformsLabel: platforms.join(' · '),
-    users: usersReached,
     startYear: start?.year ?? null,
     rangeLabel: start ? `${start.year} — ${now.getFullYear()}` : '',
     clientMetrics: {},
@@ -78,7 +78,6 @@ export function computeMetrics({ apps = [], clients = [], experiences = [], prof
     apps: String(metrics.appsCount),
     clients: String(metrics.clientsCount),
     platforms: metrics.platformsLabel,
-    users: metrics.users,
   };
 
   return metrics;
@@ -107,8 +106,7 @@ export function interpolate(text, metrics) {
 export function tickerLine(metrics) {
   return [
     metrics.yearsLabel && `${metrics.yearsLabel} years`,
-    `${metrics.appsCount} ${metrics.appsCount === 1 ? 'app' : 'apps'}`,
-    metrics.users && `${metrics.users} users`,
+    `${metrics.appsCount} app profiles`,
   ]
     .filter(Boolean)
     .join(' · ');
