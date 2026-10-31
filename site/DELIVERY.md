@@ -21,7 +21,7 @@ Updated: 2026-10-29. This file records what was built, what was verified, and wh
 | ASO plan | Five Play listings enumerated; store copy drafts with measured character counts | `site/ASO.md` |
 | Automation docs | Six workflows documented, with one implemented background sender | `site/AUTOMATIONS.md` |
 | Operations README | Run, test, configure, maintain, and deploy entry point | `site/README.md` |
-| Live deployment of these changes | **Not performed** — needs owner approval | See §13 |
+| Live deployment of these changes | Deployed 2026-10-31 (public bundle `index-Ciw2u65_.js`, API repaired the same day) | See §9, §13 and `DEPLOY.md` |
 
 ## 2. Homepage and conversion audit
 
@@ -192,7 +192,7 @@ The live site (`https://hasanabbassorathiya.tech`, bundle `assets/index-Ciw2u65_
 | `/services` | mobile | 100 | 100 | 96 | 100 | 0.9 s | 1.0 s | 20 ms | 0 |
 | `/resume` | desktop | 100 | 100 | 96 | 100 | 0.3 s | 0.3 s | 0 ms | 0 |
 
-Live scores match the harness. Best practices is 96 on every live route because the deployed `api/` is a stale snapshot: `GET /api/index.php?entity=settings` returns 400 and `GET /api/track.php` returns 404, and those failed fetches are the only console errors. The page degrades to seed content, but analytics does not record until the current `api/*.php` and the `v2-schema.sql` tables are deployed (owner approval; `config.php` is never uploaded). `uses-long-cache-ttl` flags four unhashed images at a 7-day TTL; that is deliberate because CMS media filenames are stable and a longer TTL would pin replaced icons for returning visitors. The `hcdn` check is also why automated monitors should expect a challenge instead of a direct HTML response; if real visitors report the interstitial, review the CDN bot-protection setting in hPanel.
+Live scores match the harness. Best practices is 96 on every live route because the deployed `api/` was a stale snapshot: `GET /api/index.php?entity=settings` returned 400 and `GET /api/track.php` returned 404, and those failed fetches were the only console errors. **Repaired 2026-10-31 ~15:45 UTC:** the 11-file API bundle and `migrate-2026-10-31-live.sql` were applied (see `DEPLOY.md`); live settings now returns 200 and the beacon 204, so this caveat no longer applies and Best Practices should re-measure at 100. Before the repair the page degraded to seed content and analytics recorded nothing; after it, live content hydrates and first-party events land in `analytics_events` (verified: page_view, section_view, page_leave for one live session). `config.php` is never uploaded. `uses-long-cache-ttl` flags four unhashed images at a 7-day TTL; that is deliberate because CMS media filenames are stable and a longer TTL would pin replaced icons for returning visitors. The `hcdn` check is also why automated monitors should expect a challenge instead of a direct HTML response; if real visitors report the interstitial, review the CDN bot-protection setting in hPanel.
 
 INP is a field metric and no CrUX/Real User Monitoring data exists before launch, so no INP number is claimed here. The lab proxy is Total Blocking Time: 0 ms in both recorded runs, and the hydration sweep drives client-side navigation and a theme toggle without long tasks. Real INP becomes measurable in Search Console/CrUX after deployment.
 
@@ -263,7 +263,7 @@ Never roll back by deleting the database; keep the dump and restore into the exi
 
 ## 13. Manual tasks and approvals
 
-1. **Approve live deployment.** The currently deployed build predates these changes.
+1. **Approve future deployments.** The public build and API were deployed on 2026-10-31; this section remains the approval gate for later builds.
 2. **Provide the Cal.com booking URL** and set `VITE_CAL_URL` (https only) before the production build. The contact area already renders the "Prefer a call? Book a time" link and tracks it as `cta_click` `kind: booking`; nothing appears while the variable is unset.
 3. **Provide referral URLs** and confirm the disclosure wording before any partner link goes live.
 4. **Upload `site/api/config.php`** on the server only; never commit it.
@@ -275,6 +275,7 @@ Never roll back by deleting the database; keep the dump and restore into the exi
 10. **Apply the profile drafts.** Publish `site/GITHUB.md` §1–§4 to GitHub and `site/LINKEDIN.md` §1–§8 to LinkedIn; both are drafts until the owner does this.
 11. **Read the `/privacy` notice** and confirm it matches your jurisdiction and retention policy; the page describes the shipped behaviour, but legal wording is the owner's call.
 12. **Optional: share a Stitch workspace or export** if you want a separate design-direction exercise. Stitch was not reachable from this workspace (no integration, MCP server or CLI), so the shipped direction was explored directly in Playwright and recorded in `DESIGN.md`; this is optional, not a blocker.
+13. ~~**Deploy the current `api/*.php` and growth schema.**~~ Done 2026-10-31 with owner approval: 11 files uploaded (never `config.php`/`.htaccess`) and `migrate-2026-10-31-live.sql` applied; endpoints verified live. See `DEPLOY.md` § "Production API repair (2026-10-31)".
 
 ## 14. Four-week content calendar
 
@@ -413,7 +414,7 @@ Node suites are run from `site/` because `resume.test.mjs` resolves `public/` an
 | Store rosters | Playwright on the public Play developer page; `itunes.apple.com/lookup` for artist `1734376366` | Play: 5 apps; App Store: 4 apps; all match `apps.js` |
 | Public profile and store links | `curl -L` against every LinkedIn, GitHub, FlowCV, pub.dev, BuyMeACoffee, App Store and Play link in `apps.js` and the contact section | 19/19 returned 200 on 2026-10-29; the site's own Résumé links now point at `/resume` instead of FlowCV |
 | Lighthouse (mobile, simulated) | `npx lighthouse http://127.0.0.1:8099/ …`, two consecutive clean runs | Performance 100, Accessibility 100, Best practices 96, SEO 100; FCP 0.9 s, LCP 0.9 s, TBT 0 ms, CLS 0.001. Observed trace FCP=LCP ≈0.12–0.15 s; CDP-throttled LCP = `h1` at 1.09–1.17 s. Under CPU contention one run scored 95/TBT 250 ms; simulated LCP occasionally reports ~3.1 s (Lantern font modelling) with identical trace values. Best practices 96 is the harness's API 404s |
-| Lighthouse (live host, 2026-10-31) | Lighthouse 12.8.2/Chrome 156 attached to a real Chrome with a primed `hcdn` cookie (`--port=9333 --disable-storage-reset`); a fresh headless run is 403'd by the Hostinger CDN | `/` mobile 99/100/96/100 then 100/100/96/100; `/` desktop 100/100/96/100; `/services` mobile 100/100/96/100; `/resume` desktop 100/100/96/100; FCP 0.3–1.0 s, LCP 0.3–1.1 s, TBT 0–100 ms, CLS ≤0.001. Best practices 96 is the stale live `api/` (`settings` 400, `track.php` 404); raw JSON in `site/evidence/2026-10-31/lighthouse/` |
+| Lighthouse (live host, 2026-10-31) | Lighthouse 12.8.2/Chrome 156 attached to a real Chrome with a primed `hcdn` cookie (`--port=9333 --disable-storage-reset`); a fresh headless run is 403'd by the Hostinger CDN | `/` mobile 99/100/96/100 then 100/100/96/100; `/` desktop 100/100/96/100; `/services` mobile 100/100/96/100; `/resume` desktop 100/100/96/100; FCP 0.3–1.0 s, LCP 0.3–1.1 s, TBT 0–100 ms, CLS ≤0.001. Best practices 96 was the stale live `api/` (`settings` 400, `track.php` 404); raw JSON in `site/evidence/2026-10-31/lighthouse/`. **Superseded later that day:** the API repair cleared those two failed requests, so a re-run is expected to score 100 on Best Practices. |
 | Lighthouse CI (new) | `npx @lhci/cli@0.14 autorun` from `site/`, the same command as `.github/workflows/site-ci.yml` | 3 URLs × 2 runs: performance 92–95, accessibility 100, SEO 100; budgets 0.85 / 0.95 / 0.90. The 0.85 performance floor covers the plain `serve` harness (no CDN HTTP/2; Lantern's font model lands at 2.7–3.1 s LCP, while the live host measures 0.3–1.1 s). Reports in `site/reports/lighthouse/` (gitignored) and uploaded as a workflow artifact |
 | Deployment package | `cp .htaccess dist/ && zip -qr deploy-public_html.zip .` from `dist/` | 138 files, 7,126,982 bytes uncompressed, 5,678,327 bytes zipped, SHA-256 `bbc307a1be60d9319944bdb418a74aa6bd20fcb1be7bb33b46d23e7361f1bedf`; built from a minified `npm run build` (single entry chunk `index-aK233QuH.js`, 358,966 bytes, plus per-route lazy chunks); `unzip` into a temp directory and `diff -r` against `dist/` reports no differences; `index.html` references only that entry; includes `.htaccess`, the `/privacy` and `/resume` shells and the résumé PDF; no `api/`, `admin/` or `config.php` inside |
 
