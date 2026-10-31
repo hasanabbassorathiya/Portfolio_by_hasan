@@ -1,0 +1,9 @@
+{
+  "name": "isolated-vm",
+  "version": "5.0.3",
+  "description": "Compatibility shim: sandboxed API extensions and Flow Exec operations are disabled on this host",
+  "main": "isolated-vm.js",
+  "types": "isolated-vm.d.ts",
+  "license": "ISC",
+  "private": true
+}

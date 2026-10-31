@@ -25,13 +25,14 @@ Browser (owner)  ->  cms.hasanabbassorathiya.tech (Directus Studio)
 hPanel -> **Websites** -> `hasanabbassorathiya.tech` -> **Subdomains** -> create `cms`.
 Any document root is fine; the Node app takes over the domain.
 
-### 2. Dedicated MySQL user
+### 2. MySQL user
 
-hPanel -> **Databases** -> **MySQL Databases**:
-
-1. Create user, e.g. `u124239009_cms`, with a strong password.
-2. Add it to `u124239009_portfolio` and grant **ALL PRIVILEGES** on that database.
-   Directus creates and migrates its own `directus_*` tables, so it needs CREATE/ALTER/INDEX/DROP.
+Hostinger's database users **cannot be granted on another database**: the account has no
+`GRANT OPTION`, so a freshly created `u124239009_*` user cannot be attached to
+`u124239009_portfolio`. Use the database's own user, `u124239009_portfolio`, instead. Its
+password is the one already in `api/config.php` on the server — read it there, never commit it.
+That user holds ALL PRIVILEGES on its database, which is exactly what Directus needs to create
+and migrate its own `directus_*` tables.
 
 ### 3. Node.js web app
 
@@ -48,6 +49,24 @@ hPanel -> **Websites** -> **Create site** -> **Web App** (or **Advanced -> Node.
 `npm start` runs `scripts/start.mjs`, which bootstraps Directus once (first run only) and then
 starts the server. Do not commit or upload a `.env`; set the variables below in the app panel.
 
+**How the platform socket works (verified 2026-10-31):** Hostinger's LiteSpeed runtime sets
+`LSNODE_SOCKET` (a unix socket path) and does **not** set `PORT`. `scripts/start.mjs` binds that
+socket for its whole lifetime and proxies HTTP + websocket upgrades to Directus on a private
+`$TMPDIR/directus-<pid>.sock`. Do not hand the platform socket to Directus: the supervisor
+rebinds the path between the handoff's unlink and Directus's listen (~6s later), which surfaces
+as `listen EADDRINUSE` and a crash loop. Never create extra files in
+`/usr/local/lsws/extapp-sock/` either — a Directus boot that tried returned
+`EACCES: permission denied`.
+
+**Hostinger build image constraints (verified 2026-10-31):** CloudLinux 8 / glibc 2.28,
+Node 22.23.4, `make` but **no C/C++ compiler**. Directus's default `argon2@0.44` and
+`isolated-vm@5` both fail there: their prebuilt binaries need glibc 2.34 and 2.29+ respectively,
+and without `cc` the fallback compile dies. This package therefore pins `argon2` to **0.41.1**
+(prebuilt against glibc 2.25, API-compatible `hash`/`verify`) via `overrides`, and points
+`isolated-vm` at `vendor/isolated-vm`, a shim that fails loudly only if sandboxed API
+extensions or Flow "Exec" operations are used. Collection editing, auth, files and the REST API
+are unaffected.
+
 ### 4. Environment variables
 
 Set these in the web app's **Environment Variables** panel (see `.env.example`):
@@ -60,8 +79,8 @@ Set these in the web app's **Environment Variables** panel (see `.env.example`):
 | `DB_HOST` | `127.0.0.1` (same host as MySQL) |
 | `DB_PORT` | `3306` |
 | `DB_DATABASE` | `u124239009_portfolio` |
-| `DB_USER` | `u124239009_cms` |
-| `DB_PASSWORD` | that user's password |
+| `DB_USER` | `u124239009_portfolio` |
+| `DB_PASSWORD` | that user's password (from `api/config.php` on the server) |
 | `ADMIN_EMAIL` | `hasanabbassorathiya12@gmail.com` |
 | `ADMIN_PASSWORD` | strong password for the Directus admin (store it in a password manager) |
 | `PUBLIC_URL` | `https://cms.hasanabbassorathiya.tech` |
@@ -130,8 +149,11 @@ relation. Two options:
    `https://cms.hasanabbassorathiya.tech/assets/<id>` URL into the field. The site renders absolute
    URLs fine.
 
-If you upload through Directus, point `STORAGE_LOCAL_ROOT` at a directory outside the deployment
-folder (for example `/home/u124239009/directus-uploads`) so files survive redeploys.
+If you upload through Directus, `scripts/start.mjs` checks `STORAGE_LOCAL_ROOT` at boot and falls
+back to the app's own `uploads/` folder when it is not writable (the
+`/home/u124239009/directus-uploads` path turned out not writable in the verified deployment and
+the app logged the fallback). Cloudlinux redeploys replace the app folder, so move
+`STORAGE_LOCAL_ROOT` to a writable path outside it if uploaded files must survive deploys.
 
 ## Verification (do this once after setup)
 
@@ -165,8 +187,13 @@ Studio runs at `http://127.0.0.1:8055`. Delete `.env` afterwards; never commit i
 | --- | --- |
 | `Access denied for user` | Wrong DB user/password, or the user is not attached to `u124239009_portfolio` with all privileges. Keep `DB_HOST=127.0.0.1` on the server. |
 | App fails to boot with `EADDRNOTAVAIL` | Hostinger did not inject `PORT`; remove a hardcoded port and let the platform pass it, or set `PORT=8055`. |
-| 502 after deploy | Check the deployment log: usually missing env vars, or the first bootstrap is still running (it takes ~30–60s). |
-| `npm install` fails compiling `isolated-vm` | The app is on an unsupported Node version. Switch to **Node 22**; Directus 11.17.4 also fails to install on Node 26. |
+| 502/503 after deploy | Check Runtime logs under **Deployments → Runtime logs** (switch the range to **Last day**). A first boot runs `directus bootstrap`, which takes ~30–60s; meanwhile `scripts/start.mjs` already owns the platform socket and proxies every request, answering 503 until Directus accepts traffic on its loopback port. |
+| Runtime log says `...sock is already in use` | Do not let Directus bind `LSNODE_SOCKET` directly. Closing and unlinking the startup placeholder leaves the path free only briefly, and LiteSpeed rebinds it before Directus listens. `scripts/start.mjs` keeps the platform socket for its whole lifetime and proxies to `$TMPDIR/directus-<pid>.sock`; `LSNODE_SOCKET` is mapped in this process only. |
+| Directus crashes with `EACCES: permission denied /usr/local/lsws/extapp-sock/...` | The extapp-sock directory only permits the exact socket name the platform assigned. Never create extra files there; the internal proxy socket belongs in the temp dir. |
+| Bootstrap stops halfway and `directus start` crashes with `Unknown column 'validation'` | A partial `directus_*` schema from an interrupted first boot. Drop only the `directus_*` tables, then redeploy (bootstrap rebuilds them). Never drop content tables. |
+| Runtime log says `Error: spawn npx ENOENT` | Hostinger's app runtime PATH has no `npm`/`npx`. `scripts/start.mjs` runs `node_modules/directus/cli.js` with `process.execPath`; don't reintroduce `npx` calls in the start path. |
+| Deployment shows "Entry file: none" and the domain serves a static 403/404 | Set **Entry file** to `scripts/start.mjs` in **Deployments → Settings and redeploy**. Without it the platform syncs `public_html` but never starts the Node process. |
+| `npm install` fails with `make: cc: Command not found` | The build image cannot compile native modules. `package.json` already pins `argon2` 0.41.1 (prebuilt against glibc 2.25) and replaces `isolated-vm` with `vendor/isolated-vm`, so nothing needs compiling. Don't remove those two entries. |
 | Garbled characters (`â€”`) in content | Content was imported through a latin1 MySQL client. Re-import SQL with `mysql --default-character-set=utf8mb4 ...`. Directus reads/writes UTF-8 correctly. |
 | "You have not set a project owner" on first login | Directus BSL license prompt. Enter the owner email and usage, or click **Remind Later**; it does not block editing. |
 | Studio loads but no collections | Run step 6 (`scripts/collections.mjs`). |

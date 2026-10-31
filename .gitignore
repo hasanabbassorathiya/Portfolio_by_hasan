@@ -100,5 +100,6 @@ tests/e2e/report.json
 # Site build and deploy artifacts
 site/dist/
 site/deploy-public_html.zip
+site/deploy-directus.zip
 site/evidence/
 site/vite.config.js.timestamp-*.mjs

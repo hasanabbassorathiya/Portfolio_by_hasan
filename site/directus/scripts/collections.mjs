@@ -16,22 +16,31 @@ if (!TOKEN) {
 }
 
 async function api(path, init = {}) {
-  const response = await fetch(`${API}${path}`, {
-    ...init,
-    headers: {
-      Authorization: `Bearer ${TOKEN}`,
-      'Content-Type': 'application/json',
-      ...(init.headers || {}),
-    },
-  });
-  const text = await response.text();
-  const body = text ? JSON.parse(text) : null;
-  if (!response.ok) {
-    const error = new Error(`${init.method || 'GET'} ${path} -> ${response.status}: ${text.slice(0, 400)}`);
-    error.status = response.status;
-    throw error;
+  for (let attempt = 1; ; attempt += 1) {
+    try {
+      const response = await fetch(`${API}${path}`, {
+        ...init,
+        signal: AbortSignal.timeout(60_000),
+        headers: {
+          Authorization: `Bearer ${TOKEN}`,
+          'Content-Type': 'application/json',
+          ...(init.headers || {}),
+        },
+      });
+      const text = await response.text();
+      const body = text ? JSON.parse(text) : null;
+      if (!response.ok) {
+        const error = new Error(`${init.method || 'GET'} ${path} -> ${response.status}: ${text.slice(0, 400)}`);
+        error.status = response.status;
+        throw error;
+      }
+      return body;
+    } catch (error) {
+      if (attempt >= 3 || error.status) throw error;
+      console.warn(`  ~ retrying ${init.method || 'GET'} ${path} (${error.name}: ${error.message})`);
+      await new Promise((resolve) => setTimeout(resolve, 2000 * attempt));
+    }
   }
-  return body;
 }
 
 const collections = [
@@ -222,9 +231,11 @@ async function main() {
   const me = await api('/users/me?fields=email,role.name');
   console.log(`Authenticated as ${me.data.email} (${me.data.role?.name || 'no role'})`);
 
+  const only = process.argv.find((arg) => arg.startsWith('--only='))?.slice('--only='.length).split(',');
   const existing = new Set((await api('/collections?limit=-1')).data.map((item) => item.collection));
 
   for (const def of collections) {
+    if (only && !only.includes(def.collection)) continue;
     if (!existing.has(def.collection)) {
       console.error(`\n! Table "${def.collection}" is not visible in Directus. Check that the table exists in the database and the DB user can read it.`);
       continue;
