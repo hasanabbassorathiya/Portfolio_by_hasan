@@ -138,8 +138,8 @@ The live install predates the growth-platform and enquiry migrations, so the pub
 contact form, newsletter, and analytics calls returned 404/400 while the API code on disk was
 still the older build. Repair an existing install in this order:
 1. Import `api/migrate-2026-10-31-live.sql` via phpMyAdmin. It is additive and idempotent:
-   creates only missing tables (`settings`, `media`, `analytics_events`, `analytics_daily`,
-   `subscribers`, `enquiries`, `enquiry_outbox`, `enquiry_ip_locks`) and adds only missing
+   creates only missing tables (`settings`, `login_throttles`, `media`, `analytics_events`,
+   `analytics_daily`, `subscribers`, `enquiries`, `enquiry_outbox`, `enquiry_ip_locks`) and adds only missing
    `seo_*`/`aso_*`, `experiences.summary/points` columns and the `uq_experience`/`uq_skill`
    indexes after checking `information_schema`. It never drops columns or rows; if duplicate
    rows exist the unique index is skipped with a warning instead of deleting data. Re-running it

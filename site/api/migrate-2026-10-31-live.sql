@@ -39,6 +39,15 @@ INSERT INTO settings (k, v, is_public) VALUES
   ('contact_email', '', 1)
 ON DUPLICATE KEY UPDATE k = VALUES(k);
 
+-- The live login flow needs this even though older installs never created it;
+-- without it every admin sign-in fails while reserving its throttle bucket.
+CREATE TABLE IF NOT EXISTS login_throttles (
+  bucket_key CHAR(64) CHARACTER SET ascii COLLATE ascii_bin PRIMARY KEY,
+  attempts INT UNSIGNED NOT NULL DEFAULT 0,
+  window_started BIGINT UNSIGNED NOT NULL,
+  KEY throttle_window (window_started)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 CREATE TABLE IF NOT EXISTS media (
   id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   path VARCHAR(255) NOT NULL UNIQUE,
