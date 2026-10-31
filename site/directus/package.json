@@ -1,0 +1,20 @@
+{
+  "name": "portfolio-directus",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Directus admin for the portfolio MySQL content tables",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "start": "node scripts/start.mjs",
+    "collections": "node scripts/collections.mjs",
+    "verify": "node scripts/verify.mjs",
+    "directus": "directus"
+  },
+  "dependencies": {
+    "directus": "11.17.4",
+    "mysql2": "^3.15.3"
+  }
+}

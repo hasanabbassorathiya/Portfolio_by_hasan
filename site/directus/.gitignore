@@ -1,0 +1,6 @@
+.env
+node_modules/
+uploads/
+extensions/*
+!extensions/.gitkeep
+.bootstrap-state
