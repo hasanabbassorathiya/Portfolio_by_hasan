@@ -1,9 +1,11 @@
 # Directus admin for the portfolio
 
-Directus 11.17.4 attached to the **existing** MySQL content tables. It replaces the broken
+Directus 12.5.0 attached to the **existing** MySQL content tables. It replaces the broken
 hand-written admin (`site/admin/`) with a mature Studio UI. The public React site keeps reading
 through the PHP API (`/api/index.php`); Directus only writes to the same database, so nothing on
-the live site changes.
+the live site changes. `12.6.0` is the newest release but requires Node >= 26, which Hostinger
+does not offer yet (max 24.x); 12.5.0 officially supports Node >= 22 and carries the security
+fixes below.
 
 ```
 Browser (owner)  ->  cms.hasanabbassorathiya.tech (Directus Studio)
@@ -14,7 +16,7 @@ Browser (owner)  ->  cms.hasanabbassorathiya.tech (Directus Studio)
 
 ## Requirements
 
-- Hostinger **Business** or **Cloud** plan (Node.js web apps; Node 18/20/22/24 — use **22**).
+- Hostinger **Business** or **Cloud** plan (Node.js web apps; Node 18/20/22/24 — use **22**; Directus 12 needs >= 22).
 - A subdomain: `cms.hasanabbassorathiya.tech`.
 - The existing database `u124239009_portfolio` and its credentials from hPanel.
 
@@ -46,8 +48,11 @@ hPanel -> **Websites** -> **Create site** -> **Web App** (or **Advanced -> Node.
 | Start command | `npm start` |
 | Application URL | `cms.hasanabbassorathiya.tech` |
 
-`npm start` runs `scripts/start.mjs`, which bootstraps Directus once (first run only) and then
-starts the server. Do not commit or upload a `.env`; set the variables below in the app panel.
+`npm start` runs `scripts/start.mjs`, which bootstraps Directus once (first run only), applies
+pending database migrations on every boot, and then starts the server. Migrations are required
+for the 11 -> 12 upgrade: `directus start` only warns when migrations are pending, and Directus
+12's license manager then crashes on the missing `license_key` / `license_token` settings fields.
+Do not commit or upload a `.env`; set the variables below in the app panel.
 
 **How the platform socket works (verified 2026-10-31):** Hostinger's LiteSpeed runtime sets
 `LSNODE_SOCKET` (a unix socket path) and does **not** set `PORT`. `scripts/start.mjs` binds that
@@ -65,7 +70,15 @@ and without `cc` the fallback compile dies. This package therefore pins `argon2`
 (prebuilt against glibc 2.25, API-compatible `hash`/`verify`) via `overrides`, and points
 `isolated-vm` at `vendor/isolated-vm`, a shim that fails loudly only if sandboxed API
 extensions or Flow "Exec" operations are used. Collection editing, auth, files and the REST API
-are unaffected.
+are unaffected. argon2 0.41.1 was verified against Directus 12.5 login on Node 24.
+
+**Security overrides (verified 2026-10-31):** `@directus/api@40` still pins several transitive
+packages with known CVEs (tar, undici, qs, joi, js-yaml, minimatch, stream-json, basic-ftp,
+sanitize-html, nodemailer, uuid, zod, @ai-sdk/provider-utils, @hono/node-server,
+@opentelemetry/core). `package.json` overrides each to the fixed version that Directus 12.6.0
+ships, keeping the tree on 12.5.0. `npm audit` then reports only 4 **low** findings from
+`deepmerge`, which has no patched release. Re-check with `npm audit` after any dependency bump,
+and drop an override once `@directus/api` pins the fixed version itself.
 
 ### 4. Environment variables
 
@@ -196,6 +209,7 @@ Studio runs at `http://127.0.0.1:8055`. Delete `.env` afterwards; never commit i
 | `npm install` fails with `make: cc: Command not found` | The build image cannot compile native modules. `package.json` already pins `argon2` 0.41.1 (prebuilt against glibc 2.25) and replaces `isolated-vm` with `vendor/isolated-vm`, so nothing needs compiling. Don't remove those two entries. |
 | Garbled characters (`â€”`) in content | Content was imported through a latin1 MySQL client. Re-import SQL with `mysql --default-character-set=utf8mb4 ...`. Directus reads/writes UTF-8 correctly. |
 | "You have not set a project owner" on first login | Directus BSL license prompt. Enter the owner email and usage, or click **Remind Later**; it does not block editing. |
+| Boot crashes with `permission to access fields "license_key", "license_token"` | Pending migrations were not applied. `scripts/start.mjs` runs `directus database migrate:latest` before start; if starting the CLI by hand, run `npx directus database migrate:latest` first. |
 | Studio loads but no collections | Run step 6 (`scripts/collections.mjs`). |
 | Collections linked but rows look read-only | Log in as the bootstrap admin, or grant the editor role permissions under **Settings -> Access Policies**. |
 | Uploads vanish after redeploy | `STORAGE_LOCAL_ROOT` pointed inside the deployment folder; move it outside. |

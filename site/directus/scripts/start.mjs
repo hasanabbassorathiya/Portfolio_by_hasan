@@ -148,6 +148,11 @@ function run(command, args) {
 if (!(await isInstalled())) {
   console.log('[start] Directus is not installed yet; bootstrapping.');
   await run(process.execPath, [directusCli, 'bootstrap']);
+} else {
+  // `directus start` only warns when migrations are pending, and Directus 12
+  // crashes in the license manager if the licensing migration is missing.
+  console.log('[start] applying pending database migrations.');
+  await run(process.execPath, [directusCli, 'database', 'migrate:latest']);
 }
 
 console.log('[start] starting Directus.');
