@@ -101,6 +101,7 @@ tests/e2e/report.json
 site/dist/
 site/deploy-public_html.zip
 site/deploy-directus.zip
+site/deploy-api-*.zip
 site/evidence/
 site/reports/
 site/.lighthouseci/

@@ -133,6 +133,36 @@ Details, retry rules, and the response contract are in `AUTOMATIONS.md` §2. Adm
 sessions, rate-limits 120 events/minute per visitor, and prunes raw events after 180 days
 (`analytics_daily` keeps the totals). Nothing leaves the server unless a GA4 ID is set.
 
+## Production API repair (2026-10-31)
+The live install predates the growth-platform and enquiry migrations, so the public site's
+contact form, newsletter, and analytics calls returned 404/400 while the API code on disk was
+still the older build. Repair an existing install in this order:
+1. Import `api/migrate-2026-10-31-live.sql` via phpMyAdmin. It is additive and idempotent:
+   creates only missing tables (`settings`, `media`, `analytics_events`, `analytics_daily`,
+   `subscribers`, `enquiries`, `enquiry_outbox`, `enquiry_ip_locks`) and adds only missing
+   `seo_*`/`aso_*`, `experiences.summary/points` columns and the `uq_experience`/`uq_skill`
+   indexes after checking `information_schema`. It never drops columns or rows; if duplicate
+   rows exist the unique index is skipped with a warning instead of deleting data. Re-running it
+   is safe, and it works on both a fresh database and an install that already has part of v2.
+2. Upload the PHP files from `site/deploy-api-2026-10-31.zip` into `public_html/api/`
+   (11 files: `bootstrap.php`, `auth.php`, `index.php`, `crud.php`, `entity-schema.php`,
+   `subscribe.php`, `enquiries.php`, `enquiry-store.php`, `upload.php`, `track.php`,
+   `indexnow.php`; SHA-256 `95df8bd9b7d4f6701587d9d8092666faee671528399eae9b07d7c0f3955bb378`).
+   The bundle contains no `config.php`, no `.htaccess`, and no SQL — the live `config.php` must
+   never be overwritten, and the existing `.htaccess` denies `config.php`/`*.sql`/`*.zip`.
+3. Verify over HTTPS: `/api/index.php?entity=settings` returns 200 JSON, `/api/track.php` answers
+   204, `GET /api/enquiries.php` answers 405, and a real contact submission returns 201 with a
+   32-hex reference (it also needs `enquiries` imported first). Mail delivery still requires the
+   worker cron from **Enquiries** above; the API only queues outbox rows.
+4. Newsletter, analytics, and admin pages then work without a rebuild — the deployed bundle
+   already calls these endpoints. No `config.php` edit and no `AUTH_PEPPER` rotation are involved.
+
+The migration and API code were exercised on 2026-10-31 against MariaDB 11.4.13 on a scratch
+database (simulated live schema twice, fresh install twice, duplicate-row guard, settings/apps
+reads, enquiry 201 + owner/ack outbox rows, cross-origin 403, GET 405, subscribe/unsubscribe,
+analytics insert), with `php -l` clean on every file. Applying it to production changes schema
+and code only; it sends no mail and invents no settings values.
+
 ## Steps
 ```bash
 npm run build                        # in site/ — also emits per-route meta shells
