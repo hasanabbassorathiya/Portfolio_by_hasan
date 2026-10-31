@@ -81,7 +81,8 @@ if ($isKv) {
     $groups = ['Field' => [
         ['name' => 'k', 'label' => 'Key', 'type' => 'text', 'required' => true,
          'help' => 'lowercase_with_underscores — e.g. hero_sub, availability, email'],
-        ['name' => 'v', 'label' => 'Value', 'type' => 'textarea', 'required' => true],
+        ['name' => 'v', 'label' => 'Value', 'type' => 'textarea', 'required' => true,
+         'help' => 'Tokens resolve from live data: {{years}}, {{apps}}, {{clients}}, {{users}}, {{platforms}}, {{client_metric:client-slug}}. Use them in the sub value or any text shown on the site.'],
     ]];
 }
 ?><!DOCTYPE html>

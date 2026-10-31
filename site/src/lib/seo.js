@@ -5,7 +5,7 @@ export const SITE_URL = 'https://hasanabbassorathiya.tech';
 export const SITE_NAME = 'Hasan Abbas Sorathiya';
 const DEFAULT_TITLE = 'Hasan Abbas Sorathiya · Senior Software & AI Engineer';
 const DEFAULT_DESCRIPTION =
-  'Senior mobile & AI engineer in Dubai. Native iOS and Android, Flutter as my primary cross-platform stack, plus MERN full-stack, RAG and AI agents. 7+ years shipping apps used by 100K+ people.';
+  'Senior mobile & AI engineer in Dubai. Native iOS and Android, Flutter as my primary cross-platform stack, plus MERN full-stack, RAG and AI agents. Shipping production apps end to end.';
 
 function upsertMeta(selector, attrs) {
   let el = document.head.querySelector(selector);

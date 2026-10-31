@@ -210,7 +210,10 @@ export function Work() {
 
 export function Receipts() {
   const apps = useApps();
+  const clients = useClients();
   const duas = apps.find((app) => app.slug === 'duas-and-aamal');
+  const good2go = clients.find((client) => client.slug === 'good2go-loans');
+  const market = good2go?.facts?.find?.(([label]) => label === 'Market')?.[1];
 
   return (
     <section id="receipts" className="mx-auto max-w-[1180px] px-5 py-24 md:py-32">
@@ -224,7 +227,7 @@ export function Receipts() {
         blurb="No invented quotes. Public store ratings and shipped outcomes you can verify."
         action={
           <span className="font-mono text-[9px] uppercase tracking-[0.18em] text-text-muted">
-            Store data · Oct 2026
+            Store ratings from the app catalogue
           </span>
         }
       />
@@ -263,30 +266,34 @@ export function Receipts() {
           </div>
         </article>}
 
-        <article className="group rounded-[1.6rem] border border-ink/10 bg-surface p-7 transition duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-1 hover:border-ink/25 md:p-8">
+        {good2go && <article className="group rounded-[1.6rem] border border-ink/10 bg-surface p-7 transition duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-1 hover:border-ink/25 md:p-8">
           <div className="flex items-start justify-between gap-4">
-            <span className="font-serif text-6xl leading-none tracking-[-0.02em] text-hl-a">50K+</span>
+            <span className="font-serif text-6xl leading-none tracking-[-0.02em] text-hl-a">{good2go.metric}</span>
             <span className="font-mono text-[9px] uppercase tracking-[0.16em] text-text-muted">
-              Good2Go Loans
+              {good2go.name}
             </span>
           </div>
           <p className="mt-7 max-w-[48ch] text-[15px] leading-[1.72] text-text/80">
-            At Good2Go, the mobile work connected onboarding, secure account access, and lending
-            journeys in one Flutter app. The product reached 50,000+ people in New Zealand, with an
-            architecture the team could keep extending instead of starting again.
+            At {good2go.name}, the mobile work connected onboarding, secure account access, and
+            lending journeys in one Flutter app. The product reached {good2go.metric}{' '}
+            {good2go.metricLabel}, with an architecture the team could keep extending instead of
+            starting again.
           </p>
           <div className="mt-7 flex flex-wrap items-center gap-5 border-t border-ink/10 pt-4 text-sm">
             <Link
-              to="/work/good2go-loans"
-              onClick={() => trackOpen('good2go-loans')}
+              to={`/work/${good2go.slug}`}
+              onClick={() => trackOpen(good2go.slug)}
               className="inline-flex items-center gap-2 font-medium text-text rule-link"
             >
               Read the case study
               <Arrow />
             </Link>
-            <span className="text-text-muted">FinTech · New Zealand</span>
+            <span className="text-text-muted">
+              {good2go.type}
+              {market ? ` · ${market}` : ''}
+            </span>
           </div>
-        </article>
+        </article>}
       </div>
     </section>
   );

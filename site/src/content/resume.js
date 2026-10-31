@@ -14,8 +14,8 @@ export const resume = {
   github: 'https://github.com/hasanabbassorathiya',
   githubLabel: 'github.com/hasanabbassorathiya',
   summary: [
-    'Mobile Engineering Lead with 7+ years designing, building, and shipping high-performance mobile applications across FinTech, digital lending, enterprise mobility, e-commerce, and consumer platforms. Deep expertise in Flutter/Dart, mobile architecture, Clean Architecture, MVVM, REST API integration, Firebase, AWS, CI/CD, and secure mobile development.',
-    'Leads mobile teams, owns technical decisions, and manages Android and iOS delivery end to end alongside Product, Backend, QA, DevOps, Security, and UX. Delivered financial applications, transactional workflows, authentication systems, and production platforms supporting 50K+ users across the UAE, Australia, and New Zealand. Also builds AI systems: LLM applications, RAG pipelines, agents, and automation (LangChain, OpenAI/Claude APIs, n8n, MCP servers) applied to real product and delivery problems.',
+    'Mobile Engineering Lead with {{years}} years designing, building, and shipping high-performance mobile applications across FinTech, digital lending, enterprise mobility, e-commerce, and consumer platforms. Deep expertise in Flutter/Dart, mobile architecture, Clean Architecture, MVVM, REST API integration, Firebase, AWS, CI/CD, and secure mobile development.',
+    'Leads mobile teams, owns technical decisions, and manages Android and iOS delivery end to end alongside Product, Backend, QA, DevOps, Security, and UX. Delivered financial applications, transactional workflows, authentication systems, and production platforms supporting {{client_metric:good2go-loans|50,000+}} users across the UAE, Australia, and New Zealand. Also builds AI systems: LLM applications, RAG pipelines, agents, and automation (LangChain, OpenAI/Claude APIs, n8n, MCP servers) applied to real product and delivery problems.',
   ],
   roles: [
     {
@@ -75,7 +75,7 @@ export const resume = {
       period: '08/2019 — 03/2021',
       location: 'Australia · Remote',
       summary:
-        'Led development of Good2Go Loans, a digital lending application serving 50,000+ users across New Zealand.',
+        'Led development of Good2Go Loans, a digital lending application serving {{client_metric:good2go-loans|50,000+}} users across New Zealand.',
       points: [
         'Built onboarding, authentication, account journeys, notifications, and API integrations.',
         'Designed a scalable Flutter architecture following Clean Architecture and SOLID principles.',
@@ -128,7 +128,7 @@ export const resume = {
       role: 'Senior Flutter Developer (Beedev Solutions)',
       detail: 'Digital lending app: onboarding, authentication, account journeys, and notifications.',
       href: 'https://www.goodtogoloans.com.au',
-      note: '50,000+ users across New Zealand',
+      note: '{{client_metric:good2go-loans|50,000+}} users across New Zealand',
     },
     {
       name: 'Nutrabay',

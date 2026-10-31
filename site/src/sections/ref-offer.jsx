@@ -1,14 +1,8 @@
 import React from 'react';
 import { Link } from '../lib/router';
 import { services } from '../content/services';
+import { useSiteMetrics } from '../lib/site-metrics';
 import { Arrow, ArrowBadge, Check, Kicker, SectionHead } from './ref-ui';
-
-const stats = [
-  { value: '7+', label: 'Years shipping' },
-  { value: '15', label: 'Apps shipped' },
-  { value: '100K+', label: 'Users impacted' },
-  { value: '52', label: 'Public repos' },
-];
 
 const steps = [
   {
@@ -78,6 +72,14 @@ const aiCards = [
 ];
 
 export function Stats() {
+  const metrics = useSiteMetrics();
+  const stats = [
+    metrics.yearsLabel && { value: metrics.yearsLabel, label: 'Years shipping' },
+    metrics.appsCount > 0 && { value: String(metrics.appsCount), label: 'Apps shipped' },
+    metrics.users && { value: metrics.users, label: 'Users impacted' },
+    metrics.clientsCount > 0 && { value: String(metrics.clientsCount), label: 'Client engagements' },
+  ].filter(Boolean);
+
   return (
     <section aria-label="Career at a glance" className="mx-auto max-w-[1180px] px-5">
       <div className="grid grid-cols-2 border-b border-ink/10 md:grid-cols-4">

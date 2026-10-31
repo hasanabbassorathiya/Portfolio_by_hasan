@@ -3,7 +3,7 @@ import { createRequire } from 'node:module';
 import { chromium } from 'playwright-core';
 
 const base = process.env.SITE_APACHE_URL || 'http://127.0.0.1:8099';
-const out = new URL('../evidence/2026-10-30/', import.meta.url).pathname;
+const out = new URL('../evidence/2026-10-31/', import.meta.url).pathname;
 const require = createRequire(import.meta.url);
 const axeSource = await readFile(require.resolve('axe-core/axe.min.js'), 'utf8');
 

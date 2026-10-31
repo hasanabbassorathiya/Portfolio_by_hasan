@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link } from '../lib/router';
-import { usePosts } from '../lib/live-content';
+import { useClients, usePosts, useProfile } from '../lib/live-content';
+import { useSiteMetrics } from '../lib/site-metrics';
 import { trackCta, trackEnquiry, trackOutbound, trackResume } from '../lib/analytics';
 import { Arrow, ArrowBadge, Kicker, SectionHead } from './ref-ui';
 
@@ -8,15 +9,6 @@ import { Arrow, ArrowBadge, Kicker, SectionHead } from './ref-ui';
 const bookingUrl = /^https:\/\/\S+$/.test(import.meta.env.VITE_CAL_URL || '')
   ? import.meta.env.VITE_CAL_URL
   : null;
-
-const facts = [
-  ['Based in', 'Dubai, UAE'],
-  ['Experience', '7+ years'],
-  ['Apps shipped', '15'],
-  ['Languages', 'English · Hindi · Gujarati · Urdu'],
-  ['Education', 'BSc IT, University of Mumbai'],
-  ['Availability', 'Immediate · remote-friendly'],
-];
 
 const tools = [
   { label: 'Mobile', items: ['Flutter', 'Dart', 'Riverpod', 'BLoC', 'Firebase', 'Android TV'] },
@@ -51,26 +43,39 @@ const enquiryErrors = {
 };
 
 export function About() {
+  const metrics = useSiteMetrics();
+  const profile = useProfile();
+  const clients = useClients();
+  const good2go = clients.find((client) => client.slug === 'good2go-loans');
+  const facts = [
+    ['Based in', profile.location],
+    ['Experience', metrics.yearsLabel && `${metrics.yearsLabel} years`],
+    ['Apps shipped', metrics.appsCount > 0 && String(metrics.appsCount)],
+    ['Languages', 'English · Hindi · Gujarati · Urdu'],
+    ['Education', profile.education],
+    ['Availability', profile.availability_detail || profile.availability],
+  ].filter(([, value]) => value);
+
   return (
     <section id="about" className="border-y border-ink/10 bg-surface">
       <div className="mx-auto grid max-w-[1180px] gap-12 px-5 py-24 md:py-32 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
         <div className="flex flex-col">
           <Kicker>Who I am</Kicker>
           <h2 className="mt-5 max-w-[18ch] font-serif text-[clamp(2.3rem,4.6vw,3.9rem)] font-normal leading-[1.01] tracking-[-0.015em] text-text">
-            Seven years of shipping products people <em className="italic text-hl-a">keep</em> —
+            {metrics.yearsLabel} years of shipping products people <em className="italic text-hl-a">keep</em> —
           </h2>
           <div className="mt-7 flex flex-col gap-5 text-[15px] leading-[1.8] text-text-muted">
             <p className="text-text">not just launch, forget, and rewrite a year later.</p>
             <p>
-              I&apos;m a senior software and AI engineer in Dubai. For the last seven years I have
-              shipped mobile products across fintech, e-commerce, mobility, and community platforms,
-              reaching more than 100,000 users across the UAE, Australia, and New Zealand.
+              I&apos;m a senior software and AI engineer in Dubai. For the last {metrics.years} years I
+              have shipped mobile products across fintech, e-commerce, mobility, and community
+              platforms, reaching {metrics.users} users across the UAE, Australia, and New Zealand.
             </p>
             <p>
               Most recently I led mobile engineering at Chalhoub Group for EVLAB: architecture,
               delivery, releases, and production support. Before that I led Flutter teams at
-              Belong Interactive and built digital lending at Beedev for 50,000+ users in New
-              Zealand.
+              Belong Interactive and built digital lending at Beedev
+              {good2go ? ` for ${good2go.metric} users` : ''} in New Zealand.
             </p>
             <p>
               Now I work independently across mobile products — native iOS and Android, with

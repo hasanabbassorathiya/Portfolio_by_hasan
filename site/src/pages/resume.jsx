@@ -1,6 +1,7 @@
 import React from 'react';
 import { resume } from '../content/resume';
 import { useExperiences, useSkillGroups } from '../lib/live-content';
+import { interpolate, useSiteMetrics } from '../lib/site-metrics';
 import { Link } from '../lib/router';
 import { SITE_NAME, SITE_URL, personJsonLd, useSeo } from '../lib/seo';
 import { trackCta, trackResume } from '../lib/analytics';
@@ -41,10 +42,11 @@ function Section({ title, children }) {
 export function ResumePage() {
   const experiences = useExperiences();
   const skills = useSkillGroups();
+  const metrics = useSiteMetrics();
   useSeo({
     title: `Résumé · ${SITE_NAME} · Senior Software & AI Engineer`,
     description:
-      'Résumé for Hasan Abbas Sorathiya: 7+ years of mobile engineering, Flutter architecture, AI integration and automation, and full-stack delivery. Web version of the downloadable PDF.',
+      `Résumé for Hasan Abbas Sorathiya: ${metrics.yearsLabel} years of mobile engineering, Flutter architecture, AI integration and automation, and full-stack delivery. Web version of the downloadable PDF.`,
     path: '/resume',
     jsonLd: personJsonLd,
   });
@@ -114,7 +116,7 @@ export function ResumePage() {
           <Section title="Profile">
             <div className="mt-3 space-y-2 border-t border-[#16130f]/10 pt-4 text-[13px] leading-[1.65] text-[#16130f]/85">
               {resume.summary.map((paragraph) => (
-                <p key={paragraph.slice(0, 40)}>{paragraph}</p>
+                <p key={paragraph.slice(0, 40)}>{interpolate(paragraph, metrics)}</p>
               ))}
             </div>
           </Section>
@@ -135,10 +137,10 @@ export function ResumePage() {
                       {role.company}
                       <span className="font-normal text-[#16130f]/70"> — {role.role}</span>
                     </h3>
-                    <p className="mt-1 text-[12.5px] leading-[1.6] text-[#16130f]/75">{role.summary}</p>
+                    <p className="mt-1 text-[12.5px] leading-[1.6] text-[#16130f]/75">{interpolate(role.summary, metrics)}</p>
                     <ul className="mt-1.5 list-disc space-y-1 pl-4 text-[12px] leading-[1.55] text-[#16130f]/75">
                       {role.points.map((point) => (
-                        <li key={point}>{point}</li>
+                        <li key={point}>{interpolate(point, metrics)}</li>
                       ))}
                     </ul>
                   </div>
@@ -175,9 +177,9 @@ export function ResumePage() {
                     </ContactLink>
                     <span className="font-normal text-[#16130f]/70"> — {app.role}</span>
                   </p>
-                  <p className="mt-1 text-[12px] leading-[1.55] text-[#16130f]/70">{app.detail}</p>
+                  <p className="mt-1 text-[12px] leading-[1.55] text-[#16130f]/70">{interpolate(app.detail, metrics)}</p>
                   <p className="mt-1 font-mono text-[9.5px] uppercase tracking-[0.08em] text-[#16130f]/70">
-                    {app.note}
+                    {interpolate(app.note, metrics)}
                   </p>
                 </li>
               ))}

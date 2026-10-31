@@ -1,5 +1,6 @@
 import React from 'react';
 import { useApps, useProfile } from '../lib/live-content';
+import { interpolate, platformLine, tickerLine, useSiteMetrics } from '../lib/site-metrics';
 import { trackCta, trackOutbound, trackResume } from '../lib/analytics';
 import { Arrow, ArrowBadge, Kicker } from './ref-ui';
 
@@ -50,6 +51,7 @@ const platforms = [
 export function Hero() {
   const apps = useApps();
   const profile = useProfile();
+  const metrics = useSiteMetrics();
   const featured = apps.find((app) => app.slug === 'duas-and-aamal') ?? apps[0];
   const marqueeApps = apps.slice(0, 8);
   const socialLinks = socials.map((item) => {
@@ -73,7 +75,7 @@ export function Hero() {
             <span className="h-1.5 w-1.5 rounded-full bg-emerald-600" aria-hidden="true" />
             {profile.availability}
             <span className="hidden text-ink/20 sm:inline">/</span>
-            <span className="hidden sm:inline">7+ years · 16 apps · 100K+ users</span>
+            <span className="hidden sm:inline">{tickerLine(metrics)}</span>
           </p>
         </div>
 
@@ -88,7 +90,7 @@ export function Hero() {
             </h1>
 
             <p className="rise rise-2 mt-7 max-w-[54ch] text-[16px] leading-[1.72] text-text-muted md:text-[17px]">
-              {profile.sub}
+              {interpolate(profile.sub, metrics)}
             </p>
 
             <ul className="rise rise-2 mt-6 flex flex-wrap items-center gap-2 font-mono text-[10px] uppercase tracking-[0.14em]">
@@ -224,7 +226,7 @@ export function Hero() {
         <div className="mx-auto flex max-w-[1180px] flex-wrap items-baseline justify-between gap-2 px-5 pt-5">
           <Kicker>Products in production</Kicker>
           <span className="font-mono text-[9px] uppercase tracking-[0.16em] text-text-muted">
-            16 apps · iOS · Android · Web · TV
+            {platformLine(metrics)}
           </span>
         </div>
         <div className="marquee marquee-fade mt-4 overflow-hidden pb-5">

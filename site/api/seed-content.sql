@@ -975,7 +975,7 @@ INSERT INTO `experiences` (`company`, `position`, `period`, `location`, `summary
   ('Belong Interactive', 'Lead Senior Software Engineer — Mobile', '08/2022 — 06/2023', 'Dubai, UAE', 'Delivered enterprise mobile apps across hospitality, lifestyle, retail, and customer experience platforms.', '["Led Flutter teams across architecture, development standards, code reviews, and production delivery.","Shipped the Nakheel Marinas app to 15,000+ downloads in its first month.","Managed sprint planning, estimation, and delivery coordination with Product, Design, Backend, QA, and DevOps."]', 1),
   ('Masaar', 'Senior Software Engineer — Mobile', '01/2022 — 08/2022', 'Dubai, UAE', 'Modernized a cross-border e-commerce platform serving customers importing products from Japan and Korea.', '["Re-architected the Flutter application for scalability, maintainability, and faster development.","Delivered UX and workflow improvements that contributed to roughly 25% better conversion.","Built secure authentication flows and optimized the end-to-end purchase journey."]', 2),
   ('Vervali Systems', 'Team Lead — Flutter', '03/2021 — 11/2021', 'USA · Remote', 'Led Flutter development teams delivering fintech-oriented mobile solutions.', '["Built Urban Ledger, a financial management app covering transactions and customer operations.","Implemented payment flows, secure API communication, and validation logic.","Mentored developers and improved quality through architecture guidance and code reviews."]', 3),
-  ('Beedev Solutions', 'Senior Flutter Developer', '08/2019 — 03/2021', 'Australia · Remote', 'Led development of Good2Go Loans, a digital lending application serving 50,000+ users across New Zealand.', '["Built onboarding, authentication, account journeys, notifications, and API integrations.","Designed a scalable Flutter architecture following Clean Architecture and SOLID principles.","Owned Android and iOS deployment workflows, production monitoring, and improvements."]', 4),
+  ('Beedev Solutions', 'Senior Flutter Developer', '08/2019 — 03/2021', 'Australia · Remote', 'Led development of Good2Go Loans, a digital lending application serving {{client_metric:good2go-loans|50,000+}} users across New Zealand.', '["Built onboarding, authentication, account journeys, notifications, and API integrations.","Designed a scalable Flutter architecture following Clean Architecture and SOLID principles.","Owned Android and iOS deployment workflows, production monitoring, and improvements."]', 4),
   ('Kumite 1 League', 'Flutter Developer', '01/2019 — 08/2020', 'Mumbai, India', 'Early Flutter delivery across combat-sports media and league operations.', '["Built admin panels and mobile experiences backed by Firebase.","Worked across maps, media, and live-event features in a small product team."]', 5)
 ON DUPLICATE KEY UPDATE `period` = VALUES(`period`), `location` = VALUES(`location`), `summary` = VALUES(`summary`), `points` = VALUES(`points`), `sort_order` = VALUES(`sort_order`);
 
@@ -1041,8 +1041,10 @@ INSERT INTO `profile` (`k`, `v`) VALUES
   ('role', 'Senior Software & AI Engineer'),
   ('kicker', 'Senior mobile & AI engineer · Dubai'),
   ('availability', 'Available for new work'),
+  ('availability_detail', 'Immediate · remote-friendly'),
   ('open_to', 'Open to senior roles · consulting · collaborations'),
-  ('sub', 'Senior mobile and AI engineer in Dubai. Seven years, fifteen shipped apps, and 100,000+ users across the UAE, Australia, and New Zealand — native iOS and Android, Flutter as my primary cross-platform stack, and the AI systems behind the product. Built to keep working after launch.'),
+  ('users_reached', '100K+'),
+  ('sub', 'Senior mobile and AI engineer in Dubai. {{years}} years, {{apps}} shipped apps, and {{users}} users across the UAE, Australia, and New Zealand — native iOS and Android, Flutter as my primary cross-platform stack, and the AI systems behind the product. Built to keep working after launch.'),
   ('caption', 'iOS · Android · Flutter · AI'),
   ('location', 'Dubai, UAE'),
   ('phone', '+971 58 960 2320'),

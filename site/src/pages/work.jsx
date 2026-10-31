@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from '../lib/router';
 import { useApps, useClients } from '../lib/live-content';
+import { useSiteMetrics } from '../lib/site-metrics';
 import { useSeo, SITE_URL, personJsonLd } from '../lib/seo';
 import { Kicker, Arrow } from '../sections/ref-ui';
 import { trackOpen, trackOutbound } from '../lib/analytics';
@@ -8,10 +9,17 @@ import { trackOpen, trackOutbound } from '../lib/analytics';
 export function WorkPage() {
   const apps = useApps();
   const clients = useClients();
+  const metrics = useSiteMetrics();
+  const stats = [
+    [String(metrics.clientsCount), 'Client engagements'],
+    [String(metrics.appsCount), 'Apps shipped'],
+    [metrics.users, 'Users impacted'],
+    [metrics.yearsLabel, 'Years in production'],
+  ].filter(([value]) => value);
   useSeo({
     title: 'Work · Hasan Abbas Sorathiya',
     description:
-      'Client engagements and shipped apps: EVLAB at Chalhoub Group, Good2Go Loans, Nakheel Marinas, and fifteen production apps across iOS, Android, web, and Android TV.',
+      `Client engagements and shipped apps: EVLAB at Chalhoub Group, Good2Go Loans, Nakheel Marinas, and ${metrics.appsCount} production apps across ${metrics.platformsLabel}.`,
     path: '/work',
     type: 'website',
     image: '/og/work.png',
@@ -50,26 +58,21 @@ export function WorkPage() {
     <main className="pt-[68px]">
       <section className="border-b border-[var(--border)] bg-deep">
         <div className="mx-auto max-w-[1180px] px-[clamp(1.25rem,5vw,4rem)] py-[clamp(3rem,7vw,6rem)]">
-          <Kicker>Selected work · 2019 — 2026</Kicker>
+          <Kicker>Selected work · {metrics.rangeLabel}</Kicker>
           <div className="mt-7 grid gap-8 lg:grid-cols-[1.2fr_0.8fr] lg:items-end lg:gap-16">
             <h1 className="max-w-[24ch] font-serif text-[clamp(2.6rem,6.4vw,4.9rem)] leading-[0.98] tracking-[-0.02em] text-text">
               Client platforms and shipped apps, with the{' '}
               <em className="italic text-accent">decisions</em> behind them.
             </h1>
             <p className="max-w-[48ch] text-[15px] leading-[1.78] text-text-muted">
-              Seven years of mobile delivery across fintech, mobility, hospitality, media, and
-              education. Below are the engagements where I owned the outcome — the brief, the
-              build, the release, and the production support after it.
+              {metrics.yearsLabel} years of mobile delivery across fintech, mobility, hospitality,
+              media, and education. Below are the engagements where I owned the outcome — the brief,
+              the build, the release, and the production support after it.
             </p>
           </div>
 
           <dl className="mt-12 grid grid-cols-2 gap-x-6 gap-y-6 border-t border-ink/10 pt-7 sm:grid-cols-4">
-            {[
-              ['3', 'Client engagements'],
-              ['15', 'Apps shipped'],
-              ['100K+', 'Users impacted'],
-              ['7+', 'Years in production'],
-            ].map(([value, label]) => (
+            {stats.map(([value, label]) => (
               <div key={label}>
                 <dt className="font-mono text-[9px] uppercase tracking-[0.16em] text-text-muted">
                   {label}

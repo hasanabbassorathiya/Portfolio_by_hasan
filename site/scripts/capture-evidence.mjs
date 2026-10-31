@@ -2,7 +2,7 @@ import { mkdir, writeFile } from 'node:fs/promises';
 import { chromium } from 'playwright-core';
 
 const base = process.env.SITE_APACHE_URL || 'http://127.0.0.1:8099';
-const out = new URL('../evidence/2026-10-29/', import.meta.url).pathname;
+const out = new URL('../evidence/2026-10-31/', import.meta.url).pathname;
 const widths = [
   [1440, 900],
   [1280, 800],
@@ -102,4 +102,4 @@ if (failed) {
   console.error('evidence capture failed a check');
   process.exit(1);
 }
-console.log(`screenshots written to site/evidence/2026-10-29/`);
+console.log(`screenshots written to site/evidence/2026-10-31/`);

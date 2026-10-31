@@ -164,6 +164,15 @@ try {
   await mkdir(outDir, { recursive: true });
   const { posts } = await vite.ssrLoadModule('/src/content/posts.js');
   const { apps } = await vite.ssrLoadModule('/src/content/apps.js');
+  const { clients } = await vite.ssrLoadModule('/src/content/clients.js');
+  const { experiences } = await vite.ssrLoadModule('/src/content/experience.js');
+  const { profile } = await vite.ssrLoadModule('/src/content/profile.js');
+  const { computeMetrics } = await vite.ssrLoadModule('/src/lib/site-metrics.js');
+  const metrics = computeMetrics({ apps, clients, experiences, profile });
+  const rated = apps.filter((app) => app.rating?.value).map((app) => app.rating.value);
+  const ratingRange = rated.length
+    ? `${Math.min(...rated).toFixed(1)}–${Math.max(...rated).toFixed(1)}★`
+    : '';
 
   const cards = [
     {
@@ -173,8 +182,8 @@ try {
         title: 'I build mobile apps and AI systems that survive production.',
         titleHtml:
           'I build <span class="hl-b">mobile apps</span> and AI systems that <span class="hl-a">survive production</span>.',
-        dek: 'Senior mobile and AI engineer in Dubai — native iOS and Android, Flutter as my primary stack. Fifteen shipped products and 100K+ users.',
-        meta: ['15 apps shipped', '100K+ users', '7+ years'],
+        dek: `Senior mobile and AI engineer in Dubai — native iOS and Android, Flutter as my primary stack. ${metrics.appsCount} shipped products and ${metrics.users} users.`,
+        meta: [`${metrics.appsCount} apps shipped`, `${metrics.users} users`, `${metrics.yearsLabel} years`],
         footerNote: 'Senior Software & AI Engineer · Dubai',
       }),
     },
@@ -185,7 +194,7 @@ try {
         title: 'Notes from production',
         titleHtml: 'Notes from <span class="hl-b">production</span>',
         dek: 'Field notes on Flutter, AI, and the work of shipping software people trust.',
-        meta: ['7 essays', 'Every two weeks'],
+        meta: [`${posts.length} essays`, 'Every two weeks'],
         footerNote: 'Senior Software & AI Engineer · Dubai',
       }),
     },
@@ -203,10 +212,10 @@ try {
       output: 'apps.png',
       html: cardHtml({
         kicker: 'Apps',
-        title: 'Fifteen apps. One standard.',
-        titleHtml: 'Fifteen apps. One <span class="hl-b">standard</span>.',
-        dek: 'Shipped for iOS, Android, web, and Android TV — from a 4.9★ prayer companion to a TV-first IPTV player.',
-        meta: ['15 apps', '100K+ users', '4.8–5.0★'],
+        title: `${metrics.appsCount} apps. One standard.`,
+        titleHtml: `${metrics.appsCount} apps. One <span class="hl-b">standard</span>.`,
+        dek: `Shipped for ${metrics.platformsLabel} — from a prayer companion to a TV-first IPTV player.`,
+        meta: [`${metrics.appsCount} apps`, `${metrics.users} users`, ratingRange].filter(Boolean),
         footerNote: 'Creator & lead developer',
       }),
     },
@@ -217,8 +226,8 @@ try {
         title: 'Client platforms, with the decisions behind them.',
         titleHtml: 'Client platforms, with the <span class="hl-b">decisions</span> behind them.',
         dek: 'EVLAB at Chalhoub Group, Good2Go Loans, and Nakheel Marinas — mobile delivery owned from architecture to production support.',
-        meta: ['3 client engagements', '15 apps', '7+ years'],
-        footerNote: 'Client work · 2019—2026',
+        meta: [`${metrics.clientsCount} client engagements`, `${metrics.appsCount} apps`, `${metrics.yearsLabel} years`],
+        footerNote: `Client work · ${metrics.rangeLabel}`,
       }),
     },
     ...(await Promise.all(

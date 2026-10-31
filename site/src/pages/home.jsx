@@ -4,11 +4,14 @@ import { Hero } from '../sections/ref-hero';
 import { Stats, Services, Process, AiWorkflow } from '../sections/ref-offer';
 import { Work, Receipts } from '../sections/ref-work';
 import { About, WritingSection, Contact } from '../sections/ref-about';
+import { useSiteMetrics } from '../lib/site-metrics';
 import { useSeo, personJsonLd, SITE_URL } from '../lib/seo';
 
 export function HomePage() {
+  const metrics = useSiteMetrics();
   useSeo({
     path: '/',
+    description: `Senior mobile & AI engineer in Dubai. ${metrics.yearsLabel ? `${metrics.yearsLabel} years shipping` : 'Shipping'} iOS, Android and Flutter products${metrics.users ? ` used by ${metrics.users} people` : ''}, plus MERN full-stack, RAG and AI agents.`,
     jsonLd: [
       personJsonLd,
       {
