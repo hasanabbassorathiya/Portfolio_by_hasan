@@ -1,8 +1,8 @@
 <?php
 declare(strict_types=1);
-// Postiz -> site bridge: POST /api/social.php with a published-post payload.
+// Social -> site bridge: POST /api/social.php with a published-post payload.
 // Auth is a shared secret (X-Webhook-Secret header, or ?token= for setups that
-// cannot send headers). Rows dedupe on external_id, so Postiz retries are safe.
+// cannot send headers). Rows dedupe on external_id, so retries are safe.
 require __DIR__ . '/bootstrap.php';
 require __DIR__ . '/social-lib.php';
 

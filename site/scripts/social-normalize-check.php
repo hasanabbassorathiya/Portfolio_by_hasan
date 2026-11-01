@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
-// Database-free contract check for the Postiz payload normalizer.
+// Database-free contract check for the social webhook payload normalizer.
 require __DIR__ . '/../api/social-lib.php';
 
 $failures = 0;

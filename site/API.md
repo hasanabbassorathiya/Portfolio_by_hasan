@@ -364,7 +364,7 @@ Where to read it: `/admin/analytics.php` (7/30/90-day visitors, sessions, page v
 
 ### 6.4 Social activity webhook — `POST /api/social.php`
 
-Postiz calls this after a post publishes; the site then serves the row through `?entity=activity`. The endpoint is **write-only and secret-gated**: there is no public way to add to the feed.
+Any publisher automation calls this after a post goes live; the site then serves the row through `?entity=activity`. The endpoint is **write-only and secret-gated**: there is no public way to add to the feed.
 
 ```http
 POST /api/social.php
@@ -389,7 +389,7 @@ Content-Type: application/json
 | Empty posts | A payload with neither text nor a safe `http(s)` URL is stored with `published = 0`, so nothing blank reaches the site |
 | Storage | The raw JSON is kept in `raw_json` for auditing; normalized columns drive the feed |
 
-Normalization accepts the documented Postiz shapes plus a `{ data: { post: … } }` envelope. Fields read, in order:
+Normalization accepts flat publisher payloads plus a `{ data: { post: … } }` envelope. Fields read, in order:
 
 | Column | Source paths (first match wins) |
 | --- | --- |

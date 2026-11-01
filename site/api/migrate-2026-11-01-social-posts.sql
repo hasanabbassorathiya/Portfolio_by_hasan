@@ -1,4 +1,4 @@
--- 2026-11-01 — Postiz -> site activity feed
+-- 2026-11-01 — social webhook -> site activity feed
 -- Additive only; safe to re-run. The public read path returns [] until this runs.
 CREATE TABLE IF NOT EXISTS social_posts (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT,

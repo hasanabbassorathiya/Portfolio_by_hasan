@@ -17,7 +17,7 @@
    interactive email prompt, then a hidden password prompt, or pipe exactly two lines (email,
    password) from a secret manager. Web registration returns `403` by design, so the old
    `auth.php?action=register` call no longer works. Do this **before** exposing the site publicly.
-4. **API config**: copy `api/config.sample.php` → `api/config.php`, fill DB creds + `AUTH_PEPPER` (`php -r "echo bin2hex(random_bytes(32));"`). Add `SOCIAL_WEBHOOK_SECRET` (another 32+ byte secret) when the Postiz bridge should accept writes; leave the placeholder and `/api/social.php` stays disabled. `config.php` is gitignored — never commit it and never overwrite the live copy when uploading.
+4. **API config**: copy `api/config.sample.php` → `api/config.php`, fill DB creds + `AUTH_PEPPER` (`php -r "echo bin2hex(random_bytes(32));"`). Add `SOCIAL_WEBHOOK_SECRET` (another 32+ byte secret) when the social feed should accept writes; leave the placeholder and `/api/social.php` stays disabled. `config.php` is gitignored — never commit it and never overwrite the live copy when uploading.
 5. **GA4**: create property → copy the Measurement ID. Either paste it into **Admin → Settings → GA4 measurement ID** (applies on the next page load, no rebuild) or set `VITE_GA4_ID=G-XXXXXXX` in `site/.env.production` for the build-time default.
 6. **Cal.com** (optional): paste the booking URL in **Admin → Settings → Cal.com booking URL**; the booking CTA appears only when it is set.
 7. **Search Console**: put the verification token in **Admin → Settings**, then set `GSC_VERIFICATION` in `site/.env.production` and rebuild — the meta tag has to be in the raw HTML.
@@ -97,8 +97,8 @@ and is safe to re-run. Apply it before deploying the 2026-11-01 bundle: without 
 rows, runtime hydration replaces the seed catalogue with the fifteen CMS rows and
 the six new profiles disappear from `/apps`.
 
-## Social activity feed (Postiz bridge, 2026-11-01)
-`/activity` shows posts published through Postiz. The site side ships in this branch:
+## Social activity feed (2026-11-01)
+`/activity` shows posts sent to the site's signed webhook. The site side ships in this branch:
 `api/migrate-2026-11-01-social-posts.sql` creates `social_posts`; `api/social.php` accepts the
 webhook (POST only, `SOCIAL_WEBHOOK_SECRET`, dedupes on `external_id`); `api/index.php?entity=activity`
 serves the newest 50 published rows; the React build ships `/activity` and `activity.html`. The
@@ -109,9 +109,9 @@ Deploy order: apply the migration → upload `api/social.php` + `api/social-lib.
 `api/social-secret.php` returning the same 32+ character string → upload the rebuild → send one test
 POST → check `?entity=activity` and `/activity`. Keep the secret file out of git and the static bundle.
 
-Postiz itself needs Docker, PostgreSQL, Redis and Temporal, which Hostinger **Business** web
-hosting cannot run. Deploy it on a small VPS with `site/POSTIZ.md` and point its webhook at this
-site; the bridge works the same wherever Postiz runs.
+No scheduler is hosted on this plan. Any tool that can send JSON — curl, n8n, Make, Zapier, or a
+cron script — can publish with the shared secret; the feed stays empty until the first signed POST
+arrives.
 
 ## Newsletter (email capture)
 Signup forms on the home Writing section, `/blog`, and every essay post to `/api/subscribe.php`

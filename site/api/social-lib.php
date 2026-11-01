@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-// Pure payload normalization for the Postiz webhook. No database and no
+// Pure payload normalization for the social webhook. No database and no
 // bootstrap, so scripts/social-normalize-check.php can test the contract.
 
 function social_dig(array $data, string $path) {
@@ -27,7 +27,7 @@ function social_limit(string $value, int $length): string {
     return substr($value, 0, $length);
 }
 
-// Postiz integrations differ: some send a string, some an array of blocks.
+// Publishing tools differ: some send a string, some an array of blocks.
 function social_text(array $payload): string {
     $paths = ['post.content', 'content', 'text', 'body', 'message', 'data.post.content', 'data.content', 'data.text'];
     foreach ($paths as $path) {

@@ -63,7 +63,6 @@ site/api/social-secret.php
 
 # Local credentials inventory
 CREDENTIALS.md
-site/postiz/.env
 site/directus/.env
 
 # Service account keys
