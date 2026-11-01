@@ -59,6 +59,12 @@ ui-debug.log
 
 # PHP API secrets
 site/api/config.php
+site/api/social-secret.php
+
+# Local credentials inventory
+CREDENTIALS.md
+site/postiz/.env
+site/directus/.env
 
 # Service account keys
 *-service-account.json

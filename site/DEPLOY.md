@@ -3,12 +3,13 @@
 ## One-time prep
 1. **MySQL DB** (cPanel → MySQL Databases): create DB + user, then import, in this order:
    `api/schema.sql`, `api/v2-schema.sql`, `api/seed.sql`, `api/seed-content.sql`,
-   `api/enquiries-schema.sql` (via phpMyAdmin Import). Every statement is `CREATE TABLE IF NOT
+   `api/enquiries-schema.sql`, `api/migrate-2026-11-01-social-posts.sql` (via phpMyAdmin Import).
+   Every statement is `CREATE TABLE IF NOT
    EXISTS` / nullable `ALTER`, so re-importing later only adds what is missing — including
    `settings`, `media`, `analytics_events`, `analytics_daily`, the flattened `seo_*`/`aso_*`
-   columns, and the `subscribers`/`clients`/`apps`/`posts` tables. `seed-content.sql` is generated
-   from the site content with `npm run seed:sql` and upserts by slug; re-import it after content
-   changes (that is also how the "Shia" wording fix reaches an existing database).
+   columns, and the `subscribers`/`clients`/`apps`/`posts`/`social_posts` tables. `seed-content.sql`
+   is generated from the site content with `npm run seed:sql` and upserts by slug; re-import it
+   after content changes (that is also how the "Shia" wording fix reaches an existing database).
 2. **Uploads directory**: create `public_html/media/uploads/` and make it writable by PHP
    (0755 is enough on Hostinger; 0775 if the API runs as a different user). `api/upload.php`
    writes library images here and records them in `media`.
@@ -16,7 +17,7 @@
    interactive email prompt, then a hidden password prompt, or pipe exactly two lines (email,
    password) from a secret manager. Web registration returns `403` by design, so the old
    `auth.php?action=register` call no longer works. Do this **before** exposing the site publicly.
-4. **API config**: copy `api/config.sample.php` → `api/config.php`, fill DB creds + `AUTH_PEPPER` (`php -r "echo bin2hex(random_bytes(32));"`). `config.php` is gitignored — never commit it and never overwrite the live copy when uploading.
+4. **API config**: copy `api/config.sample.php` → `api/config.php`, fill DB creds + `AUTH_PEPPER` (`php -r "echo bin2hex(random_bytes(32));"`). Add `SOCIAL_WEBHOOK_SECRET` (another 32+ byte secret) when the Postiz bridge should accept writes; leave the placeholder and `/api/social.php` stays disabled. `config.php` is gitignored — never commit it and never overwrite the live copy when uploading.
 5. **GA4**: create property → copy the Measurement ID. Either paste it into **Admin → Settings → GA4 measurement ID** (applies on the next page load, no rebuild) or set `VITE_GA4_ID=G-XXXXXXX` in `site/.env.production` for the build-time default.
 6. **Cal.com** (optional): paste the booking URL in **Admin → Settings → Cal.com booking URL**; the booking CTA appears only when it is set.
 7. **Search Console**: put the verification token in **Admin → Settings**, then set `GSC_VERIFICATION` in `site/.env.production` and rebuild — the meta tag has to be in the raw HTML.
@@ -32,6 +33,7 @@ public_html/
 ├── index.html, blog.html    ← from site/dist/
 ├── apps.html                ← pre-rendered /apps index shell (title/OG/JSON-LD)
 ├── work.html                ← pre-rendered /work index shell (clients + case studies)
+├── activity.html            ← pre-rendered /activity shell (noindex social feed; not in sitemap)
 ├── resume.html              ← pre-rendered /resume shell (web résumé)
 ├── hasan-abbas-sorathiya-resume.pdf  ← from `npm run resume:pdf`, generated from /resume
 ├── _views/blog/*.html       ← pre-rendered post shells; deliberately outside /blog and /apps
@@ -44,15 +46,19 @@ public_html/
 ├── og/                      ← 1200×630 share cards per essay/app (`npm run og`)
 ├── api/                     ← site/api/  (php files only)
 │   ├── bootstrap.php, config.php, index.php, auth.php, crud.php, entity-schema.php,
-│   │   subscribe.php, enquiries.php, enquiry-store.php, upload.php, track.php, indexnow.php
-│   └── schema.sql, v2-schema.sql, seed.sql, seed-content.sql, enquiries-schema.sql
+│   │   subscribe.php, enquiries.php, enquiry-store.php, upload.php, track.php, indexnow.php,
+│   │   social.php, social-lib.php
+│   └── schema.sql, v2-schema.sql, seed.sql, seed-content.sql, enquiries-schema.sql,
+│       migrate-2026-10-31-live.sql, migrate-2026-11-01-app-catalogue.sql,
+│       migrate-2026-11-01-social-posts.sql
 ├── media/uploads/           ← created by the owner, writable by PHP (upload library)
 └── admin/                   ← site/admin/ (PHP dashboard, served outside the SPA)
     └── index.php, dashboard.php, edit.php, subscribers.php, enquiries.php,
         analytics.php, settings.php, guard.php, logout.php, admin.css
 ```
 `/blog` is served from `blog.html`, `/apps` from `apps.html`, `/work` from `work.html`, and
-`/apps/<slug>` / `/work/<slug>` from `_views/apps/…` and `_views/work/…`. App images live
+`/apps/<slug>` / `/work/<slug>` from `_views/apps/…` and `_views/work/…`. `/activity` is served
+from `activity.html`; it is `noindex` and deliberately absent from `sitemap.xml`. App images live
 under `/media/apps/…`, client logos under `/media/clients/…`. No physical route directories
 exist, so Apache never issues a directory-slash 301.
 
@@ -90,6 +96,22 @@ Automover TMS, Kokoro Michi, ChucklePlay — and updates `profile.stats_json` to
 and is safe to re-run. Apply it before deploying the 2026-11-01 bundle: without the
 rows, runtime hydration replaces the seed catalogue with the fifteen CMS rows and
 the six new profiles disappear from `/apps`.
+
+## Social activity feed (Postiz bridge, 2026-11-01)
+`/activity` shows posts published through Postiz. The site side ships in this branch:
+`api/migrate-2026-11-01-social-posts.sql` creates `social_posts`; `api/social.php` accepts the
+webhook (POST only, `SOCIAL_WEBHOOK_SECRET`, dedupes on `external_id`); `api/index.php?entity=activity`
+serves the newest 50 published rows; the React build ships `/activity` and `activity.html`. The
+footer link appears only after at least one row is live.
+
+Deploy order: apply the migration → upload `api/social.php` + `api/social-lib.php` → provide
+`SOCIAL_WEBHOOK_SECRET` in the live `api/config.php` (edit in place; never replace it) or upload
+`api/social-secret.php` returning the same 32+ character string → upload the rebuild → send one test
+POST → check `?entity=activity` and `/activity`. Keep the secret file out of git and the static bundle.
+
+Postiz itself needs Docker, PostgreSQL, Redis and Temporal, which Hostinger **Business** web
+hosting cannot run. Deploy it on a small VPS with `site/POSTIZ.md` and point its webhook at this
+site; the bridge works the same wherever Postiz runs.
 
 ## Newsletter (email capture)
 Signup forms on the home Writing section, `/blog`, and every essay post to `/api/subscribe.php`

@@ -160,3 +160,22 @@ export function mapProfile(rows) {
   }
   return profile;
 }
+
+export function mapActivity(row) {
+  const stamp = String(row.posted_at ?? '').trim();
+  const iso = stamp ? `${stamp.replace(' ', 'T')}Z` : '';
+  return {
+    id: String(row.external_id ?? row.id ?? ''),
+    provider: row.provider ?? '',
+    channel: row.channel ?? '',
+    kind: row.kind ?? 'post',
+    text: row.text ?? '',
+    url: row.url ?? '',
+    image: row.image ?? '',
+    postedAt: iso,
+    dateLabel: iso ? formatDate(iso.slice(0, 10)) : '',
+  };
+}
+
+export const mapActivities = (rows) =>
+  rows.map(mapActivity).sort((a, b) => b.postedAt.localeCompare(a.postedAt));

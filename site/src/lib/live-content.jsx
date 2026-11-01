@@ -6,6 +6,7 @@ import { experiences as seedExperiences, skillGroups as seedSkills } from '../co
 import { profile as seedProfile } from '../content/profile';
 import {
   groupSkills,
+  mapActivities,
   mapApps,
   mapClients,
   mapExperiences,
@@ -23,6 +24,7 @@ const state = {
   experiences: seedExperiences,
   skills: seedSkills,
   profile: seedProfile,
+  activity: [],
   live: false,
   started: false,
 };
@@ -53,6 +55,8 @@ const validators = {
     row && isFilled(row.company) && isFilled(row.position) && isFilled(row.period),
   skills: (row) => row && isFilled(row.grp) && isFilled(row.name),
   profile: (row) => row && isFilled(row.k) && typeof row.v === 'string',
+  activity: (row) =>
+    row && isFilled(row.external_id) && (isFilled(row.text) || isFilled(row.url)),
 };
 
 async function fetchEntity(entity, signal) {
@@ -97,6 +101,7 @@ export function loadLiveContent() {
       if (typeof mapped.sub === 'string' && mapped.sub.includes('{{users}}')) delete mapped.sub;
       state.profile = { ...seedProfile, ...mapped };
     }, true),
+    hydrate('activity', controller.signal, (value) => { state.activity = mapActivities(value); }),
   ]).then((results) => {
     clearTimeout(timer);
     state.live = results.some((result) => result.status === 'fulfilled' && result.value === true);
@@ -111,6 +116,7 @@ const snapshot = {
   experiences: () => state.experiences,
   skills: () => state.skills,
   profile: () => state.profile,
+  activity: () => state.activity,
 };
 
 export function useApps() {
@@ -135,6 +141,10 @@ export function useSkillGroups() {
 
 export function useProfile() {
   return useSyncExternalStore(subscribe, snapshot.profile, snapshot.profile);
+}
+
+export function useSocialPosts() {
+  return useSyncExternalStore(subscribe, snapshot.activity, snapshot.activity);
 }
 
 export function relatedPosts(posts, post, count = 2) {

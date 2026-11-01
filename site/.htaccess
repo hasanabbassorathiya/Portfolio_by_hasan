@@ -47,6 +47,8 @@ ErrorDocument 404 /404.html
   RewriteRule ^privacy/?$ privacy.html [L]
   RewriteCond %{DOCUMENT_ROOT}/community.html -f
   RewriteRule ^community/?$ community.html [L]
+  RewriteCond %{DOCUMENT_ROOT}/activity.html -f
+  RewriteRule ^activity/?$ activity.html [L]
 
   # Allow direct access to existing files
   RewriteCond %{REQUEST_FILENAME} -f

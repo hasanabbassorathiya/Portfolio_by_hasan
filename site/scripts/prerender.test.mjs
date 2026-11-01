@@ -78,6 +78,7 @@ test('build emits readable route bodies, real metadata, service sitemap and a no
     ['resources.html', /Useful things/],
     ['privacy.html', /What this site/],
     ['community.html', /A room for people who/],
+    ['activity.html', /What I publish/],
     ['_views/services/full-stack-api-development.html', /Backend, API &amp; full-stack integrations/],
     ['_views/apps/hoda.html', /Hoda/],
     ['_views/work/good2go-loans.html', /Good2Go/],
@@ -114,6 +115,11 @@ test('build emits readable route bodies, real metadata, service sitemap and a no
   assert.match(sitemap, /<loc>https:\/\/hasanabbassorathiya.tech\/community<\/loc>/);
   assert.match((await readFile(`${root}dist/community.html`, 'utf8')), /<link rel="canonical" href="https:\/\/hasanabbassorathiya.tech\/community"/);
   assert.doesNotMatch(sitemap, /\/404/);
+  const activity = await readFile(`${root}dist/activity.html`, 'utf8');
+  assert.match(activity, /<link rel="canonical" href="https:\/\/hasanabbassorathiya.tech\/activity"/);
+  assert.match(activity, /name="robots" content="noindex, follow"/);
+  assert.match(activity, /Nothing cross-posted yet/);
+  assert.doesNotMatch(sitemap, /\/activity</);
   const privacy = await readFile(`${root}dist/privacy.html`, 'utf8');
   assert.match(privacy, /<link rel="canonical" href="https:\/\/hasanabbassorathiya.tech\/privacy"/);
   assert.doesNotMatch(privacy, /name="robots" content="noindex/);

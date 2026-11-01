@@ -58,6 +58,7 @@ The response also sets `admin_token` as an `HttpOnly; SameSite=Lax` cookie, so t
 | `apps` | `apps` | `apps` |
 | `posts` | `posts` | `posts` |
 | `settings` | — (admin Settings page) | `settings` |
+| `activity` | — (written by `social.php`) | `social_posts` |
 
 ---
 
@@ -72,6 +73,7 @@ The response also sets `admin_token` as an `HttpOnly; SameSite=Lax` cookie, so t
 | `projects`, `experience`, `skills`, `testimonials` | all rows | `sort_order, id` |
 | `profile` | all rows | `k` |
 | `settings` | `is_public = 1 AND v <> ''` | `k` |
+| `activity` | `published = 1` only | `posted_at DESC`, max 50 |
 
 Response shapes:
 
@@ -87,10 +89,20 @@ Response shapes:
 { "entity": "settings", "data": { "ga4_id": "G-XXXXXXX", "community_enabled": "1" } }
 ```
 
+```json
+{ "entity": "activity", "data": [
+  { "id": 1, "external_id": "post-123", "provider": "linkedin",
+    "channel": "Hasan on LinkedIn", "kind": "post", "text": "Shipped…",
+    "url": "https://www.linkedin.com/posts/…", "image": "",
+    "posted_at": "2026-10-31 09:00:00" }
+] }
+```
+
 Notes that matter for the frontend:
 
 - `profile` and `settings` are **not** row lists. `profile` is a list of `{k,v}` rows; `settings` is a flat map of public keys with empty values removed.
 - An empty `apps`/`clients`/`posts` response is meaningful: the site treats it as "everything unpublished", so sections empty out. `experience`, `skills` and `profile` keep their built-in content when the table has no rows, so an unseeded install still renders a resume.
+- `activity` is a live-only feed: it has no seed rows, so an empty (or failed) response simply shows the empty state on `/activity`. If the `social_posts` table has not been created yet, the endpoint still answers `200` with `data: []` instead of failing the page.
 - Runtime SEO fields (`seo_title`, `seo_description`, `seo_image`, `noindex`) are consumed by the SPA per item; `seo_image` may be a site path or an absolute `https://` URL.
 - ASO fields (`aso_*`) are store-listing metadata edited in the CMS. They are served but never rendered on the website.
 
@@ -350,6 +362,49 @@ Privacy: there is **no raw IP column**. `visitor` is `HMAC-SHA256(ANALYTICS_SALT
 
 Where to read it: `/admin/analytics.php` (7/30/90-day visitors, sessions, page views, CTAs, store clicks, funnel, sources, campaigns, devices, browsers, countries, recent events, per-app clicks).
 
+### 6.4 Social activity webhook — `POST /api/social.php`
+
+Postiz calls this after a post publishes; the site then serves the row through `?entity=activity`. The endpoint is **write-only and secret-gated**: there is no public way to add to the feed.
+
+```http
+POST /api/social.php
+X-Webhook-Secret: <SOCIAL_WEBHOOK_SECRET>
+Content-Type: application/json
+
+{ "id": "post-123",
+  "providerIdentifier": "linkedin",
+  "integration": { "name": "Hasan on LinkedIn" },
+  "post": { "id": "post-123", "content": "Shipped…",
+            "releaseURL": "https://www.linkedin.com/posts/…",
+            "publishedAt": "2026-10-31T10:30:00.000Z" } }
+```
+
+| Guard | Rule |
+| --- | --- |
+| Method | `POST` only; anything else `405` |
+| Secret | `X-Webhook-Secret` header, or `?token=` for callers that cannot set headers. `hash_equals`, 32+ chars, placeholder `CHANGE_ME` treated as unset |
+| Size | 64 KB body cap → `413` |
+| JSON | Must decode to an object → `400` |
+| Idempotency | `external_id` is unique; a retry answers `200 { "duplicate": true }` instead of inserting twice |
+| Empty posts | A payload with neither text nor a safe `http(s)` URL is stored with `published = 0`, so nothing blank reaches the site |
+| Storage | The raw JSON is kept in `raw_json` for auditing; normalized columns drive the feed |
+
+Normalization accepts the documented Postiz shapes plus a `{ data: { post: … } }` envelope. Fields read, in order:
+
+| Column | Source paths (first match wins) |
+| --- | --- |
+| `external_id` | `post.id`, `postId`, `id`, `eventId`, `data.post.id`, `data.id`; otherwise `hash-sha256(raw)` |
+| `text` | `post.content`, `content`, `text`, `body`, `message`, nested `data.*`; arrays of blocks join with a blank line |
+| `url` | `post.releaseURL`, `releaseURL`, `post.url`, `url`, `permalink`, `post.permalink`; only `http(s)` survives |
+| `image` | `post.image`, `image`, `media.0.url`, `post.media.0.url` |
+| `provider` | `providerIdentifier`, `integration.providerIdentifier`, `provider` |
+| `channel` | `integration.name`, `channel.name`, `account.name` |
+| `posted_at` | `post.publishedAt`, `publishedAt`, `post.createdAt`, `createdAt`, `date`; stored UTC |
+
+Responses: `201 { "ok": true, "duplicate": false, "published": true, "external_id": "…" }` on the first write, `200` with `"duplicate": true` on a retry, `503` when the secret or table is not configured yet (fail closed).
+
+Set `SOCIAL_WEBHOOK_SECRET` in `api/config.php`, or upload `api/social-secret.php` returning the same 32+ character string when the live `config.php` must not be edited. The placeholder in `config.sample.php` keeps the endpoint disabled. `php scripts/social-normalize-check.php` is a database-free contract check for the parser.
+
 ---
 
 ## 7. SEO toolkit
@@ -385,8 +440,8 @@ Auth + CSRF required. Reads `indexnow_key` (lowercase hex 8–128), writes `/<ke
 
 ## 8. Setup checklist (new environment)
 
-1. Copy `api/config.sample.php` → `api/config.php` and fill DB credentials, `AUTH_PEPPER`, optional `ANALYTICS_SALT`. Never commit `config.php`.
-2. Import SQL in order: `schema.sql` → `v2-schema.sql` → `seed.sql` → `seed-content.sql`.
+1. Copy `api/config.sample.php` → `api/config.php` and fill DB credentials, `AUTH_PEPPER`, optional `ANALYTICS_SALT` and `SOCIAL_WEBHOOK_SECRET`. Never commit `config.php`.
+2. Import SQL in order: `schema.sql` → `v2-schema.sql` → `seed.sql` → `seed-content.sql` → `migrate-2026-11-01-social-posts.sql`.
 3. Create the first admin: `php scripts/create-admin.php you@example.com`.
 4. Open `/admin/` and sign in.
 5. Fill Settings → GA4, Discord, IndexNow, social URLs.
@@ -403,4 +458,4 @@ Auth + CSRF required. Reads `indexnow_key` (lowercase hex 8–128), writes `/<ke
 4. Run **Auth → Login**. The test script stores `token` and `csrf` as collection variables.
 5. Call anything. Create requests keep `published: 0`, save the new `id` into its variable (`appId`, `postId`, …), and Delete requests clean up after themselves.
 
-The collection mirrors the sections above: Auth, Public content (9 entities), Admin CRUD (8 entity folders × list/get/create/update/delete), Media, Intake & analytics, SEO tools.
+The collection mirrors the sections above: Auth, Public content (the entities listed in §1), Admin CRUD (8 entity folders × list/get/create/update/delete), Media, Intake & analytics, SEO tools.

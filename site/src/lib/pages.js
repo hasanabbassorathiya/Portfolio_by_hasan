@@ -15,6 +15,7 @@ const loaders = {
   service: () => import('../pages/service').then((m) => m.ServicePage),
   resources: () => import('../pages/resources').then((m) => m.ResourcesPage),
   community: () => import('../pages/community').then((m) => m.CommunityPage),
+  activity: () => import('../pages/activity').then((m) => m.ActivityPage),
   resume: () => import('../pages/resume').then((m) => m.ResumePage),
   privacy: () => import('../pages/privacy').then((m) => m.PrivacyPage),
 };

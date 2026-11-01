@@ -1,10 +1,11 @@
 import React from 'react';
 import { Link } from '../lib/router';
 import { trackCta, trackOutbound } from '../lib/analytics';
-import { useProfile } from '../lib/live-content';
+import { useProfile, useSocialPosts } from '../lib/live-content';
 
 export function SiteFooter() {
   const profile = useProfile();
+  const activity = useSocialPosts();
   const profiles = [
     ['LinkedIn', profile.linkedin],
     ['GitHub', profile.github],
@@ -59,6 +60,9 @@ export function SiteFooter() {
             <span className="font-mono text-[10px] uppercase tracking-[0.12em]">Site</span>
             <Link to="/resources" className="inline-flex min-h-11 items-center hover:text-band-fg">Resources</Link>
             <Link to="/community" className="inline-flex min-h-11 items-center hover:text-band-fg">Community</Link>
+            {activity.length > 0 && (
+              <Link to="/activity" className="inline-flex min-h-11 items-center hover:text-band-fg">Activity</Link>
+            )}
             <Link to="/privacy" className="inline-flex min-h-11 items-center hover:text-band-fg">Privacy</Link>
             <span className="font-mono text-[10px] uppercase tracking-[0.12em]">Elsewhere</span>
             {elsewhere.map(([label, href]) => {

@@ -58,6 +58,7 @@ export function matchRoute(path) {
   if (path === '/services') return { page: 'services' };
   if (path === '/resources') return { page: 'resources' };
   if (path === '/community') return { page: 'community' };
+  if (path === '/activity') return { page: 'activity' };
   if (path === '/resume') return { page: 'resume' };
   if (path === '/privacy') return { page: 'privacy' };
   const service = path.match(/^\/services\/([a-z0-9-]+)$/);

@@ -65,6 +65,7 @@ try {
     { route: '/services', page: 'services', name: 'ServicesPage' },
     { route: '/resources', page: 'resources', name: 'ResourcesPage' },
     { route: '/community', page: 'community', name: 'CommunityPage' },
+    { route: '/activity', page: 'activity', name: 'ActivityPage' },
     { route: '/resume', page: 'resume', name: 'ResumePage' },
     { route: '/privacy', page: 'privacy', name: 'PrivacyPage' },
     { route: '/apps', page: 'apps', name: 'AppsPage' },
@@ -91,7 +92,8 @@ try {
     console.log(`prerendered ${entry.route}`);
   }
 
-  const sitemapEntries = routes.filter(({ route }) => route !== '/404').map(({ route, date }) =>
+  // /404 and /activity are intentionally noindex and stay out of the sitemap.
+  const sitemapEntries = routes.filter(({ route }) => route !== '/404' && route !== '/activity').map(({ route, date }) =>
     `<url><loc>${SITE_URL}${route}</loc>${date ? `<lastmod>${escapeHtml(date)}</lastmod>` : ''}</url>`);
   await writeFile(path.join(dist, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${sitemapEntries.join('\n')}\n</urlset>\n`);
   console.log(`sitemap.xml (${sitemapEntries.length} urls)`);

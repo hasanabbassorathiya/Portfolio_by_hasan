@@ -22,6 +22,7 @@ const ServicesPage = lazyPage('services');
 const ServicePage = lazyPage('service');
 const ResourcesPage = lazyPage('resources');
 const CommunityPage = lazyPage('community');
+const ActivityPage = lazyPage('activity');
 const ResumePage = lazyPage('resume');
 const PrivacyPage = lazyPage('privacy');
 
@@ -86,6 +87,7 @@ function AppBody({ initialPage, initialPath }) {
   else if (matched.page === 'service') page = <ServicePage slug={matched.slug} />;
   else if (matched.page === 'resources') page = <ResourcesPage />;
   else if (matched.page === 'community') page = <CommunityPage />;
+  else if (matched.page === 'activity') page = <ActivityPage />;
   else if (matched.page === 'resume') page = <ResumePage />;
   else if (matched.page === 'privacy') page = <PrivacyPage />;
   else page = <NotFoundPage />;
