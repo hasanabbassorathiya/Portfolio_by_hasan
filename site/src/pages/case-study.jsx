@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from '../lib/router';
+import { AppIcon } from '../components/app-icon';
 import { useApps, useClients } from '../lib/live-content';
 import { useSeo, SITE_URL, personJsonLd } from '../lib/seo';
 import { Arrow, Check, Kicker } from '../sections/ref-ui';
@@ -286,7 +287,11 @@ export function CaseStudyPage({ slug }) {
                 to={`/apps/${app.slug}`}
                 className="group flex items-center gap-3 rounded-xl border border-ink/10 bg-surface/70 p-3.5 transition-colors duration-300 hover:border-ink/25"
               >
-                <img src={app.icon} alt="" loading="lazy" className="h-9 w-9 rounded-lg border border-ink/10" />
+                <AppIcon
+                  app={app}
+                  className="h-9 w-9 shrink-0 overflow-hidden rounded-lg border border-ink/10 object-cover"
+                  textClassName="text-[11px]"
+                />
                 <span className="min-w-0">
                   <span className="block truncate text-[13px] font-medium text-text">{app.name}</span>
                   <span className="block truncate font-mono text-[8.5px] uppercase tracking-[0.12em] text-text-muted">

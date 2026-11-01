@@ -41,7 +41,7 @@ export function mapApp(row, seed) {
         }
       : undefined,
     stack: decode(row.stack, []),
-    links: decode(row.links, {}),
+    links: { ...(seed?.links ?? {}), ...decode(row.links, {}) },
     summary: row.summary ?? '',
     features: decode(row.features, []),
     story: row.story ?? '',

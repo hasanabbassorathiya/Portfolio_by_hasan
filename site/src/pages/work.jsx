@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from '../lib/router';
+import { AppIcon } from '../components/app-icon';
 import { useApps, useClients } from '../lib/live-content';
 import { useSiteMetrics } from '../lib/site-metrics';
 import { useSeo, SITE_URL, personJsonLd } from '../lib/seo';
@@ -176,7 +177,11 @@ export function WorkPage() {
                 className="group flex items-center justify-between gap-4 border-t border-ink/10 py-4 transition-colors duration-300 hover:border-ink/30"
               >
                 <span className="flex min-w-0 items-center gap-3">
-                  <img src={app.icon} alt="" loading="lazy" className="h-8 w-8 rounded-[9px] border border-ink/10" />
+                  <AppIcon
+                    app={app}
+                    className="h-8 w-8 shrink-0 overflow-hidden rounded-[9px] border border-ink/10 object-cover"
+                    textClassName="text-[10px]"
+                  />
                   <span className="truncate text-sm font-medium text-text">{app.name}</span>
                 </span>
                 <span className="flex shrink-0 items-center gap-3">

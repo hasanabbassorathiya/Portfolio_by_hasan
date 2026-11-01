@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from '../lib/router';
+import { AppIcon } from '../components/app-icon';
 import { useApps, useProfile } from '../lib/live-content';
 import { interpolate, platformLine, tickerLine, useSiteMetrics } from '../lib/site-metrics';
 import { trackCta, trackOutbound, trackResume } from '../lib/analytics';
@@ -243,13 +244,10 @@ export function Hero() {
               </div>
 
               {featured && <div className="absolute -top-4 left-3 hidden items-center gap-2.5 rounded-2xl border border-ink/10 bg-surface/95 p-3 pr-4 shadow-[0_18px_40px_-28px_rgba(20,17,13,0.55)] backdrop-blur-sm md:-left-6 md:flex">
-                <img
-                  src={featured.icon}
-                  alt=""
-                  width="36"
-                  height="36"
-                  loading="lazy"
-                  className="h-9 w-9 rounded-[10px] border border-ink/10"
+                <AppIcon
+                  app={featured}
+                  className="h-9 w-9 overflow-hidden rounded-[10px] border border-ink/10 object-cover"
+                  textClassName="text-[11px]"
                 />
                 <div>
                   <p className="text-xs font-medium text-text">{featured.name}</p>
@@ -287,7 +285,7 @@ export function Hero() {
                 className="flex items-center gap-10 pr-10"
               >
                 {marqueeApps.map((app) => {
-                  const href = app.links.ios || app.links.android || app.links.web || app.links.github;
+                  const href = app.links.ios || app.links.android || app.links.web || app.links.github || app.links.website;
                   if (!href) return null;
                   return (
                     <a
@@ -299,13 +297,10 @@ export function Hero() {
                       onClick={() => trackOutbound(app.name, href)}
                       className="flex items-center gap-3 whitespace-nowrap opacity-70 transition duration-300 hover:opacity-100"
                     >
-                      <img
-                        src={app.icon}
-                        alt=""
-                        width="32"
-                        height="32"
-                        loading="lazy"
-                        className="h-8 w-8 rounded-[9px] border border-ink/10"
+                      <AppIcon
+                        app={app}
+                        className="h-8 w-8 overflow-hidden rounded-[9px] border border-ink/10 object-cover"
+                        textClassName="text-[10px]"
                       />
                       <span className="text-sm font-medium text-text">{app.name}</span>
                     </a>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from '../lib/router';
-import { shipped } from '../content/apps';
+import { AppIcon } from '../components/app-icon';
 import { useApps } from '../lib/live-content';
 import { useSeo, SITE_URL, personJsonLd } from '../lib/seo';
 import { trackOpen, trackCta, trackOutbound } from '../lib/analytics';
@@ -13,11 +13,11 @@ function AppCard({ app }) {
       className="group flex flex-col gap-5 rounded-2xl border border-[var(--border)] bg-surface p-6 transition-colors hover:border-accent/45"
     >
       <div className="flex items-start justify-between gap-4">
-        <img
-          src={app.icon}
-          alt={`${app.name} icon`}
-          className="h-16 w-16 rounded-2xl border border-accent/25 object-cover"
-          loading="lazy"
+        <AppIcon
+          app={app}
+          label={`${app.name} icon`}
+          className="h-16 w-16 overflow-hidden rounded-2xl border border-accent/25 object-cover"
+          textClassName="text-xl"
         />
         {app.rating && (
           <span className="rounded-full border border-accent/30 px-3 py-1 font-mono text-[10px] text-accent">
@@ -42,54 +42,11 @@ function AppCard({ app }) {
   );
 }
 
-function ShippedRow({ app }) {
-  const content = (
-    <>
-      <div className="flex min-w-0 flex-col gap-1">
-        <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-          <span className="font-serif text-lg text-text">{app.name}</span>
-          <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-accent">{app.role}</span>
-        </div>
-        <p className="max-w-[70ch] text-sm leading-[1.65] text-text-muted">{app.note}</p>
-      </div>
-      <div className="flex shrink-0 items-center gap-4 md:flex-col md:items-end md:gap-1">
-        <span className="font-mono text-[10px] uppercase tracking-[0.12em] text-text-muted">{app.platforms}</span>
-        {app.href && <span className="font-mono text-[11px] text-accent">Open ↗</span>}
-        {app.slug && <span className="font-mono text-[11px] text-accent">View app →</span>}
-      </div>
-    </>
-  );
-
-  const className =
-    'flex flex-col gap-3 border-t border-[var(--border)] py-6 md:flex-row md:items-baseline md:justify-between md:gap-8';
-
-  if (app.slug) {
-    return (
-      <Link
-        to={`/apps/${app.slug}`}
-        onClick={() => trackOpen(app.slug)}
-        className={`${className} group transition-colors hover:border-accent/40`}
-      >
-        {content}
-      </Link>
-    );
-  }
-  if (app.href) {
-    return (
-      <a href={app.href} target="_blank" rel="noreferrer" className={`${className} group transition-colors hover:border-accent/40`}>
-        {content}
-      </a>
-    );
-  }
-  return <div className={className}>{content}</div>;
-}
-
 export function AppsPage() {
   const apps = useApps();
-  const otherShipped = shipped.filter((entry) => !entry.slug && !apps.some((app) => app.name === entry.name));
-  const catalogue = [...apps, ...otherShipped];
   const platformCount = new Set(apps.flatMap((app) => app.platforms)).size;
-  const description = `${catalogue.length} apps across personal products, client work, and publishing contributions, with ${apps.length} app profiles and store or source links.`;
+  const linkedCount = apps.filter((app) => Object.keys(app.links ?? {}).length > 0).length;
+  const description = `${apps.length} apps across personal products, client work, and publishing contributions, with store or source links where they exist.`;
   useSeo({
     title: 'Apps · Hasan Abbas Sorathiya',
     description,
@@ -105,16 +62,12 @@ export function AppsPage() {
         description,
         mainEntity: {
           '@type': 'ItemList',
-          numberOfItems: catalogue.length,
-          itemListElement: catalogue.map((app, index) => ({
+          numberOfItems: apps.length,
+          itemListElement: apps.map((app, index) => ({
             '@type': 'ListItem',
             position: index + 1,
             name: app.name,
-            ...(app.slug
-              ? { url: `${SITE_URL}/apps/${app.slug}` }
-              : app.href
-                ? { url: app.href }
-                : {}),
+            url: `${SITE_URL}/apps/${app.slug}`,
           })),
         },
       },
@@ -133,18 +86,18 @@ export function AppsPage() {
 
           <div className="flex flex-col gap-5">
             <h1 className="max-w-[24ch] font-serif text-[clamp(2.4rem,6vw,4.6rem)] leading-[1.02] tracking-[-0.03em]">
-              {catalogue.length} apps. Different <em className="font-serif font-normal italic text-accent">contributions</em>.
+              {apps.length} apps. Different <em className="font-serif font-normal italic text-accent">contributions</em>.
             </h1>
             <p className="max-w-[70ch] text-[1.05rem] leading-[1.8] text-text-muted">
               Personal products, client work, and publishing contributions across iOS, Android, web, and Android TV.
-              {' '}{apps.length} app profiles below describe the products and my role; publishing is credited separately from development.
+              {' '}Every profile below describes the product and my role; publishing is credited separately from development.
             </p>
           </div>
 
           <div className="flex flex-wrap gap-x-10 gap-y-4 border-t border-[var(--border)] pt-6 font-mono text-[11px] uppercase tracking-[0.14em] text-text-muted">
-            <span><span className="text-accent">{catalogue.length}</span> apps in the portfolio</span>
-            <span><span className="text-accent">{apps.length}</span> app profiles</span>
+            <span><span className="text-accent">{apps.length}</span> apps in the portfolio</span>
             <span><span className="text-accent">{platformCount}</span> platforms</span>
+            <span><span className="text-accent">{linkedCount}</span> with store or source links</span>
           </div>
         </div>
       </section>
@@ -156,30 +109,25 @@ export function AppsPage() {
             {apps.length} app profiles — products and contributions
           </h2>
         </div>
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-          {apps.map((app) => (
-            <AppCard key={app.slug} app={app} />
-          ))}
-        </div>
+        {apps.length > 0 ? (
+          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+            {apps.map((app) => (
+              <AppCard key={app.slug} app={app} />
+            ))}
+          </div>
+        ) : (
+          <p className="border-t border-[var(--border)] pt-6 text-text-muted">
+            No app profiles are published right now. Check back soon.
+          </p>
+        )}
       </section>
 
       <section className="border-y border-[var(--border)] bg-deep">
-        <div className="mx-auto max-w-[1360px] px-[clamp(1.25rem,5vw,4rem)] py-[clamp(2.5rem,6vw,4.5rem)]">
-          <div className="flex flex-col gap-3 pb-6">
-            <p className="font-mono text-xs uppercase tracking-[0.22em] text-accent">More work</p>
-            <h2 className="font-serif text-[clamp(1.7rem,3.6vw,2.6rem)] tracking-[-0.02em]">
-              {otherShipped.length} more entries — client work and open source
-            </h2>
-          </div>
-          <div className="flex flex-col border-b border-[var(--border)]">
-            {otherShipped.map((app) => (
-              <ShippedRow key={app.name} app={app} />
-            ))}
-          </div>
-          <p className="mt-6 font-mono text-[11px] uppercase tracking-[0.14em] text-text-muted">
+        <div className="mx-auto flex max-w-[1360px] flex-col gap-4 px-[clamp(1.25rem,5vw,4rem)] py-[clamp(2.5rem,6vw,4rem)]">
+          <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-text-muted">
             Some client apps are no longer listed on public stores.
           </p>
-          <div className="mt-3 flex flex-wrap gap-x-6 gap-y-2 font-mono text-[11px] uppercase tracking-[0.14em]">
+          <div className="flex flex-wrap gap-x-6 gap-y-2 font-mono text-[11px] uppercase tracking-[0.14em]">
             <a
               href="https://apps.apple.com/ae/developer/hasan-abbas-sorathiya/id1734376366"
               target="_blank"

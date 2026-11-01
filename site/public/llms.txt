@@ -17,7 +17,7 @@ Availability: open to senior roles, consulting and product collaborations.
 
 ## Verified facts
 
-- 15 app profiles across iOS, Android, web and TV, plus a wider catalogue that credits publishing separately from development.
+- 21 app profiles across iOS, Android, web and TV, covering personal products, client work, and publishing contributions.
 - Good2Go Loans: 50,000+ users in New Zealand.
 - Nakheel Marinas: 15,000+ first-month downloads.
 - Duas and Aamal: 4.9 on Google Play with 1,058 reviews at the last check.
@@ -41,7 +41,7 @@ Availability: open to senior roles, consulting and product collaborations.
 - [App audits & specialist consulting](https://hasanabbassorathiya.tech/services/app-audit-consulting)
 - [Digital platform development](https://hasanabbassorathiya.tech/services/digital-platform-development)
 - [UI/UX & product design](https://hasanabbassorathiya.tech/services/ui-ux-product-design)
-- [Apps](https://hasanabbassorathiya.tech/apps): 21-entry catalogue with store or source links — 15 app profiles, plus Petassy, BlankSpace, and BULB VPN (unreleased builds) and entries credited as publishing rather than development.
+- [Apps](https://hasanabbassorathiya.tech/apps): 21 app profiles with store, product-site, or source links where they exist.
 - [Case studies](https://hasanabbassorathiya.tech/work): EVLAB, Good2Go Loans, Nakheel Marinas.
 - [Writing](https://hasanabbassorathiya.tech/blog): production engineering essays, RSS at /rss.xml.
 - [Resources](https://hasanabbassorathiya.tech/resources): the pub.dev package, reading and working-together notes.

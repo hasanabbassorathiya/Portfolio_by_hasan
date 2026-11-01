@@ -10,7 +10,7 @@ REPLACE INTO profile (k, v) VALUES
 ('currently_building', 'Carvan-e-Hind v2 — community platform for the trust — and a handful of AI agents in private beta'),
 ('creed', 'Engineering excellence is not just about code; it is about the impact it creates.'),
 ('experience_years', '6'),
-('stats_json', '[{"label":"Years Experience","value":6,"suffix":"+"},{"label":"App Profiles","value":15},{"label":"Client Engagements","value":3},{"label":"Good2Go Users","value":50,"suffix":"K+"}]');
+('stats_json', '[{"label":"Years Experience","value":6,"suffix":"+"},{"label":"App Profiles","value":21},{"label":"Client Engagements","value":3},{"label":"Good2Go Users","value":50,"suffix":"K+"}]');
 
 -- Featured projects
 REPLACE INTO projects (slug, title, category, year, client, role, description, stack, store_urls, is_featured, sort_order) VALUES

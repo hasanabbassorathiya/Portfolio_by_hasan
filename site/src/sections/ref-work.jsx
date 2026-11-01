@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from '../lib/router';
+import { AppIcon } from '../components/app-icon';
 import { useApps, useClients } from '../lib/live-content';
 import { trackOpen, trackOutbound } from '../lib/analytics';
 import { Arrow, ArrowBadge, Kicker, SectionHead } from './ref-ui';
@@ -14,16 +15,20 @@ function AppCard({ app }) {
       className="group flex min-h-[300px] flex-col overflow-hidden rounded-[1.4rem] border border-band-fg/10 bg-band-soft transition duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-1 hover:border-band-fg/25"
     >
       <div className="relative h-36 shrink-0 overflow-hidden border-b border-band-fg/10 bg-band">
-        <img
-          src={iconOnly ? app.icon : app.cover || app.screenshots[0]}
-          alt=""
-          loading="lazy"
-          className={`${iconOnly ? 'mx-auto h-28 w-28 p-3 object-contain' : 'h-full w-full object-cover object-top'} transition duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.04]`}
-        />
-        {!iconOnly && <div
-          aria-hidden="true"
-          className="absolute inset-0 bg-gradient-to-t from-band/90 via-band/15 to-transparent"
-        />}
+        {iconOnly ? (
+          <AppIcon
+            app={app}
+            className="mx-auto mt-4 h-28 w-28 overflow-hidden rounded-[1.4rem] border border-band-fg/10 object-contain"
+            textClassName="text-2xl"
+          />
+        ) : (
+          <img
+            src={app.cover || app.screenshots[0]}
+            alt=""
+            loading="lazy"
+            className="h-full w-full object-cover object-top transition duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.04]"
+          />
+        )}
         <span className="absolute bottom-3 left-5 font-mono text-[9px] uppercase tracking-[0.18em] text-band-fg/65">
           {app.platforms.join(' · ')}
         </span>

@@ -28,7 +28,7 @@ The site is a conversion surface for inbound roles, consulting and app users —
 |---|---|---|
 | Engineering — React/Vite site, PHP/MySQL API, admin CRM, deploy scripts | Done | `DELIVERY.md` §10, §18 |
 | Design — Bone & Ink system, self-hosted type, OG cards, full-colour imagery | Done | `DESIGN.md`, `COMPONENTS.md`, `evidence/2026-10-29/` |
-| Content — 15-profile app catalogue plus a 21-entry shipped list, 3 client case studies, 9 essays, services, resources, résumé | Done | `src/content/`, `prerender.test.mjs` |
+| Content — 21-profile app catalogue, 3 client case studies, 9 essays, services, resources, résumé | Done | `src/content/`, `prerender.test.mjs` |
 | Marketing — brag launch video, profile drafts, 4-week calendar, ASO plan | Drafted, not published | `../brag-output-2026-10-29-013040/`, `LINKEDIN.md`, `GITHUB.md`, `SOCIAL.md`, `ASO.md` |
 | Automation — A–F workflows, enquiry worker dry-run | Documented and tested except live mail | `AUTOMATIONS.md` |
 | QA — Node, PHP, hydration, axe, Playwright captures, Lighthouse | Done | `DELIVERY.md` §18 |

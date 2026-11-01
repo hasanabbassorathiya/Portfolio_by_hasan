@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from '../lib/router';
+import { AppIcon } from '../components/app-icon';
 import { useApps } from '../lib/live-content';
 import { useSeo, SITE_URL, personJsonLd } from '../lib/seo';
 import { trackCta, trackOutbound, trackStore } from '../lib/analytics';
@@ -25,7 +26,7 @@ export function AppPage({ slug }) {
             description: app.summary,
             applicationCategory: app.genre,
             operatingSystem: app.platforms.join(', '),
-            image: `${SITE_URL}${app.icon}`,
+            ...(app.icon ? { image: `${SITE_URL}${app.icon}` } : {}),
             ...(app.role === 'Publisher'
               ? { publisher: { '@type': 'Person', name: 'Hasan Abbas Sorathiya', url: SITE_URL } }
               : app.role?.startsWith('Creator')
@@ -72,10 +73,12 @@ export function AppPage({ slug }) {
 
           <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
             <div className="flex items-start gap-5">
-              <img
-                src={app.icon}
-                alt={`${app.name} icon`}
-                className="h-20 w-20 rounded-2xl border border-accent/30 object-cover shadow-lg md:h-24 md:w-24"
+              <AppIcon
+                app={app}
+                label={`${app.name} icon`}
+                className="h-20 w-20 shrink-0 overflow-hidden rounded-2xl border border-accent/30 object-cover shadow-lg md:h-24 md:w-24"
+                textClassName="text-3xl"
+                loading="eager"
               />
               <div className="flex flex-col gap-3">
                 <h1 className="font-serif text-[clamp(2rem,5vw,3.4rem)] leading-[1.05] tracking-[-0.03em]">
@@ -127,6 +130,17 @@ export function AppPage({ slug }) {
                     Open the web app ↗
                   </a>
                 )}
+                {app.links.website && (
+                  <a
+                    href={app.links.website}
+                    target="_blank"
+                    rel="noreferrer"
+                    onClick={() => trackOutbound(`${app.name} website`, app.links.website)}
+                    className="rounded-lg border border-[var(--border)] px-5 py-3 text-text-muted transition hover:border-accent/50 hover:text-text"
+                  >
+                    Visit the product site ↗
+                  </a>
+                )}
                 {app.links.github && (
                   <a
                     href={app.links.github}
@@ -154,17 +168,19 @@ export function AppPage({ slug }) {
               {app.story && <p className="leading-[1.8] text-text-muted">{app.story}</p>}
             </div>
 
-            <div className="flex flex-col gap-4">
-              <p className="font-mono text-xs uppercase tracking-[0.22em] text-accent">What is inside</p>
-              <ul className="flex flex-col divide-y divide-[var(--border)] border-y border-[var(--border)]">
-                {app.features.map((feature) => (
-                  <li key={feature} className="flex items-start gap-3 py-4">
-                    <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-accent" aria-hidden="true" />
-                    <span className="leading-[1.65] text-text">{feature}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
+            {app.features?.length > 0 && (
+              <div className="flex flex-col gap-4">
+                <p className="font-mono text-xs uppercase tracking-[0.22em] text-accent">What is inside</p>
+                <ul className="flex flex-col divide-y divide-[var(--border)] border-y border-[var(--border)]">
+                  {app.features.map((feature) => (
+                    <li key={feature} className="flex items-start gap-3 py-4">
+                      <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-accent" aria-hidden="true" />
+                      <span className="leading-[1.65] text-text">{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
 
             {app.decisions?.length > 0 && (
               <div className="flex flex-col gap-4">
@@ -202,21 +218,23 @@ export function AppPage({ slug }) {
           </div>
 
           <div className="flex flex-col gap-6">
-            <div className="grid grid-cols-2 gap-3">
-              {app.screenshots.map((src, index) => (
-                <div
-                  key={src}
-                  className="overflow-hidden rounded-[1.4rem] border border-[var(--border)] bg-surface p-2"
-                >
-                  <img
-                    src={src}
-                    alt={`${app.name} screenshot ${index + 1}`}
-                    className="w-full rounded-[1rem] object-cover"
-                    loading={index === 0 ? 'eager' : 'lazy'}
-                  />
-                </div>
-              ))}
-            </div>
+            {app.screenshots?.length > 0 && (
+              <div className="grid grid-cols-2 gap-3">
+                {app.screenshots.map((src, index) => (
+                  <div
+                    key={src}
+                    className="overflow-hidden rounded-[1.4rem] border border-[var(--border)] bg-surface p-2"
+                  >
+                    <img
+                      src={src}
+                      alt={`${app.name} screenshot ${index + 1}`}
+                      className="w-full rounded-[1rem] object-cover"
+                      loading={index === 0 ? 'eager' : 'lazy'}
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
             {app.metrics?.length > 0 && (
               <div className="grid grid-cols-3 gap-3 border-t border-[var(--border)] pt-6">
                 {app.metrics.map(([value, label]) => (
@@ -258,7 +276,11 @@ export function AppPage({ slug }) {
                 to={`/apps/${item.slug}`}
                 className="group flex items-center gap-4 rounded-xl border border-[var(--border)] bg-surface p-4 transition-colors hover:border-accent/40"
               >
-                <img src={item.icon} alt="" className="h-12 w-12 rounded-xl object-cover" loading="lazy" />
+                <AppIcon
+                  app={item}
+                  className="h-12 w-12 shrink-0 overflow-hidden rounded-xl object-cover"
+                  textClassName="text-sm"
+                />
                 <div className="min-w-0">
                   <p className="truncate font-serif text-lg group-hover:text-accent">{item.name}</p>
                   <p className="truncate font-mono text-[10px] uppercase tracking-[0.12em] text-text-muted">{item.genre}</p>

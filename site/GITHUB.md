@@ -11,7 +11,7 @@ Publish this in the repository named `hasanabbassorathiya` (the profile README r
 
 Senior Software & AI Engineer in Dubai. I build Flutter products and the AI systems behind them.
 
-Six-plus years of mobile engineering and 15 app profiles across iOS, Android, web and TV, including Good2Go Loans (50,000+ users in New Zealand) and Nakheel Marinas (15,000+ first-month downloads). Flutter specialist; LLMs, RAG, agents, MCP servers and n8n automation; backend and API work where it earns its place.
+Six-plus years of mobile engineering and 21 app profiles across iOS, Android, web and TV, including Good2Go Loans (50,000+ users in New Zealand) and Nakheel Marinas (15,000+ first-month downloads). Flutter specialist; LLMs, RAG, agents, MCP servers and n8n automation; backend and API work where it earns its place.
 
 **Currently**
 - `stoolap_flutter` — pure-Rust embedded SQL for Flutter, with vector search and reactive streams. [pub.dev](https://pub.dev/packages/stoolap_flutter) · [source](https://github.com/hasanabbassorathiya/stoolap-flutter)
@@ -31,7 +31,7 @@ Open to senior Flutter, mobile lead and AI engineering roles, plus consulting on
 ```
 
 Rules for this README:
-- Keep the numbers to the verified set: 15 app profiles, 50,000+ Good2Go users, 15,000+ Nakheel first-month downloads, 4.9 Play rating. Do not use a cross-client user total.
+- Keep the numbers to the verified set: 21 app profiles, 50,000+ Good2Go users, 15,000+ Nakheel first-month downloads, 4.9 Play rating. Do not use a cross-client user total.
 - Do not add star counts, download badges or "trusted by" logos.
 - Do not list client names that are not already published on the site.
 

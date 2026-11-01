@@ -8,7 +8,7 @@ Updated: 2026-10-31. This file records what was built, what was verified, and wh
 |---|---|---|
 | Public site (React/Vite, Bone & Ink) | Built, pre-rendered, tested locally | `npm run build`; `node --test site/scripts/prerender.test.mjs` |
 | Services pages | Six detail pages + index | `site/src/content/services.js`, tests in `services.test.mjs` |
-| App catalogue | 15 app profiles, store links, icons | `site/src/content/apps.js` |
+| App catalogue | 21 app profiles, store links, icons | `site/src/content/apps.js` |
 | Client case studies | Three studies | `site/src/content/clients.js` |
 | Essays | Nine posts, RSS, sitemap | `site/src/content/posts/`, `dist/rss.xml` |
 | Resources page + pub.dev feature | Live route `/resources` | `site/src/pages/resources.jsx` |
@@ -43,7 +43,7 @@ Observed from public homepages on 2026-10-29. Third-party figures are their own 
 |---|---|---|---|
 | Positioning | Google Developer Expert · product builder | AI-assisted solo agency; senior Android/Flutter | Senior mobile + AI + full-stack engineer, Dubai |
 | Primary conversion | Social links; no visible form in fetched HTML | Contact form + email, repeated CTAs | Durable enquiry form + direct email + sticky CTA |
-| Proof | Bio and public profile; metadata claims reach | Logos, nine case cards, two testimonials, metrics | 15 app profiles, 3 case studies, 9 essays, store links |
+| Proof | Bio and public profile; metadata claims reach | Logos, nine case cards, two testimonials, metrics | 21 app profiles, 3 case studies, 9 essays, store links |
 | Services | Not itemised on the homepage | Three engagement models + rescue audit | Six scoped services with boundaries and evidence |
 | Process | Not visible | Weekly demos, written scope | Explicit four-step process per service |
 | Content engine | Essays (external) | Medium articles | Nine first-party essays + RSS |
@@ -61,7 +61,7 @@ Observed from public homepages on 2026-10-29. Third-party figures are their own 
   /services/app-audit-consulting
   /services/digital-platform-development
   /services/ui-ux-product-design
-/apps                 15 app profiles
+/apps                 21 app profiles
 /work                 3 client case studies
 /blog                 9 essays + RSS
 /resources            Featured pub.dev package, code, reading, working together
@@ -82,7 +82,7 @@ Verified or supplied by the owner (see `hasan.md`, canonical):
 - BSc IT, University of Mumbai, 2019. The only listed credential is a Udemy course certificate with a public issuer PDF; no other certification is claimed (the PMP credential is not held).
 - App Store roster resolved 2026-10-29 through Apple's public lookup API for artist `1734376366`: Duas and Aamal, Hoda, Fragrance of Mastership, and Lumio TV. All four exist in `apps.js`. The developer web page itself redirected to the CN storefront, so the API result is the evidence.
 - `stoolap_flutter` exists on pub.dev (v2.0.1 observed 2026-10-29). Package name and URL verified.
-- App counts — the `/apps` catalogue has 15 profiles (`site/src/content/apps.js`), a mix of published and unreleased builds. `hasan.md` §6 also lists client and contributed apps that are not in the catalogue; the combined `shipped` list in `apps.js` has 21 entries. Marketing copy says "15 app profiles" and never claims all listed builds are shipped. The 100K+ cross-client user aggregate is withdrawn: the only attributable user figures are Good2Go Loans 50,000+ (New Zealand) and Nakheel Marinas 15,000+ first-month downloads.
+- App counts — the `/apps` catalogue has 21 profiles (`site/src/content/apps.js`), a mix of published and unreleased builds, client work, and publishing credits. Every profile is a CMS row; the six apps that used to exist only as hardcoded entries (EVLAB, Good2Go Loans, Nakheel Marinas, Automover TMS, Kokoro Michi, ChucklePlay) are in the catalogue and in `api/migrate-2026-11-01-app-catalogue.sql`. Marketing copy says "21 app profiles" and never claims all listed builds are shipped. The 100K+ cross-client user aggregate is withdrawn: the only attributable user figures are Good2Go Loans 50,000+ (New Zealand) and Nakheel Marinas 15,000+ first-month downloads.
 
 Unresolved / needs owner input:
 
@@ -212,7 +212,7 @@ Latest test results (2026-10-29):
 
 | Suite | Result |
 |---|---|
-| `app-catalog.test.mjs` | 29 pass |
+| `app-catalog.test.mjs` | 38 pass |
 | `live-content.test.mjs` | 21 pass |
 | `prerender.test.mjs` | 4 pass (includes build, resources, schema, sitemap, 404 and `llms.txt`) |
 | `services.test.mjs` | 11 pass (real SSR for the service index and all six detail pages) |
@@ -334,7 +334,7 @@ Key additions/changes in this pass:
 - `site/src/sections/ref-about.jsx`, `site/api/enquiry-store.php` — added `Full-time role` to the enquiry project types (and the server-side allow-list) so recruiting conversations don't get mislabelled as project work.
 - `site/src/lib/router.jsx` — default React import so the component renders under the classic JSX transform used by the config-less SSR test.
 - `site/scripts/a11y-audit.mjs` — axe-core sweep over 14 routes at two widths in both themes, plus a heading-outline assertion (one `h1`, no skipped levels inside `main`); exits non-zero on serious/critical findings.
-- `site/public/llms.txt` — AI-assistant summary of verified facts, services and canonical links; now links all six service detail pages and `/privacy`, and describes `/apps` as a 20-entry catalogue (15 shipped) instead of "11 app profiles". `prerender.test.mjs` asserts the service and privacy links.
+- `site/public/llms.txt` — AI-assistant summary of verified facts, services and canonical links; now links all six service detail pages and `/privacy`, and describes `/apps` as a 21-profile catalogue. `prerender.test.mjs` asserts the service and privacy links.
 - `site/GITHUB.md`, `site/LINKEDIN.md` — profile README, pinned-repo plan, headline/About/experience drafts.
 - `site/ASO.md` — store-listing plan for the five verified Play apps and owner-controlled App Store listings, with character-counted copy drafts and console-based measurement rules.
 - `site/AUTOMATIONS.md` — enquiries, content, job search, outreach, monitoring, and reporting routines, including what is deliberately manual and why.
@@ -406,7 +406,7 @@ Node suites are run from `site/` because `resume.test.mjs` resolves `public/` an
 | Internal link crawl | 48 unique `href="/…"` values extracted from `dist/*.html` and `dist/_views`, minus assets/media | 0 broken |
 | Meta and structured data | one-off Node audit over `dist/**/*.html` | 40 pages: no missing or duplicate titles/descriptions, 40 canonicals, 36 JSON-LD blocks all parse, every referenced OG image exists |
 | PHP syntax | `php -l` on every file under `api/`, `admin/`, `scripts/` | 20 files, 0 errors |
-| `llms.txt` coverage | assertions in `prerender.test.mjs` | All six service routes and `/privacy` linked; the app line matches the 15-profile `/apps` catalogue |
+| `llms.txt` coverage | assertions in `prerender.test.mjs` | All six service routes and `/privacy` linked; the app line matches the 21-profile `/apps` catalogue |
 | GA4 SPA page views | `VITE_GA4_ID=G-TEST123 npm run build`, served on `:8100`, Playwright `/` → `/services` → `/services/flutter-app-development`, then read `window.dataLayer` | Two `page_view` events after the initial one, with the correct `page_path` and the lazy page's `page_title` (250 ms delay); `enquiry_submit` still fires only on submit |
 | Cal.com booking wiring | `VITE_CAL_URL=https://cal.com/hasan-booking-test VITE_GA4_ID=G-TEST123` build on `:8123`; Playwright at 1440 px and 390 px | Link renders with the test `href`, `target="_blank"`, `rel="noreferrer"`, no overflow at 390 px, and fires `cta_click` `{kind: booking, meta: contact}`. The shipped build (variable unset) contains no "Prefer a call" string and no `cal.com` reference |
 | Six-width visual evidence | `node site/scripts/capture-evidence.mjs` | 50 captures (8 routes × 6 widths + 2 full-page) at 1440/1280/1024/768/390/320, all 200, no document overflow, fonts loaded; details in `site/evidence/2026-10-29/report.json` |
@@ -495,8 +495,8 @@ An independent live/local audit produced `AUDIT_2026-10-31.md` (detailed finding
 and **not deployed**.
 
 - Experience is pinned to the owner-confirmed 6+ years; the 100K+ aggregate is withdrawn and replaced by
-  the named Good2Go (50K+) and Nakheel (15K+) figures. The `/apps` page separates 15 profiles from the
-  21-entry catalogue.
+  the named Good2Go (50K+) and Nakheel (15K+) figures. The `/apps` page renders all 21
+  CMS-backed profiles.
 - The résumé is repositioned to Flutter & Dart, iOS and Android delivery, AI integration, and
   backend/API/full-stack integrations. PMP is removed; the only credential claimed is the Udemy
   certificate with a public issuer PDF.

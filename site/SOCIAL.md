@@ -17,7 +17,7 @@ https://hasanabbassorathiya.tech/blog/<slug>?utm_source=linkedin&utm_medium=soci
 >
 > So I rebuilt it as a system: the apps, the numbers, the architecture decisions, the essays. One place.
 >
-> - 15 app profiles across iOS, Android, and Android TV
+> - 21 app profiles across iOS, Android, and Android TV
 > - 50,000+ users on a lending platform in New Zealand, 15K+ first-month downloads for a marina app, and a 4.9★ prayer app
 > - 6+ years, most recently leading mobile delivery for an electric mobility platform in Dubai
 >
@@ -48,7 +48,7 @@ https://hasanabbassorathiya.tech/blog/<slug>?utm_source=linkedin&utm_medium=soci
 > - RAG that survives real users
 > - Localization lessons from a 4.6★ app
 >
-> Plus 15 app profiles and the decisions behind them.
+> Plus 21 app profiles and the decisions behind them.
 >
 > If you are on the same path, the writing is free and the RSS feed is there:
 > https://hasanabbassorathiya.tech/blog?utm_source=linkedin&utm_medium=social&utm_campaign=site-launch

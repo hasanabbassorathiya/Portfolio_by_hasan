@@ -59,7 +59,7 @@ exist, so Apache never issues a directory-slash 301.
 ## Fastest path — File Manager (no SSH)
 `site/deploy-public_html.zip` is built from `dist/` **plus `site/.htaccess`** and contains no
 `api/` or `admin/` files, so the live PHP panel and `config.php` are untouched. Current bundle
-(2026-10-30, incl. Klix and Urban Ledger): 156 files (8,534,844 bytes / 8,335 KB uncompressed; 6,984,086 bytes / 6.7 MB zip), SHA-256 `8a6366444d36134917ef6255ae1166e0ee3e2a7d889d73a960b88f8e133c944c`.
+(2026-11-01, incl. the six new app profiles): 196 files (8,804,777 bytes / 8,599 KB uncompressed; 7,060,573 bytes / 6.9 MB zip), SHA-256 `7ef121cbb6c52888dba2fec7ea350b21bc8187b693c533be7f8b253eb89ab022`.
 Because the zip is static-only, the newsletter forms need the two PHP files and one table
 described under **Newsletter** below; until those exist they fall back to a mailto message.
 1. hPanel → **Files → File Manager** → open `public_html`.
@@ -78,9 +78,18 @@ clients, apps, and posts — through `api/crud.php` behind token auth. The edito
 `admin/edit.php` renders the right fields per entity, validates JSON columns, toggles
 `published`, and deletes with confirmation. Upload `api/crud.php`, `api/index.php`,
 `admin/edit.php`, and `admin/admin.css` alongside the schema, then re-import
-`api/seed-content.sql` so the three client case studies, thirteen apps, and nine
+`api/seed-content.sql` so the three client case studies, twenty-one apps, and nine
 essays appear in the admin lists. `npm run seed:sql` regenerates that file from
 `src/content/` after content edits.
+
+## Catalogue migration (2026-11-01)
+`api/migrate-2026-11-01-app-catalogue.sql` inserts the six app rows that previously
+existed only in `src/content/apps.js` — EVLAB, Good2Go Loans, Nakheel Marinas,
+Automover TMS, Kokoro Michi, ChucklePlay — and updates `profile.stats_json` to
+21 app profiles. It upserts on `slug`, leaves the existing fifteen rows' ids alone,
+and is safe to re-run. Apply it before deploying the 2026-11-01 bundle: without the
+rows, runtime hydration replaces the seed catalogue with the fifteen CMS rows and
+the six new profiles disappear from `/apps`.
 
 ## Newsletter (email capture)
 Signup forms on the home Writing section, `/blog`, and every essay post to `/api/subscribe.php`
@@ -169,7 +178,7 @@ npm run build                        # in site/ — also emits per-route meta sh
 npm run resume:pdf                   # regenerate the PDF from the fresh build (writes public/ and dist/)
 cp .htaccess dist/.htaccess          # vite build empties dist/, so the htaccess must be re-copied
 rm -f deploy-public_html.zip && (cd dist && zip -qr ../deploy-public_html.zip .)
-# Before uploading, confirm `dist/assets/index-*.js` is about 379 kB and that `dist/index.html`
+# Before uploading, confirm `dist/assets/index-*.js` is about 384 kB and that `dist/index.html`
 # references exactly one entry script. A ~660 kB chunk means dist/ holds an unminified build, and
 # extra hero-/reel- script tags mean the stale manualChunks config is back — rebuild before zipping.
 # Order matters: `npm test` includes prerender.test.mjs, which runs `npm run build` unminified and

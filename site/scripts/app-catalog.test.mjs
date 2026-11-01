@@ -6,7 +6,7 @@ import { fileURLToPath } from 'node:url';
 import React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { createServer } from 'vite';
-import { apps, appBySlug, shipped } from '../src/content/apps.js';
+import { apps, appBySlug } from '../src/content/apps.js';
 
 // Public developer listings: Apple id1734376366, Google Play 5895887615343030170.
 const inventory = [
@@ -36,18 +36,16 @@ for (const [slug, platform, id] of inventory) {
     assert.equal(url.hostname, platform === 'ios' ? 'apps.apple.com' : 'play.google.com');
     assert.equal(platform === 'ios' ? url.pathname.match(/\/id(\d+)$/)?.[1] : url.searchParams.get('id'), id);
     assert.ok(app.platforms.includes(platform === 'ios' ? 'iOS' : 'Android'));
-    assert.equal(shipped.filter((row) => row.slug === slug).length, 1, 'Shipped row must link to details exactly once');
+    assert.equal(apps.filter((row) => row.slug === slug).length, 1, 'Catalogue entry must exist exactly once');
   });
 }
 
-test('catalogue and shipped list have unique, resolvable identities', () => {
+test('catalogue entries have unique, resolvable identities', () => {
   assert.equal(new Set(apps.map((app) => app.slug)).size, apps.length);
-  assert.equal(new Set(shipped.map((app) => app.name)).size, shipped.length);
-  for (const row of shipped.filter((app) => app.slug)) {
-    assert.ok(appBySlug(row.slug), `Unresolvable shipped link: ${row.slug}`);
-  }
-  for (const app of apps) {
-    assert.ok(shipped.some((row) => row.slug === app.slug), `Missing shipped identity: ${app.slug}`);
+  assert.equal(new Set(apps.map((app) => app.name)).size, apps.length);
+  assert.equal(apps.length, 21);
+  for (const slug of ['evlab', 'good2go-loans', 'nakheel-marinas', 'automover-tms', 'kokoro-michi', 'chuckleplay']) {
+    assert.ok(appBySlug(slug), `Missing catalogue entry: ${slug}`);
   }
 });
 
@@ -97,7 +95,6 @@ test('book and pilgrimage contributions are explicitly Publisher, not author or 
     assert.ok(app, `Missing catalogue entry: ${slug}`);
     assert.equal(app.role, 'Publisher');
     assert.match(app.attribution, /publish/i);
-    assert.equal(shipped.find((row) => row.slug === slug)?.role, 'Publisher');
   }
   assert.match(appBySlug('hoda').summary, /French.*English/i);
   assert.match(appBySlug('hoda').summary, /pilgrimage/i);
@@ -168,6 +165,8 @@ test('rendered catalogue and details keep counts, metadata and attribution hones
   t.after(async () => { globalThis.document = previousDocument; await server.close(); });
   const { AppsPage } = await server.ssrLoadModule('/src/pages/apps.jsx');
   const { AppPage } = await server.ssrLoadModule('/src/pages/app.jsx');
+  const { appInitials } = await server.ssrLoadModule('/src/components/app-icon.jsx');
+  const { mapApp } = await server.ssrLoadModule('/src/lib/content-mappers.js');
   const { apps: renderedApps } = await server.ssrLoadModule('/src/content/apps.js');
   const render = (component, props) => {
     globalThis.document = metadataDocument();
@@ -180,10 +179,14 @@ test('rendered catalogue and details keep counts, metadata and attribution hones
     const { html, jsonLd } = render(AppsPage);
     const collection = jsonLd.find((entry) => entry['@type'] === 'CollectionPage');
     assert.match(html, /21 apps\./);
-    assert.match(html, /15 app (?:details|profiles)/);
+    assert.match(html, /21 app profiles/);
+    assert.doesNotMatch(html, /More work/);
     assert.equal(collection.mainEntity.numberOfItems, 21);
     assert.equal(collection.mainEntity.itemListElement.length, 21);
-    for (const slug of additions) assert.ok(html.includes(`href="/apps/${slug}"`));
+    assert.ok(collection.mainEntity.itemListElement.every((item) => item.url.includes('/apps/')));
+    for (const slug of [...additions, 'evlab', 'good2go-loans', 'nakheel-marinas', 'automover-tms', 'kokoro-michi', 'chuckleplay']) {
+      assert.ok(html.includes(`href="/apps/${slug}"`), `missing catalogue card: ${slug}`);
+    }
     assert.doesNotMatch(html, /Fifteen|Seven|full case study/);
   });
 
@@ -202,6 +205,21 @@ test('rendered catalogue and details keep counts, metadata and attribution hones
     });
   }
 
+  await t.test('a CMS row keeps every seed link it does not override', () => {
+    const bulb = appBySlug('bulbvpn');
+    const row = {
+      slug: 'bulbvpn', name: 'BULB VPN', tagline: '', role: 'Creator', year: '',
+      platforms: '["Android"]', genre: 'Utilities', icon: '', screenshots: '[]',
+      rating_value: null, rating_count: null, stack: '[]',
+      links: '{"android":"https://play.google.com/store/apps/details?id=app.bulbvpn.com"}',
+      summary: '', features: '[]', story: '', metrics: '[]',
+    };
+    const mapped = mapApp(row, bulb);
+    assert.equal(mapped.links.android, 'https://play.google.com/store/apps/details?id=app.bulbvpn.com');
+    assert.equal(mapped.links.github, bulb.links.github);
+    assert.equal(mapApp({ ...row, links: '{}' }, bulb).links.github, bulb.links.github);
+  });
+
   await t.test('an absent stack is supported as well as an empty stack', () => {
     const app = renderedApps.find((entry) => entry.slug === 'hoda');
     const original = app.stack;
@@ -209,5 +227,31 @@ test('rendered catalogue and details keep counts, metadata and attribution hones
       delete app.stack;
       assert.doesNotThrow(() => render(AppPage, { slug: 'hoda' }));
     } finally { app.stack = original; }
+  });
+
+  for (const slug of ['kokoro-michi', 'chuckleplay']) {
+    await t.test(`${slug}: missing artwork falls back to a monogram instead of a broken image`, () => {
+      const { html, jsonLd } = render(AppPage, { slug });
+      const app = appBySlug(slug);
+      const schema = jsonLd.find((entry) => entry['@type'] === 'MobileApplication');
+      assert.equal(app.icon, '');
+      assert.equal(schema.image, undefined);
+      assert.doesNotMatch(html, /src=""/);
+      assert.match(html, new RegExp(`>${appInitials(app.name)}<`));
+      assert.equal(document.head.querySelector('meta[property="og:image"]').attrs.content, 'https://hasanabbassorathiya.tech/og.png');
+    });
+  }
+
+  await t.test('kokoro-michi: empty feature and screenshot sections stay hidden', () => {
+    const { html } = render(AppPage, { slug: 'kokoro-michi' });
+    assert.doesNotMatch(html, /What is inside/);
+    assert.doesNotMatch(html, /screenshot 1/);
+  });
+
+  await t.test('automover-tms: the website CTA renders and empty sections stay hidden', () => {
+    const { html } = render(AppPage, { slug: 'automover-tms' });
+    assert.match(html, /href="https:\/\/www\.automover\.com\.au\/"/);
+    assert.match(html, /Visit the product site/);
+    assert.doesNotMatch(html, /What is inside/);
   });
 });

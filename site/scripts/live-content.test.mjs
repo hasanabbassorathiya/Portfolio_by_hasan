@@ -72,17 +72,16 @@ for (const width of [390, 1440]) {
   });
 }
 
-test('empty apps remove list profiles and schema items, retaining only non-profile shipped entries', async (t) => {
+test('empty apps remove every catalogue profile and schema item', async (t) => {
   const page = await pageFor(t, { apps: empty });
   await visit(page, '/apps');
   assert.match(await page.locator('h2').first().innerText(), /0 app profiles/);
   assert.equal(await page.locator('main a[href^="/apps/"]').count(), 0);
   await assertHiddenProfiles(page);
-  assert.match(await page.locator('main').innerText(), /ChucklePlay/);
+  assert.doesNotMatch(await page.locator('main').innerText(), /ChucklePlay|EVLAB|Kokoro Michi/);
   const collection = (await schemas(page)).find((item) => item['@type'] === 'CollectionPage');
-  assert.equal(collection.mainEntity.numberOfItems, 6);
-  assert.equal(collection.mainEntity.itemListElement.length, 6);
-  assert.ok(collection.mainEntity.itemListElement.every((item) => !item.url?.includes('/apps/')));
+  assert.equal(collection.mainEntity.numberOfItems, 0);
+  assert.equal(collection.mainEntity.itemListElement.length, 0);
 });
 
 test('one CMS app replaces the inventory across home, list, detail and hidden routes', async (t) => {
@@ -99,7 +98,7 @@ test('one CMS app replaces the inventory across home, list, detail and hidden ro
   assert.equal(await page.locator('main a[href^="/apps/"]').count(), 1);
   await assertHiddenProfiles(page);
   const collection = (await schemas(page)).find((item) => item['@type'] === 'CollectionPage');
-  assert.equal(collection.mainEntity.numberOfItems, 7);
+  assert.equal(collection.mainEntity.numberOfItems, 1);
   assert.equal(collection.mainEntity.itemListElement.filter((item) => item.url?.includes('/apps/')).length, 1);
 
   await page.locator('main a[href="/apps/petassy"]').click();
@@ -154,8 +153,8 @@ for (const [label, reply] of malformed) {
   test(`${label}: failed or malformed apps retain the seed catalogue`, async (t) => {
     const page = await pageFor(t, { apps: reply });
     await visit(page, '/apps');
-    assert.match(await page.locator('h2').first().innerText(), /15 app profiles/);
-    assert.equal(await page.locator('main a[href^="/apps/"]').count(), 15);
+    assert.match(await page.locator('h2').first().innerText(), /21 app profiles/);
+    assert.equal(await page.locator('main a[href^="/apps/"]').count(), 21);
     assert.equal(await page.locator('main a[href="/apps/hoda"]').count(), 1);
     assert.equal(await page.locator('main a[href="/apps/duas-and-aamal"]').count(), 1);
     assert.equal((await schemas(page)).find((item) => item['@type'] === 'CollectionPage').mainEntity.numberOfItems, 21);
@@ -186,8 +185,8 @@ test('empty posts and clients clear their home cards without affecting a failed 
   await visit(page);
   assert.equal(await page.locator('#writing a[href^="/blog/"]').count(), 0);
   assert.equal(await page.locator('#work a[href^="/work/"]').count(), 0);
-  assert.match(await page.locator('#work').innerText(), /15 app profiles and 0 client engagements/);
-  assert.equal(await page.locator('#work a[href^="/apps/"]').count(), 15);
+  assert.match(await page.locator('#work').innerText(), /21 app profiles and 0 client engagements/);
+  assert.equal(await page.locator('#work a[href^="/apps/"]').count(), 21);
 });
 
 test('empty CMS posts keep /blog readable without draft links and recover seed fallback on API failure', async (t) => {
@@ -228,7 +227,7 @@ test('the seed is visible while the API is pending, then an empty array clears i
   });
   await page.goto(`${base}/apps`, { waitUntil: 'domcontentloaded' });
   await page.locator('main a[href="/apps/hoda"]').waitFor();
-  assert.equal(await page.locator('main a[href^="/apps/"]').count(), 15);
+  assert.equal(await page.locator('main a[href^="/apps/"]').count(), 21);
   release();
   await page.waitForLoadState('networkidle');
   assert.equal(await page.locator('main a[href^="/apps/"]').count(), 0);

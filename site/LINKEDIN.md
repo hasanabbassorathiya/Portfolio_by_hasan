@@ -15,7 +15,7 @@ Alternatives if the first reads too broad:
 ```text
 I'm a Dubai-based software engineer who builds mobile products and the AI systems behind them.
 
-For six-plus years I've worked across fintech, e-commerce, mobility and community apps, leading Flutter delivery end to end: architecture, release management and production support. Fifteen app profiles across iOS, Android, web and TV, including Good2Go Loans (50,000+ users in New Zealand) and Nakheel Marinas (15,000+ first-month downloads). Most recently I led mobile engineering at Chalhoub Group for EVLAB, an electric mobility platform.
+For six-plus years I've worked across fintech, e-commerce, mobility and community apps, leading Flutter delivery end to end: architecture, release management and production support. Twenty-one app profiles across iOS, Android, web and TV, including Good2Go Loans (50,000+ users in New Zealand) and Nakheel Marinas (15,000+ first-month downloads). Most recently I led mobile engineering at Chalhoub Group for EVLAB, an electric mobility platform.
 
 Alongside mobile, I build AI systems that hold up after the demo: RAG pipelines with retrieval and citations, agents and MCP servers, and n8n automation that removes repetitive work. I care about the unglamorous parts — evaluation, failure states, cost and reliability.
 
