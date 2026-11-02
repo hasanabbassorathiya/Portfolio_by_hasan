@@ -284,9 +284,18 @@ export const apps = [
     platforms: ['iOS', 'Android'],
     genre: 'Word game',
     icon: '/media/apps/blankspace/icon.webp',
-    screenshots: [],
+    screenshots: [
+      '/media/apps/blankspace/shot1.webp',
+      '/media/apps/blankspace/shot2.webp',
+      '/media/apps/blankspace/shot3.webp',
+      '/media/apps/blankspace/shot4.webp',
+      '/media/apps/blankspace/shot5.webp',
+      '/media/apps/blankspace/shot6.webp',
+    ],
     stack: ['Flutter', 'Dart', 'Riverpod', 'go_router', 'Supabase Realtime', 'Firebase Remote Config', 'RevenueCat', 'AdMob'],
-    links: {},
+    links: {
+      android: 'https://play.google.com/store/apps/details?id=com.blankspaceparty.game',
+    },
     summary:
       'A party word game built on a pure-Dart round engine: solo, pass-and-play, and online rooms, with bots, scoring, a local leaderboard, and an optional premium tier.',
     features: [
@@ -304,6 +313,18 @@ export const apps = [
       ['Pure Dart', 'Round engine'],
       ['Realtime', 'Online rooms'],
     ],
+    sources: {
+      listings: ['https://play.google.com/store/apps/details?id=com.blankspaceparty.game'],
+      icon: 'https://play-lh.googleusercontent.com/8px71-OeSep3V4ETBdoAnLjzYVD991W-BqICo8rCm5qW7bXFJ1xBb7IKdlVEBlxbH0NEB0ZXrB6tb3JgDDHOPA=s512',
+      screenshots: [
+        'https://play-lh.googleusercontent.com/HWHHruaro8Gt9H77Vw5s_ckm6U3xJGBKL8RQoVm24IcL-EPNMVovjx05VUdb1j-5SYGipAHGzXH-qvD0WcSN=w600',
+        'https://play-lh.googleusercontent.com/Y_Hbz4yPVyCJbKyAJawzZDJ7qDQ_5X9VZixfP3nUMKaqWqBNNhECTbZy65vcM7S4d54lTWWJIB-bZ0Dnr_AIGQ=w600',
+        'https://play-lh.googleusercontent.com/jtQrgmZVGDsuDmwR23t3mJLsrFbL8QPtdRx6vpxv27GtMM94qavLGXyR7xW4IJ14mt4MVwT5_p067rBthhWskMY=w600',
+        'https://play-lh.googleusercontent.com/lYFY0qSUWRuLmopJZosTVRuixdDp0qLQ10U5kuFsdwlVfG-8KZbzRTQFFZEZXNAp08RdeZZh0UE3aho69Usu=w600',
+        'https://play-lh.googleusercontent.com/JXRh6IawNBhRE_tecQsd2TAmpMfBpSrBcch0TxFI0K5hXRvWNF75tQ_edrXcXF5z11JXzs5XC1OmgtBVgXHFrw=w600',
+        'https://play-lh.googleusercontent.com/-rdA4tfUUy3Zd2z1m5zv_RaK-3lpCFvM6TzHLzd8ealzeoMJlq3yMFJga3SFGh8f1jKECvN569BzXsZCRLZp0lg=w600',
+      ],
+    },
   },
   {
     slug: 'bulbvpn',
@@ -313,9 +334,16 @@ export const apps = [
     platforms: ['iOS', 'Android'],
     genre: 'Utilities',
     icon: '/media/apps/bulbvpn/icon.webp',
-    screenshots: [],
+    screenshots: [
+      '/media/apps/bulbvpn/shot1.webp',
+      '/media/apps/bulbvpn/shot2.webp',
+      '/media/apps/bulbvpn/shot3.webp',
+      '/media/apps/bulbvpn/shot4.webp',
+      '/media/apps/bulbvpn/shot5.webp',
+    ],
     stack: ['Flutter', 'Dart', 'Riverpod', 'go_router', 'flutter_vless', 'Firebase Remote Config', 'Analytics', 'Crashlytics', 'mobile_scanner'],
     links: {
+      android: 'https://play.google.com/store/apps/details?id=app.bulbvpn.com',
       github: 'https://github.com/hasanabbassorathiya/BULBVPN',
     },
     summary:
@@ -335,6 +363,17 @@ export const apps = [
       ['4', 'Import paths'],
       ['2', 'Platforms'],
     ],
+    sources: {
+      listings: ['https://play.google.com/store/apps/details?id=app.bulbvpn.com'],
+      icon: 'https://play-lh.googleusercontent.com/oxp8AacP4LiAjVMA2A_inzJuf52FkdbuDcYAwHXGqCegG3EP4NXR4zSi7906Cs20qRZ5D6bxNvGTsAkLbAuyUQ=s512',
+      screenshots: [
+        'https://play-lh.googleusercontent.com/JxMX-D5gqXN4SkzQ8rHmiHAcc-Aqcg0O9a3-Gsfla9ENJ_FerJMxsNMAmLeVRlcoXDkw07PYQpQk_Up39XEPKA=w600',
+        'https://play-lh.googleusercontent.com/ntmVQDG17BzhEUXFPNPDc7t0yS9VS9IiEx8hlcUevsoWPKBrhjc1KYFr57ci14XSYyMswrx9kefQQWgHL8jzGs8=w600',
+        'https://play-lh.googleusercontent.com/LXxPQk5Nt07kwTSC_gUgweafvrIR4XNbl546KA1OpUcTnxlD4NLZ_lMFIKaLmCWDmle_760s8j768IgfEi9BO7Y=w600',
+        'https://play-lh.googleusercontent.com/T-r52--ZMyliTi2Q32B8K-h2Urz3U5pDHmNhU8Y5k7KYS_qxHvxaQevD0UYnfNj35YkugSBMsC3zWIJx_nUDhQ=w600',
+        'https://play-lh.googleusercontent.com/gJ-SIy7BY7zCekwpgT5A6uPKY1TQLy2m9XfESUMCyA7MLS_Z8yVje_eFTMCOyiIwKoNXQ-KEZD1Z5KufiJHA=w600',
+      ],
+    },
   },
   // Store descriptions establish product features, not implementation ownership.
   // Preserve original listing/CDN URLs so the downloaded assets remain traceable.
