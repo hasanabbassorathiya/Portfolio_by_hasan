@@ -63,6 +63,7 @@ export function SiteFooter() {
             {activity.length > 0 && (
               <Link to="/activity" className="inline-flex min-h-11 items-center hover:text-band-fg">Activity</Link>
             )}
+            <Link to="/brand" className="inline-flex min-h-11 items-center hover:text-band-fg">Brand</Link>
             <Link to="/privacy" className="inline-flex min-h-11 items-center hover:text-band-fg">Privacy</Link>
             <span className="font-mono text-[10px] uppercase tracking-[0.12em]">Elsewhere</span>
             {elsewhere.map(([label, href]) => {

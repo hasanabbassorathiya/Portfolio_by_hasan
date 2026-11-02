@@ -24,6 +24,7 @@ const ResourcesPage = lazyPage('resources');
 const CommunityPage = lazyPage('community');
 const ActivityPage = lazyPage('activity');
 const ResumePage = lazyPage('resume');
+const BrandPage = lazyPage('brand');
 const PrivacyPage = lazyPage('privacy');
 
 export function App({ initialRoute, initialPage }) {
@@ -89,6 +90,7 @@ function AppBody({ initialPage, initialPath }) {
   else if (matched.page === 'community') page = <CommunityPage />;
   else if (matched.page === 'activity') page = <ActivityPage />;
   else if (matched.page === 'resume') page = <ResumePage />;
+  else if (matched.page === 'brand') page = <BrandPage />;
   else if (matched.page === 'privacy') page = <PrivacyPage />;
   else page = <NotFoundPage />;
 

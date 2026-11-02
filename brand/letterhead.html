@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Letterhead — Hasan Abbas Sorathiya</title>
+<!--
+  A4 letterhead. Print: open in Chrome → Print → A4, margins "None" (the page handles them),
+  "Background graphics" ON, scale 100 %.
+
+  The monogram is inline geometry, not a font, so it prints identically everywhere. The name and
+  role are real text set in Geist with a grotesque fallback — where Geist is not installed the line
+  widths shift a little. For a print vendor that needs curves, convert the text in
+  brand/lockup-horizontal.svg to outlines instead of using this file.
+-->
+<style>
+  @page { size: A4; margin: 0; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: #e9e2d5; }
+  body {
+    font-family: Geist, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    color: #16130f;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .sheet {
+    width: 210mm; min-height: 297mm; margin: 10mm auto; padding: 22mm 20mm 18mm;
+    background: #f3efe6; display: flex; flex-direction: column;
+    box-shadow: 0 1px 24px rgba(20,17,13,.14);
+  }
+  @media print { html, body { background: #f3efe6; } .sheet { margin: 0; box-shadow: none; } }
+
+  header { display: flex; align-items: flex-end; justify-content: space-between; }
+  .mark { display: flex; align-items: center; gap: 7mm; }
+  .mark svg { display: block; width: 46mm; height: auto; color: #14110d; }
+  .role {
+    font-family: 'Geist Mono', ui-monospace, Menlo, Consolas, monospace;
+    font-size: 8.2pt; letter-spacing: .16em; text-transform: uppercase; color: #665f52;
+    line-height: 1.6;
+  }
+  .rule { border-top: 1px solid rgba(22,19,15,.13); margin: 9mm 0 0; }
+
+  .body { flex: 1; padding-top: 14mm; }
+  .note {
+    font-family: 'Geist Mono', ui-monospace, Menlo, Consolas, monospace;
+    font-size: 7.6pt; letter-spacing: .12em; text-transform: uppercase; color: #a9a193;
+  }
+  .lines { margin-top: 12mm; border-left: 1px solid rgba(22,19,15,.13); padding-left: 6mm; }
+  .lines p { font-size: 10.5pt; line-height: 1.75; max-width: 68ch; color: #16130f; }
+  .lines p + p { margin-top: 4mm; }
+  .sig { margin-top: 14mm; font-size: 10.5pt; line-height: 1.7; }
+  .sig strong { font-weight: 600; display: block; }
+  .sig span { color: #665f52; font-size: 9pt; }
+
+  footer { display: flex; align-items: flex-end; justify-content: space-between; gap: 8mm; }
+  footer .rule { margin: 0 0 4mm; }
+  .contact {
+    font-family: 'Geist Mono', ui-monospace, Menlo, Consolas, monospace;
+    font-size: 8pt; letter-spacing: .06em; color: #665f52; line-height: 1.9;
+  }
+  .contact a { color: #1d3cff; text-decoration: none; }
+  .seal { flex: none; }
+  .seal svg { display: block; width: 12mm; height: 12mm; }
+</style>
+</head>
+<body>
+<div class="sheet">
+
+  <header>
+    <div class="mark">
+      <!-- brand/logo-mark.svg, ink on paper -->
+      <svg viewBox="-1 -1 175 104" role="img" aria-label="HS monogram">
+        <g fill="currentColor">
+          <rect x="1" y="1" width="18" height="100"/>
+          <rect x="63" y="1" width="18" height="100"/>
+          <rect x="17" y="42" width="48" height="18"/>
+        </g>
+        <path d="M155.5 13.9A21 21 0 1 0 142 51a21 21 0 1 1-13.5 37.1"
+              fill="none" stroke="currentColor" stroke-width="18"/>
+      </svg>
+      <p class="role">Senior Software<br>&amp; AI Engineer</p>
+    </div>
+    <p class="role">Dubai, UAE</p>
+  </header>
+
+  <div class="rule"></div>
+
+  <div class="body">
+    <p class="note">Reference</p>
+    <div class="lines">
+      <p>Use this sheet for proposals, contracts and any printed letter. Two rules of the system apply
+      here: ink on paper only, and one accent — the blue is reserved for the links in the footer, so
+      nothing in the body copy should take it.</p>
+      <p>Leave the 22 mm top and 18 mm bottom margins clear. The mark needs clearspace on all four
+      sides of at least its own cap height.</p>
+    </div>
+    <div class="sig">
+      <strong>Hasan Abbas Sorathiya</strong>
+      <span>Senior Software &amp; AI Engineer</span>
+    </div>
+  </div>
+
+  <footer>
+    <div class="rule" style="flex:1"></div>
+    <p class="contact">
+      <a href="https://hasanabbassorathiya.tech">hasanabbassorathiya.tech</a><br>
+      <a href="mailto:hasanabbassorathiya12@gmail.com">hasanabbassorathiya12@gmail.com</a><br>
+      github.com/hasanabbassorathiya
+    </p>
+    <div class="seal">
+      <!-- brand/seal-ink.svg -->
+      <svg viewBox="0 0 64 64" role="img" aria-label="Hasan Abbas Sorathiya">
+        <rect width="64" height="64" rx="13" fill="#14110d"/>
+        <g transform="translate(9.24 18.58) scale(0.2631)">
+          <g fill="#f3efe6">
+            <rect x="1" y="1" width="18" height="100"/>
+            <rect x="63" y="1" width="18" height="100"/>
+            <rect x="17" y="42" width="48" height="18"/>
+          </g>
+          <path d="M155.5 13.9A21 21 0 1 0 142 51a21 21 0 1 1-13.5 37.1"
+                fill="none" stroke="#f3efe6" stroke-width="18"/>
+        </g>
+      </svg>
+    </div>
+  </footer>
+
+</div>
+</body>
+</html>

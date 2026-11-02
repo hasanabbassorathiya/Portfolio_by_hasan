@@ -56,16 +56,20 @@ public_html/
     └── index.php, dashboard.php, edit.php, subscribers.php, enquiries.php,
         analytics.php, settings.php, guard.php, logout.php, admin.css
 ```
-`/blog` is served from `blog.html`, `/apps` from `apps.html`, `/work` from `work.html`, and
-`/apps/<slug>` / `/work/<slug>` from `_views/apps/…` and `_views/work/…`. `/activity` is served
-from `activity.html`; it is `noindex` and deliberately absent from `sitemap.xml`. App images live
-under `/media/apps/…`, client logos under `/media/clients/…`. No physical route directories
-exist, so Apache never issues a directory-slash 301.
+`/blog` is served from `blog.html`, `/apps` from `apps.html`, `/work` from `work.html`, `/brand`
+from `brand.html`, and `/apps/<slug>` / `/work/<slug>` from `_views/apps/…` and `_views/work/…`.
+`/activity` is served from `activity.html`; it is `noindex` and deliberately absent from
+`sitemap.xml`. App images live under `/media/apps/…`, client logos under `/media/clients/…`, brand
+art under `/media/brand/…`. No physical route directories exist at the docroot, so Apache never
+issues a directory-slash 301 — this is load-bearing, not tidiness: a `public/brand/` asset folder
+made `mod_dir` answer `/brand` with a 301 to `/brand/` before the per-directory rewrite ever ran,
+which a `vite preview` cannot reproduce. Brand art therefore lives under `media/`.
 
 ## Fastest path — File Manager (no SSH)
 `site/deploy-public_html.zip` is built from `dist/` **plus `site/.htaccess`** and contains no
 `api/` or `admin/` files, so the live PHP panel and `config.php` are untouched. Current bundle
-(2026-11-01, incl. the six new app profiles): 196 files (8,804,777 bytes / 8,599 KB uncompressed; 7,060,573 bytes / 6.9 MB zip), SHA-256 `7ef121cbb6c52888dba2fec7ea350b21bc8187b693c533be7f8b253eb89ab022`.
+(2026-11-02, incl. the `/brand` press page and brand art): 215 entries (10,202,689 bytes / 9,964 KB
+uncompressed; 8,391,206 bytes / 8.0 MB zip), SHA-256 `9e0df2c93d7d87cb08eae4672cd638c16272f71140aa33deebf2d5cd932b3e3b`.
 Because the zip is static-only, the newsletter forms need the two PHP files and one table
 described under **Newsletter** below; until those exist they fall back to a mailto message.
 1. hPanel → **Files → File Manager** → open `public_html`.
@@ -198,6 +202,9 @@ and code only; it sends no mail and invents no settings values.
 ```bash
 npm run build                        # in site/ — also emits per-route meta shells
 npm run resume:pdf                   # regenerate the PDF from the fresh build (writes public/ and dist/)
+# Only when brand/ sources change: npm run brand:kit rewrites public/media/brand/press-kit.zip,
+# which /brand links to. It is committed, so a deploy works without it; it uses macOS `sips` to
+# shrink the 4.2 MB boards to 1600 px JPEGs, so do not wire it into `build`.
 cp .htaccess dist/.htaccess          # vite build empties dist/, so the htaccess must be re-copied
 rm -f deploy-public_html.zip && (cd dist && zip -qr ../deploy-public_html.zip .)
 # Before uploading, confirm `dist/assets/index-*.js` is about 384 kB and that `dist/index.html`

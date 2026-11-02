@@ -60,6 +60,7 @@ export function matchRoute(path) {
   if (path === '/community') return { page: 'community' };
   if (path === '/activity') return { page: 'activity' };
   if (path === '/resume') return { page: 'resume' };
+  if (path === '/brand') return { page: 'brand' };
   if (path === '/privacy') return { page: 'privacy' };
   const service = path.match(/^\/services\/([a-z0-9-]+)$/);
   if (service) return { page: 'service', slug: service[1] };

@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Email signature — Hasan Abbas Sorathiya</title>
+<!--
+  PASTE-READY EMAIL SIGNATURE
+
+  Install:
+    Gmail      Settings → General → Signature → paste the rendered block below
+               (open this file in a browser, select the signature, copy, paste).
+    Outlook    File → Options → Mail → Signatures → new → paste the same way.
+    Apple Mail Settings → Accounts → Signature → paste.
+
+  Why it is built this way:
+    • Table layout with inline styles only. Gmail and Outlook strip <style> blocks,
+      classes, flexbox and grid; tables with inline styles survive all of them.
+    • No SVG and no required image. The monogram is a solid ink cell with letterspaced
+      text, so the signature still looks right when a client blocks remote images. An <img> version is included further down if you prefer the
+      exact mark — it needs site/public/media/brand/seal-ink.png to be deployed first.
+    • One accent colour (#1D3CFF) reserved for links, one hairline rule. Nothing else.
+-->
+<style>
+  body { background: #f3efe6; margin: 0; padding: 48px; font-family: Geist, 'Helvetica Neue', Helvetica, Arial, sans-serif; }
+  .stage { max-width: 720px; margin: 0 auto; }
+  .note { color: #665f52; font: 400 12px/1.7 'Geist Mono', ui-monospace, Menlo, monospace; letter-spacing: .04em; margin: 0 0 10px; }
+  .label { color: #16130f; font: 600 11px/1 'Geist Mono', ui-monospace, Menlo, monospace; letter-spacing: .18em; text-transform: uppercase; margin: 40px 0 14px; }
+  .card { background: #fbf8f2; border: 1px solid rgba(22,19,15,.13); padding: 28px; }
+</style>
+</head>
+<body>
+<div class="stage">
+
+  <p class="label">1 · Signature — HTML clients (Gmail, Outlook, Apple Mail, Fastmail)</p>
+  <div class="card">
+
+    <!-- BEGIN SIGNATURE — copy from here -->
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;font-family:Geist,'Helvetica Neue',Helvetica,Arial,sans-serif;">
+      <tr>
+        <td width="60" valign="top" style="padding:0 18px 0 0;">
+          <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="56" style="border-collapse:separate;">
+            <tr>
+              <td width="56" height="56" align="center" valign="middle" bgcolor="#14110d"
+                  style="width:56px;height:56px;background:#14110d;border-radius:11px;text-align:center;vertical-align:middle;font-size:16px;font-weight:600;color:#f3efe6;letter-spacing:2px;text-indent:2px;line-height:56px;">HS</td>
+            </tr>
+          </table>
+        </td>
+        <td valign="top" style="padding:0;">
+          <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;">
+            <tr>
+              <td style="font-size:15px;font-weight:600;line-height:20px;color:#14110d;">Hasan Abbas Sorathiya</td>
+            </tr>
+            <tr>
+              <td style="padding-top:2px;font-size:12px;line-height:17px;color:#665f52;font-family:'Geist Mono',ui-monospace,Menlo,Consolas,monospace;">Senior Software &amp; AI Engineer</td>
+            </tr>
+            <tr>
+              <td style="padding:11px 0 10px;font-size:0;line-height:0;border-bottom:1px solid rgba(22,19,15,.13);">&nbsp;</td>
+            </tr>
+            <tr>
+              <td style="font-size:12.5px;line-height:21px;">
+                <a href="https://hasanabbassorathiya.tech" style="color:#1d3cff;text-decoration:none;">hasanabbassorathiya.tech</a><br>
+                <a href="mailto:hasanabbassorathiya12@gmail.com" style="color:#1d3cff;text-decoration:none;">hasanabbassorathiya12@gmail.com</a><br>
+                <span style="color:#665f52;font-family:'Geist Mono',ui-monospace,Menlo,Consolas,monospace;font-size:11.5px;">github.com/hasanabbassorathiya<br>Dubai, UAE</span>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+    <!-- END SIGNATURE — copy to here -->
+
+  </div>
+
+  <p class="label">2 · Same block with the real mark as an image</p>
+  <p class="note">Use this variant only after <code>site/public/media/brand/seal-ink.png</code> is deployed — the URL has to resolve for the recipient. Keep the <code>alt</code> so a blocked image still spells the monogram.</p>
+  <div class="card">
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;font-family:Geist,'Helvetica Neue',Helvetica,Arial,sans-serif;">
+      <tr>
+        <td width="60" valign="top" style="padding:0 18px 0 0;">
+          <img src="https://hasanabbassorathiya.tech/media/brand/seal-ink.png" width="56" height="56" alt="HS" style="display:block;border:0;border-radius:11px;">
+        </td>
+        <td valign="top">
+          <span style="font-size:15px;font-weight:600;color:#14110d;">Hasan Abbas Sorathiya</span><br>
+          <span style="font-size:12px;color:#665f52;font-family:'Geist Mono',ui-monospace,Menlo,monospace;">Senior Software &amp; AI Engineer</span>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <p class="label">3 · Plain-text fallback (Teams, Slack, ticket replies, SMS)</p>
+  <div class="card">
+    <pre style="margin:0;font:400 12.5px/1.75 'Geist Mono',ui-monospace,Menlo,monospace;color:#16130f;white-space:pre-wrap;">Hasan Abbas Sorathiya
+Senior Software &amp; AI Engineer
+hasanabbassorathiya.tech · hasanabbassorathiya12@gmail.com
+github.com/hasanabbassorathiya · Dubai, UAE</pre>
+  </div>
+
+  <p class="note" style="margin-top:34px;">Deliberately absent: a phone number (not on file — never guessed), social icons, a headshot, a "please consider the environment" line, and any banner image. Signature rules live in <code>brand/BRAND.md</code>.</p>
+
+</div>
+</body>
+</html>

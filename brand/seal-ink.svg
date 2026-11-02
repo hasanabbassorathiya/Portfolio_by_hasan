@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="Hasan Abbas Sorathiya">
+  <rect width="64" height="64" rx="13" fill="#14110d"/>
+  <g transform="translate(9.24 18.58) scale(0.2631)">
+    <g fill="#f3efe6">
+      <rect x="1" y="1" width="18" height="100"/>
+      <rect x="63" y="1" width="18" height="100"/>
+      <rect x="17" y="42" width="48" height="18"/>
+    </g>
+    <path d="M155.5 13.9A21 21 0 1 0 142 51a21 21 0 1 1-13.5 37.1"
+          fill="none" stroke="#f3efe6" stroke-width="18"/>
+  </g>
+</svg>

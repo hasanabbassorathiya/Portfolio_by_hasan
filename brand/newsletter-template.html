@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>Shipping Notes — issue template</title>
+<!--
+  SHIPPING NOTES · newsletter template
+
+  Fill the {{TOKENS}} below, then either:
+    • paste the rendered page into Gmail/Outlook as a manual dispatch, or
+    • import this file into Beehiiv / Loops / Buttondown as a custom template
+      (their merge tags use the same {{CURLY}} syntax, so most tokens map straight across).
+
+  Email-client rules this file obeys: 600px table layout, inline styles only, no SVG,
+  no flex/grid, no position:absolute, background colours set on both <table> and <td>,
+  web-safe font stacks (Geist and Instrument Serif are used when the client has them,
+  Helvetica and Georgia when it does not).
+
+  Nothing in here invents a metric, a subscriber count or a quote. Numbers appear only
+  as {{TOKENS}} you fill with real ones.
+-->
+</head>
+<body style="margin:0;padding:0;background:#e9e2d5;">
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:#e9e2d5;">
+<tr><td align="center" style="padding:32px 12px;">
+
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="600" style="width:600px;background:#fbf8f2;">
+
+  <!-- ── Masthead ─────────────────────────────────────────────────── -->
+  <tr>
+    <td style="padding:44px 44px 0;font-family:Geist,'Helvetica Neue',Helvetica,Arial,sans-serif;">
+      <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+        <tr>
+          <td style="font-size:11px;line-height:14px;letter-spacing:.18em;text-transform:uppercase;color:#665f52;font-family:'Geist Mono',ui-monospace,Menlo,Consolas,monospace;">HS</td>
+          <td align="right" style="font-size:11px;line-height:14px;letter-spacing:.14em;text-transform:uppercase;color:#665f52;font-family:'Geist Mono',ui-monospace,Menlo,Consolas,monospace;">Dispatch&nbsp;{{ISSUE_NO}}</td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" style="padding:26px 44px 22px;font-family:Geist,'Helvetica Neue',Helvetica,Arial,sans-serif;">
+      <span style="font-size:34px;line-height:40px;font-weight:600;letter-spacing:.14em;color:#14110d;">SHIPPING&nbsp;NOTES</span>
+    </td>
+  </tr>
+  <tr><td style="padding:0 44px;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="height:1px;line-height:1px;font-size:0;background:rgba(22,19,15,.13);">&nbsp;</td></tr></table></td></tr>
+  <tr>
+    <td align="center" style="padding:14px 44px 40px;font-size:11.5px;line-height:16px;letter-spacing:.1em;text-transform:uppercase;color:#665f52;font-family:'Geist Mono',ui-monospace,Menlo,Consolas,monospace;">
+      Notes from shipping Flutter products&nbsp;·&nbsp;Hasan Abbas Sorathiya
+    </td>
+  </tr>
+
+  <!-- ── Headline + lede ──────────────────────────────────────────── -->
+  <tr>
+    <td style="padding:0 44px;font-family:'Instrument Serif',Georgia,'Times New Roman',serif;">
+      <span style="font-size:31px;line-height:38px;font-style:italic;color:#14110d;">{{HEADLINE}}</span>
+    </td>
+  </tr>
+  <tr>
+    <td style="padding:16px 44px 0;font-size:12px;line-height:18px;letter-spacing:.04em;color:#665f52;font-family:'Geist Mono',ui-monospace,Menlo,Consolas,monospace;">
+      {{DATE}}&nbsp;·&nbsp;{{READ_MINUTES}} min
+    </td>
+  </tr>
+  <tr>
+    <td style="padding:22px 44px 0;font-size:16.5px;line-height:26px;color:#16130f;font-family:Geist,'Helvetica Neue',Helvetica,Arial,sans-serif;">
+      {{LEDE}}
+    </td>
+  </tr>
+
+  <!-- ── Body ─────────────────────────────────────────────────────── -->
+  <tr>
+    <td style="padding:22px 44px 0;font-size:15.5px;line-height:25px;color:#16130f;font-family:Geist,'Helvetica Neue',Helvetica,Arial,sans-serif;">
+      {{BODY}}
+    </td>
+  </tr>
+
+  <!-- ── Three notes (the recurring section) ──────────────────────── -->
+  <tr><td style="padding:38px 44px 0;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="height:1px;line-height:1px;font-size:0;background:rgba(22,19,15,.13);">&nbsp;</td></tr></table></td></tr>
+  <tr>
+    <td style="padding:20px 44px 0;font-size:11px;line-height:14px;letter-spacing:.18em;text-transform:uppercase;color:#665f52;font-family:'Geist Mono',ui-monospace,Menlo,Consolas,monospace;">
+      Three things
+    </td>
+  </tr>
+  <tr>
+    <td style="padding:14px 44px 0;font-size:15px;line-height:24px;color:#a33f1c;font-family:'Geist Mono',ui-monospace,Menlo,Consolas,monospace;">
+      1.&nbsp;&nbsp;{{NOTE_1}}<br>
+      2.&nbsp;&nbsp;{{NOTE_2}}<br>
+      3.&nbsp;&nbsp;{{NOTE_3}}
+    </td>
+  </tr>
+
+  <!-- ── Pull quote (optional; delete this block if unused) ───────── -->
+  <tr>
+    <td style="padding:36px 44px 0;">
+      <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="border-top:1px solid rgba(22,19,15,.13);border-bottom:1px solid rgba(22,19,15,.13);">
+        <tr><td style="padding:22px 0;font-family:'Instrument Serif',Georgia,'Times New Roman',serif;font-size:21px;line-height:29px;font-style:italic;color:#14110d;">
+          {{PULL_QUOTE}}
+        </td></tr>
+      </table>
+    </td>
+  </tr>
+
+  <!-- ── Single call to action ────────────────────────────────────── -->
+  <tr>
+    <td style="padding:38px 44px 0;">
+      <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+        <tr><td bgcolor="#1d3cff" style="background:#1d3cff;border-radius:8px;">
+          <a href="{{CTA_URL}}" style="display:block;padding:13px 24px;font-size:13.5px;line-height:18px;font-weight:600;letter-spacing:.06em;color:#fbf8f2;text-decoration:none;font-family:Geist,'Helvetica Neue',Helvetica,Arial,sans-serif;">{{CTA_LABEL}}</a>
+        </td></tr>
+      </table>
+    </td>
+  </tr>
+
+  <!-- ── Sign-off ─────────────────────────────────────────────────── -->
+  <tr>
+    <td style="padding:34px 44px 0;font-size:15px;line-height:25px;color:#16130f;font-family:Geist,'Helvetica Neue',Helvetica,Arial,sans-serif;">
+      — Hasan
+    </td>
+  </tr>
+
+  <!-- ── Footer ───────────────────────────────────────────────────── -->
+  <tr>
+    <td style="padding:36px 44px 0;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="height:1px;line-height:1px;font-size:0;background:rgba(22,19,15,.13);">&nbsp;</td></tr></table></td>
+  </tr>
+  <tr>
+    <td style="padding:20px 44px 44px;font-size:12px;line-height:21px;color:#665f52;font-family:'Geist Mono',ui-monospace,Menlo,Consolas,monospace;">
+      <a href="https://hasanabbassorathiya.tech/blog" style="color:#1d3cff;text-decoration:none;">hasanabbassorathiya.tech/blog</a><br>
+      <a href="mailto:hasanabbassorathiya12@gmail.com" style="color:#1d3cff;text-decoration:none;">hasanabbassorathiya12@gmail.com</a><br>
+      Dubai, UAE<br><br>
+      <a href="{{SUBSCRIBE_URL}}" style="color:#665f52;text-decoration:underline;">Subscribe</a>&nbsp;·&nbsp;<a href="{{UNSUBSCRIBE_URL}}" style="color:#665f52;text-decoration:underline;">Unsubscribe</a>
+    </td>
+  </tr>
+
+</table>
+
+</td></tr>
+</table>
+</body>
+</html>

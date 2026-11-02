@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-1 -1 175 104" width="175" height="104" role="img" aria-label="HS monogram">
+  <!--
+    Hasan Abbas Sorathiya — monogram.
+    Constructed geometry, not a font: the H is three rectangles on an 18-unit stem,
+    the S is two tangent 21-unit arcs stroked at 18. Ink box is 171.02 x 102 at (1,0);
+    the viewBox adds one unit of bleed so the arc terminals are never clipped.
+  -->
+  <g fill="currentColor">
+    <rect x="1" y="1" width="18" height="100"/>
+    <rect x="63" y="1" width="18" height="100"/>
+    <rect x="17" y="42" width="48" height="18"/>
+  </g>
+  <path d="M155.5 13.9A21 21 0 1 0 142 51a21 21 0 1 1-13.5 37.1"
+        fill="none" stroke="currentColor" stroke-width="18" stroke-linecap="butt"/>
+</svg>

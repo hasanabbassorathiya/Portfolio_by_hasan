@@ -12,6 +12,7 @@
     "resume:pdf": "node scripts/build-resume-pdf.mjs",
     "preview": "vite preview",
     "seed:sql": "node scripts/seed-sql.mjs",
+    "brand:kit": "node scripts/build-press-kit.mjs",
     "postman": "php scripts/gen-postman.php",
     "verify:postman": "php scripts/gen-postman.php && node scripts/verify-postman.mjs"
   },

@@ -17,6 +17,7 @@ const loaders = {
   community: () => import('../pages/community').then((m) => m.CommunityPage),
   activity: () => import('../pages/activity').then((m) => m.ActivityPage),
   resume: () => import('../pages/resume').then((m) => m.ResumePage),
+  brand: () => import('../pages/brand').then((m) => m.BrandPage),
   privacy: () => import('../pages/privacy').then((m) => m.PrivacyPage),
 };
 

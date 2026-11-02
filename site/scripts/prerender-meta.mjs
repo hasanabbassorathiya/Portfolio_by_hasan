@@ -67,6 +67,7 @@ try {
     { route: '/community', page: 'community', name: 'CommunityPage' },
     { route: '/activity', page: 'activity', name: 'ActivityPage' },
     { route: '/resume', page: 'resume', name: 'ResumePage' },
+    { route: '/brand', page: 'brand', name: 'BrandPage' },
     { route: '/privacy', page: 'privacy', name: 'PrivacyPage' },
     { route: '/apps', page: 'apps', name: 'AppsPage' },
     { route: '/work', page: 'work', name: 'WorkPage' },

@@ -24,6 +24,7 @@ const routes = [
   '/blog/rag-that-survives-real-users',
   '/resources',
   '/resume',
+  '/brand',
   '/privacy',
   '/community',
   '/404',

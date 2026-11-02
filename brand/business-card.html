@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Business card — Hasan Abbas Sorathiya</title>
+<!--
+  85 × 55 mm, front and back. Print: Chrome → Print → A4, margins "None", "Background graphics" ON,
+  scale 100 % (measure the card against the cut marks before sending to a printer — browser print
+  dialogs round differently at every zoom).
+
+  The back is the system's only paper-on-ink surface, which is why it carries seal-paper rather than
+  seal-ink. Uncoated 350 gsm suits the palette; a gloss laminate makes the paper ground read grey.
+-->
+<style>
+  @page { size: A4; margin: 0; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: #e9e2d5; }
+  body {
+    font-family: Geist, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 16mm;
+  }
+  .row { display: flex; gap: 10mm; margin-bottom: 10mm; }
+  .tag {
+    font-family: 'Geist Mono', ui-monospace, Menlo, Consolas, monospace;
+    font-size: 6.8pt; letter-spacing: .18em; text-transform: uppercase; color: #665f52; margin-bottom: 2mm;
+  }
+  .card {
+    width: 85mm; height: 55mm; position: relative; overflow: hidden;
+    box-shadow: 0 1px 10px rgba(20,17,13,.16);
+  }
+  .paper { background: #f3efe6; color: #16130f; }
+  .inkbg { background: #14110d; color: #f3efe6; }
+
+  .front { padding: 8mm 7mm; display: flex; flex-direction: column; justify-content: space-between; }
+  .front .mark { display: flex; align-items: center; gap: 4mm; }
+  .front svg.mono { width: 26mm; height: auto; color: #14110d; display: block; }
+  .front .name { font-size: 10.6pt; font-weight: 600; letter-spacing: .01em; line-height: 1.2; }
+  .front .role {
+    font-family: 'Geist Mono', ui-monospace, Menlo, Consolas, monospace;
+    font-size: 6.4pt; letter-spacing: .16em; text-transform: uppercase; color: #665f52; margin-top: 1.6mm;
+  }
+  .front .foot {
+    display: flex; align-items: flex-end; justify-content: space-between;
+    border-top: 1px solid rgba(22,19,15,.13); padding-top: 3mm;
+  }
+  .front .url {
+    font-family: 'Geist Mono', ui-monospace, Menlo, Consolas, monospace;
+    font-size: 6.6pt; letter-spacing: .06em; color: #1d3cff;
+  }
+  .front .dot { width: 2mm; height: 2mm; border-radius: 50%; background: #1d3cff; }
+
+  .back { padding: 8mm 7mm; display: flex; align-items: center; gap: 6mm; }
+  .back svg.seal { width: 15mm; height: 15mm; flex: none; display: block; }
+  .back .contact {
+    font-family: 'Geist Mono', ui-monospace, Menlo, Consolas, monospace;
+    font-size: 6.9pt; line-height: 2.05; letter-spacing: .05em; color: #f3efe6;
+  }
+  .back .contact .muted { color: #a9a193; }
+
+  .cut { position: absolute; inset: 0; pointer-events: none; }
+  .cut i { position: absolute; width: 2.4mm; height: 2.4mm; border: 0; }
+  .cut i.tl { top: 0; left: 0; border-left: 1px solid #16130f; border-top: 1px solid #16130f; }
+  .cut i.tr { top: 0; right: 0; border-right: 1px solid #16130f; border-top: 1px solid #16130f; }
+  .cut i.bl { bottom: 0; left: 0; border-left: 1px solid #16130f; border-bottom: 1px solid #16130f; }
+  .cut i.br { bottom: 0; right: 0; border-right: 1px solid #16130f; border-bottom: 1px solid #16130f; }
+  .inkbg .cut i { border-color: rgba(243,239,230,.5); }
+
+  @media print { html, body { background: #f3efe6; } .card { box-shadow: none; } .tag { display: none; } }
+</style>
+</head>
+<body>
+
+<div>
+  <p class="tag">Front · 85 × 55 mm · ink on paper</p>
+  <div class="card paper">
+    <div class="front">
+      <div>
+        <div class="mark">
+          <svg class="mono" viewBox="-1 -1 175 104" role="img" aria-label="HS monogram">
+            <g fill="currentColor">
+              <rect x="1" y="1" width="18" height="100"/>
+              <rect x="63" y="1" width="18" height="100"/>
+              <rect x="17" y="42" width="48" height="18"/>
+            </g>
+            <path d="M155.5 13.9A21 21 0 1 0 142 51a21 21 0 1 1-13.5 37.1"
+                  fill="none" stroke="currentColor" stroke-width="18"/>
+          </svg>
+        </div>
+        <p class="name">Hasan Abbas Sorathiya</p>
+        <p class="role">Senior Software &amp; AI Engineer</p>
+      </div>
+      <div class="foot">
+        <p class="url">hasanabbassorathiya.tech</p>
+        <span class="dot" aria-hidden="true"></span>
+      </div>
+    </div>
+    <div class="cut"><i class="tl"></i><i class="tr"></i><i class="bl"></i><i class="br"></i></div>
+  </div>
+</div>
+
+<div>
+  <p class="tag">Back · 85 × 55 mm · paper on ink</p>
+  <div class="card inkbg">
+    <div class="back">
+      <svg class="seal" viewBox="0 0 64 64" role="img" aria-label="Hasan Abbas Sorathiya">
+        <rect width="64" height="64" rx="13" fill="#f3efe6"/>
+        <g transform="translate(9.24 18.58) scale(0.2631)">
+          <g fill="#14110d">
+            <rect x="1" y="1" width="18" height="100"/>
+            <rect x="63" y="1" width="18" height="100"/>
+            <rect x="17" y="42" width="48" height="18"/>
+          </g>
+          <path d="M155.5 13.9A21 21 0 1 0 142 51a21 21 0 1 1-13.5 37.1"
+                fill="none" stroke="#14110d" stroke-width="18"/>
+        </g>
+      </svg>
+      <p class="contact">
+        hasanabbassorathiya12@gmail.com<br>
+        github.com/hasanabbassorathiya<br>
+        <span class="muted">Dubai, UAE</span>
+      </p>
+    </div>
+    <div class="cut"><i class="tl"></i><i class="tr"></i><i class="bl"></i><i class="br"></i></div>
+  </div>
+</div>
+
+</body>
+</html>

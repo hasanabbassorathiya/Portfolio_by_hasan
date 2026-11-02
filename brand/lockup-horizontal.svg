@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 536 120" width="536" height="120" role="img" aria-label="Hasan Abbas Sorathiya — Senior Software and AI Engineer">
+  <!--
+    Horizontal lockup. The mark is geometry; the two text lines use Geist with a
+    grotesque fallback. Box width 536 is measured against Geist 600 at 23/12.5 with
+    the tracking below — where Geist is unavailable the line widths shift, so convert
+    these two <text> nodes to outlines before sending to print.
+  -->
+  <g transform="translate(14 29.4) scale(0.6)" fill="#14110d">
+    <rect x="1" y="1" width="18" height="100"/>
+    <rect x="63" y="1" width="18" height="100"/>
+    <rect x="17" y="42" width="48" height="18"/>
+    <path d="M155.5 13.9A21 21 0 1 0 142 51a21 21 0 1 1-13.5 37.1"
+          fill="none" stroke="#14110d" stroke-width="18"/>
+  </g>
+
+  <rect x="138" y="32" width="1" height="56" fill="#16130f" opacity="0.13"/>
+
+  <text x="160" y="60" fill="#14110d"
+        font-family="Geist, 'Helvetica Neue', Helvetica, Arial, sans-serif"
+        font-size="23" font-weight="600" letter-spacing="3.2">HASAN ABBAS SORATHIYA</text>
+
+  <text x="161" y="84" fill="#665f52"
+        font-family="'Geist Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace"
+        font-size="12.5" letter-spacing="1.5">SENIOR SOFTWARE &amp; AI ENGINEER</text>
+
+  <circle cx="440" cy="80" r="3.5" fill="#1d3cff"/>
+</svg>

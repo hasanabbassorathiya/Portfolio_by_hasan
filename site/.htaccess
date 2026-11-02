@@ -49,6 +49,8 @@ ErrorDocument 404 /404.html
   RewriteRule ^community/?$ community.html [L]
   RewriteCond %{DOCUMENT_ROOT}/activity.html -f
   RewriteRule ^activity/?$ activity.html [L]
+  RewriteCond %{DOCUMENT_ROOT}/brand.html -f
+  RewriteRule ^brand/?$ brand.html [L]
 
   # Allow direct access to existing files
   RewriteCond %{REQUEST_FILENAME} -f

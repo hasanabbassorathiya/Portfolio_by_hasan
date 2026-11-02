@@ -1,0 +1,91 @@
+/*
+  Hasan Abbas Sorathiya — brand tokens
+  Copied from site/src/index.css :root and html[data-theme='dark'], plus the name aliases used in
+  brand/BRAND.md §3. index.css stays authoritative for the running site; this file is for anything
+  outside it (Figma, email HTML, print, decks, the /brand page's own swatches).
+
+  Two forms of every colour on purpose:
+    --*-hex    paste into a design tool or an email client
+    --*-rgb    the space-separated triplet index.css feeds to rgb() through Tailwind
+*/
+
+:root {
+  color-scheme: light;
+
+  /* grounds */
+  --paper: #F3EFE6;   --paper-rgb: 243 239 230;   /* --canvas */
+  --surface: #FBF8F2; --surface-rgb: 251 248 242;
+  --deep: #E9E2D5;    --deep-rgb: 233 226 213;
+  --monogram: #E8E1D3; --monogram-rgb: 232 225 211;
+  --light-lav: #F5F0E6; --light-lav-rgb: 245 240 230;
+
+  /* ink */
+  --ink: #14110D;        --ink-rgb: 20 17 13;
+  --ink-soft: #1C1811;   --ink-soft-rgb: 28 24 17;
+  --text: #16130F;       --text-rgb: 22 19 15;
+  --muted: #665F52;      --muted-rgb: 102 95 82;   /* --text-muted */
+  --rule: rgba(22, 19, 15, .13);                   /* --border, 1px */
+
+  /* accents — one per composition */
+  --signal: #1D3CFF;      --signal-rgb: 29 60 255;   /* --accent, --accent-solid, --hl-b */
+  --signal-bright: #0026FF; --signal-bright-rgb: 0 38 255; /* --accent-bright */
+  --on-signal: #FBF8F2;   --on-signal-rgb: 251 248 242; /* --on-accent */
+  --thread: #A33F1C;      --thread-rgb: 163 63 28;      /* --hl-a */
+  --thread-soft: #E08A5F; --thread-soft-rgb: 224 138 95; /* --hl-a-ink, thread on ink grounds */
+
+  /* fixed dark bands (work, footer, case-study hero) */
+  --band: #14110D;      --band-rgb: 20 17 13;
+  --band-soft: #1C1811; --band-soft-rgb: 28 24 17;
+  --band-fg: #F3EFE6;   --band-fg-rgb: 243 239 230;
+
+  /* type */
+  --font-display: Geist, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-body: Geist, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-mono: 'Geist Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+  --font-editorial: 'Instrument Serif', Georgia, 'Times New Roman', serif;
+  --tracking-wordmark: .18em;   /* uppercase, weight 600 */
+  --tracking-label: .16em;      /* mono labels, 10–11px, uppercase */
+  --measure: 74ch;              /* body copy: 62–74 characters, never justified */
+
+  /* radius — the only corner in the system */
+  --seal-radius: 13;            /* in the 64-unit SVG box; 11px in the 56px signature cell */
+}
+
+html[data-theme='dark'],
+[data-theme='dark'] {
+  color-scheme: dark;
+
+  --paper: #12100C;   --paper-rgb: 18 16 12;
+  --surface: #1B1712; --surface-rgb: 27 23 18;
+  --deep: #262119;    --deep-rgb: 38 33 25;
+  --monogram: #221D16; --monogram-rgb: 34 29 22;
+  --light-lav: #1E1A14; --light-lav-rgb: 30 26 20;
+
+  /* `ink` flips to bone so hairlines and the monogram invert together */
+  --ink: #F3EFE6;      --ink-rgb: 243 239 230;
+  --ink-soft: #241F18; --ink-soft-rgb: 36 31 24;
+  --text: #F3EFE6;     --text-rgb: 243 239 230;
+  --muted: #A9A193;    --muted-rgb: 169 161 147;
+  --rule: rgba(243, 239, 230, .15);
+
+  --signal: #8B9BFF;        --signal-rgb: 139 155 255;
+  --signal-bright: #AAB6FF; --signal-bright-rgb: 170 182 255;
+  --signal-solid: #2F49FF;  /* fills still need the saturated blue behind light text */
+  --on-signal: #F7F3EA;     --on-signal-rgb: 247 243 234;
+  --thread: #E08A5F;        --thread-rgb: 224 138 95;
+  --thread-soft: #E08A5F;
+
+  --band: #0B0906;      --band-rgb: 11 9 6;
+  --band-soft: #16120D; --band-soft-rgb: 22 18 13;
+  --band-fg: #ECE6DA;   --band-fg-rgb: 236 230 218;
+}
+
+/*
+  Rules that tokens cannot carry, so they are written down here:
+  • The mark is ink on paper or paper on ink. Never --signal, never --thread, never a gradient.
+  • Hairlines are 1px at --rule. A second rule weight does not exist.
+  • --signal is a link or one CTA. --thread is a numbered list or a rare warning. Never both in one
+    composition.
+  • Display type is Geist 600; editorial headlines are Instrument Serif italic. Mono is for labels,
+    data and code, always uppercase with --tracking-label.
+*/
