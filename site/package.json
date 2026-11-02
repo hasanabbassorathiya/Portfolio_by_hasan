@@ -11,7 +11,9 @@
     "hydration": "node scripts/hydration-check.mjs",
     "resume:pdf": "node scripts/build-resume-pdf.mjs",
     "preview": "vite preview",
-    "seed:sql": "node scripts/seed-sql.mjs"
+    "seed:sql": "node scripts/seed-sql.mjs",
+    "postman": "php scripts/gen-postman.php",
+    "verify:postman": "php scripts/gen-postman.php && node scripts/verify-postman.mjs"
   },
   "dependencies": {
     "lenis": "^1.3.27",

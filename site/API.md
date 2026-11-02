@@ -149,7 +149,14 @@ Behaviour:
 - `date` fields must be real `YYYY-MM-DD` dates.
 - `checkbox` accepts `true`, `"true"`, `1`, `"1"`, `"on"` → `1`, anything else → `0`.
 - `json` fields accept an array/object or a JSON string, validated against the field shape (`list`, `pairs`, `object`) before storage.
-- `image` fields are text paths/URLs (≤255). Upload binary files through `/api/upload.php` first.
+- `image` fields are text paths/URLs. Upload binary files through `/api/upload.php` first.
+- Text length is capped at the **smaller** of the schema's declared `max` and the column's real `VARCHAR` width (see §4.1). A field that is too long answers:
+
+```json
+{ "error": "validation failed", "field": "grp", "detail": "Group: too long — 40 character limit, got 46" }
+```
+
+Before this was measured, `entity-schema.php` promised 255 characters for every plain text field while 30 of the columns are narrower, so a legal-looking save died as `{"error":"update failed"}` with no field named — from the CLI *and* from `/admin/edit.php`, which posts to the same endpoint and sets no `maxlength`. `crud.php` now reads the widths out of `information_schema` at request time, so the database, not the doc comment, is the limit.
 
 ### Profile (key/value)
 
@@ -235,6 +242,48 @@ Unique key: `(grp, name)`.
 
 Seeded profile keys: `name`, `kicker`, `sub`, `availability`, `open_to`, `location`, `email`, `phone`, `linkedin`, `github`, `instagram`, `play_store`, `app_store`, `summary`.
 
+### 4.1 Effective character limits
+
+The schema default is 255 characters for `text` and `image`. These columns are narrower, so **this is the number that will reject your write**. Everything not listed here accepts its full declared `max`.
+
+| Entity | Field | Real limit |
+| --- | --- | --- |
+| apps | `slug`, `name` | 190 |
+| apps | `role` | 150 |
+| apps | `genre` | 80 |
+| apps | `year` | **40** |
+| clients | `slug`, `name`, `kicker` | 190 |
+| clients | `metric_label`, `type`, `location` | 120 |
+| clients | `role` | 150 |
+| clients | `period`, `metric` | **60** |
+| posts | `slug` | 190 |
+| posts | `category` | 80 |
+| projects | `slug`, `title` | 190 |
+| projects | `client`, `role` | 120 |
+| projects | `category` | 60 |
+| projects | `year` | **20** |
+| experiences | `company`, `position` | 150 |
+| experiences | `location` | 120 |
+| experiences | `period` | **40** |
+| skills | `name` | 80 |
+| skills | `grp` | **40** |
+| testimonials | `author`, `note` | 120 |
+
+Fields with an explicit `max` in the schema already matched their column: `seo_description` 320, `aso_subtitle` 120, `aso_category` 60, `aso_age_rating` **20**. `posts.body` is `mediumtext`, `profile.v` is `text`, and the other `textarea`/`markdown` fields are not width-bound.
+
+`apps.rating_value` is `decimal(2,1)`, so it tops out at **9.9** — a 10.0 rating is not storable.
+
+Reproduce against any database (the local harness or the live one):
+
+```bash
+mysql <db> -e "SELECT table_name, column_name, character_maximum_length
+  FROM information_schema.columns
+  WHERE table_schema = DATABASE() AND data_type = 'varchar'
+  ORDER BY table_name, character_maximum_length"
+```
+
+The same table, generated from the schema you are running against, is in the Postman collection under `4 · Field reference` — one request per entity.
+
 ---
 
 ## 5. Media uploads
@@ -268,6 +317,22 @@ file=<binary>   folder=apps
 ```
 
 The row in `media` is best-effort: the file is already served from disk even if the audit insert fails because `v2-schema.sql` has not been imported.
+
+Rejections, by status:
+
+| Condition | Code | Body |
+| --- | --- | --- |
+| Missing/unreadable `file` | 400 | `no file uploaded` |
+| `folder` outside `[a-z0-9][a-z0-9-]{0,59}` | 400 | `invalid folder` |
+| 0 bytes or over 8 MB | 413 | `file must be between 1 byte and 8 MB` |
+| MIME outside the five allowed | 415 | `only JPEG, PNG, WebP, AVIF or GIF images are allowed` |
+| Bytes pass the MIME test but are not a decodable image | 415 | `file is not a readable image` |
+| Directory or `move_uploaded_file` fails | 500 | `could not store the upload` |
+
+Two gaps worth knowing before you plan work around this endpoint:
+
+- **There is no read endpoint for media.** `upload.php` inserts into `media`, but `crud.php` has no `media` entity and `index.php` does not serve it, so the library is not queryable through the API and nothing will tell you which uploads are orphaned. The files on disk under `media/uploads/` are the source of truth.
+- **It writes only inside `media/uploads/`.** The site's app icons and screenshots live at `media/apps/<slug>/`, which this endpoint cannot reach — putting a file there is a filesystem/deploy operation, not an API call. That is why the BlankSpace and BULB VPN artwork cannot be attached through the CMS today.
 
 ---
 
@@ -441,7 +506,7 @@ Auth + CSRF required. Reads `indexnow_key` (lowercase hex 8–128), writes `/<ke
 ## 8. Setup checklist (new environment)
 
 1. Copy `api/config.sample.php` → `api/config.php` and fill DB credentials, `AUTH_PEPPER`, optional `ANALYTICS_SALT` and `SOCIAL_WEBHOOK_SECRET`. Never commit `config.php`.
-2. Import SQL in order: `schema.sql` → `v2-schema.sql` → `seed.sql` → `seed-content.sql` → `migrate-2026-11-01-social-posts.sql`.
+2. Import SQL in order: `schema.sql` → `v2-schema.sql` → `seed.sql` → `seed-content.sql` → `enquiries-schema.sql` → `migrate-2026-11-01-social-posts.sql`. Pass `--default-character-set=utf8mb4` on the client, and create the database with `CHARACTER SET utf8mb4`: some local MariaDB builds default `character_set_client` to `latin1`, which silently double-encodes the em dashes and curly quotes in the seed text (`—` becomes `â€”`) while still importing cleanly.
 3. Create the first admin: `php scripts/create-admin.php you@example.com`.
 4. Open `/admin/` and sign in.
 5. Fill Settings → GA4, Discord, IndexNow, social URLs.
@@ -452,10 +517,37 @@ Auth + CSRF required. Reads `indexnow_key` (lowercase hex 8–128), writes `/<ke
 
 ## 9. Postman
 
-1. Import `postman/portfolio-api.postman_collection.json`.
-2. Import `postman/environment-local.json` (or `environment-production.json`) and select it.
-3. Set `adminEmail` / `adminPassword` in the environment.
-4. Run **Auth → Login**. The test script stores `token` and `csrf` as collection variables.
-5. Call anything. Create requests keep `published: 0`, save the new `id` into its variable (`appId`, `postId`, …), and Delete requests clean up after themselves.
+`postman/portfolio-api.postman_collection.json` — 80 requests in 10 folders. Folders 0–7 are **generated** from `api/entity-schema.php`, so a field added to the schema appears in its create body, its update body and its reference table without anyone remembering to document it. Folders 8–9 (intake, SEO) are carried over verbatim by the generator.
 
-The collection mirrors the sections above: Auth, Public content (the entities listed in §1), Admin CRUD (8 entity folders × list/get/create/update/delete), Media, Intake & analytics, SEO tools.
+### Use it
+
+1. Import `postman/portfolio-api.postman_collection.json`.
+2. Import `postman/environment-local.json` and `postman/environment-production.json`; select one. The environment's `baseUrl` **and** `siteUrl` override the collection defaults — set both, or a local upload check silently targets the live site.
+3. Fill `adminEmail` / `adminPassword` in the environment. They are never committed and must not go in a URL, where they would land in shell history and Postman sync.
+4. Run **`1 · Auth → Login`**. Its test script writes `token` and `csrf` as collection variables for every request after it. Both are bound together (CSRF is an HMAC of the token), so take the pair from one response — mixing them gives `403`.
+5. Read **`0 · Start here`** before writing anything. Read **`4 · Field reference`** for the per-field contract, including §4.1's real column widths.
+
+Folders: `0 Start here · 1 Auth · 2 Public content · 3 Profile (key/value) · 4 Field reference · 5 Admin CRUD · 6 Media · 7 Recipes · 8 Intake & analytics · 9 SEO tools`.
+
+`5 · Admin CRUD` runs List → **Create** (captures the id) → Get one → Update → Set media → Publish → **Delete** for each entity, in that order, so running a folder top to bottom leaves no row behind. `6 · Media → Recipe: upload → attach to an app` creates its own throwaway row and deletes it, so it cannot overwrite a real app.
+
+### Regenerate it
+
+```bash
+cd site && npm run postman          # php scripts/gen-postman.php
+```
+
+The generator fails rather than shipping a hole: a schema field with no example value, or a `{{var}}` referenced but not declared, exits non-zero.
+
+### Prove it
+
+The collection ships JavaScript that has to work, so `scripts/verify-postman.mjs` runs it the way Postman's runner does — same phase order, same `pm.test`/`pm.expect`/`pm.response`/`pm.sendRequest`, `node:vm` sandboxes — against a real PHP + MySQL stack and reports every assertion.
+
+```bash
+cd site && CMS_VERIFY_BASE=http://127.0.0.1:8099/api CMS_VERIFY_SITE=http://127.0.0.1:8099 \
+  CMS_VERIFY_EMAIL=… CMS_VERIFY_PASSWORD=… CMS_VERIFY_FILE=/tmp/probe.png \
+  node scripts/verify-postman.mjs
+```
+
+It **refuses any non-loopback `CMS_VERIFY_BASE`** — the collection creates and deletes rows, so there is no way to aim it at production by accident. Folder `9 · SEO tools` is skipped because it calls indexnow.org. Current state: `79 requests · 53 scripted assertions · 0 failing` against a scratch `portfolio_cms_verify` database (80th request is the skipped IndexNow call).
+

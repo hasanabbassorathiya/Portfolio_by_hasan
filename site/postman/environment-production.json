@@ -8,6 +8,12 @@
       "enabled": true
     },
     {
+      "key": "siteUrl",
+      "value": "https://hasanabbassorathiya.tech",
+      "type": "default",
+      "enabled": true
+    },
+    {
       "key": "adminEmail",
       "value": "you@example.com",
       "type": "default",

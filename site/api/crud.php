@@ -66,22 +66,75 @@ function crud_json_shape(mixed $value, string $shape): ?string
 }
 
 /**
+ * VARCHAR widths straight from the database, keyed by column name.
+ *
+ * entity-schema.php declares an editorial max (default 255 for text); the column is the
+ * limit that actually rejects a write — 30 of the editable text fields sit in
+ * VARCHAR(20..190) columns. Validating against the schema alone lets a value through
+ * that MySQL then refuses, and the admin sees `update failed` with no field named.
+ * TEXT-family columns are skipped because character_maximum_length there is a byte
+ * ceiling, not a character count. API.md §4.1 lists the widths.
+ *
+ * @return array<string,int>
+ */
+function crud_varchar_limits(PDO $pdo, string $table): array
+{
+    static $cache = [];
+    if (isset($cache[$table])) return $cache[$table];
+    $limits = [];
+    try {
+        $st = $pdo->prepare(
+            'SELECT column_name, character_maximum_length FROM information_schema.columns
+             WHERE table_schema = DATABASE() AND table_name = ?
+               AND data_type IN (?, ?)'
+        );
+        $st->execute([$table, 'varchar', 'char']);
+        foreach ($st->fetchAll() as $row) {
+            $len = (int)($row['character_maximum_length'] ?? 0);
+            if ($len > 0) $limits[strtolower((string)$row['column_name'])] = $len;
+        }
+    } catch (Throwable $e) {
+        // information_schema can be restricted; fall back to the schema-declared max.
+    }
+    return $cache[$table] = $limits;
+}
+
+/** The shorter of the schema's editorial max and the column's real width. */
+function crud_max(array $field, ?int $varchar): int
+{
+    $type = $field['type'] ?? 'text';
+    $declared = (int)($field['max'] ?? match ($type) {
+        'text', 'image' => 255,
+        'textarea' => 20000,
+        'markdown' => 200000,
+        default => 0,
+    });
+    if ($varchar === null) return $declared;
+    return $declared > 0 ? min($declared, $varchar) : $varchar;
+}
+
+/**
+ * A rejection the admin can act on. admin/edit.php renders `detail` alone, so the
+ * message has to name its own field; the machine-readable key ships alongside it.
+ */
+function crud_fail(array $field, string $name, string $message): array
+{
+    return ['field' => $name, 'error' => (string)($field['label'] ?? $name) . ': ' . $message];
+}
+
+/**
  * @return array{0: array<string,mixed>, 1: ?array{field:string, error:string}}
  */
 function crud_clean(array $body, array $cfg, bool $creating): array
 {
     $fields = crud_field_map($cfg);
+    $limits = crud_varchar_limits(db(), (string)$cfg['table']);
     $out = [];
     foreach ($fields as $name => $field) {
         if (!array_key_exists($name, $body)) continue;
         $type = $field['type'] ?? 'text';
         $value = $body[$name];
-        $max = (int)($field['max'] ?? match ($type) {
-            'text', 'image' => 255,
-            'textarea' => 20000,
-            'markdown' => 200000,
-            default => 0,
-        });
+        $max = crud_max($field, $limits[strtolower($name)] ?? null);
 
         if ($type === 'checkbox') {
             $out[$name] = in_array($value, [1, '1', true, 'true', 'on'], true) ? 1 : 0;
@@ -89,7 +142,7 @@ function crud_clean(array $body, array $cfg, bool $creating): array
         }
         if ($type === 'number') {
             if ($value === '' || $value === null) { $out[$name] = null; continue; }
-            if (!is_numeric($value)) return [[], ['field' => $name, 'error' => 'must be a number']];
+            if (!is_numeric($value)) return [[], crud_fail($field, $name, 'must be a number')];
             $out[$name] = $value + 0;
             continue;
         }
@@ -97,7 +150,7 @@ function crud_clean(array $body, array $cfg, bool $creating): array
             if ($value === '' || $value === null) { $out[$name] = null; continue; }
             $date = DateTime::createFromFormat('Y-m-d', (string)$value);
             if (!$date || $date->format('Y-m-d') !== (string)$value) {
-                return [[], ['field' => $name, 'error' => 'must be a date (YYYY-MM-DD)']];
+                return [[], crud_fail($field, $name, 'must be a date (YYYY-MM-DD)')];
             }
             $out[$name] = (string)$value;
             continue;
@@ -107,33 +160,33 @@ function crud_clean(array $body, array $cfg, bool $creating): array
             if (is_string($value)) {
                 $decoded = json_decode($value, true);
                 if (json_last_error() !== JSON_ERROR_NONE) {
-                    return [[], ['field' => $name, 'error' => 'invalid JSON']];
+                    return [[], crud_fail($field, $name, 'invalid JSON')];
                 }
                 $value = $decoded;
             }
             $problem = crud_json_shape($value, (string)($field['shape'] ?? 'list'));
-            if ($problem !== null) return [[], ['field' => $name, 'error' => $problem]];
+            if ($problem !== null) return [[], crud_fail($field, $name, $problem)];
             $out[$name] = json_encode($value, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
             continue;
         }
 
         // text-like
         if (!is_string($value) && !is_int($value) && !is_float($value)) {
-            return [[], ['field' => $name, 'error' => 'must be text']];
+            return [[], crud_fail($field, $name, 'must be text')];
         }
         $value = trim((string)$value);
         if ($value === '') {
             $out[$name] = ($field['required'] ?? false) ? '' : null;
             if (($field['required'] ?? false)) {
-                return [[], ['field' => $name, 'error' => 'is required']];
+                return [[], crud_fail($field, $name, 'is required')];
             }
             continue;
         }
         if ($max > 0 && mb_strlen($value) > $max) {
-            return [[], ['field' => $name, 'error' => "must be {$max} characters or fewer"]];
+            return [[], crud_fail($field, $name, "too long — {$max} character limit, got " . mb_strlen($value))];
         }
         if ($name === 'slug' && !preg_match('/\A[a-z0-9][a-z0-9-]{0,189}\z/', $value)) {
-            return [[], ['field' => $name, 'error' => 'use lowercase letters, numbers and hyphens']];
+            return [[], crud_fail($field, $name, 'use lowercase letters, numbers and hyphens')];
         }
         $out[$name] = $value;
     }
@@ -141,11 +194,39 @@ function crud_clean(array $body, array $cfg, bool $creating): array
     if ($creating) {
         foreach ($fields as $name => $field) {
             if (($field['required'] ?? false) && (!isset($out[$name]) || $out[$name] === '' || $out[$name] === null)) {
-                return [[], ['field' => $name, 'error' => 'is required']];
+                return [[], crud_fail($field, $name, 'is required')];
             }
         }
     }
     return [$out, null];
+}
+
+/**
+ * The column a rejected write came from, when MySQL says so.
+ *
+ * Only the column name is read out of the driver message — the rest can carry SQL or the
+ * value itself, and `detail` renders straight into the admin page. This is a backstop for
+ * hosts where information_schema is restricted and crud_varchar_limits() comes back empty.
+ */
+function crud_column_error(PDOException $e): ?string
+{
+    $msg = (string)($e->errorInfo[2] ?? '');
+    if (preg_match("/(?:for|in) column '([A-Za-z0-9_]{1,64})'/", $msg, $m)) return $m[1];
+    if (preg_match("/Column '([A-Za-z0-9_]{1,64})' cannot be null/", $msg, $m)) return $m[1];
+    return null;
+}
+
+/**
+ * @param array<string,array> $fields
+ * @return array<string,string>
+ */
+function crud_write_failed(array $fields, PDOException $e, string $fallback): array
+{
+    $col = crud_column_error($e);
+    if ($col === null) return ['error' => $fallback];
+    $label = (string)($fields[$col]['label'] ?? $col);
+    return ['error' => 'validation failed', 'field' => $col,
+            'detail' => "{$label}: rejected by the database — check the length and type against that field"];
 }
 
 function crud_slug_conflict(PDO $pdo, string $table, string $slug, int $ignoreId = 0): bool
@@ -227,7 +308,7 @@ if ($method === 'POST') {
         if ($e->getCode() === '23000') {
             json_out(['error' => 'slug already exists', 'field' => 'slug'], 409);
         }
-        json_out(['error' => 'insert failed'], 422);
+        json_out(crud_write_failed(crud_field_map($cfg), $e, 'insert failed'), 422);
     }
     json_out(['id' => (int)$pdo->lastInsertId()], 201);
 }
@@ -253,7 +334,7 @@ if ($method === 'PUT') {
         if ($e->getCode() === '23000') {
             json_out(['error' => 'slug already exists', 'field' => 'slug'], 409);
         }
-        json_out(['error' => 'update failed'], 422);
+        json_out(crud_write_failed(crud_field_map($cfg), $e, 'update failed'), 422);
     }
     json_out(['ok' => true]);
 }

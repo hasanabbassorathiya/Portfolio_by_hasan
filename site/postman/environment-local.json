@@ -8,6 +8,12 @@
       "enabled": true
     },
     {
+      "key": "siteUrl",
+      "value": "http://localhost:8099",
+      "type": "default",
+      "enabled": true
+    },
+    {
       "key": "adminEmail",
       "value": "you@example.com",
       "type": "default",
