@@ -111,3 +111,11 @@ site/evidence/
 site/reports/
 site/.lighthouseci/
 site/vite.config.js.timestamp-*.mjs
+
+# Brand identity assets are deliverables, not scratch. The blanket *.png above left
+# the shipped favicon/PWA icon set unversioned, so re-include exactly these files.
+!brand/**/*.png
+!site/public/apple-touch-icon.png
+!site/public/icon-192.png
+!site/public/icon-512.png
+!site/public/brand/*.png
