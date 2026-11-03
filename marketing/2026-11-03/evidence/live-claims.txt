@@ -1,0 +1,42 @@
+Live-claim verification for the campaign — every number allowed on screen, re-measured 2026-11-03.
+Reproduce with:
+
+    for p in services apps resume work; do printf "/%-9s " "$p"; \
+      curl -s -o /dev/null -w "%{http_code}\n" "https://hasanabbassorathiya.tech/$p"; done
+    curl -s -o /tmp/pub.html -w "%{http_code} " https://pub.dev/packages/stoolap_flutter
+    grep -oE "stoolap_flutter [0-9.]+" /tmp/pub.html | head -1
+    curl -s "https://hasanabbassorathiya.tech/api/index.php?entity=apps" | \
+      node -e "const d=JSON.parse(require('fs').readFileSync(0,'utf8'));const a=Array.isArray(d)?d:(d.data||[]);
+               console.log('live CMS apps:', a.length);
+               a.filter(x=>x.rating_value).forEach(x=>console.log(' ', x.rating_value, '/', x.rating_count, '-', x.name));"
+
+--- Output ---
+
+/services  200
+/apps      200
+/resume    200
+/work      200
+
+pub.dev    200  stoolap_flutter 2.0.1
+
+live CMS apps: 21
+  4.9 / 1058 - Duas and Aamal
+  5.0 / 4    - Carvan-e-Hind        <- denominator too small, never on screen
+  4.8 / 12   - 14 Stars             <- never on screen
+  4.4 / 5    - KLIX                 <- never on screen
+  5.0 / 5    - Urban Ledger         <- never on screen
+
+Duas and Aamal CMS record (source for "still maintained"):
+  year: "2023 — present"   role: "Creator · Flutter developer"
+  tagline: "A daily companion for duas, aamal, and prayer — built Gujarati-first."
+
+--- Discrepancy carried into the plan ---
+
+hasan.md §5 "App profiles" row says 15; the live CMS returns 21 (measured above, and the
+2026-11-03 deploy verified 21 on /apps). Reconcile hasan.md before the count appears in a video.
+
+--- Not measured, deliberately excluded ---
+
+Play Store rating values cannot be read with curl (client-side rendered). The 4.9 / 1,058 figure is
+re-read in Chrome at the render's `assets` gate, not asserted here.
+GitHub stargazers on stoolap-flutter: 3 (measured 2026-11-03) — too weak to display, excluded.

@@ -12,7 +12,7 @@ Legend: ⬜ todo · ✅ done · N/A not applicable
 - ⬜ Funnel definition: visit → hero read → project chapter opened → CTA → contact/book
 - ✅ `section_view` scroll milestones via IntersectionObserver on home sections (about/apps/writing/work/speaking/contact), once per session
 - ⬜ Microsoft Clarity (heatmaps/session replay, privacy-friendly) or PostHog alternative
-- ⬜ `robots.txt` + `sitemap.xml` submitted to Google Search Console + Bing Webmaster
+- ✅ `robots.txt` + `sitemap.xml` submitted to Google Search Console — URL-prefix property `https://hasanabbassorathiya.tech/` verified 2026-11-03 by HTML file (`google9d7e6a4ddebdf66b.html`, 53 bytes, served 200 with a 404 control on a guessed sibling name), `/sitemap.xml` submitted same day → status Success, 49 discovered pages (`evidence/2026-11-03/live/gsc-verification.txt`). ✅ Bing Webmaster Tools opened through Google SSO as the site-owning account `hasanabbassorathiya12@gmail.com` (the identity question is resolved) and the site was imported from Search Console with the read-only `webmasters.readonly` scope — "Site addition successful, imported 1 sites"; `/sitemap.xml` came across with it and shows Imported / Processing, 1 known sitemap, 0 errors, 0 warnings (`evidence/2026-11-03/live/bing-webmaster-import.txt`). ⬜ re-check Bing sitemap status after processing finishes (this is signed-in account state, so it needs a browser, not curl)
 - ✅ `robots.txt` disallows `/admin/` + `/api/`, points to the sitemap; `sitemap.xml` lists all 42 routes, every one returns 200 on the harness, and `sitemap.xml` + `rss.xml` (9 items) are now generated from the post/app content at build time and well-formed XML
 - ⬜ GA filters: exclude own devices (or use `debug_mode` only locally)
 - ⬜ UTM conventions documented for future campaigns (`utm_source=<platform>&utm_campaign=launch2026`)
@@ -35,12 +35,14 @@ Legend: ⬜ todo · ✅ done · N/A not applicable
 - ⬜ Testimonials (2–3 real quotes) + stats with real numbers only
 
 ## 4. Digital Marketing
-- ⬜ Launch video via **brag skill** for site + per flagged app (Duas & Aamal first)
+- ✅ Launch campaign rendered 2026-11-03 via OpenMontage (not the brag skill): 45s master reel in 16:9/1:1/9:16, four 9:16 project clips, 20s consulting cut in 1:1/9:16 — nine silent caption-led files in `marketing/2026-11-03/out/`, evidence and defects in [../marketing/2026-11-03/DELIVERY.md](../marketing/2026-11-03/DELIVERY.md). ⬜ posting still owner-gated
 - ⬜ LinkedIn launch post (story format: problem → craft → link) + personal profile update w/ site URL
-- ⬜ GitHub profile README links the site
+- ✅ GitHub profile README links the site — `https://raw.githubusercontent.com/hasanabbassorathiya/hasanabbassorathiya/main/README.md` returns 200 and line 35 is `- [Portfolio](https://hasanabbassorathiya.tech)`; the same URL also renders on the profile page. ⬜ the same README still points "Resume" at a FlowCV page rather than `/resume` on this site
 - ⬜ OG preview tested (LinkedIn Post Inspector / Twitter card validator)
 - ✅ Share copy: 3 launch variants + 8 essay cross-posts + X versions in `site/SOCIAL.md`
-- ⬜ BuyMeACoffee kept as support CTA (secondary, not primary)
+- ✅ BuyMeACoffee kept as support CTA (secondary, not primary): `buymeacoffee.com/hasanabbassorathiya` verified real (200 + `og:title` "HASAN ABBAS SORATHIYA"), rendered only in the footer "Elsewhere" list, now CMS-overridable via `profile.buymeacoffee`
+- ✅ Every advertised profile link checked to exist — 8 `sameAs` entries (LinkedIn, GitHub, YouTube, Instagram, Medium, Buy Me a Coffee, Play developer page, App Store developer page) return 200, with a fabricated-handle control returning 404 so the 200 means "exists"; Instagram and Medium needed a signed-in browser because curl only sees a login wall / Cloudflare challenge. Instagram already lists `hasanabbassorathiya.tech` in the profile bio (`evidence/2026-11-03/live/digital-marketing-links.txt`)
+- ⬜ Search Console has no social-channel switch: Settings → Associations offers **Google Analytics only** ("No associated services"), and that needs the GA4 measurement ID the owner has not supplied. X / Discord / Reddit / Dev.to / Product Hunt handles were never provided and are not invented
 
 ## 5. Technical / Hosting (Hostinger)
 - ⬜ HTTPS forced (SSL active, .htaccess redirect), www→apex redirect decided
@@ -73,7 +75,7 @@ Legend: ⬜ todo · ✅ done · N/A not applicable
 - ✅ `/community` page with Discord CTA and newsletter fallback (invite still ⬜ owner input)
 - ✅ `site/API.md` + `site/postman/` collection (56 requests, local + production environments) —
   request shapes exercised with curl; the collection has not been run through Newman
-- ⬜ Owner-blocked inputs: GA4 measurement ID, Search Console token, Discord invite, Cal.com URL
+- ⬜ Owner-blocked inputs: GA4 measurement ID, Discord invite, Cal.com URL (Search Console no longer needs a token — the URL-prefix property is verified by HTML file)
 - ⬜ Deploy of the v2 build (awaiting owner approval; never overwrite `api/config.php`)
 
 ## 6. Pre-launch QA

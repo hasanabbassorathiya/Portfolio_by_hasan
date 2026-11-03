@@ -18,7 +18,7 @@ https://hasanabbassorathiya.tech/blog/<slug>?utm_source=linkedin&utm_medium=soci
 > So I rebuilt it as a system: the apps, the numbers, the architecture decisions, the essays. One place.
 >
 > - 21 app profiles across iOS, Android, and Android TV
-> - 50,000+ users on a lending platform in New Zealand, 15K+ first-month downloads for a marina app, and a 4.9★ prayer app
+> - 50,000+ users on a lending platform in New Zealand, 15K+ first-month downloads for a marina app, and a 5.0★ prayer app
 > - 6+ years, most recently leading mobile delivery for an electric mobility platform in Dubai
 >
 > I am open to senior or lead Flutter and AI engineering roles — Dubai-based, remote-friendly, available immediately.
@@ -126,3 +126,59 @@ Keep to one idea and one link.
 - GitHub profile README: link the site in the first line
 - Résumé: share `hasanabbassorathiya.tech/resume` (or the PDF at `/hasan-abbas-sorathiya-resume.pdf`) instead of the FlowCV link; the page and PDF share one data source, so dates and roles cannot drift
 - App Store developer page: confirm the site URL in the developer website field
+
+## 5. Video sequence (2026-11-03 campaign)
+
+Rendered per [marketing/2026-11-03/PRODUCTION-PLAN.md](../marketing/2026-11-03/PRODUCTION-PLAN.md);
+where and when each file goes out is in [MARKETING.md](MARKETING.md). Silent with burned-in
+captions, so the first line here is the only thing a muted viewer reads before the video starts.
+
+Every number below is from `hasan.md` §5, the live CMS, or re-read at the render's `assets` gate.
+Never "7 years", never a `100K+` aggregate, never a star rating on screen unless its denominator is
+with it and the denominator is `1,063`. `21 apps` is the live CMS count measured 2026-11-03
+(`api/index.php?entity=apps` → 21 rows); `hasan.md` §5 still lists 15 and needs reconciling first.
+
+**Week 1 · master reel · LinkedIn**
+
+> Six years of shipping products people keep.
+>
+> Good2Go Loans — 50,000+ users across New Zealand, fintech where the audit trail is the feature.
+> Nakheel Marinas — 15K+ downloads in the first month.
+> Duas and Aamal — 5.0 on Google Play, 1,063 ratings, live on both stores.
+>
+> No case studies about work I did not do. The receipts are in the link.
+> https://hasanabbassorathiya.tech
+
+**Week 1 · master reel · X** (one idea, one link)
+
+> 45 seconds, no voiceover, no stock footage — just the listings, the numbers and the commits. 21 apps, 9 essays, one site: https://hasanabbassorathiya.tech
+
+**Week 1 · GitHub profile README** (16:9, muted)
+
+> Six years of shipped Flutter, iOS and Android — the reel, then the receipts.
+
+**Week 2 · `clip-duas` · Reels / Shorts**
+
+> 5.0★ across 1,063 Play ratings: Quran with Gujarati translation, prayer times, widgets, offline mode — built Gujarati-first. https://hasanabbassorathiya.tech/apps
+
+**Week 3 · `clip-bulbvpn`**
+
+> A VPN built for Iranian networks, where the honest part is the measurement, not the promise. https://hasanabbassorathiya.tech/apps
+
+**Week 4 · `clip-blankspace`**
+
+> A party game where iOS swipe-back had to feel native or the whole thing broke. https://hasanabbassorathiya.tech/apps
+
+**Week 5 · `clip-stoolap` · dev community**
+
+> `flutter pub add stoolap_flutter` — v2.0.1 on pub.dev. The widget I kept rebuilding for every client, so I shipped it once instead. https://pub.dev/packages/stoolap_flutter
+
+**Week 6 · consulting cut · LinkedIn + `/services`**
+
+> Flutter delivery, iOS and Android, and the AI systems behind the product. Immediate, remote-friendly.
+> What I take on and what I turn down is on the page: https://hasanabbassorathiya.tech/services
+
+**UTM for every link in this section** — `?utm_source=<channel>&utm_medium=video&utm_campaign=receipts-2026-q4&utm_content=<master|duas|bulbvpn|blankspace|stoolap|consulting>`.
+
+**Still blocked, still not invented:** X, Discord, Reddit, Dev.to and Product Hunt posting requires
+the owner's actual handles. Nothing in this sequence is scheduled there until they exist.

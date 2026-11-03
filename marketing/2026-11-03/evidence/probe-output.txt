@@ -1,0 +1,33 @@
+## OpenMontage HEAD
+195eab2 Merge pull request #867 from calesthio/fix/subtitle-style-security-test
+
+## Tools actually available, per capability (registry.discover() then get_status())
+music_search       total=2   available=['pixabay_music']
+music_library      total=1   available=[]
+music_generation   total=6   available=[]
+screen_capture     total=3   available=['cap_recorder', 'screen_capture_selector', 'screen_recorder']
+subtitle           total=2   available=['remotion_caption_burn', 'subtitle_gen']
+tts                total=19  available=[]
+image_generation   total=30  available=[]
+video_generation   total=34  available=[]
+video_post         total=10  available=['auto_reframe', 'green_screen_composite', 'green_screen_processor', 'hyperframes_compose', 'showcase_card', 'silence_cutter', 'video_compose', 'video_stitch', 'video_trimmer']
+analysis           total=14  available=['audio_energy', 'audio_probe', 'composition_validator', 'frame_sampler', 'scene_detect', 'video_analyzer', 'visual_qa']
+enhancement        total=6   available=['color_grade', 'face_enhance']
+publish            total=1   available=['export_bundle']
+
+## Render runtimes
+{'ffmpeg': True, 'remotion': True, 'hyperframes': True}
+
+## Control: esbuild inside remotion-composer really runs (npm warned postinstall was unapproved)
+esbuild OK
+
+## Music plan probe — both sources, no credentials supplied
+pixabay_music   status=available   success=False results=0 err=Pixabay music search failed: HTTP Error 403: Forbidden
+freesound_music status=unavailable success=False results=0 err=FREESOUND_API_KEY not set. Set the FREESOUND_API_KEY environment variable:
+  export FREESOUND_API_KEY=your_key_here
+Get a free key at https://freesound.org/apiv2/apply/
+music_library drop path exists: False
+
+## HyperFrames runtime (optional-dependency warnings are expected)
+    "npm_package_version": "0.9.7",
+    "stdout_tail": "\nhyperframes doctor\n\n  \u2713 Version          0.9.7 (latest)\n  \u2713 Node.js          v26.12.1 (darwin arm64)\n  \u2713 CPU              10 cores \u00b7 Apple M1 Pro @ 2400MHz\n  \u2713 Memory           16.0 GB total \u00b7 2.8 GB available\n  \u2713 Disk             22.1 GB free\n  \u2713 Frames cache     /var/folders/0r/5p8cbnmj3wd90jh2jlp_0y9c0000gn/T/hyperframes-extract-cache-501 \u00b7 22.1 GB free at /var/folders/0r/5p8cbnmj3wd90jh2jlp_0y9c0000gn/T \u00b7 default\n  \u2713 Archive extractor unzip\n  \u2713 Settings lock    Not locked\n  \u2713 Environment      non-TTY\n  \u2717 whisper-cpp      Not found (optional \u2014 needed for transcription)\n                     brew install whisper-cpp\n  \u2717 TTS (Kokoro)     Not installed (optional \u2014 local voice fallback)\n                     pip install kokoro-onnx soundfile\n  \u2717 BGM (MusicGen)   Not installed (optional \u2014 local music fallback)\n                     pip install transformers torch soundfile numpy\n  \u2713 onnxruntime-node Not installed (installs on first use)\n  \u2713 @google/genai    Not installed (installs on first use)\n  \u2713 FFmpeg           ffmpeg 9.0.2 at /opt/homebrew/bin/ffmpeg; loudness numbers are only comparable on 8.0.1\n  \u2713 FFprobe          ffprobe 9.0.2 at /opt/homebrew/bin/ffprobe\n  \u2713 Chrome           cache: /Users/macbookm1pro/.cache/hyperframes/chrome/chrome-headless-shell/mac_arm-152.0.7977.30/chrome-headless-shell-mac-arm64/chrome-headless-shell\n  \u2713 Docker           Docker version 29.9.2, build a82e528901\n  \u2713 Docker running   Running\n\n  \u25c7  Some checks failed \u2014 see hints above\n\n",
