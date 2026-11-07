@@ -5,7 +5,7 @@ export const SITE_URL = 'https://hasanabbassorathiya.tech';
 export const SITE_NAME = 'Hasan Abbas Sorathiya';
 const DEFAULT_TITLE = 'Hasan Abbas Sorathiya · Senior Software & AI Engineer';
 const DEFAULT_DESCRIPTION =
-  'Senior mobile & AI engineer in Dubai. Six-plus years shipping Flutter, iOS and Android products, backend and API integrations, plus RAG and AI agents. Built for production.';
+  'Senior mobile & AI engineer in Dubai. Six-plus years shipping Flutter, iOS and Android products, backend and API integrations, plus RAG and AI agents — apps and systems people keep using.';
 
 function upsertMeta(selector, attrs) {
   let el = document.head.querySelector(selector);
@@ -112,6 +112,7 @@ export const personJsonLd = {
     'https://www.youtube.com/channel/UCSGwYKSUJb7sX4-BI12WB_Q',
     'https://www.instagram.com/hasanabbassorathiya/',
     'https://hasanabbassorathiya.medium.com/',
+    'https://buymeacoffee.com/hasanabbassorathiya',
     'https://play.google.com/store/apps/dev?id=5895887615343030170',
     'https://apps.apple.com/us/developer/hasan-abbas-sorathiya/id1734376366',
   ],

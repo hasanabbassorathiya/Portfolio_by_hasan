@@ -179,9 +179,10 @@ try {
       output: '../og.png',
       html: cardHtml({
         kicker: 'Portfolio · Mobile & AI',
-        title: 'I build Flutter apps and AI systems that survive production.',
-        titleHtml:
-          'I build <span class="hl-b">Flutter apps</span> and AI systems that <span class="hl-a">survive production</span>.',
+        title: profile.headline,
+        titleHtml: escapeHtml(profile.headline)
+          .replace('Flutter apps', '<span class="hl-b">Flutter apps</span>')
+          .replace('people keep using', '<span class="hl-a">people keep using</span>'),
         dek: `Senior mobile and AI engineer in Dubai — Flutter as my primary stack, with iOS and Android delivery. ${metrics.appsCount} app profiles across mobile, web and TV.`,
         meta: [`${metrics.appsCount} app profiles`, `${metrics.yearsLabel} years`],
         footerNote: 'Senior Software & AI Engineer · Dubai',
@@ -237,7 +238,7 @@ try {
           kicker: 'App',
           title: app.name,
           dek: app.tagline,
-          icon: await dataUri(`public${app.icon}`),
+          icon: app.icon ? await dataUri(`public${app.icon}`) : '',
           meta: [app.genre, app.platforms.join(' · '), String(app.year)],
           rating: app.rating ? `${app.rating.value.toFixed(1)} (${app.rating.count.toLocaleString('en-US')})` : '',
           footerNote: app.role,

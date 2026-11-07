@@ -8,7 +8,7 @@ Updated: 2026-10-29. A draft for the owner to apply. Nothing here has been publi
 
 Alternatives if the first reads too broad:
 - `Senior Flutter Engineer · Mobile Lead · AI Integration & Automation`
-- `Mobile Engineering Lead · Flutter · AI Systems that survive production`
+- `Mobile Engineering Lead · Flutter · AI Systems people keep using`
 
 ## 2. About
 
@@ -89,7 +89,7 @@ Do not promise response times, prices or availability guarantees.
 - Ground: Bone & Ink cream `#F3EFE6`; ink text `#16130F`; one cobalt accent `#1D3CFF`; rust `#A33F1C` only for a single italic word.
 - Left-aligned type, generous margins, no stock imagery.
 - Line 1 (Instrument Serif, ~64 px): `I build Flutter apps and AI systems`
-- Line 2 (Instrument Serif italic, cobalt): `that survive production.`
+- Line 2 (Instrument Serif italic, cobalt): `people keep using.`
 - Line 3 (Geist Mono, small caps, letter-spaced): `SENIOR SOFTWARE & AI ENGINEER · DUBAI`
 - Bottom right (Geist Mono, small): `hasanabbassorathiya.tech`
 - Keep the lower-left area visually quiet; LinkedIn overlays the profile photo there on mobile.

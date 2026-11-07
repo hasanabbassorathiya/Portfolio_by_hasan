@@ -19,6 +19,7 @@
 
 ### Hero copy
 - **Title:** Senior Software & AI Engineer
+- **Site `<h1>` (canonical):** "I build Flutter apps and AI systems people keep using." — served from the CMS `profile.headline`; `site/scripts/positioning.test.mjs` fails if any carrier drifts or reintroduces a retired line.
 - **One-liner:** LLMs, RAG & Agents · Flutter & Dart · Backend & API integrations
 - **Status line:** Open to opportunities — building AI-powered Flutter products and the backend integrations behind them. Available for senior engineering roles, consulting, and product collaborations.
 - **Quote:** "Engineering excellence is not just about code; it is about the impact it creates."

@@ -90,6 +90,18 @@ const platforms = [
   { label: 'AI systems' },
 ];
 
+// The CMS headline is plain prose; these phrases carry the hero's colour accents.
+// A headline that drops one of them simply renders without that highlight.
+function Headline({ text }) {
+  return String(text ?? '')
+    .split(/(Flutter apps|people keep using)/)
+    .map((part, index) => {
+      if (part === 'Flutter apps') return <em key={index} className="italic text-accent">{part}</em>;
+      if (part === 'people keep using') return <em key={index} className="italic text-hl-a">{part}</em>;
+      return part;
+    });
+}
+
 export function Hero() {
   const apps = useApps();
   const profile = useProfile();
@@ -128,8 +140,7 @@ export function Hero() {
               id="hero-title"
               className="rise rise-1 max-w-[13ch] font-serif text-[clamp(2.85rem,5.8vw,5.35rem)] font-normal leading-[0.97] tracking-[-0.02em] text-text"
             >
-              I build <em className="italic text-accent">Flutter apps</em> and AI systems that{' '}
-              <em className="italic text-hl-a">survive production</em>.
+              <Headline text={interpolate(profile.headline, metrics)} />
             </h1>
 
             <p className="rise rise-2 mt-7 max-w-[54ch] text-[16px] leading-[1.72] text-text-muted md:text-[17px]">
