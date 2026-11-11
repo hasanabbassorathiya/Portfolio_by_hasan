@@ -150,6 +150,35 @@ code { font-family:ui-monospace,monospace; color:var(--accent); font-size:.85em;
 }
 .thumb { width:28px; height:28px; border-radius:.35rem; object-fit:cover; border:1px solid var(--border); vertical-align:middle; }
 
+.structured-row { display:flex; flex-wrap:wrap; align-items:center; gap:.75rem; padding:.85rem 0; border-bottom:1px solid var(--border); }
+.structured-row:last-child { border-bottom:0; }
+.structured-inputs { display:flex; flex:1 1 280px; flex-wrap:wrap; gap:.6rem; min-width:0; }
+.structured-label { flex:1 1 120px; min-width:0; display:grid; gap:.25rem; }
+.structured-actions { display:flex; flex-wrap:wrap; gap:.5rem; }
+.structured-actions .btn-sm { min-height:44px; }
+.structured-preview { width:64px; height:88px; object-fit:contain; border:1px solid var(--border); border-radius:.5rem; }
+.structured-empty { padding:.65rem 0; }
+.save-notice:not(:empty) { color:var(--accent); margin-bottom:1rem; }
+.editor .field { min-width:0; }
+.editor .editor-grid { grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr)); }
+.editor .editor-actions { flex-wrap:wrap; position:sticky; bottom:0; background:var(--surface); padding:1rem 0; border-top:1px solid var(--border); }
+.editor .media-row { flex-wrap:wrap; }
+.editor .media-row input { min-width:0; }
+.editor [aria-invalid=true] { border-color:var(--danger); }
+.editor :focus-visible { outline:2px solid var(--accent); outline-offset:3px; }
+.editor { scroll-margin-top:7rem; }
+@media (max-width:600px) {
+  .editor { padding:1rem; }
+  .editor .field input, .editor .field textarea { font-size:1rem; }
+  .editor .btn-sm { min-height:44px; }
+  .structured-inputs { flex-basis:100%; }
+  .structured-label { flex-basis:100%; }
+  .topbar { position:static; }
+}
+@media (prefers-reduced-motion:reduce) {
+  .editor * { transition:none; scroll-behavior:auto; }
+}
+
 /* Analytics + settings */
 .grid-2 { display:grid; gap:1.5rem; grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); }
 .panel-head { display:flex; align-items:baseline; justify-content:space-between; gap:1rem; flex-wrap:wrap; }

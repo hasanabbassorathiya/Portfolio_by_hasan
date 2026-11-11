@@ -214,3 +214,50 @@ function entity_resolve(string $name): ?array
     if (!isset($schema[$name])) return null;
     return [$name, $schema[$name]];
 }
+
+/**
+ * Typed definitions for the profile key/value store.
+ *
+ * The profile entity writes arbitrary k/v rows, so its CRUD whitelist is empty. These
+ * definitions describe the keys the public site actually hydrates (content-mappers.js
+ * maps each row's `k` straight onto the profile object), letting the panel, MCP tools
+ * and Postman render typed controls instead of a free-text key box. `sub` is the hero
+ * sub-copy read by hero.jsx / ref-hero.jsx; experience_years is the owner-confirmed
+ * figure that drives {{years}} and must stay numeric so dates cannot round it up.
+ *
+ * @return array<int,array<string,mixed>>
+ */
+function profile_fields(): array
+{
+    return [
+        ['name' => 'name', 'label' => 'Name', 'type' => 'text', 'group' => 'Identity', 'required' => true, 'max' => 120],
+        ['name' => 'role', 'label' => 'Role', 'type' => 'text', 'group' => 'Identity', 'max' => 120],
+        ['name' => 'headline', 'label' => 'Headline (h1)', 'type' => 'text', 'group' => 'Identity', 'max' => 200],
+        ['name' => 'kicker', 'label' => 'Kicker', 'type' => 'text', 'group' => 'Identity', 'max' => 160],
+        ['name' => 'caption', 'label' => 'Caption', 'type' => 'text', 'group' => 'Identity', 'max' => 120],
+        ['name' => 'sub', 'label' => 'Hero sub-copy', 'type' => 'textarea', 'group' => 'Hero', 'max' => 2000,
+         'help' => 'Tokens resolve from live data: {{years}}, {{apps}}, {{public_links}}, {{clients}}, {{platforms}}.'],
+        ['name' => 'experience_years', 'label' => 'Years of experience', 'type' => 'number', 'group' => 'Hero',
+         'help' => 'Owner-confirmed figure. Drives {{years}}; kept numeric so experience dates cannot round it up.'],
+        ['name' => 'availability', 'label' => 'Availability', 'type' => 'text', 'group' => 'Hero', 'max' => 120],
+        ['name' => 'availability_detail', 'label' => 'Availability detail', 'type' => 'text', 'group' => 'Hero', 'max' => 160],
+        ['name' => 'open_to', 'label' => 'Open to', 'type' => 'text', 'group' => 'Hero', 'max' => 200],
+        ['name' => 'location', 'label' => 'Location', 'type' => 'text', 'group' => 'Contact', 'max' => 120],
+        ['name' => 'phone', 'label' => 'Phone', 'type' => 'text', 'group' => 'Contact', 'max' => 40],
+        ['name' => 'email', 'label' => 'Email', 'type' => 'text', 'group' => 'Contact', 'max' => 190],
+        ['name' => 'resume', 'label' => 'Resume URL', 'type' => 'text', 'group' => 'Contact', 'max' => 255],
+        ['name' => 'linkedin', 'label' => 'LinkedIn', 'type' => 'text', 'group' => 'Social', 'max' => 255],
+        ['name' => 'github', 'label' => 'GitHub', 'type' => 'text', 'group' => 'Social', 'max' => 255],
+        ['name' => 'youtube', 'label' => 'YouTube', 'type' => 'text', 'group' => 'Social', 'max' => 255],
+        ['name' => 'instagram', 'label' => 'Instagram', 'type' => 'text', 'group' => 'Social', 'max' => 255],
+        ['name' => 'medium', 'label' => 'Medium', 'type' => 'text', 'group' => 'Social', 'max' => 255],
+        ['name' => 'buymeacoffee', 'label' => 'Buy Me a Coffee', 'type' => 'text', 'group' => 'Social', 'max' => 255],
+        ['name' => 'certificate', 'label' => 'Certificate URL', 'type' => 'text', 'group' => 'Social', 'max' => 500],
+        ['name' => 'footnote', 'label' => 'Footnote', 'type' => 'text', 'group' => 'About', 'max' => 200],
+        ['name' => 'education', 'label' => 'Education', 'type' => 'text', 'group' => 'About', 'max' => 200],
+        ['name' => 'currently_building', 'label' => 'Currently building', 'type' => 'textarea', 'group' => 'About', 'max' => 2000],
+        ['name' => 'creed', 'label' => 'Creed', 'type' => 'textarea', 'group' => 'About', 'max' => 2000],
+        ['name' => 'stats_json', 'label' => 'Stats', 'type' => 'json', 'shape' => 'list', 'group' => 'About',
+         'help' => '[{"label":"Years Experience","value":6,"suffix":"+"}]'],
+    ];
+}

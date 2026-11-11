@@ -597,6 +597,25 @@ function reference_folder(array $schema): array
                 "Not a row table. `k` matches `[a-z0-9_]{1,60}`; `v` must be a string (`null` → 422). "
                 . "Writes are `REPLACE INTO`, so POST both creates and updates. See folder `3 · Profile (key/value)`.",
                 auth_headers());
+            $items[] = req('profile — typed field schema', 'GET', url('crud.php', [
+                'entity' => ['value' => 'profile', 'desc' => ''],
+                'schema' => ['value' => '1', 'desc' => 'Return field definitions instead of rows.'],
+            ]),
+                "`?schema=1` returns `{entity, kv, fields:[{name,label,type,group,help,max,shape}]}` — the typed definitions "
+                . "for the keys the site hydrates (`sub` is the hero sub-copy, `experience_years` is numeric). The panel, MCP "
+                . "tools and Postman use this to render typed controls instead of a free-text key box.\n\n"
+                . "Every entity supports `&schema=1`; for row tables it returns the same field whitelist `crud.php` validates against.",
+                auth_headers(), null, [
+                event('test', [
+                    'pm.test("200 with typed fields", () => {',
+                    '  pm.response.to.have.status(200);',
+                    '  const b = pm.response.json();',
+                    '  pm.expect(b.fields).to.be.an("array");',
+                    '  const years = b.fields.find((f) => f.name === "experience_years");',
+                    '  pm.expect(years.type).to.eql("number");',
+                    '});',
+                ]),
+            ]);
             continue;
         }
         $desc = "**`{$cfg['label']}`** — table `{$cfg['table']}`"
@@ -753,17 +772,71 @@ function media_folder(): array
         ]),
     ]);
 
-    $cleanup = req('List uploads on disk (via the media table)', 'GET', url('crud.php', [
-        'entity' => ['value' => 'profile', 'desc' => 'Placeholder — there is no list endpoint for media yet.'],
-    ]), "There is **no read endpoint for uploaded media.** `upload.php` inserts into a `media` table, but `crud.php` has no "
-        . "`media` entity and `index.php` does not serve it, so the library is not queryable through this API.\n\n"
-        . "Practical consequence: uploads accumulate and nothing in the API will tell you which ones are orphaned. Track "
-        . "`{{mediaPath}}` yourself, or list `site/media/uploads/` on the host.\n\n"
-        . "This request is a pointer, not a solution — it is here so the gap is visible instead of silent.");
+    $libList = req('List the media library', 'GET', url('media.php', [
+        'folder' => ['value' => '', 'desc' => 'Optional folder filter, [a-z0-9][a-z0-9-]{0,59}.', 'disabled' => true],
+        'page' => ['value' => '1', 'desc' => '50 rows per page.'],
+    ]),
+        "`api/media.php` is the queryable library backed by the `media` table: `{rows:[{id,path,folder,mime,bytes,width,height,created_at}], page, has_more}`. "
+        . "Add `&folder=<name>` to filter. Requires `media:read` (a session token works too).\n\n"
+        . "The file on disk is still the source of truth — a row can exist for a file that was removed by hand, and an upload "
+        . "whose `media` insert failed (pre-v2 schema) is served from disk without a row.",
+        auth_headers(), null, [
+        event('test', [
+            'pm.test("200 with rows array", () => { pm.response.to.have.status(200); pm.expect(pm.response.json().rows).to.be.an("array"); });',
+        ]),
+    ]);
 
-    return folder('6 · Media', [$upload, $show, $recipe, $cleanup],
+    $libUpload = req('Upload into the library', 'POST', url('media.php'),
+        "Same upload core as `upload.php` (multipart `file` + `folder`), but scoped: needs `media:write` + CSRF. "
+        . "`201 {path,url,mime,bytes,width,height}` and a `media` row. This request captures `{{mediaId}}` for the Delete below. "
+        . "Do not hand-write a `Content-Type` header — Postman sets the multipart boundary.",
+        [
+            hdr('X-Auth-Token', '{{token}}', 'Session token, or a scoped token with media:write.'),
+            hdr('X-CSRF-Token', '{{csrf}}', 'Required for the write.'),
+        ],
+        formdata_body([
+            ['key' => 'file', 'type' => 'file', 'src' => [], 'description' => 'jpeg/png/webp/avif/gif, ≤ 8 MB.'],
+            ['key' => 'folder', 'type' => 'text', 'value' => 'postman', 'description' => 'Sub-directory inside /media/uploads/.'],
+            ['key' => 'csrf_token', 'type' => 'text', 'value' => '{{csrf}}', 'description' => 'Form-field alternative to the header.'],
+        ]), [
+        event('test', [
+            'pm.test("201 and capture the library id", () => {',
+            '  pm.response.to.have.status(201);',
+            '  const b = pm.response.json();',
+            '  pm.expect(b.url).to.match(/^\\/media\\/uploads\\//);',
+            '});',
+            // The upload response carries no id; read it back from the library by path.
+            "pm.sendRequest({",
+            "  url: pm.collectionVariables.get('baseUrl') + '/media.php?folder=postman',",
+            "  method: 'GET',",
+            "  header: [{ key: 'X-Auth-Token', value: pm.collectionVariables.get('token') }],",
+            '}, function (err, res) {',
+            "  if (err || res.code !== 200) { console.log('media id lookup failed'); return; }",
+            "  const path = pm.response.json().url;",
+            "  const row = res.json().rows.find((r) => r.path === path);",
+            "  if (row) { pm.collectionVariables.set('mediaId', row.id); console.log('library row #' + row.id); }",
+            '});',
+        ]),
+    ]);
+
+    $libDelete = req('Delete from the library', 'DELETE', url('media.php', [
+        'id' => ['value' => '{{mediaId}}', 'desc' => 'Captured by Upload into the library.'],
+    ]),
+        "Removes the `media` row **and** unlinks the file from disk. `200 {ok:true}`, or `404 not found`. "
+        . "Needs `media:write` + CSRF. Run after the library upload to leave no demo file behind.",
+        [
+            hdr('X-Auth-Token', '{{token}}', 'Session token, or a scoped token with media:write.'),
+            hdr('X-CSRF-Token', '{{csrf}}', 'Required for the write.'),
+        ], null, [
+        event('test', [
+            'pm.test("200 deleted", () => { pm.response.to.have.status(200); pm.expect(pm.response.json().ok).to.eql(true); });',
+        ]),
+    ]);
+
+    return folder('6 · Media', [$upload, $show, $recipe, $libList, $libUpload, $libDelete],
         'Upload returns a URL; content fields store that URL. They are never the same request, and the gap between them '
-        . 'is the single most common reason a media edit "did not work".');
+        . 'is the single most common reason a media edit "did not work". `media.php` adds a queryable library '
+        . '(list/filter/upload/delete) on top of the original `upload.php`.');
 }
 
 function recipes_folder(): array
@@ -819,6 +892,131 @@ function recipes_folder(): array
     ];
     return folder('7 · Recipes', $items,
         'Multi-step flows assembled from the other folders. Read the description — the steps are in it.');
+}
+
+// ---------------------------------------------------------------- scoped tokens & CRM
+
+function tokens_folder(): array
+{
+    $list = req('List scoped tokens', 'GET', url('tokens.php'),
+        "Scoped, revocable API tokens for Postman/MCP/automation — distinct from the 7-day **session** token Login returns.\n\n"
+        . "`GET` answers `{tokens:[{id,label,scopes,expires_at,revoked_at,created_at,active}], allowed_scopes:[…]}`. "
+        . "The raw token value is **never** returned here — it is shown once, at creation. `active` is false once revoked or expired.\n\n"
+        . "**Session only:** a scoped token cannot list, create or revoke tokens. Calling this with a scoped token answers 403 `session token required`.",
+        auth_headers(), null, [
+        event('test', [
+            'pm.test("200 with tokens and allowed_scopes", () => {',
+            '  pm.response.to.have.status(200);',
+            '  const b = pm.response.json();',
+            '  pm.expect(b.tokens).to.be.an("array");',
+            '  pm.expect(b.allowed_scopes).to.be.an("array");',
+            '});',
+        ]),
+    ]);
+
+    $create = req('Create a scoped token', 'POST', url('tokens.php'),
+        "Body: `{label, scopes[], days?}`. `label` ≤ 120 chars; `scopes` is a non-empty subset of "
+        . "`content:read, content:write, media:read, media:write, crm:read, crm:write`; `days` is 1–365 (default 90).\n\n"
+        . "`201 {id, token, csrf, scopes, expires_in}` — **copy `token` and `csrf` now**, neither is retrievable later. "
+        . "Send the token as `X-Auth-Token` on the endpoints its scopes cover; a missing scope answers 403 `insufficient scope`. "
+        . "Writes also need `X-CSRF-Token` set to the returned `csrf` (it is pepper-derived, so a scoped client cannot compute it itself).\n\n"
+        . "This request captures `{{scopedTokenId}}` so the Revoke request below can revoke it. Uses the session token + CSRF.",
+        write_headers(), json_body(['label' => 'Postman demo token', 'scopes' => ['content:read'], 'days' => 7]), [
+        event('test', [
+            'pm.test("201 with a 64-hex token and csrf pair", () => {',
+            '  pm.response.to.have.status(201);',
+            '  const b = pm.response.json();',
+            '  pm.expect(b.token).to.match(/^[0-9a-f]{64}$/);',
+            '  pm.expect(b.csrf).to.match(/^[0-9a-f]{64}$/);',
+            '  pm.expect(b.scopes).to.be.an("array");',
+            '  pm.collectionVariables.set("scopedTokenId", b.id);',
+            '  pm.collectionVariables.set("scopedToken", b.token);',
+            '  pm.collectionVariables.set("scopedCsrf", b.csrf);',
+            '});',
+        ]),
+    ]);
+
+    $revoke = req('Revoke the scoped token', 'DELETE', url('tokens.php', [
+        'id' => ['value' => '{{scopedTokenId}}', 'desc' => 'Captured by Create a scoped token.'],
+    ]),
+        "Soft-revokes: sets `revoked_at = NOW()`. The token stops authenticating immediately; the row stays for audit. "
+        . "`200 {ok:true}`, or `404 not found or already revoked` if the id is wrong or already revoked.\n\n"
+        . "Run after Create to leave no active demo token behind. Session token + CSRF required.",
+        write_headers(), null, [
+        event('test', [
+            'pm.test("200 revoked", () => { pm.response.to.have.status(200); pm.expect(pm.response.json().ok).to.eql(true); });',
+        ]),
+    ]);
+
+    return folder('8 · Scoped API tokens', [$list, $create, $revoke],
+        'Create → use → revoke. Scoped tokens carry only the permissions you grant and can be revoked individually, '
+        . 'unlike the all-powerful session token. Folder is self-cleaning: Create then Revoke leaves no active token.');
+}
+
+function crm_folder(): array
+{
+    $enquiries = req('List enquiries', 'GET', url('crm.php', [
+        'resource' => ['value' => 'enquiries', 'desc' => 'enquiries | subscribers | settings'],
+        'page' => ['value' => '1', 'desc' => '1-based page.'],
+        'status' => ['value' => '', 'desc' => 'Optional status filter.', 'disabled' => true],
+    ]),
+        "Dedicated CRM read — not unrestricted table CRUD. `GET ?resource=enquiries` lists intake rows; add `&id=<n>` for one "
+        . "row's full detail. `PUT ?resource=enquiries&id=<n>` updates status/follow-up with a `version` for optimistic locking "
+        . "(a stale version answers 409). Requires `crm:read` (or `crm:write` for PUT).",
+        auth_headers(), null, [
+        event('test', ['pm.test("200", () => pm.response.to.have.status(200));']),
+    ]);
+
+    $subscribers = req('List subscribers', 'GET', url('crm.php', [
+        'resource' => ['value' => 'subscribers', 'desc' => ''],
+        'page' => ['value' => '1', 'desc' => '50 rows per page.'],
+    ]),
+        "`{rows:[{id,email,source,created_at}], page, has_more}`. `DELETE ?resource=subscribers&id=<n>` removes one "
+        . "(needs `crm:write` + CSRF). Requires `crm:read`.",
+        auth_headers(), null, [
+        event('test', [
+            'pm.test("200 with rows array", () => { pm.response.to.have.status(200); pm.expect(pm.response.json().rows).to.be.an("array"); });',
+        ]),
+    ]);
+
+    $settingsGet = req('Get settings', 'GET', url('crm.php', ['resource' => ['value' => 'settings', 'desc' => '']]),
+        "Returns the settings key/value map (ga4_id, gsc_verification, indexnow_key, community_enabled, contact_email, …). "
+        . "Requires `crm:read`.",
+        auth_headers(), null, [
+        event('test', ['pm.test("200 object", () => { pm.response.to.have.status(200); pm.expect(pm.response.json()).to.be.an("object"); });']),
+    ]);
+
+    $settingsPut = req('Update a setting (idempotent demo)', 'PUT', url('crm.php', ['resource' => ['value' => 'settings', 'desc' => '']]),
+        "Validated write — `settings-validate.php` rejects a bad shape with 422 (e.g. `ga4_id` must match `G-XXXXXXXXXX`). "
+        . "Unknown keys are dropped; a body with no valid field answers 400.\n\n"
+        . "**Safe by construction:** the pre-request reads the current `community_enabled` and this writes the *same* value back "
+        . "(defaulting to `0` when unset), so it proves the PUT path without changing what the site does. To set a real value, "
+        . "replace the body, e.g. `{\"ga4_id\":\"G-XXXXXXXXXX\"}`. Requires `crm:write` + CSRF.",
+        write_headers(), json_body(['community_enabled' => '{{crmCommunity}}']), [
+        event('prerequest', [
+            "pm.sendRequest({",
+            "  url: pm.collectionVariables.get('baseUrl') + '/crm.php?resource=settings',",
+            "  method: 'GET',",
+            "  header: [{ key: 'X-Auth-Token', value: pm.collectionVariables.get('token') }],",
+            '}, function (err, res) {',
+            "  let value = '0';",
+            "  if (!err && res.code === 200) { const v = res.json().community_enabled; if (v === '1' || v === '0') value = v; }",
+            "  pm.collectionVariables.set('crmCommunity', value);",
+            '});',
+        ]),
+        event('test', [
+            'pm.test("200 and updated key", () => {',
+            '  pm.response.to.have.status(200);',
+            '  const b = pm.response.json();',
+            '  pm.expect(b.ok).to.eql(true);',
+            '  pm.expect(b.updated).to.include("community_enabled");',
+            '});',
+        ]),
+    ]);
+
+    return folder('9 · CRM', [$enquiries, $subscribers, $settingsGet, $settingsPut],
+        'Enquiries, subscribers and settings through one scoped endpoint (`api/crm.php?resource=…`). '
+        . 'Reads need crm:read; writes need crm:write + CSRF. The settings write is idempotent so the folder is safe to run as-is.');
 }
 
 // ---------------------------------------------------------------- carry-over
@@ -885,8 +1083,8 @@ $schema = entity_schema();
 
 $folders = array_merge(
     [start_here_folder(), auth_folder(), public_folder(), profile_folder(), reference_folder($schema),
-     crud_folder($schema), media_folder(), recipes_folder()],
-    renumber_carried(carried_folders(), 8)
+     crud_folder($schema), media_folder(), recipes_folder(), tokens_folder(), crm_folder()],
+    renumber_carried(carried_folders(), 10)
 );
 
 // every {{var}} used anywhere must exist in the variable list, or Postman shows it greyed
@@ -897,6 +1095,7 @@ $vars = [
     'adminEmail' => '', 'adminPassword' => '',
     'token' => '', 'csrf' => '',
     'mediaPath' => '', 'demoSlug' => '', 'mediaRecipeId' => '',
+    'mediaId' => '', 'scopedTokenId' => '', 'scopedToken' => '', 'scopedCsrf' => '', 'crmCommunity' => '',
 ];
 foreach (ID_VARS as $v) $vars[$v] = '';
 $vars['enquiryReference'] = '';

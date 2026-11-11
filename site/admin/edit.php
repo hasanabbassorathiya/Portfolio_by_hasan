@@ -80,7 +80,7 @@ foreach ($cfg['fields'] as $field) {
 if ($isKv) {
     $groups = ['Field' => [
         ['name' => 'k', 'label' => 'Key', 'type' => 'text', 'required' => true,
-         'help' => 'lowercase_with_underscores — e.g. hero_sub, availability, email'],
+         'help' => 'lowercase_with_underscores — e.g. sub, availability, email'],
         ['name' => 'v', 'label' => 'Value', 'type' => 'textarea', 'required' => true,
          'help' => 'Tokens resolve from live data: {{years}}, {{apps}}, {{clients}}, {{users}}, {{platforms}}, {{client_metric:client-slug}}. Use them in the sub value or any text shown on the site.'],
     ]];
@@ -116,6 +116,7 @@ if ($isKv) {
     <button class="btn-primary" type="button" onclick="openEditor()">+ New <?=htmlspecialchars($cfg['singular'])?></button>
   </header>
 
+  <p id="page-status" role="status" class="save-notice"></p>
   <section class="editor" id="editor" hidden>
     <div class="editor-head">
       <h2 id="editor-title">New record</h2>
@@ -141,10 +142,24 @@ if ($isKv) {
                   <input type="checkbox" name="<?=$name?>" value="1">
                   <span><?=htmlspecialchars($label)?></span>
                 </label>
-              <?php elseif ($type === 'textarea' || $type === 'json' || $type === 'markdown'): ?>
+              <?php elseif ($type === 'json'): ?>
+                <div class="field field-wide" role="group" aria-label="<?=htmlspecialchars($label)?>" data-structured="<?=$name?>" data-shape="<?=htmlspecialchars($field['shape'] ?? 'list')?>" data-images="<?=$name === 'screenshots' ? '1' : '0'?>">
+                  <span><?=htmlspecialchars($label)?></span>
+                  <input type="hidden" name="<?=$name?>" data-json="1">
+                  <div data-items></div>
+                  <div class="structured-actions">
+                    <button class="btn-sm" type="button" data-add>Add item</button>
+                    <?php if ($name === 'screenshots'): ?>
+                      <button class="btn-sm" type="button" data-upload="<?=$name?>">Upload images</button>
+                      <input type="file" accept="image/png,image/jpeg,image/webp,image/avif,image/gif" multiple hidden data-file="<?=$name?>">
+                    <?php endif; ?>
+                  </div>
+                  <small class="field-help"><?=$name === 'screenshots' ? 'Upload images or add an existing image path. Move items to set their display order. Removing an item does not delete its file.' : (($field['shape'] ?? 'list') === 'object' ? 'One key and value per row. Keys must be unique.' : 'Add one item per row. Move items to set their display order.')?></small>
+                </div>
+              <?php elseif ($type === 'textarea' || $type === 'markdown'): ?>
                 <label class="field field-wide">
-                  <span><?=htmlspecialchars($label)?><?=$type === 'json' ? ' <em class="tag-json">JSON</em>' : ''?></span>
-                  <textarea name="<?=$name?>" rows="<?=$type === 'markdown' ? 16 : ($type === 'json' ? 3 : 5)?>" <?=$requiredAttr?> <?=$type === 'json' ? 'data-json="1" spellcheck="false" placeholder="' . htmlspecialchars($help) . '"' : ''?>></textarea>
+                  <span><?=htmlspecialchars($label)?></span>
+                  <textarea name="<?=$name?>" rows="<?=$type === 'markdown' ? 16 : 5?>" <?=$requiredAttr?>></textarea>
                   <?=$helpHtml?>
                 </label>
               <?php elseif ($type === 'image'): ?>
@@ -181,7 +196,8 @@ if ($isKv) {
       <div class="editor-actions">
         <button class="btn-primary" type="submit" id="save-btn">Save</button>
         <button class="btn-sm" type="button" onclick="closeEditor()">Cancel</button>
-        <span class="form-error" id="form-error"></span>
+        <span class="form-error" id="form-error" role="alert"></span>
+        <span class="field-help" id="editor-status" role="status"></span>
       </div>
     </form>
   </section>
@@ -218,7 +234,7 @@ if ($isKv) {
               </td>
             <?php endforeach; ?>
             <td class="row-actions">
-              <button class="btn-sm" type="button" onclick="openEditor(<?=$editArg?>)">Edit</button>
+              <button class="btn-sm" type="button" onclick="openEditor(<?=htmlspecialchars($editArg, ENT_QUOTES, 'UTF-8')?>)">Edit</button>
               <?php if (!empty($cfg['view']) && $hasSlug && !empty($row['slug'])): ?>
                 <button class="btn-sm" type="button" onclick="window.open('<?=htmlspecialchars(sprintf($cfg['view'], rawurlencode((string)$row['slug'])))?>', '_blank')" title="Open on the public site">↗</button>
               <?php endif; ?>
@@ -269,127 +285,8 @@ if ($isKv) {
 const ENTITY = <?=json_encode($entity)?>;
 const CSRF = <?=json_encode($csrf)?>;
 const IS_KV = <?=$isKv ? 'true' : 'false'?>;
-const form = document.getElementById('editor-form');
-const editor = document.getElementById('editor');
-const errorEl = document.getElementById('form-error');
-const titleEl = document.getElementById('editor-title');
-const saveBtn = document.getElementById('save-btn');
-let editingRef = null;
-
-function setValue(name, value) {
-  const el = form.elements[name];
-  if (!el) return;
-  if (el.type === 'checkbox') el.checked = String(value) === '1' || value === true;
-  else if (el.dataset.json === '1') {
-    if (!value) { el.value = ''; return; }
-    try { el.value = JSON.stringify(typeof value === 'string' ? JSON.parse(value) : value, null, 2); }
-    catch { el.value = String(value); }
-  } else el.value = value ?? '';
-  if (el.dataset.image === '1') updatePreview(name, el.value);
-  if (name === 'k') el.dataset.previous = value ?? '';
-}
-
-function updatePreview(name, value) {
-  const img = form.querySelector(`[data-preview="${name}"]`);
-  if (!img) return;
-  if (value) { img.src = value; img.hidden = false; }
-  else { img.removeAttribute('src'); img.hidden = true; }
-}
-
-form.querySelectorAll('[data-image="1"]').forEach((input) => {
-  input.addEventListener('input', () => updatePreview(input.name, input.value.trim()));
-});
-
-form.querySelectorAll('[data-upload]').forEach((button) => {
-  const name = button.dataset.upload;
-  const fileInput = form.querySelector(`[data-file="${name}"]`);
-  button.addEventListener('click', () => fileInput.click());
-  fileInput.addEventListener('change', async () => {
-    const file = fileInput.files && fileInput.files[0];
-    if (!file) return;
-    button.disabled = true;
-    button.textContent = 'Uploading…';
-    errorEl.textContent = '';
-    try {
-      const body = new FormData();
-      body.append('file', file);
-      body.append('folder', ENTITY);
-      const res = await fetch('../api/upload.php', {
-        method: 'POST',
-        headers: { 'X-CSRF-Token': CSRF },
-        body,
-      });
-      const data = await res.json().catch(() => ({}));
-      if (!res.ok) throw new Error(data.error || 'Upload failed.');
-      form.elements[name].value = data.path;
-      updatePreview(name, data.path);
-    } catch (error) {
-      errorEl.textContent = error.message;
-    } finally {
-      button.disabled = false;
-      button.textContent = 'Upload';
-      fileInput.value = '';
-    }
-  });
-});
-
-async function openEditor(ref) {
-  editingRef = ref ?? null;
-  form.reset();
-  errorEl.textContent = '';
-  form.querySelectorAll('[data-preview]').forEach((img) => { img.hidden = true; img.removeAttribute('src'); });
-  titleEl.textContent = editingRef !== null ? 'Edit ' + (IS_KV ? editingRef : '#' + editingRef) : 'New record';
-  saveBtn.textContent = editingRef !== null ? 'Save changes' : 'Create';
-  editor.hidden = false;
-
-  if (editingRef !== null) {
-    const query = IS_KV ? `entity=profile&k=${encodeURIComponent(editingRef)}` : `entity=${ENTITY}&id=${editingRef}`;
-    const res = await fetch(`../api/crud.php?${query}`, { headers: { Accept: 'application/json' } });
-    if (!res.ok) { errorEl.textContent = 'Could not load that record. Sign in again if the session expired.'; return; }
-    const row = await res.json();
-    Object.entries(row).forEach(([key, value]) => setValue(key, value));
-  }
-  editor.scrollIntoView({ behavior: 'smooth', block: 'start' });
-}
-
-function closeEditor() {
-  editor.hidden = true;
-  editingRef = null;
-}
-
-form.addEventListener('submit', async (event) => {
-  event.preventDefault();
-  errorEl.textContent = '';
-  saveBtn.disabled = true;
-  const payload = {};
-  for (const el of form.querySelectorAll('[name]')) {
-    if (el.type === 'checkbox') { payload[el.name] = el.checked ? 1 : 0; continue; }
-    let value = el.value.trim();
-    if (el.dataset.json === '1') {
-      if (!value) { payload[el.name] = null; continue; }
-      try { JSON.parse(value); } catch { errorEl.textContent = `Invalid JSON in “${el.name}”.`; el.focus(); saveBtn.disabled = false; return; }
-    }
-    if (el.type === 'number' && value === '') value = null;
-    payload[el.name] = value;
-  }
-  if (IS_KV) payload.previous_k = form.elements.k.dataset.previous || payload.k;
-
-  const id = !IS_KV && editingRef !== null ? `&id=${editingRef}` : '';
-  const url = `../api/crud.php?entity=${ENTITY}${id}`;
-  try {
-    const res = await fetch(url, {
-      method: editingRef !== null ? 'PUT' : 'POST',
-      headers: { 'Content-Type': 'application/json', Accept: 'application/json', 'X-CSRF-Token': CSRF },
-      body: JSON.stringify(payload),
-    });
-    if (res.ok) { location.reload(); return; }
-    const data = await res.json().catch(() => ({}));
-    errorEl.textContent = data.detail || data.error || 'Save failed.';
-  } catch {
-    errorEl.textContent = 'Network error — check the connection and try again.';
-  }
-  saveBtn.disabled = false;
-});
 </script>
+<script src="structured-fields.js"></script>
+<script src="editor.js"></script>
 </body>
 </html>

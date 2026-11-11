@@ -10,8 +10,11 @@ $pdo = db();
 
 require_admin();
 if (in_array($method, ['POST', 'PUT', 'DELETE'], true)) {
+    require_scope('content:write');
     $csrf = $_SERVER['HTTP_X_CSRF_TOKEN'] ?? ($_POST['csrf_token'] ?? '');
     require_admin_csrf(is_string($csrf) ? $csrf : '');
+} else {
+    require_scope('content:read');
 }
 
 $entity = (string)($_GET['entity'] ?? '');
@@ -238,6 +241,10 @@ function crud_slug_conflict(PDO $pdo, string $table, string $slug, int $ignoreId
 
 // ---- Read ----
 if ($method === 'GET') {
+    if (($_GET['schema'] ?? '') === '1') {
+        $fields = $isKv ? profile_fields() : $cfg['fields'];
+        json_out(['entity' => $entity, 'kv' => $isKv, 'fields' => $fields]);
+    }
     $id = (int)($_GET['id'] ?? 0);
     if ($isKv) {
         $k = trim((string)($_GET['k'] ?? ''));

@@ -22,7 +22,7 @@ cleanup() { kill $DBPID ${PHPID:-} 2>/dev/null || true; wait 2>/dev/null || true
 trap cleanup EXIT
 for i in $(seq 1 100); do mariadb -h 127.0.0.1 -P 3307 -u root -e 'SELECT 1' >/dev/null 2>&1 && break; sleep 0.2; done
 mariadb -h 127.0.0.1 -P 3307 -u root -e 'CREATE DATABASE cms_test'
-for f in schema.sql v2-schema.sql seed.sql seed-content.sql enquiries-schema.sql; do mariadb -h 127.0.0.1 -P 3307 -u root cms_test < "$ROOT/site/api/$f"; done
+for f in schema.sql v2-schema.sql v3-schema.sql seed.sql seed-content.sql enquiries-schema.sql; do mariadb -h 127.0.0.1 -P 3307 -u root cms_test < "$ROOT/site/api/$f"; done
 HASH=$(php -r 'echo password_hash("harness-password" . "cms-harness-pepper", PASSWORD_ARGON2ID);')
 TOKEN=$(php -r 'echo bin2hex(random_bytes(32));')
 mariadb -h 127.0.0.1 -P 3307 -u root cms_test -e "INSERT INTO admins (email,password_hash) VALUES ('harness@example.test','$HASH'); INSERT INTO auth_tokens (token,admin_id,expires_at) VALUES ('$TOKEN',1,DATE_ADD(NOW(), INTERVAL 7 DAY));"
@@ -146,6 +146,8 @@ P_GONE=$(curl -s -o /dev/null -w '%{http_code}' "${AUTH_H[@]}" "$BASE/api/crud.p
 [ "$P_GONE" = "404" ] || fail "deleted profile key still readable ($P_GONE)"
 
 printf 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==' | base64 -d > "$TMP/pixel.png"
+# A 67-byte PNG declaring 8000x8000 (64MP): a decompression bomb the pixel cap must reject before GD decodes.
+php -r 'function c($t,$d){return pack("N",strlen($d)).$t.$d.pack("N",crc32($t.$d));} file_put_contents($argv[1], "\x89PNG\r\n\x1a\n".c("IHDR",pack("NN",8000,8000)."\x08\x00\x00\x00\x00").c("IDAT",gzcompress("\x00\x00")).c("IEND",""));' "$TMP/bomb.png"
 UP=$(curl -s -w '\n%{http_code}' -X POST -H "X-Auth-Token: $API_TOKEN" -H "X-CSRF-Token: $API_CSRF" \
   -F folder=harness -F file=@"$TMP/pixel.png" "$BASE/api/upload.php")
 UP_CODE=$(printf '%s' "$UP" | tail -1)
@@ -157,6 +159,10 @@ case "$UP_PATH" in /media/uploads/harness/*) ;; *) fail "unexpected upload path:
 UP_NOCSRF=$(curl -s -o /dev/null -w '%{http_code}' -X POST -H "X-Auth-Token: $API_TOKEN" \
   -F folder=harness -F file=@"$TMP/pixel.png" "$BASE/api/upload.php")
 [ "$UP_NOCSRF" = "403" ] || fail "upload without CSRF returned $UP_NOCSRF"
+# Decompression bomb: huge declared dimensions must be rejected (413) before GD allocates memory.
+BOMB=$(curl -s -o /dev/null -w '%{http_code}' -X POST -H "X-Auth-Token: $API_TOKEN" -H "X-CSRF-Token: $API_CSRF" \
+  -F folder=harness -F file=@"$TMP/bomb.png" "$BASE/api/upload.php")
+[ "$BOMB" = "413" ] || fail "decompression bomb upload returned $BOMB (expected 413 pixel cap)"
 
 UA='Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36'
 BEACON='{"event":"page_view","path":"/harness","session":"0123456789abcdef0123456789abcdef","props":{"title":"Harness"},"utm":{"source":"harness","medium":"smoke"},"referrer":"example.test"}'
@@ -207,6 +213,165 @@ IN_HOST=$(curl -s -o /dev/null -w '%{http_code}' -X POST "${WRITE_H[@]}" -H 'Hos
 [ -f "$PUB/a1b2c3d4e5f6a7b8a1b2c3d4e5f6a7b8.txt" ] || fail "indexnow key file not written"
 IN_GET=$(curl -s -o /dev/null -w '%{http_code}' "${AUTH_H[@]}" "$BASE/api/indexnow.php")
 [ "$IN_GET" = "405" ] || fail "indexnow GET returned $IN_GET"
+
+# ---- Scoped API tokens ----
+TOK_CREATE=$(curl -s -w '\n%{http_code}' -X POST "${WRITE_H[@]}" \
+  --data '{"label":"harness-scoped","scopes":["content:read","crm:read"],"days":30}' "$BASE/api/tokens.php")
+TOK_CODE=$(printf '%s' "$TOK_CREATE" | tail -1)
+TOK_BODY=$(printf '%s' "$TOK_CREATE" | sed '$d')
+[ "$TOK_CODE" = "201" ] || fail "token create returned $TOK_CODE $TOK_BODY"
+SCOPED_TOKEN=$(printf '%s' "$TOK_BODY" | php -r '$d=json_decode(stream_get_contents(STDIN),true); echo $d["token"] ?? "";')
+[ ${#SCOPED_TOKEN} -eq 64 ] || fail "scoped token not 64 hex: $SCOPED_TOKEN"
+
+# Scoped token can read content
+SC_READ=$(curl -s -o /dev/null -w '%{http_code}' -H "X-Auth-Token: $SCOPED_TOKEN" "$BASE/api/crud.php?entity=apps")
+[ "$SC_READ" = "200" ] || fail "scoped content:read returned $SC_READ"
+
+# Scoped token cannot write content (no content:write scope)
+SC_WRITE=$(curl -s -o /dev/null -w '%{http_code}' -X POST -H "X-Auth-Token: $SCOPED_TOKEN" -H 'Content-Type: application/json' \
+  --data '{"slug":"scope-test","name":"x","tagline":"y"}' "$BASE/api/crud.php?entity=apps")
+[ "$SC_WRITE" = "403" ] || fail "scoped token write without scope returned $SC_WRITE"
+
+# Scoped token can read CRM
+SC_CRM=$(curl -s -o /dev/null -w '%{http_code}' -H "X-Auth-Token: $SCOPED_TOKEN" "$BASE/api/crm.php?resource=enquiries")
+[ "$SC_CRM" = "200" ] || fail "scoped crm:read returned $SC_CRM"
+
+# Scoped token cannot write CRM (no crm:write scope)
+SC_CRM_W=$(curl -s -o /dev/null -w '%{http_code}' -X PUT -H "X-Auth-Token: $SCOPED_TOKEN" -H 'Content-Type: application/json' \
+  --data '{"status":"contacted","notes":"x","next_action":"","follow_up_date":"","version":1}' "$BASE/api/crm.php?resource=enquiries&id=1")
+[ "$SC_CRM_W" = "403" ] || fail "scoped crm write without scope returned $SC_CRM_W"
+
+# Scoped token cannot manage tokens
+SC_TOK=$(curl -s -o /dev/null -w '%{http_code}' -H "X-Auth-Token: $SCOPED_TOKEN" "$BASE/api/tokens.php")
+[ "$SC_TOK" = "403" ] || fail "scoped token managing tokens returned $SC_TOK"
+
+# List tokens (session token only)
+TOK_LIST=$(curl -s -H "X-Auth-Token: $API_TOKEN" "$BASE/api/tokens.php")
+grep -q -- 'harness-scoped' <<<"$TOK_LIST" || fail "token not in list: $TOK_LIST"
+
+# Revoke token
+TOK_ID=$(printf '%s' "$TOK_LIST" | php -r '$d=json_decode(stream_get_contents(STDIN),true); foreach($d["tokens"] as $t){ if($t["label"]==="harness-scoped"){echo $t["id"];break;} }')
+[ -n "$TOK_ID" ] || fail "token id not found in list"
+REV_CODE=$(curl -s -o /dev/null -w '%{http_code}' -X DELETE "${WRITE_H[@]}" "$BASE/api/tokens.php?id=$TOK_ID")
+[ "$REV_CODE" = "200" ] || fail "token revoke returned $REV_CODE"
+
+# Revoked token is rejected
+REV_READ=$(curl -s -o /dev/null -w '%{http_code}' -H "X-Auth-Token: $SCOPED_TOKEN" "$BASE/api/crud.php?entity=apps")
+[ "$REV_READ" = "401" ] || fail "revoked token still accepted ($REV_READ)"
+
+# A scoped token paired with its CSRF can write (the path MCP/Postman clients use).
+TOK_WRITE=$(curl -s -w '\n%{http_code}' -X POST "${WRITE_H[@]}" \
+  --data '{"label":"harness-write","scopes":["content:read","content:write","media:read","media:write","crm:read","crm:write"],"days":1}' "$BASE/api/tokens.php")
+TOK_WRITE_CODE=$(printf '%s' "$TOK_WRITE" | tail -1)
+TOK_WRITE_BODY=$(printf '%s' "$TOK_WRITE" | sed '$d')
+[ "$TOK_WRITE_CODE" = "201" ] || fail "write token create returned $TOK_WRITE_CODE $TOK_WRITE_BODY"
+WRITE_TOKEN=$(printf '%s' "$TOK_WRITE_BODY" | php -r '$d=json_decode(stream_get_contents(STDIN),true); echo $d["token"] ?? "";')
+WRITE_CSRF=$(printf '%s' "$TOK_WRITE_BODY" | php -r '$d=json_decode(stream_get_contents(STDIN),true); echo $d["csrf"] ?? "";')
+WRITE_TOKEN_ID=$(printf '%s' "$TOK_WRITE_BODY" | php -r '$d=json_decode(stream_get_contents(STDIN),true); echo $d["id"] ?? "";')
+[ ${#WRITE_TOKEN} -eq 64 ] || fail "write token not 64 hex: $WRITE_TOKEN"
+[ ${#WRITE_CSRF} -eq 64 ] || fail "scoped token create did not return a csrf pair: $TOK_WRITE_BODY"
+SC_APP=$(curl -s -w '\n%{http_code}' -X POST -H "X-Auth-Token: $WRITE_TOKEN" -H "X-CSRF-Token: $WRITE_CSRF" -H 'Content-Type: application/json' \
+  --data '{"slug":"harness-scoped-write","name":"Harness Scoped Write","tagline":"Created by a scoped token","platforms":["iOS"],"links":{},"metrics":[],"features":[],"screenshots":[],"stack":[],"published":0,"sort_order":99}' "$BASE/api/crud.php?entity=apps")
+SC_APP_CODE=$(printf '%s' "$SC_APP" | tail -1)
+SC_APP_ID=$(printf '%s' "$SC_APP" | sed '$d' | php -r '$d=json_decode(stream_get_contents(STDIN),true); echo $d["id"] ?? "";')
+[ "$SC_APP_CODE" = "201" ] && [ -n "$SC_APP_ID" ] || fail "scoped token write returned $SC_APP_CODE $SC_APP"
+SC_DEL=$(curl -s -o /dev/null -w '%{http_code}' -X DELETE -H "X-Auth-Token: $WRITE_TOKEN" -H "X-CSRF-Token: $WRITE_CSRF" "$BASE/api/crud.php?entity=apps&id=$SC_APP_ID")
+[ "$SC_DEL" = "200" ] || fail "scoped token delete returned $SC_DEL"
+REV_WRITE=$(curl -s -o /dev/null -w '%{http_code}' -X DELETE "${WRITE_H[@]}" "$BASE/api/tokens.php?id=$WRITE_TOKEN_ID")
+[ "$REV_WRITE" = "200" ] || fail "write token revoke returned $REV_WRITE"
+
+# ---- CRM API: enquiries ----
+CRM_LIST=$(curl -s "${AUTH_H[@]}" "$BASE/api/crm.php?resource=enquiries")
+grep -q -- 'Harness Person' <<<"$CRM_LIST" || fail "crm enquiries list missing: $CRM_LIST"
+CRM_DETAIL=$(curl -s "${AUTH_H[@]}" "$BASE/api/crm.php?resource=enquiries&id=1")
+grep -q -- '"version"' <<<"$CRM_DETAIL" || fail "crm enquiry detail missing version"
+CRM_VER=$(printf '%s' "$CRM_DETAIL" | php -r '$d=json_decode(stream_get_contents(STDIN),true); echo $d["version"] ?? "";')
+CRM_UP=$(curl -s -w '\n%{http_code}' -X PUT "${WRITE_H[@]}" \
+  --data "{\"status\":\"qualified\",\"notes\":\"CRM API test\",\"next_action\":\"\",\"follow_up_date\":\"\",\"version\":$CRM_VER}" \
+  "$BASE/api/crm.php?resource=enquiries&id=1")
+CRM_UP_CODE=$(printf '%s' "$CRM_UP" | tail -1)
+[ "$CRM_UP_CODE" = "200" ] || fail "crm enquiry update returned $CRM_UP_CODE"
+# Optimistic lock: same version again must 409
+CRM_CONFLICT=$(curl -s -o /dev/null -w '%{http_code}' -X PUT "${WRITE_H[@]}" \
+  --data "{\"status\":\"won\",\"notes\":\"\",\"next_action\":\"\",\"follow_up_date\":\"\",\"version\":$CRM_VER}" \
+  "$BASE/api/crm.php?resource=enquiries&id=1")
+[ "$CRM_CONFLICT" = "409" ] || fail "crm stale version returned $CRM_CONFLICT"
+
+# ---- CRM API: subscribers ----
+curl -s -o /dev/null -X POST -H 'Content-Type: application/json' --data '{"email":"crm-sub@example.test","source":"harness","website":""}' "$BASE/api/subscribe.php"
+SUB_LIST=$(curl -s "${AUTH_H[@]}" "$BASE/api/crm.php?resource=subscribers")
+grep -q -- 'crm-sub@example.test' <<<"$SUB_LIST" || fail "crm subscribers list missing"
+SUB_ID=$(printf '%s' "$SUB_LIST" | php -r '$d=json_decode(stream_get_contents(STDIN),true); foreach($d["rows"] as $r){ if($r["email"]==="crm-sub@example.test"){echo $r["id"];break;} }')
+[ -n "$SUB_ID" ] || fail "subscriber id not found"
+SUB_DEL=$(curl -s -o /dev/null -w '%{http_code}' -X DELETE "${WRITE_H[@]}" "$BASE/api/crm.php?resource=subscribers&id=$SUB_ID")
+[ "$SUB_DEL" = "200" ] || fail "crm subscriber delete returned $SUB_DEL"
+
+# ---- CRM API: settings ----
+SET_GET=$(curl -s "${AUTH_H[@]}" "$BASE/api/crm.php?resource=settings")
+grep -q -- '"ga4_id"' <<<"$SET_GET" || fail "crm settings get missing ga4_id"
+SET_PUT=$(curl -s -w '\n%{http_code}' -X PUT "${WRITE_H[@]}" \
+  --data '{"ga4_id":"G-CRMAPI1234"}' "$BASE/api/crm.php?resource=settings")
+SET_PUT_CODE=$(printf '%s' "$SET_PUT" | tail -1)
+[ "$SET_PUT_CODE" = "200" ] || fail "crm settings update returned $SET_PUT_CODE"
+[ "$(dbsql "SELECT v FROM settings WHERE k='ga4_id'")" = "G-CRMAPI1234" ] || fail "crm settings value not written"
+# Invalid settings value rejected
+SET_BAD=$(curl -s -o /dev/null -w '%{http_code}' -X PUT "${WRITE_H[@]}" \
+  --data '{"ga4_id":"not-a-ga4-id"}' "$BASE/api/crm.php?resource=settings")
+[ "$SET_BAD" = "422" ] || fail "crm invalid settings returned $SET_BAD"
+
+# ---- Media library API ----
+MEDIA_LIST=$(curl -s "${AUTH_H[@]}" "$BASE/api/media.php")
+grep -q -- '"path"' <<<"$MEDIA_LIST" || fail "media list missing path: $MEDIA_LIST"
+grep -q -- '/media/uploads/harness/' <<<"$MEDIA_LIST" || fail "media list missing uploaded file"
+MEDIA_FOLDER=$(curl -s "${AUTH_H[@]}" "$BASE/api/media.php?folder=harness")
+grep -q -- '"folder":"harness"' <<<"$MEDIA_FOLDER" || fail "media folder filter broken"
+MEDIA_NOAUTH=$(curl -s -o /dev/null -w '%{http_code}' "$BASE/api/media.php")
+[ "$MEDIA_NOAUTH" = "401" ] || fail "media without auth returned $MEDIA_NOAUTH"
+# Scoped token with media:read can list
+TOK_MEDIA=$(curl -s -X POST "${WRITE_H[@]}" --data '{"label":"media-reader","scopes":["media:read"],"days":7}' "$BASE/api/tokens.php")
+MEDIA_TOKEN=$(printf '%s' "$TOK_MEDIA" | php -r '$d=json_decode(stream_get_contents(STDIN),true); echo $d["token"] ?? "";')
+[ ${#MEDIA_TOKEN} -eq 64 ] || fail "media token creation failed"
+MEDIA_SC=$(curl -s -o /dev/null -w '%{http_code}' -H "X-Auth-Token: $MEDIA_TOKEN" "$BASE/api/media.php")
+[ "$MEDIA_SC" = "200" ] || fail "scoped media:read returned $MEDIA_SC"
+# Scoped token without media:write cannot upload
+MEDIA_UP_DENY=$(curl -s -o /dev/null -w '%{http_code}' -X POST -H "X-Auth-Token: $MEDIA_TOKEN" \
+  -F folder=harness -F file=@"$TMP/pixel.png" "$BASE/api/media.php")
+[ "$MEDIA_UP_DENY" = "403" ] || fail "scoped media upload without write scope returned $MEDIA_UP_DENY"
+# The legacy upload.php endpoint must enforce media:write too, even with a valid CSRF pair.
+MEDIA_CSRF=$(printf '%s' "$TOK_MEDIA" | php -r '$d=json_decode(stream_get_contents(STDIN),true); echo $d["csrf"] ?? "";')
+LEGACY_UP_DENY=$(curl -s -o /dev/null -w '%{http_code}' -X POST -H "X-Auth-Token: $MEDIA_TOKEN" -H "X-CSRF-Token: $MEDIA_CSRF" \
+  -F folder=harness -F file=@"$TMP/pixel.png" "$BASE/api/upload.php")
+[ "$LEGACY_UP_DENY" = "403" ] || fail "legacy upload.php without media:write returned $LEGACY_UP_DENY (scope bypass)"
+
+# ---- Typed profile fields ----
+# `sub` is the hero sub-copy key the site hydrates (hero.jsx / ref-hero.jsx read profile.sub).
+PROFILE_SCHEMA=$(curl -s "${AUTH_H[@]}" "$BASE/api/crud.php?entity=profile&schema=1")
+grep -q -- '"experience_years"' <<<"$PROFILE_SCHEMA" || fail "typed profile schema missing experience_years"
+grep -q -- '"type":"number"' <<<"$PROFILE_SCHEMA" || fail "experience_years not typed as number"
+grep -q -- '"sub"' <<<"$PROFILE_SCHEMA" || fail "typed profile schema missing hero sub-copy (sub)"
+
+echo "PASS: scoped tokens — create, scope enforcement, revoke, rejection"
+echo "PASS: CRM API — enquiries list/detail/update/conflict, subscribers list/delete, settings get/update/validation"
+echo "PASS: media library — list, folder filter, auth, scoped read/write enforcement"
+echo "PASS: typed profile — schema endpoint returns field types"
+
+if [ "${CMS_BROWSER_TEST:-}" = "1" ]; then
+  CMS_TEST_URL="$BASE" CMS_TEST_TOKEN="$API_TOKEN" CMS_TEST_CSRF="$API_CSRF" CMS_TEST_OUTPUT="$TMP" node --test "$ROOT/site/scripts/cms-editor.test.mjs"
+fi
+
+# Re-execute the Postman collection's own scripts against this same throwaway harness.
+# verify-postman.mjs refuses non-loopback targets, so this can never touch production.
+if [ "${CMS_VERIFY_POSTMAN:-}" = "1" ]; then
+  CMS_VERIFY_BASE="$BASE/api" CMS_VERIFY_SITE="$BASE" \
+  CMS_VERIFY_EMAIL="harness@example.test" CMS_VERIFY_PASSWORD="harness-password" \
+  CMS_VERIFY_FILE="$TMP/pixel.png" node "$ROOT/site/scripts/verify-postman.mjs"
+fi
+
+# MCP protocol test: spawns the stdio server against this same throwaway harness.
+if [ "${CMS_MCP_TEST:-}" = "1" ]; then
+  CMS_TEST_URL="$BASE" CMS_TEST_TOKEN="$API_TOKEN" CMS_TEST_CSRF="$API_CSRF" CMS_TEST_FILE="$TMP/pixel.png" \
+    node --test "$ROOT/site/scripts/cms-mcp.test.mjs"
+fi
 
 echo "PASS: CMS dashboard, editors, subscribers, API, enquiry intake, CSRF update, newsletter subscribe/unsubscribe"
 echo "PASS: growth platform — API login, apps CRUD, profile KV, upload, settings, beacon filters, analytics dashboard, IndexNow guards"

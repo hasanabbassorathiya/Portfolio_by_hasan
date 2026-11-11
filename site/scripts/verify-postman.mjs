@@ -148,7 +148,7 @@ const cookieHeader = () => [...jar].map(([k, v]) => `${k}=${v}`).join('; ');
 
 // ------------------------------------------------------------------ walker
 
-const SKIP = ['9 · SEO tools'];   // makes an outbound call to indexnow.org
+const SKIP = ['SEO tools'];   // makes an outbound call to indexnow.org
 const results = [];
 
 function resolveUrl(url) {

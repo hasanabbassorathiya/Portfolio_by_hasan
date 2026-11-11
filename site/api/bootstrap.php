@@ -44,7 +44,42 @@ function admin_id(): ?int {
     $st = db()->prepare('SELECT admin_id, expires_at > NOW() AS live FROM auth_tokens WHERE token = ?');
     $st->execute([$token]);
     $row = $st->fetch();
-    if (!$row || !$row['live']) return null;
+    if ($row && $row['live']) return (int)$row['admin_id'];
+    $st = db()->prepare('SELECT admin_id FROM api_tokens WHERE token = ? AND expires_at > NOW() AND revoked_at IS NULL');
+    $st->execute([$token]);
+    $row = $st->fetch();
+    return $row ? (int)$row['admin_id'] : null;
+}
+
+function api_token_scopes(): array|false|null {
+    $token = auth_token();
+    if (!valid_auth_token($token)) return false;
+    $st = db()->prepare('SELECT admin_id FROM auth_tokens WHERE token = ? AND expires_at > NOW()');
+    $st->execute([$token]);
+    if ($st->fetch()) return null;
+    $st = db()->prepare('SELECT scopes FROM api_tokens WHERE token = ? AND expires_at > NOW() AND revoked_at IS NULL');
+    $st->execute([$token]);
+    $row = $st->fetch();
+    if (!$row) return false;
+    return json_decode($row['scopes'], true) ?: [];
+}
+
+function require_scope(string $scope): void {
+    admin_response_headers();
+    $scopes = api_token_scopes();
+    if ($scopes === false) json_out(['error' => 'unauthorized'], 401);
+    if ($scopes === null) return;
+    if (!in_array($scope, $scopes, true)) json_out(['error' => 'insufficient scope', 'required' => $scope], 403);
+}
+
+function require_session(): int {
+    admin_response_headers();
+    $token = auth_token();
+    if (!valid_auth_token($token)) json_out(['error' => 'unauthorized'], 401);
+    $st = db()->prepare('SELECT admin_id FROM auth_tokens WHERE token = ? AND expires_at > NOW()');
+    $st->execute([$token]);
+    $row = $st->fetch();
+    if (!$row) json_out(['error' => 'session token required'], 403);
     return (int)$row['admin_id'];
 }
 

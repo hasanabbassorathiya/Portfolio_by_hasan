@@ -1,0 +1,11 @@
+# Uploads are static images only — never execute scripts here, even if a polyglot
+# slips past the MIME allowlist or a host handler is misconfigured.
+<IfModule mod_php.c>
+  php_flag engine off
+</IfModule>
+RemoveHandler .php .phtml .php3 .php4 .php5 .php7 .phps .pht .phar
+RemoveType .php .phtml .php3 .php4 .php5 .php7 .phps .pht .phar
+Options -ExecCGI -Indexes
+<FilesMatch "\.(php|phtml|php3|php4|php5|php7|phps|pht|phar|cgi|pl|py|sh)$">
+  Require all denied
+</FilesMatch>
