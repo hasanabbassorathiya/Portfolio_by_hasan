@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_motion.dart';
 import '../../../shared/widgets/floating_nav.dart';
 import '../../../shared/widgets/scroll_progress_bar.dart';
 import '../../../shared/widgets/grain_overlay.dart';
@@ -26,11 +27,22 @@ class PortfolioScreen extends StatefulWidget {
 
 class _PortfolioScreenState extends State<PortfolioScreen> {
   final ScrollController _scrollController = ScrollController();
+  final GlobalKey<FloatingNavState> _navKey = GlobalKey<FloatingNavState>();
   int _currentSection = 0;
   bool _navVisible = true;
   double _lastOffset = 0;
 
   final _sectionKeys = List.generate(10, (i) => GlobalKey());
+
+  late final List<NavItem> _navItems = [
+    NavItem(label: 'Home', onTap: () => _scrollToSection(0)),
+    NavItem(label: 'About', onTap: () => _scrollToSection(1)),
+    NavItem(label: 'Services', onTap: () => _scrollToSection(2)),
+    NavItem(label: 'Work', onTap: () => _scrollToSection(3)),
+    NavItem(label: 'Experience', onTap: () => _scrollToSection(4)),
+    NavItem(label: 'Blog', onTap: () => _scrollToSection(6)),
+    NavItem(label: 'Contact', onTap: () => _scrollToSection(7)),
+  ];
 
   @override
   void initState() {
@@ -49,7 +61,7 @@ class _PortfolioScreenState extends State<PortfolioScreen> {
         if (box != null) {
           final top = box.localToGlobal(Offset.zero).dy + offset;
           if (offset >= top - 200) {
-            setState(() => _currentSection = i);
+            if (_currentSection != i) setState(() => _currentSection = i);
             break;
           }
         }
@@ -71,7 +83,7 @@ class _PortfolioScreenState extends State<PortfolioScreen> {
         Scrollable.ensureVisible(
           ctx,
           duration: const Duration(milliseconds: 600),
-          curve: Curves.easeOutCubic,
+          curve: AppMotion.swiftOut,
         );
       }
     }
@@ -85,9 +97,6 @@ class _PortfolioScreenState extends State<PortfolioScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final w = MediaQuery.sizeOf(context).width;
-    final isMobile = w < 1024;
-
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: const SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
@@ -130,102 +139,29 @@ class _PortfolioScreenState extends State<PortfolioScreen> {
                   SliverToBoxAdapter(child: FooterSection(key: _sectionKeys[9])),
                 ],
               ),
-              if (!isMobile)
-                Positioned(
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  child: AnimatedSlide(
-                    offset: _navVisible ? Offset.zero : const Offset(0, -2),
+              Positioned(
+                top: 0,
+                left: 0,
+                right: 0,
+                child: AnimatedSlide(
+                  offset: _navVisible ? Offset.zero : const Offset(0, -2),
+                  duration: const Duration(milliseconds: 450),
+                  curve: AppMotion.swiftOut,
+                  child: AnimatedOpacity(
+                    opacity: _navVisible ? 1.0 : 0.0,
                     duration: const Duration(milliseconds: 300),
-                    curve: Curves.easeOut,
-                    child: AnimatedOpacity(
-                      opacity: _navVisible ? 1.0 : 0.0,
-                      duration: const Duration(milliseconds: 200),
-                      child: FloatingNav(
-                        currentSection: _currentSection,
-                        items: [
-                          NavItem(label: 'Home', onTap: () => _scrollToSection(0)),
-                          NavItem(label: 'About', onTap: () => _scrollToSection(1)),
-                          NavItem(label: 'Services', onTap: () => _scrollToSection(2)),
-                          NavItem(label: 'Work', onTap: () => _scrollToSection(3)),
-                          NavItem(label: 'Experience', onTap: () => _scrollToSection(4)),
-                          NavItem(label: 'Blog', onTap: () => _scrollToSection(6)),
-                          NavItem(label: 'Contact', onTap: () => _scrollToSection(7)),
-                        ],
-                      ),
+                    child: FloatingNav(
+                      key: _navKey,
+                      currentSection: _currentSection,
+                      items: _navItems,
                     ),
                   ),
                 ),
-              if (isMobile) _buildBottomNav(),
+              ),
+              if (_navKey.currentState != null)
+                _navKey.currentState!.buildOverlay(),
             ],
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildBottomNav() {
-    return Positioned(
-      bottom: 0,
-      left: 0,
-      right: 0,
-      child: Container(
-        decoration: BoxDecoration(
-          color: AppColors.base.withValues(alpha: 0.95),
-          border: Border(top: BorderSide(color: AppColors.surface)),
-        ),
-        child: SafeArea(
-          top: false,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _bottomNavItem(0, Icons.home_rounded, 'Home'),
-              _bottomNavItem(1, Icons.person_outline_rounded, 'About'),
-              _bottomNavItem(2, Icons.work_outline_rounded, 'Work'),
-              _bottomNavItem(3, Icons.mail_outline_rounded, 'Contact'),
-              _bottomNavItem(4, Icons.more_horiz_rounded, 'More'),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _bottomNavItem(int index, IconData icon, String label) {
-    final isActive = _currentSection == index;
-    return GestureDetector(
-      onTap: () => _scrollToSection(index),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            AnimatedContainer(
-              duration: const Duration(milliseconds: 200),
-              width: isActive ? 20 : 0,
-              height: 3,
-              decoration: BoxDecoration(
-                color: AppColors.accent,
-                borderRadius: BorderRadius.circular(2),
-              ),
-            ),
-            const SizedBox(height: 6),
-            Icon(
-              icon,
-              size: 22,
-              color: isActive ? AppColors.accent : AppColors.textMuted,
-            ),
-            const SizedBox(height: 4),
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: 11,
-                color: isActive ? AppColors.accent : AppColors.textMuted,
-                fontWeight: isActive ? FontWeight.w600 : FontWeight.w400,
-              ),
-            ),
-          ],
         ),
       ),
     );

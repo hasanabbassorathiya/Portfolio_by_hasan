@@ -10,9 +10,17 @@ class AppSpacing {
   static const double xxxl = 64;
   static const double hero = 96;
 
-  static const double sectionVertical = 120;
-  static const double sectionVerticalMobile = 80;
+  static const double sectionVertical = 140;
+  static const double sectionVerticalMobile = 88;
 
   static const double maxContentWidth = 1200;
   static const double maxNarrowWidth = 800;
+
+  // Radius system — exaggerated squircles with concentric nesting
+  static const double radiusShell = 32; // outer Double-Bezel shell
+  static const double radiusCore = 26; // radiusShell - shell padding (6)
+  static const double radiusCard = 24;
+  static const double radiusInput = 16;
+  static const double radiusChip = 12;
+  static const double radiusPill = 999;
 }

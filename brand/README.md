@@ -57,6 +57,9 @@ rsvg-convert -w 192  -h 192  brand/seal-ink.svg       -o brand/icons/icon-192.pn
 rsvg-convert -w 512  -h 512  brand/seal-ink.svg       -o brand/icons/icon-512.png
 rsvg-convert -w 128  -h 128  brand/seal-ink.svg       -o site/public/media/brand/seal-ink.png
 rsvg-convert -w 128  -h 128  brand/seal-paper.svg     -o site/public/media/brand/seal-paper.png
+rsvg-convert -w 42   -h 42   brand/icons/glyphs/phone.svg -o site/public/media/brand/icons/phone.png
+rsvg-convert -w 42   -h 42   brand/icons/glyphs/mail.svg  -o site/public/media/brand/icons/mail.png
+rsvg-convert -w 42   -h 42   brand/icons/glyphs/web.svg   -o site/public/media/brand/icons/web.png
 ```
 
 Verified: re-running these against the checked-in files produced identical bytes (16 px 464 B, 32 px
@@ -79,8 +82,14 @@ copy, then paste into the client:
 - **Plain text** (Teams, Slack, ticket replies) — use `signature-plaintext.txt` verbatim.
 
 Use the **text/ink-cell** variant as the default. The `<img>` variant points at
-`https://hasanabbassorathiya.tech/media/brand/seal-ink.png` and must not be used until that URL returns 200.
-Never add a phone number, headshot, banner or social-icon row — see `BRAND.md` §6.
+`https://hasanabbassorathiya.tech/media/brand/seal-ink.png` and must not be used until that URL returns 200;
+the same rule applies to the glyph rows in variant 2b, which need `media/brand/icons/*.png` live.
+Never add a headshot, banner or social-icon row. Phone numbers are on file since 2026-11-02 and are set as
+`tel:` links in ink, not signal — see `BRAND.md` §6.
+
+A `data:` URI in a signature `<img>` is worse than a broken URL: Gmail does not fall back to `alt`, it
+deletes the entire signature block on the next re-render. Verified 2026-11-02 by inserting a glyph set as
+base64 into Settings → Signature — the editor held it, then emptied itself ~1 s later.
 
 ## 5. Rebuilding the press kit
 

@@ -15,9 +15,19 @@
   Why it is built this way:
     • Table layout with inline styles only. Gmail and Outlook strip <style> blocks,
       classes, flexbox and grid; tables with inline styles survive all of them.
-    • No SVG and no required image. The monogram is a solid ink cell with letterspaced
-      text, so the signature still looks right when a client blocks remote images. An <img> version is included further down if you prefer the
-      exact mark — it needs site/public/media/brand/seal-ink.png to be deployed first.
+    • The monogram is a solid ink cell with letterspaced text, not an image, so the
+      signature still looks right when a client blocks remote images. An <img> version
+      is included further down if you prefer the exact mark — it needs
+      site/public/media/brand/seal-ink.png to be deployed first.
+    • The three contact rows lead with an ink chip — a 20px solid-ink square carrying one
+      letterspaced Geist Mono capital (M / E / W). Same construction as the monogram, so
+      it reads as an icon system rather than a label, and it needs no hosted file.
+      The drawn glyphs for those rows live in brand/icons/glyphs/ and rasterise to
+      site/public/media/brand/icons/; variant 2b below swaps the chips for them, but only
+      once those PNGs are deployed — Gmail strips data: URI images from a signature on
+      save (verified 2026-11-02: the editor empties itself), so they must be real URLs.
+      Phone numbers are tel: links kept in ink, not signal — signal stays reserved for
+      the two routes to the site and the mailbox.
     • One accent colour (#1D3CFF) reserved for links, one hairline rule. Nothing else.
 -->
 <style>
@@ -57,10 +67,46 @@
               <td style="padding:11px 0 10px;font-size:0;line-height:0;border-bottom:1px solid rgba(22,19,15,.13);">&nbsp;</td>
             </tr>
             <tr>
-              <td style="font-size:12.5px;line-height:21px;">
-                <a href="https://hasanabbassorathiya.tech" style="color:#1d3cff;text-decoration:none;">hasanabbassorathiya.tech</a><br>
-                <a href="mailto:hasanabbassorathiya12@gmail.com" style="color:#1d3cff;text-decoration:none;">hasanabbassorathiya12@gmail.com</a><br>
-                <span style="color:#665f52;font-family:'Geist Mono',ui-monospace,Menlo,Consolas,monospace;font-size:11.5px;">github.com/hasanabbassorathiya<br>Dubai, UAE</span>
+              <td style="padding:0 0 12px;">
+                <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;">
+                  <tr>
+                    <td width="28" valign="middle" style="width:28px;padding:2px 8px 2px 0;">
+                      <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="20" style="border-collapse:separate;">
+                        <tr><td width="20" height="20" align="center" valign="middle" bgcolor="#14110d" style="width:20px;height:20px;background:#14110d;border-radius:4px;text-align:center;vertical-align:middle;font-family:'Geist Mono',ui-monospace,Menlo,Consolas,monospace;font-size:10px;font-weight:600;color:#f3efe6;line-height:20px;">M</td></tr>
+                      </table>
+                    </td>
+                    <td valign="middle" style="padding:2px 0;font-family:'Geist Mono',ui-monospace,Menlo,Consolas,monospace;font-size:11.5px;line-height:20px;color:#16130f;">
+                      <a href="tel:+971589602320" style="color:#16130f;text-decoration:none;">+971 58 960 2320</a>
+                      <span style="color:#a89f8e;"> / </span>
+                      <a href="tel:+917021707223" style="color:#16130f;text-decoration:none;">+91 7021707223</a>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td width="28" valign="middle" style="width:28px;padding:2px 8px 2px 0;">
+                      <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="20" style="border-collapse:separate;">
+                        <tr><td width="20" height="20" align="center" valign="middle" bgcolor="#14110d" style="width:20px;height:20px;background:#14110d;border-radius:4px;text-align:center;vertical-align:middle;font-family:'Geist Mono',ui-monospace,Menlo,Consolas,monospace;font-size:10px;font-weight:600;color:#f3efe6;line-height:20px;">E</td></tr>
+                      </table>
+                    </td>
+                    <td valign="middle" style="padding:2px 0;font-size:12.5px;line-height:20px;">
+                      <a href="mailto:hasanabbassorathiya12@gmail.com" style="color:#1d3cff;text-decoration:none;">hasanabbassorathiya12@gmail.com</a>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td width="28" valign="middle" style="width:28px;padding:2px 8px 2px 0;">
+                      <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="20" style="border-collapse:separate;">
+                        <tr><td width="20" height="20" align="center" valign="middle" bgcolor="#14110d" style="width:20px;height:20px;background:#14110d;border-radius:4px;text-align:center;vertical-align:middle;font-family:'Geist Mono',ui-monospace,Menlo,Consolas,monospace;font-size:10px;font-weight:600;color:#f3efe6;line-height:20px;">W</td></tr>
+                      </table>
+                    </td>
+                    <td valign="middle" style="padding:2px 0;font-size:12.5px;line-height:20px;">
+                      <a href="https://hasanabbassorathiya.tech/" style="color:#1d3cff;text-decoration:none;">hasanabbassorathiya.tech</a>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td style="font-family:'Geist Mono',ui-monospace,Menlo,Consolas,monospace;font-size:11.5px;line-height:19px;color:#665f52;">
+                <a href="https://github.com/hasanabbassorathiya" style="color:#665f52;text-decoration:none;">github.com/hasanabbassorathiya</a><br>Dubai, UAE
               </td>
             </tr>
           </table>
@@ -87,15 +133,36 @@
     </table>
   </div>
 
+  <p class="label">2b · Contact rows drawn with the brand glyphs</p>
+  <p class="note">Identical to variant 1 except the M / E / W chips are replaced by <code>brand/icons/glyphs/</code> rasterised to <code>site/public/media/brand/icons/{phone,mail,web}.png</code> at 42px and shown at 14px. Requires those three files live under <code>media/brand/icons/</code>; Gmail deletes the whole signature if the <code>src</code> is a data URI, and shows an empty box if the URL 404s.</p>
+  <div class="card">
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;">
+      <tr>
+        <td width="28" valign="middle" style="width:28px;padding:2px 8px 2px 0;"><img src="https://hasanabbassorathiya.tech/media/brand/icons/phone.png" width="14" height="14" alt="Mobile" style="display:block;border:0;width:14px;height:14px;"></td>
+        <td valign="middle" style="padding:2px 0;font-family:'Geist Mono',ui-monospace,Menlo,Consolas,monospace;font-size:11.5px;line-height:20px;color:#16130f;"><a href="tel:+971589602320" style="color:#16130f;text-decoration:none;">+971 58 960 2320</a> <span style="color:#a89f8e;">/</span> <a href="tel:+917021707223" style="color:#16130f;text-decoration:none;">+91 7021707223</a></td>
+      </tr>
+      <tr>
+        <td width="28" valign="middle" style="width:28px;padding:2px 8px 2px 0;"><img src="https://hasanabbassorathiya.tech/media/brand/icons/mail.png" width="14" height="14" alt="Email" style="display:block;border:0;width:14px;height:14px;"></td>
+        <td valign="middle" style="padding:2px 0;font-size:12.5px;line-height:20px;"><a href="mailto:hasanabbassorathiya12@gmail.com" style="color:#1d3cff;text-decoration:none;">hasanabbassorathiya12@gmail.com</a></td>
+      </tr>
+      <tr>
+        <td width="28" valign="middle" style="width:28px;padding:2px 8px 2px 0;"><img src="https://hasanabbassorathiya.tech/media/brand/icons/web.png" width="14" height="14" alt="Website" style="display:block;border:0;width:14px;height:14px;"></td>
+        <td valign="middle" style="padding:2px 0;font-size:12.5px;line-height:20px;"><a href="https://hasanabbassorathiya.tech/" style="color:#1d3cff;text-decoration:none;">hasanabbassorathiya.tech</a></td>
+      </tr>
+    </table>
+  </div>
+
   <p class="label">3 · Plain-text fallback (Teams, Slack, ticket replies, SMS)</p>
   <div class="card">
     <pre style="margin:0;font:400 12.5px/1.75 'Geist Mono',ui-monospace,Menlo,monospace;color:#16130f;white-space:pre-wrap;">Hasan Abbas Sorathiya
 Senior Software &amp; AI Engineer
-hasanabbassorathiya.tech · hasanabbassorathiya12@gmail.com
+M: +971 58 960 2320 / +91 7021707223
+E: hasanabbassorathiya12@gmail.com
+W: https://hasanabbassorathiya.tech/
 github.com/hasanabbassorathiya · Dubai, UAE</pre>
   </div>
 
-  <p class="note" style="margin-top:34px;">Deliberately absent: a phone number (not on file — never guessed), social icons, a headshot, a "please consider the environment" line, and any banner image. Signature rules live in <code>brand/BRAND.md</code>.</p>
+  <p class="note" style="margin-top:34px;">Deliberately absent: social-network icons, a headshot, a "please consider the environment" line, and any banner image. Contact icons are the brand's own glyphs, not a third-party icon set. Signature rules live in <code>brand/BRAND.md</code>.</p>
 
 </div>
 </body>

@@ -227,7 +227,8 @@ class ProjectDetailScreen extends StatelessWidget {
   }
 
   Widget _buildTechStack(Map<String, dynamic> project) {
-    final techs = project['technologies'] as List;
+    final rawTechs = project['technologies'];
+    final techs = rawTechs is List ? rawTechs : <dynamic>[];
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

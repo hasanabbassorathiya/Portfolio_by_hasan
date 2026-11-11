@@ -373,17 +373,28 @@ class DbSetup {
     }
   }
 
-  // ── Master Seed ──
+  static Future<int> _count(String table) async {
+    try {
+      final r = await TursoService.query("SELECT COUNT(*) as c FROM $table");
+      if (r.isEmpty) return 0;
+      final v = r.first['c'];
+      return v is int ? v : int.tryParse(v?.toString() ?? '') ?? 0;
+    } catch (_) {
+      return 0;
+    }
+  }
+
+  // ── Master Seed (per-table: only seeds tables that are empty) ──
   static Future<void> seedAll() async {
     await createAllTables();
     await seedProfile();
-    await seedProjects();
-    await seedExperience();
-    await seedEducation();
-    await seedCertifications();
-    await seedSkills();
-    await seedLanguages();
-    await seedPosts();
-    await seedSocialLinks();
+    if (await _count('projects') == 0) await seedProjects();
+    if (await _count('experience') == 0) await seedExperience();
+    if (await _count('education') == 0) await seedEducation();
+    if (await _count('certifications') == 0) await seedCertifications();
+    if (await _count('skills') == 0) await seedSkills();
+    if (await _count('languages') == 0) await seedLanguages();
+    if (await _count('posts') == 0) await seedPosts();
+    if (await _count('social_links') == 0) await seedSocialLinks();
   }
 }

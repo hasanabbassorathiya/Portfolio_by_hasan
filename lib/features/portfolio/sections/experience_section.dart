@@ -93,8 +93,8 @@ class _TimelineItemState extends State<_TimelineItem> {
   Widget build(BuildContext context) {
     final rawHighlights = widget.experience['highlights'];
     final highlights = rawHighlights is List ? rawHighlights : [];
-    final startDate = (widget.experience['start_date'] ?? widget.experience['startDate'] ?? '') as String;
-    final endDate = (widget.experience['end_date'] ?? widget.experience['endDate'] ?? '') as String;
+    final startDate = (widget.experience['start_date'] ?? widget.experience['startDate'] ?? '').toString();
+    final endDate = (widget.experience['end_date'] ?? widget.experience['endDate'] ?? '').toString();
 
     return IntrinsicHeight(
       child: Row(

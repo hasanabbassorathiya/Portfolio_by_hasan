@@ -61,9 +61,9 @@ const rules = [
 ];
 
 const files = [
-  ['4 vector marks', 'logo-mark.svg, lockup-horizontal.svg, seal-ink.svg, seal-paper.svg'],
+  ['7 vector marks', 'logo-mark.svg, lockup-horizontal.svg, the two seals, and the three M / E / W contact glyphs'],
   ['5 icon PNGs', 'favicon 16 and 32, apple-touch 180, maskable sizes 192 and 512'],
-  ['2 rendered seals', 'seal-ink-128.png and seal-paper-128.png for remote-avatar slots'],
+  ['5 rendered PNGs', 'the two seals at 128 px for remote-avatar slots, the three glyphs at 42 px'],
   ['4 boards', 'the presentation sheets at 1600px JPEG rather than 4.2MB of PNG'],
   ['2 print sheets', 'letterhead.html (A4) and business-card.html (85 × 55 mm)'],
   ['3 email files', 'email-signature.html, signature-plaintext.txt, newsletter-template.html'],
@@ -311,7 +311,7 @@ export function BrandPage() {
         body="Table layout, inline styles only, no style blocks, no required image. Gmail and Outlook remove everything else, so the signature carries its own monogram as a solid ink cell — it still looks right when remote images are blocked."
       >
         <div className="grid gap-4 sm:grid-cols-2">
-          <div className="rounded-[1.4rem] border border-ink/10 bg-surface p-5">
+          <div className="rounded-[1.4rem] border border-ink/10 bg-surface p-5 sm:col-span-2">
             <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-text-muted">Email signature</p>
             <div className="mt-4 flex items-start gap-4">
               <span
@@ -320,19 +320,41 @@ export function BrandPage() {
               >
                 HS
               </span>
-              <p className="text-[13px] leading-[1.6] text-text">
-                <strong className="font-semibold">Hasan Abbas Sorathiya</strong>
-                <br />
-                <span className="font-mono text-[11px] text-text-muted">Senior Software &amp; AI Engineer</span>
-                <br />
-                <a href="https://hasanabbassorathiya.tech" className="text-accent no-underline">
-                  hasanabbassorathiya.tech
-                </a>
-              </p>
+              <div className="min-w-0">
+                <p className="text-[13px] leading-[1.6] text-text">
+                  <strong className="font-semibold">Hasan Abbas Sorathiya</strong>
+                  <br />
+                  <span className="font-mono text-[11px] text-text-muted">Senior Software &amp; AI Engineer</span>
+                </p>
+                <div className="mt-2 border-t border-ink/10 pt-2">
+                  {[
+                    ['M', '+971 58 960 2320 / +91 7021707223', null],
+                    ['E', 'hasanabbassorathiya12@gmail.com', 'mailto:hasanabbassorathiya12@gmail.com'],
+                    ['W', 'hasanabbassorathiya.tech', 'https://hasanabbassorathiya.tech'],
+                  ].map(([chip, value, href]) => (
+                    <p key={chip} className="flex items-start gap-2 py-[3px]">
+                      <span
+                        className="flex h-5 w-5 flex-none items-center justify-center rounded-[4px] font-mono text-[10px] font-semibold leading-none"
+                        style={{ background: INK, color: PAPER }}
+                      >
+                        {chip}
+                      </span>
+                      {href ? (
+                        <a href={href} className="font-mono text-[11px] leading-[20px] text-accent no-underline">
+                          {value}
+                        </a>
+                      ) : (
+                        <span className="font-mono text-[11px] leading-[20px] text-text">{value}</span>
+                      )}
+                    </p>
+                  ))}
+                </div>
+              </div>
             </div>
             <p className="mt-4 text-[12px] leading-relaxed text-text-muted">
-              Three variants plus install steps in the kit. No phone number, no headshot, no banner, no
-              social icons.
+              Four variants plus install steps in the kit. The M / E / W chips are the monogram&rsquo;s
+              construction at a fifth of the size, so the contact rows read as icons without a hosted file.
+              No headshot, no banner, no social icons.
             </p>
           </div>
 
@@ -340,11 +362,12 @@ export function BrandPage() {
             ['Newsletter', 'SHIPPING NOTES', 'A 600px table masthead with {{TOKENS}} for headline, body, notes and the two links. No subscriber count, no testimonial.'],
             ['Print', 'Letterhead + card', 'A4 letterhead and an 85 × 55 mm card, front ink-on-paper and back paper-on-ink. Print at 100% with background graphics on.'],
             ['Icons', '16 to 512 px', 'Favicon pair, 180px Apple touch icon, and the 192/512 manifest sizes — all rendered from the two seals, all byte-reproducible.'],
+            ['Glyphs', 'M · E · W', 'Three 24 × 24 stroke icons drawn on the mark’s own rules — 2-unit stroke, square caps, miter joins. They ship as SVG and rasterise to 42 px PNGs.'],
           ].map(([k, title, body]) => (
             <div key={k} className="rounded-[1.4rem] border border-ink/10 bg-surface p-5">
               <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-text-muted">{k}</p>
-              <h3 className="mt-3 font-serif text-xl leading-tight text-text">{title}</h3>
-              <p className="mt-2.5 text-[13px] leading-[1.7] text-text-muted">{body}</p>
+              <h3 className="mt-3 font-serif text-[17px] leading-tight text-text">{title}</h3>
+              <p className="mt-2.5 text-[12px] leading-[1.65] text-text-muted">{body}</p>
             </div>
           ))}
         </div>
@@ -359,7 +382,7 @@ export function BrandPage() {
       >
         <div>
           <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-band-fg/70">Rebuild the rasters</p>
-          <pre className="mt-3 overflow-x-auto rounded-[1.1rem] border border-band-fg/15 bg-black/25 p-4 font-mono text-[11.5px] leading-[1.9] text-band-fg/90"><code>{`rsvg-convert -w 16  -h 16  public/favicon.svg -o brand/icons/favicon-16.png
+          <pre tabIndex={0} aria-label="Commands to rebuild the raster icons" className="mt-3 overflow-x-auto rounded-[1.1rem] border border-band-fg/15 bg-black/25 p-4 font-mono text-[11.5px] leading-[1.9] text-band-fg/90"><code>{`rsvg-convert -w 16  -h 16  public/favicon.svg -o brand/icons/favicon-16.png
 rsvg-convert -w 180 -h 180 brand/seal-ink.svg  -o brand/icons/apple-touch-icon.png
 rsvg-convert -w 512 -h 512 brand/seal-ink.svg  -o brand/icons/icon-512.png
 cd site && npm run brand:kit`}</code></pre>

@@ -25,6 +25,8 @@ The shipped SVG is **constructed geometry, not a font**: the `H` is three rectan
 | `brand/seal-ink.svg` | Ink square, paper mark. Favicon, avatar, app icon. |
 | `brand/seal-paper.svg` | Paper square, ink mark. On ink backgrounds only. |
 | `brand/icons/` | `favicon-16.png`, `favicon-32.png`, `apple-touch-icon.png` (180), `icon-192.png`, `icon-512.png`. |
+| `brand/icons/glyphs/` | `phone.svg`, `mail.svg`, `web.svg` — three 24×24 contact glyphs drawn on the same rules as the mark: 2-unit stroke, square caps, miter joins, ink `#14110D`, no third colour. Built here, not taken from an icon set. |
+| `site/public/media/brand/icons/` | The same three glyphs rasterised at 42 px (3× the 14 px they render at): `rsvg-convert -w 42 -h 42 brand/icons/glyphs/<name>.svg -o site/public/media/brand/icons/<name>.png`. |
 | `brand/tokens.css` | The palette and type as CSS custom properties, light and dark, copied from `site/src/index.css`. For work outside the site (decks, email HTML, print, Figma). |
 | `brand/README.md` | Instructions: where each file deploys, the verified `rsvg-convert` commands that rebuild every raster, install steps, press-kit build, pre-ship checks. |
 | `brand/signature-plaintext.txt` | The plain-text signature on its own, for Teams/Slack/ticket replies. |
@@ -83,7 +85,7 @@ Short declarative sentences. Name the technology, the decision, and the conseque
 
 ## 6. Applications
 
-**Email signature** — `brand/email-signature.html`. Three variants (HTML clients, image-mark, plain text) in one file, with install steps for Gmail/Outlook/Apple Mail. The default variant draws the monogram as a solid ink cell with letterspaced text, so it survives blocked remote images. Deliberately absent: a phone number (not on file, never guessed), social icons, a headshot, a banner.
+**Email signature** — `brand/email-signature.html`. Four variants in one file (HTML clients, image-mark, glyph contact rows, plain text), with install steps for Gmail/Outlook/Apple Mail. The default variant draws the monogram as a solid ink cell with letterspaced text, so it survives blocked remote images. Its three contact rows lead with a 20px ink chip carrying one Geist Mono capital — M, E, W — the monogram's construction at a fifth of the size, so the rows read as an icon system without depending on a hosted file. Variant 2b replaces the chips with the drawn glyphs; use it only once `media/brand/icons/*.png` is live, because Gmail deletes the whole signature when an `<img>` in it uses a `data:` URI (verified 2026-11-02) and shows an empty box when the URL 404s. Contact details are the owner's, on file since 2026-11-02: `+971 58 960 2320`, `+91 7021707223`, `hasanabbassorathiya12@gmail.com`, `hasanabbassorathiya.tech`. Phone numbers are `tel:` links set in ink, not signal — blue stays reserved for the mailbox and the site. Deliberately absent: social-network icons, a headshot, a banner.
 
 **Newsletter** — `brand/newsletter-template.html`, masthead **SHIPPING NOTES**. 600px table layout, inline styles, `{{TOKENS}}` for headline/body/notes/CTA/subscribe links. Nothing in the template asserts a subscriber count or a testimonial. The masthead name was confirmed on 2026-11-02; changing it is one string.
 
@@ -95,9 +97,15 @@ Short declarative sentences. Name the technology, the decision, and the conseque
 
 ## 7. Open, owner-side
 
-1. The phone number for the signature, if you want one.
-2. Where dispatches are sent from (manual Gmail, or Beehiiv/Loops/Buttondown importing the template).
+1. Where dispatches are sent from (manual Gmail, or Beehiiv/Loops/Buttondown importing the template).
+2. Uploading `site/public/media/brand/icons/{phone,mail,web}.png` to the live webroot, which is
+   the only thing blocking variant 2b. hPanel's session had expired on 2026-11-02 and the agent
+   will not touch credentials, so this needs the owner logged in.
 
 Closed 2026-11-02: `/brand`, `site/public/media/brand/`, the new `favicon.svg` and the three
 `site/public/*.png` icons are live on hasanabbassorathiya.tech (owner-approved deploy), and
-**SHIPPING NOTES** is confirmed as the masthead name.
+**SHIPPING NOTES** is confirmed as the masthead name. Also closed 2026-11-02: the phone numbers
+went on file (`+971 58 960 2320`, `+91 7021707223`) and the Gmail "Brand" signature was rebuilt
+with the designation and the M / E / W contact rows — installed and verified in a fresh compose
+window (ink chips 20px at `rgb(20,17,13)` on `rgb(243,239,230)`, `tel:` links in ink, mailbox and
+site in signal, GitHub in muted, no `<img>` in the block).

@@ -17,7 +17,7 @@ export function SiteFooter() {
     ['Instagram', profile.instagram],
     ['Medium', profile.medium],
     ['Udemy certificate', profile.certificate],
-    ['Buy me a coffee', 'https://buymeacoffee.com/hasanabbassorathiya'],
+    ['Buy me a coffee', profile.buymeacoffee],
   ].filter(([, href]) => href);
 
   const stack = [

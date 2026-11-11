@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_motion.dart';
 import '../../../core/theme/app_typography.dart';
+import '../../../core/theme/app_spacing.dart';
 import '../../../core/config/app_config.dart';
 import '../../../core/database/portfolio_repository.dart';
 import '../../../shared/widgets/text_scramble.dart';
 import '../../../shared/widgets/floating_particles.dart';
 import '../../../shared/widgets/magnetic_cursor.dart';
 import '../../../shared/widgets/decorative_effects.dart';
+import '../../../shared/widgets/gradient_button.dart';
 
 class HeroSection extends StatefulWidget {
   const HeroSection({super.key});
@@ -50,25 +53,49 @@ class _HeroSectionState extends State<HeroSection>
       child: Stack(
         children: [
           Positioned.fill(
+            child: Container(color: AppColors.deep),
+          ),
+          // Radial mesh-gradient orbs
+          Positioned(
+            top: -h * 0.25,
+            right: -w * 0.12,
             child: Container(
-              color: AppColors.deep,
+              width: isMobile ? 320 : 640,
+              height: isMobile ? 320 : 640,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: RadialGradient(
+                  colors: [
+                    AppColors.orbIndigo.withValues(alpha: 0.22),
+                    Colors.transparent,
+                  ],
+                ),
+              ),
+            ),
+          ),
+          Positioned(
+            bottom: -h * 0.3,
+            left: -w * 0.1,
+            child: Container(
+              width: isMobile ? 280 : 560,
+              height: isMobile ? 280 : 560,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: RadialGradient(
+                  colors: [
+                    AppColors.orbEmerald.withValues(alpha: 0.14),
+                    Colors.transparent,
+                  ],
+                ),
+              ),
             ),
           ),
           Positioned.fill(
             child: FloatingParticles(
               count: isMobile ? 15 : 30,
-              color: AppColors.accent,
+              color: AppColors.textMuted,
               maxSize: 2,
               speed: 0.2,
-            ),
-          ),
-          Positioned(
-            top: -h * 0.2,
-            right: -w * 0.15,
-            child: MorphingBlob(
-              size: isMobile ? 200 : 400,
-              color: AppColors.accent,
-              points: 6,
             ),
           ),
           Positioned.fill(
@@ -87,36 +114,12 @@ class _HeroSectionState extends State<HeroSection>
                       children: [
                         AnimatedSlide(
                           offset: _entered ? Offset.zero : const Offset(0, 0.3),
-                          duration: const Duration(milliseconds: 800),
-                          curve: Curves.easeOutCubic,
+                          duration: AppMotion.entrance,
+                          curve: AppMotion.reveal,
                           child: AnimatedOpacity(
                             opacity: _entered ? 1.0 : 0.0,
                             duration: const Duration(milliseconds: 600),
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                              decoration: BoxDecoration(
-                                color: AppColors.accent,
-                                border: Border.all(color: AppColors.accent, width: 2),
-                              ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Container(
-                                    width: 8,
-                                    height: 8,
-                                    decoration: const BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: AppColors.deep,
-                                    ),
-                                  ),
-                                  const SizedBox(width: 10),
-                                  Text(
-                                    _subtitle.toUpperCase(),
-                                    style: AppTypography.label(AppColors.deep).copyWith(letterSpacing: 4),
-                                  ),
-                                ],
-                              ),
-                            ),
+                            child: _HeroBadge(label: _subtitle),
                           ),
                         ),
                         SizedBox(height: compact ? 16 : 32),
@@ -133,7 +136,7 @@ class _HeroSectionState extends State<HeroSection>
                           child: AnimatedOpacity(
                             opacity: _entered ? 1.0 : 0.0,
                             duration: const Duration(milliseconds: 800),
-                            child: _buildCTAButtons(isMobile),
+                            child: _buildCTAButtons(),
                           ),
                         ),
                       ],
@@ -174,38 +177,38 @@ class _HeroSectionState extends State<HeroSection>
 
   Widget _buildProfileImage(double h) {
     final hasNetworkAvatar = _avatarUrl.isNotEmpty && _avatarUrl.startsWith('http');
+    final size = h * 0.4;
 
     return Center(
       child: AnimatedSlide(
         offset: _entered ? Offset.zero : const Offset(0.3, 0),
         duration: const Duration(milliseconds: 1200),
-        curve: Curves.easeOutCubic,
+        curve: AppMotion.reveal,
         child: AnimatedOpacity(
           opacity: _entered ? 1.0 : 0.0,
           duration: const Duration(milliseconds: 1000),
           child: Container(
-            width: h * 0.4,
-            height: h * 0.4,
+            width: size,
+            height: size,
             constraints: const BoxConstraints(maxWidth: 380, maxHeight: 380),
+            // Double-Bezel shell around the avatar
+            padding: const EdgeInsets.all(6),
             decoration: BoxDecoration(
-              border: Border.all(
-                color: AppColors.accent,
-                width: 3,
-              ),
-              boxShadow: const [
-                BoxShadow(
-                  color: Color(0x4038BDF8),
-                  offset: Offset(8, 8),
-                ),
-              ],
+              color: AppColors.glassFill,
+              border: Border.all(color: AppColors.hairline, width: 1),
+              borderRadius: BorderRadius.circular(AppSpacing.radiusShell),
+              boxShadow: AppColors.shadowLifted,
             ),
-            child: hasNetworkAvatar
-                ? Image.network(
-                    _avatarUrl,
-                    fit: BoxFit.cover,
-                    errorBuilder: (_, __, ___) => _buildLocalAvatar(),
-                  )
-                : _buildLocalAvatar(),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(AppSpacing.radiusCore),
+              child: hasNetworkAvatar
+                  ? Image.network(
+                      _avatarUrl,
+                      fit: BoxFit.cover,
+                      errorBuilder: (_, __, ___) => _buildLocalAvatar(),
+                    )
+                  : _buildLocalAvatar(),
+            ),
           ),
         ),
       ),
@@ -222,9 +225,7 @@ class _HeroSectionState extends State<HeroSection>
 
   Widget _buildFallbackAvatar() {
     return Container(
-      decoration: const BoxDecoration(
-        color: AppColors.surface,
-      ),
+      decoration: const BoxDecoration(color: AppColors.surface),
       child: Center(
         child: Text(
           _name.split(' ').map((e) => e.isNotEmpty ? e[0] : '').join(),
@@ -322,16 +323,25 @@ class _HeroSectionState extends State<HeroSection>
             padding: const EdgeInsets.only(bottom: 24),
             child: Center(
               child: Container(
-                width: 120,
-                height: 120,
+                width: 128,
+                height: 128,
+                padding: const EdgeInsets.all(5),
                 decoration: BoxDecoration(
-                  border: Border.all(color: AppColors.accent, width: 2),
+                  color: AppColors.glassFill,
+                  border: Border.all(color: AppColors.hairline, width: 1),
+                  borderRadius: BorderRadius.circular(28),
+                  boxShadow: AppColors.shadowAmbient,
                 ),
-                child: _avatarUrl.isNotEmpty && _avatarUrl.startsWith('http')
-                    ? Image.network(_avatarUrl, fit: BoxFit.cover,
-                        errorBuilder: (_, __, ___) => _buildLocalAvatar(),
-                      )
-                    : _buildLocalAvatar(),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(24),
+                  child: _avatarUrl.isNotEmpty && _avatarUrl.startsWith('http')
+                      ? Image.network(
+                          _avatarUrl,
+                          fit: BoxFit.cover,
+                          errorBuilder: (_, __, ___) => _buildLocalAvatar(),
+                        )
+                      : _buildLocalAvatar(),
+                ),
               ),
             ),
           ),
@@ -376,34 +386,34 @@ class _HeroSectionState extends State<HeroSection>
     );
   }
 
-  Widget _buildCTAButtons(bool isMobile) {
+  Widget _buildCTAButtons() {
     return Wrap(
       spacing: 16,
       runSpacing: 16,
       children: [
         MagneticCursor(
           strength: 0.15,
-          child: _CtaButton(
+          child: GradientButton(
             label: 'View Work',
-            icon: Icons.arrow_downward_rounded,
-            filled: true,
-            onTap: () {
+            size: GradientButtonSize.large,
+            onPressed: () {
               final ctx = context;
               Scrollable.ensureVisible(
                 ctx,
                 duration: const Duration(milliseconds: 800),
-                curve: Curves.easeOutCubic,
+                curve: AppMotion.swiftOut,
               );
             },
           ),
         ),
         MagneticCursor(
           strength: 0.15,
-          child: _CtaButton(
+          child: GradientButton(
             label: 'Download CV',
-            icon: Icons.open_in_new_rounded,
-            filled: false,
-            onTap: () => launchUrl(
+            outlined: true,
+            size: GradientButtonSize.large,
+            icon: Icons.arrow_downward_outlined,
+            onPressed: () => launchUrl(
               Uri.parse(_resumeUrl),
               mode: LaunchMode.externalApplication,
             ),
@@ -429,86 +439,48 @@ class _HeroSectionState extends State<HeroSection>
   }
 }
 
-class _CtaButton extends StatefulWidget {
+class _HeroBadge extends StatelessWidget {
   final String label;
-  final IconData icon;
-  final bool filled;
-  final VoidCallback onTap;
 
-  const _CtaButton({
-    required this.label,
-    required this.icon,
-    required this.filled,
-    required this.onTap,
-  });
-
-  @override
-  State<_CtaButton> createState() => _CtaButtonState();
-}
-
-class _CtaButtonState extends State<_CtaButton> {
-  bool _hovered = false;
-  bool _pressed = false;
+  const _HeroBadge({required this.label});
 
   @override
   Widget build(BuildContext context) {
-    return MouseRegion(
-      onEnter: (_) => setState(() => _hovered = true),
-      onExit: (_) => setState(() => _hovered = false),
-      child: GestureDetector(
-        onTapDown: (_) => setState(() => _pressed = true),
-        onTapUp: (_) {
-          setState(() => _pressed = false);
-          widget.onTap();
-        },
-        onTapCancel: () => setState(() => _pressed = false),
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 100),
-          transform: _pressed
-              ? (Matrix4.identity()..translate(2.0, 2.0))
-              : Matrix4.identity(),
-          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-          decoration: BoxDecoration(
-            color: widget.filled
-                ? (_hovered ? AppColors.accentHover : AppColors.accent)
-                : (_hovered ? AppColors.accent.withValues(alpha: 0.15) : Colors.transparent),
-            border: Border.all(
-              color: widget.filled
-                  ? AppColors.accent
-                  : (_hovered ? AppColors.accent : AppColors.border),
-              width: 2,
-            ),
-            boxShadow: [
-              if (!_pressed)
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      decoration: BoxDecoration(
+        color: AppColors.glassFill,
+        border: Border.all(color: AppColors.hairline, width: 1),
+        borderRadius: BorderRadius.circular(AppSpacing.radiusPill),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 7,
+            height: 7,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: AppColors.accent,
+              boxShadow: [
                 BoxShadow(
-                  color: _hovered && widget.filled
-                      ? AppColors.accent.withValues(alpha: 0.3)
-                      : Colors.black.withValues(alpha: 0.3),
-                  offset: const Offset(4, 4),
+                  color: AppColors.accent.withValues(alpha: 0.6),
+                  blurRadius: 8,
                 ),
-            ],
+              ],
+            ),
           ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                widget.icon,
-                size: 18,
-                color: widget.filled ? AppColors.deep : AppColors.accent,
-              ),
-              const SizedBox(width: 10),
-              Text(
-                widget.label.toUpperCase(),
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w700,
-                  color: widget.filled ? AppColors.deep : AppColors.accent,
-                  letterSpacing: 1,
-                ),
-              ),
-            ],
+          const SizedBox(width: 10),
+          Text(
+            label.toUpperCase(),
+            style: const TextStyle(
+              fontSize: 11,
+              fontWeight: FontWeight.w600,
+              color: AppColors.textSecondary,
+              letterSpacing: 3,
+            ),
           ),
-        ),
+        ],
       ),
     );
   }
@@ -549,7 +521,7 @@ class _DelayedSlideState extends State<_DelayedSlide> {
     return AnimatedSlide(
       offset: _ready && widget.entered ? Offset.zero : widget.offset,
       duration: widget.duration,
-      curve: Curves.easeOutCubic,
+      curve: AppMotion.reveal,
       child: widget.child,
     );
   }

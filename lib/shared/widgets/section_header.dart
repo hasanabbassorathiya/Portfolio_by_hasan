@@ -1,5 +1,53 @@
 import 'package:flutter/material.dart';
 import '../../core/theme/app_colors.dart';
+import '../../core/theme/app_spacing.dart';
+
+/// Microscopic pill-shaped eyebrow tag preceding major headings.
+class EyebrowTag extends StatelessWidget {
+  final String label;
+  final bool center;
+
+  const EyebrowTag({
+    super.key,
+    required this.label,
+    this.center = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+      decoration: BoxDecoration(
+        color: AppColors.glassFill,
+        border: Border.all(color: AppColors.hairline, width: 1),
+        borderRadius: BorderRadius.circular(AppSpacing.radiusPill),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 5,
+            height: 5,
+            decoration: const BoxDecoration(
+              shape: BoxShape.circle,
+              color: AppColors.accent,
+            ),
+          ),
+          const SizedBox(width: 8),
+          Text(
+            label.toUpperCase(),
+            style: const TextStyle(
+              fontSize: 10,
+              fontWeight: FontWeight.w600,
+              color: AppColors.textSecondary,
+              letterSpacing: 2.4,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
 
 class SectionHeader extends StatelessWidget {
   final String label;
@@ -25,37 +73,21 @@ class SectionHeader extends StatelessWidget {
     return Column(
       crossAxisAlignment: center ? CrossAxisAlignment.center : crossAxisAlignment,
       children: [
-        Row(
-          mainAxisSize: center ? MainAxisSize.max : MainAxisSize.min,
-          mainAxisAlignment: center ? MainAxisAlignment.center : MainAxisAlignment.start,
-          children: [
-            Container(width: 32, height: 2, color: AppColors.accent),
-            const SizedBox(width: 16),
-            Text(
-              label.toUpperCase(),
-              style: const TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w700,
-                color: AppColors.accent,
-                letterSpacing: 3,
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 40),
+        EyebrowTag(label: label),
+        const SizedBox(height: 32),
         Text(
           title,
           style: TextStyle(
-            fontSize: isMobile ? 36 : 52,
+            fontSize: isMobile ? 38 : 56,
             fontWeight: FontWeight.w900,
             color: AppColors.textPrimary,
-            height: 1.1,
-            letterSpacing: -1.5,
+            height: 1.05,
+            letterSpacing: -1.8,
           ),
           textAlign: center ? TextAlign.center : TextAlign.left,
         ),
         if (subtitle != null) ...[
-          const SizedBox(height: 16),
+          const SizedBox(height: 20),
           Text(
             subtitle!,
             style: TextStyle(

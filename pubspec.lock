@@ -589,6 +589,15 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "7.0.2"
+  phosphor_flutter:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: "290a73304d62a5b74af3dbb38121121b92b2dcc5"
+      resolved-ref: "290a73304d62a5b74af3dbb38121121b92b2dcc5"
+      url: "https://github.com/phosphor-icons/flutter.git"
+    source: git
+    version: "2.1.0"
   platform:
     dependency: transitive
     description:

@@ -77,10 +77,8 @@ class PortfolioRepository {
       await TursoService.initialize();
       await _createTables();
 
-      final isEmpty = await _isProfileEmpty();
-      if (isEmpty) {
-        await DbSetup.seedAll();
-      }
+      // seedAll is per-table safe: each table seeds only when empty.
+      await DbSetup.seedAll();
       await _loadAllFromDb();
       _usesDb = true;
     } catch (_) {
@@ -109,16 +107,6 @@ class PortfolioRepository {
     ];
     for (final sql in schemas) {
       try { await TursoService.query(sql); } catch (_) {}
-    }
-  }
-
-  Future<bool> _isProfileEmpty() async {
-    try {
-      final result = await TursoService.query("SELECT COUNT(*) as count FROM profile WHERE id = 'main'");
-      if (result.isEmpty) return true;
-      return result.first['count'] == 0;
-    } catch (_) {
-      return true;
     }
   }
 
@@ -152,7 +140,7 @@ class PortfolioRepository {
         'start_date': e['startDate'],
         'end_date': e['endDate'],
         'location': e['location'],
-        'highlights': e['highlights'] is String ? e['highlights'] : jsonEncode(e['highlights']),
+        'highlights': e['highlights'] is List ? List<dynamic>.from(e['highlights'] as List) : e['highlights'],
       };
     }).toList();
 
@@ -272,6 +260,11 @@ class PortfolioRepository {
       if (parsed[field] is String) {
         try { parsed[field] = jsonDecode(parsed[field] as String); } catch (_) {}
       }
+    }
+    // Turso HTTP API returns integers as strings — coerce known int columns.
+    for (final field in ['icon_codepoint', 'display_order', 'is_featured', 'is_active', 'rating', 'order_index', 'count', 'c']) {
+      final v = parsed[field];
+      if (v is String) parsed[field] = int.tryParse(v) ?? 0;
     }
     if (parsed['is_featured'] != null) {
       parsed['is_featured'] = parsed['is_featured'] == 1 || parsed['is_featured'] == true ? 1 : 0;
@@ -434,15 +427,17 @@ class PortfolioRepository {
     }
   }
 
+  static int _asInt(dynamic v) => v is int ? v : int.tryParse(v?.toString() ?? '') ?? 0;
+
   Future<Map<String, int>> getStats() async {
     final stats = <String, int>{};
     if (_usesDb) {
-      try { final r = await TursoService.query("SELECT COUNT(*) as c FROM contact_submissions"); stats['contacts'] = r.isNotEmpty ? (r.first['c'] ?? 0) as int : 0; } catch (_) { stats['contacts'] = 0; }
-      try { final r = await TursoService.query("SELECT COUNT(*) as c FROM newsletter_subscribers"); stats['subscribers'] = r.isNotEmpty ? (r.first['c'] ?? 0) as int : 0; } catch (_) { stats['subscribers'] = 0; }
-      try { final r = await TursoService.query("SELECT COUNT(*) as c FROM analytics_events WHERE event_type = 'page_view'"); stats['views'] = r.isNotEmpty ? (r.first['c'] ?? 0) as int : 0; } catch (_) { stats['views'] = 0; }
-      try { final r = await TursoService.query("SELECT COUNT(*) as c FROM projects"); stats['projects'] = r.isNotEmpty ? (r.first['c'] ?? 0) as int : 0; } catch (_) { stats['projects'] = 0; }
-      try { final r = await TursoService.query("SELECT COUNT(*) as c FROM experience"); stats['experience'] = r.isNotEmpty ? (r.first['c'] ?? 0) as int : 0; } catch (_) { stats['experience'] = 0; }
-      try { final r = await TursoService.query("SELECT COUNT(*) as c FROM skills"); stats['skills'] = r.isNotEmpty ? (r.first['c'] ?? 0) as int : 0; } catch (_) { stats['skills'] = 0; }
+      try { final r = await TursoService.query("SELECT COUNT(*) as c FROM contact_submissions"); stats['contacts'] = r.isNotEmpty ? _asInt(r.first['c']) : 0; } catch (_) { stats['contacts'] = 0; }
+      try { final r = await TursoService.query("SELECT COUNT(*) as c FROM newsletter_subscribers"); stats['subscribers'] = r.isNotEmpty ? _asInt(r.first['c']) : 0; } catch (_) { stats['subscribers'] = 0; }
+      try { final r = await TursoService.query("SELECT COUNT(*) as c FROM analytics_events WHERE event_type = 'page_view'"); stats['views'] = r.isNotEmpty ? _asInt(r.first['c']) : 0; } catch (_) { stats['views'] = 0; }
+      try { final r = await TursoService.query("SELECT COUNT(*) as c FROM projects"); stats['projects'] = r.isNotEmpty ? _asInt(r.first['c']) : 0; } catch (_) { stats['projects'] = 0; }
+      try { final r = await TursoService.query("SELECT COUNT(*) as c FROM experience"); stats['experience'] = r.isNotEmpty ? _asInt(r.first['c']) : 0; } catch (_) { stats['experience'] = 0; }
+      try { final r = await TursoService.query("SELECT COUNT(*) as c FROM skills"); stats['skills'] = r.isNotEmpty ? _asInt(r.first['c']) : 0; } catch (_) { stats['skills'] = 0; }
     } else {
       stats['contacts'] = _contactSubmissions.length;
       stats['subscribers'] = _subscribers.length;

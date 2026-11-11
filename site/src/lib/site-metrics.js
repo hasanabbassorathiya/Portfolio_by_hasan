@@ -44,6 +44,15 @@ function platformUnion(apps) {
   });
 }
 
+// Counts only what a stranger can open right now, so copy can never claim more than it can show.
+function publicLinkCount(apps) {
+  const isOpenable = (value) => /^https?:\/\//i.test(String(value ?? ''));
+  return apps.filter((app) => {
+    const links = app?.links;
+    return links && typeof links === 'object' && Object.values(links).some(isOpenable);
+  }).length;
+}
+
 // Every public count comes from here: app rows, client rows, experience dates,
 // and the profile kv store. Nothing on the site should restate these by hand.
 export function computeMetrics({ apps = [], clients = [], experiences = [], profile = {} } = {}, now = new Date()) {
@@ -59,6 +68,7 @@ export function computeMetrics({ apps = [], clients = [], experiences = [], prof
     years,
     yearsLabel: years === null ? '' : `${years}+`,
     appsCount: apps.length,
+    publicLinks: publicLinkCount(apps),
     clientsCount: clients.length,
     platforms,
     platformsLabel: platforms.join(' · '),
@@ -76,6 +86,7 @@ export function computeMetrics({ apps = [], clients = [], experiences = [], prof
   metrics.tokens = {
     years: metrics.yearsLabel,
     apps: String(metrics.appsCount),
+    public_links: String(metrics.publicLinks),
     clients: String(metrics.clientsCount),
     platforms: metrics.platformsLabel,
   };

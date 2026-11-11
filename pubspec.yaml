@@ -22,6 +22,12 @@ dependencies:
   # Icons & SVG
   flutter_svg: ^2.0.10+1
 
+  # Pinned to git due to blocked pub.dev API on this network
+  phosphor_flutter:
+    git:
+      url: https://github.com/phosphor-icons/flutter.git
+      ref: 290a73304d62a5b74af3dbb38121121b92b2dcc5
+
   # URLs
   url_launcher: ^6.2.2
   url_strategy: ^0.3.0

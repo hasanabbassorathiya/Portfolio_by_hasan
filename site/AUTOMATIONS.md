@@ -11,7 +11,7 @@ contacts no one automatically. Nothing here promises leads, rankings, or revenue
 | A | Enquiries | Implemented | Form submit + cron worker | Explicit `--send`; consent required; idempotent |
 | B | Content | Implemented + human review | CMS edit → seed → build | Draft/publish flag; fact checks; no auto-generated claims |
 | C | Job search | Manual by design | Weekly, 30–45 min | No auto-apply, no logged-in scraping |
-| D | Outreach | Manual by design | Weekly, capped at five people | No bulk messages, no scraped emails |
+| D | Outreach | Reviewed local drafts | Weekly, capped at five people | No bulk messages, no scraped emails |
 | E | Monitoring | Semi-automated | Pre-deploy and weekly | Read-only checks; no external service |
 | F | Reporting | Manual | Monthly | Measured data only; blanks where data is absent |
 
@@ -80,14 +80,25 @@ produce the exact spam behaviour this project avoids.
 
 Weekly routine (30–45 minutes):
 
-1. Run saved searches: senior Flutter engineer (Dubai and remote), mobile lead Flutter, AI
+1. After signing in to the locally installed Treg CLI, use catalog searches for live hiring
+   signals and contact verification. Read the catalog price before any paid call:
+
+   ```bash
+   treg login
+   treg catalog search "hiring signals for remote Flutter and AI software engineers"
+   treg catalog search "find and verify a work email for a recruiter"
+   ```
+
+   Treg results are leads, not permission to contact. Verify each address, retain its source, and
+   add only the specific people you selected to the reviewed CSV for the outreach helper.
+2. Run saved searches: senior Flutter engineer (Dubai and remote), mobile lead Flutter, AI
    engineer with RAG/agents, full-stack React/Node with AI. Treat these as queries, not claims
    about the market.
-2. Read each posting before applying. Apply only where the role matches the verified profile in
+3. Read each posting before applying. Apply only where the role matches the verified profile in
    `hasan.md`; cap at five applications per week.
-3. Tailor two sentences per application and link the closest case study (`/work/<slug>` or
+4. Tailor two sentences per application and link the closest case study (`/work/<slug>` or
    `/apps/<slug>`), not the homepage.
-4. Track every application with the fields below; follow up once after 7–10 days, then stop.
+5. Track every application with the fields below; follow up once after 7–10 days, then stop.
 
 | Date | Company | Role | Source | Fit (1–5) | Contact | Status | Next action |
 |---|---|---|---|---|---|---|---|
@@ -96,12 +107,36 @@ No auto-apply, no résumé blasting, no invented experience, no fake referrals.
 
 ## 5. D — Outreach
 
-Manual and capped at five specific people per week.
+Manual and capped at five specific people in a rolling seven-day window. The local draft helper
+loads the verified profile from `src/content/profile.js` and `src/content/resume.js`; it does not
+send mail or hold an email-provider credential.
+
+Prepare a small, reviewed CSV. Use addresses from an official job posting or a company contact
+page, verify them before adding them, and keep the source URL or description in `source`:
+
+```text
+company,role,email,name,job_url,source,verified,country,contact_type,personalization
+Example Labs,Senior Flutter Engineer,recruiter@example.test,Alex,https://example.test/jobs/1,Official job posting,true,UK,recruiter,Your post mentions Flutter and Android delivery.
+```
+
+Run the flow from `site/`:
+
+```bash
+npm run outreach -- prepare --contacts contacts.csv --out .outreach
+npm run outreach -- list --manifest .outreach/manifest.json
+npm run outreach -- compose --manifest .outreach/manifest.json --id CONTACT_ID --open
+npm run outreach -- mark-sent --manifest .outreach/manifest.json --id CONTACT_ID --confirm
+```
+
+`prepare` writes one `.eml` draft and a review CSV per contact. `compose --open` opens one
+personalized message in the default mail client; it never sends. `mark-sent` is an explicit ledger
+step and refuses to exceed five recorded sends in seven days. Use one follow-up after 7–10 days,
+then stop.
 
 - Use the copy variants in `site/SOCIAL.md` and the profile drafts in `site/LINKEDIN.md`; personalise
   the first line with something real about their product or post.
-- No bulk email tools, no purchased lists, no scraped addresses, no automated DMs or connection
-  requests, no engagement pods.
+- No bulk email tools, purchased lists, scraped addresses, automated DMs or connection requests,
+  or engagement pods.
 - One follow-up after 7–10 days at most. If there is no reply, stop.
 - Do not message anyone who has asked not to be contacted, and do not use the enquiry address for
   outreach.

@@ -36,6 +36,9 @@ const VERBATIM = [
   ['icons/apple-touch-icon.png', 'icons/apple-touch-icon-180.png'],
   ['icons/icon-192.png', 'icons/icon-192.png'],
   ['icons/icon-512.png', 'icons/icon-512.png'],
+  ['icons/glyphs/phone.svg', 'icons/glyphs/phone.svg'],
+  ['icons/glyphs/mail.svg', 'icons/glyphs/mail.svg'],
+  ['icons/glyphs/web.svg', 'icons/glyphs/web.svg'],
   ['email-signature.html', 'email-signature.html'],
   ['signature-plaintext.txt', 'signature-plaintext.txt'],
   ['newsletter-template.html', 'newsletter-template.html'],
@@ -44,9 +47,13 @@ const VERBATIM = [
 ];
 
 // Rendered, not copied: the kit's seals are the two SVGs at 128 px, the same sizes the site serves.
+// The contact glyphs are rendered at 42 px — 3x the 14 px they are drawn at in the signature.
 const RENDERED = [
   ['seal-ink.svg', 'png/seal-ink-128.png', 128],
   ['seal-paper.svg', 'png/seal-paper-128.png', 128],
+  ['icons/glyphs/phone.svg', 'png/glyph-phone-42.png', 42],
+  ['icons/glyphs/mail.svg', 'png/glyph-mail-42.png', 42],
+  ['icons/glyphs/web.svg', 'png/glyph-web-42.png', 42],
 ];
 
 const rsvg = (svg, dest, px) =>

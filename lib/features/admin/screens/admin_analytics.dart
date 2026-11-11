@@ -145,7 +145,7 @@ class _AdminAnalyticsState extends State<AdminAnalytics> {
     }
 
     final maxCount = viewData.fold<int>(0, (max, d) {
-      final c = (d['count'] ?? 0) as int;
+      final c = d['count'] is int ? d['count'] as int : int.tryParse(d['count']?.toString() ?? '') ?? 0;
       return c > max ? c : max;
     });
 
@@ -164,7 +164,7 @@ class _AdminAnalyticsState extends State<AdminAnalytics> {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: viewData.take(14).map((d) {
-                final count = (d['count'] ?? 0) as int;
+                final count = d['count'] is int ? d['count'] as int : int.tryParse(d['count']?.toString() ?? '') ?? 0;
                 final height = maxCount > 0 ? (count / maxCount) * 180.0 : 0.0;
                 final date = d['date']?.toString() ?? '';
                 final shortDate = date.length >= 5 ? date.substring(5) : date;

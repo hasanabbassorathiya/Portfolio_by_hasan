@@ -1,5 +1,7 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:visibility_detector/visibility_detector.dart';
+import '../../core/theme/app_motion.dart';
 
 enum RevealDirection { up, down, left, right, scale, fade }
 
@@ -14,9 +16,9 @@ class ScrollReveal extends StatefulWidget {
     super.key,
     required this.child,
     this.direction = RevealDirection.up,
-    this.duration = const Duration(milliseconds: 600),
+    this.duration = const Duration(milliseconds: 850),
     this.delay = Duration.zero,
-    this.offset = 40,
+    this.offset = 64,
   });
 
   @override
@@ -33,7 +35,7 @@ class _ScrollRevealState extends State<ScrollReveal>
   void initState() {
     super.initState();
     _controller = AnimationController(vsync: this, duration: widget.duration);
-    _animation = CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic);
+    _animation = CurvedAnimation(parent: _controller, curve: AppMotion.reveal);
 
     // Fallback: ensure content becomes visible even if VisibilityDetector fails (common on web)
     Future.delayed(const Duration(milliseconds: 800), () {
@@ -90,7 +92,8 @@ class _ScrollRevealState extends State<ScrollReveal>
               scale = 1.0;
           }
 
-          return Transform.translate(
+          final blur = 8.0 * (1 - t);
+          final content = Transform.translate(
             offset: offset,
             child: Transform.scale(
               scale: scale,
@@ -99,6 +102,11 @@ class _ScrollRevealState extends State<ScrollReveal>
                 child: child,
               ),
             ),
+          );
+          if (blur < 0.4 || t >= 1) return content;
+          return ImageFiltered(
+            imageFilter: ImageFilter.blur(sigmaX: blur, sigmaY: blur),
+            child: content,
           );
         },
         child: widget.child,

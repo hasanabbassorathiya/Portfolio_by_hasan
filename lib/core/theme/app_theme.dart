@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'app_colors.dart';
+import 'app_spacing.dart';
 
 class AppTheme {
   AppTheme._();
@@ -90,24 +91,24 @@ class AppTheme {
         ),
       ),
       dividerTheme: const DividerThemeData(
-        color: AppColors.border,
-        thickness: 2,
+        color: AppColors.hairlineSoft,
+        thickness: 1,
         space: 1,
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: AppColors.surface,
+        fillColor: AppColors.glassFill,
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.zero,
-          borderSide: const BorderSide(color: AppColors.border, width: 2),
+          borderRadius: BorderRadius.circular(AppSpacing.radiusInput),
+          borderSide: const BorderSide(color: AppColors.hairline, width: 1),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.zero,
-          borderSide: const BorderSide(color: AppColors.border, width: 2),
+          borderRadius: BorderRadius.circular(AppSpacing.radiusInput),
+          borderSide: const BorderSide(color: AppColors.hairline, width: 1),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.zero,
-          borderSide: const BorderSide(color: AppColors.accent, width: 2),
+          borderRadius: BorderRadius.circular(AppSpacing.radiusInput),
+          borderSide: const BorderSide(color: AppColors.accent, width: 1),
         ),
         hintStyle: GoogleFonts.spaceGrotesk(color: AppColors.textMuted, fontSize: 14),
         labelStyle: GoogleFonts.spaceGrotesk(color: AppColors.textMuted, fontSize: 12),
