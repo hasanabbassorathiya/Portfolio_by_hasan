@@ -48,8 +48,10 @@ function shell(metadata, markup, site, person) {
   return html.replace('</head>', () => `${head.join('\n')}\n</head>`);
 }
 
+// Production mode so ssrLoadModule resolves import.meta.env from .env.production,
+// matching the client bundle (otherwise build-time flags like VITE_CAL_URL prerender empty).
 const vite = await createServer({
-  root, appType: 'custom', logLevel: 'silent',
+  root, mode: 'production', appType: 'custom', logLevel: 'silent',
   server: { middlewareMode: true, hmr: false, watch: null },
 });
 
