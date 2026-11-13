@@ -61,6 +61,7 @@ ui-debug.log
 site/api/config.php
 site/api/social-secret.php
 site/api/mail-secret.php
+site/api/discord-secret.php
 
 # Local credentials inventory
 CREDENTIALS.md

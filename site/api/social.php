@@ -5,6 +5,7 @@ declare(strict_types=1);
 // cannot send headers). Rows dedupe on external_id, so retries are safe.
 require __DIR__ . '/bootstrap.php';
 require __DIR__ . '/social-lib.php';
+require __DIR__ . '/discord-lib.php';
 
 header('Cache-Control: no-store');
 header('X-Robots-Tag: noindex, nofollow');
@@ -14,15 +15,8 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
     json_out(['error' => 'method not allowed'], 405);
 }
 
-$secret = defined('SOCIAL_WEBHOOK_SECRET') ? (string)SOCIAL_WEBHOOK_SECRET : '';
+$secret = social_webhook_secret();
 if ($secret === '') {
-    $secretFile = __DIR__ . '/social-secret.php';
-    if (is_file($secretFile)) {
-        $stored = require $secretFile;
-        $secret = is_string($stored) ? trim($stored) : '';
-    }
-}
-if (strlen($secret) < 32 || str_starts_with($secret, 'CHANGE_ME')) {
     json_out([
         'error' => 'webhook not configured',
         'detail' => 'Define SOCIAL_WEBHOOK_SECRET in api/config.php or upload api/social-secret.php.',
@@ -62,6 +56,11 @@ try {
 }
 
 $created = $st->rowCount() === 1;
+// Only a first-time post is announced: webhook retries dedupe on external_id
+// and must not double-post to Discord. A Discord failure never fails the feed.
+if ($created && $row['published'] === 1) {
+    discord_mirror($row, __DIR__ . '/discord-secret.php');
+}
 json_out([
     'ok' => true,
     'duplicate' => !$created,

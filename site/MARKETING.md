@@ -58,7 +58,13 @@ reel in the next. Nothing in the template asserts a subscriber count.
 **Search** — the reel earns its place on the site itself: `og:video` on the home page, the
 `/resume` page linking it, and the video kept out of the sitemap unless it has a real hosted URL.
 
-Not touched: **Discord, Reddit, Dev.to, Product Hunt** — no verified accounts exist for them, and
+**Discord** — the community server is live (`Mobile Builders`, invite
+`https://discord.gg/yy4NTZ3C6D`). It is the one channel that runs itself: every post that
+reaches the site's activity feed is mirrored into `#announcements`, and a community note can
+be pushed there from the site with one signed request. Discord is Community-enabled with a
+rules channel, verified-email verification, and join notices in `#announcements`.
+
+Not touched: **Reddit, Dev.to, Product Hunt** — no verified accounts exist for them, and
 nothing gets invented to fill a channel.
 
 ---

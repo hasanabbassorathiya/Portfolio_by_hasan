@@ -117,6 +117,22 @@ No scheduler is hosted on this plan. Any tool that can send JSON — curl, n8n, 
 cron script — can publish with the shared secret; the feed stays empty until the first signed POST
 arrives.
 
+## Discord community autopilot (2026-11-14)
+The community server (`Mobile Builders`) has an incoming webhook in `#announcements`
+(id `1570917631345688597`). The site ships `api/discord-lib.php` (payload builder + sender),
+`api/discord-publish.php` (push a community note on demand), and a mirror inside
+`api/social.php` so a post that lands on the feed is announced in Discord too.
+
+Deploy order: upload `api/discord-lib.php`, `api/discord-publish.php`, and the patched
+`api/social.php` → upload `api/discord-secret.php` (gitignored, mode 600, holds the webhook
+URL) → send one test note with the shared secret → check `#announcements`. Both files stay
+out of the static bundle, and `api/discord-secret.php` must never be committed.
+
+Server-side, Discord was set to Community with a verified-email verification level, content
+filtering for all members, `#rules` as the rules channel, and join notices routed to
+`#announcements`. Community Onboarding (the rules screen) still has to be switched on in
+Server Settings → Onboarding.
+
 ## Newsletter (email capture)
 Signup forms on the home Writing section, `/blog`, and every essay post to `/api/subscribe.php`
 and store one row per address in `subscribers`. To turn them on:

@@ -470,6 +470,39 @@ Responses: `201 { "ok": true, "duplicate": false, "published": true, "external_i
 
 Set `SOCIAL_WEBHOOK_SECRET` in `api/config.php`, or upload `api/social-secret.php` returning the same 32+ character string when the live `config.php` must not be edited. The placeholder in `config.sample.php` keeps the endpoint disabled. `php scripts/social-normalize-check.php` is a database-free contract check for the parser.
 
+### 6.5 Discord autopilot — `POST /api/discord-publish.php`
+
+The site's own publishing side talks to Discord: a post that arrives on the social webhook is mirrored into the community server's `#announcements` channel, and a site-authored community note can be pushed on demand. Both go through one Discord incoming webhook.
+
+```http
+POST /api/discord-publish.php
+X-Webhook-Secret: <SOCIAL_WEBHOOK_SECRET>
+Content-Type: application/json
+
+{ "title": "Community note", "text": "Bring one problem…", "url": "https://hasanabbassorathiya.tech/community" }
+```
+
+| Guard | Rule |
+| --- | --- |
+| Method | `POST` only; anything else `405` |
+| Secret | The same shared secret as §6.4 — `X-Webhook-Secret` header or `?token=`; `hash_equals`, 32+ chars, placeholder `CHANGE_ME` treated as unset |
+| Body | `text` or `url` required → `422` when both are empty |
+| Discord | `api/discord-secret.php` must hold the webhook URL → `503` when it is missing |
+| Delivery | Discord's own 2xx means delivered; anything else → `502` plus a server-side log line |
+
+Responses: `200 { "ok": true }` when Discord accepted the message.
+
+**Automatic mirror.** `POST /api/social.php` mirrors a post into `#announcements` the first time it is stored — new rows only, so a webhook retry never double-posts. The mirror is best-effort: a Discord outage is logged and the feed still answers `201`. Discord receives an embed titled `New on <provider>` carrying the post text, its link, and the channel name as the footer.
+
+Configure it by uploading `api/discord-secret.php` (gitignored):
+
+```php
+<?php
+return ['webhook' => 'https://discord.com/api/webhooks/…'];
+```
+
+Only `https://discord.com/api/webhooks/…` and `discordapp.com` URLs are accepted; anything else is ignored. `php scripts/discord-mirror-check.php` is a database-free contract check for the payload builder, the secret reader, and the sender.
+
 ---
 
 ## 7. SEO toolkit

@@ -4,6 +4,20 @@ declare(strict_types=1);
 // Pure payload normalization for the social webhook. No database and no
 // bootstrap, so scripts/social-normalize-check.php can test the contract.
 
+function social_webhook_secret(string $secretFile = ''): string {
+    $secret = '';
+    if (defined('SOCIAL_WEBHOOK_SECRET')) $secret = trim((string)SOCIAL_WEBHOOK_SECRET);
+    if ($secret === '') {
+        if ($secretFile === '') $secretFile = __DIR__ . '/social-secret.php';
+        if (!is_file($secretFile)) return '';
+        $stored = require $secretFile;
+        if (!is_string($stored)) return '';
+        $secret = trim($stored);
+    }
+    if (strlen($secret) < 32 || str_starts_with($secret, 'CHANGE_ME')) return '';
+    return $secret;
+}
+
 function social_dig(array $data, string $path) {
     $node = $data;
     foreach (explode('.', $path) as $key) {
