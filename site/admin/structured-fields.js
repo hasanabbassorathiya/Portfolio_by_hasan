@@ -6,11 +6,19 @@ class StructuredField {
     this.shape = root.dataset.shape;
     this.images = root.dataset.images === '1';
     this.rows = [];
-    root.querySelector('[data-add]').addEventListener('click', () => {
-      this.append(this.shape === 'list' ? '' : ['', '']);
-      this.list.lastElementChild.querySelector('input').focus();
-    });
+    this.dragState = null;
+    this.setupEventListeners();
     this.set(null);
+  }
+
+  setupEventListeners() {
+    const addBtn = this.root.querySelector('[data-add]');
+    if (addBtn) {
+      addBtn.addEventListener('click', () => {
+        this.append(this.shape === 'list' ? '' : ['', '']);
+        this.list.lastElementChild?.querySelector('input')?.focus();
+      });
+    }
   }
 
   set(raw) {
@@ -19,7 +27,6 @@ class StructuredField {
     let rows = [];
     if (value != null && value !== '') {
       if (this.shape === 'object') {
-        // PHP encodes an empty associative array as [], including decoded {} values.
         if (typeof value !== 'object' || (Array.isArray(value) && value.length > 0)) throw new Error('Expected key/value data.');
         rows = Object.entries(value);
       } else {
@@ -61,64 +68,128 @@ class StructuredField {
       empty.className = 'field-help structured-empty';
       empty.textContent = this.images ? 'No screenshots yet. Upload images to get started.' : 'No items yet.';
       this.list.append(empty);
+      return;
     }
+
     this.rows.forEach((value, index) => {
-      const row = document.createElement('div');
-      row.className = 'structured-row';
-      const inputs = document.createElement('div');
-      inputs.className = 'structured-inputs';
-      let preview;
-      if (this.images) {
-        preview = document.createElement('img');
-        preview.alt = `Screenshot ${index + 1}`;
-        preview.className = 'structured-preview';
-        preview.loading = 'lazy';
-        preview.referrerPolicy = 'no-referrer';
-        this.preview(preview, value);
-        row.append(preview);
-      }
-      const values = this.shape === 'list' ? [value] : value;
-      values.forEach((part, column) => {
-        const label = document.createElement('label');
-        label.className = 'structured-label';
-        const caption = document.createElement('span');
-        const title = this.shape === 'list' ? (this.images ? 'Image path' : 'Item') : column === 1 ? 'Value' : this.shape === 'object' ? 'Key' : 'Label';
-        caption.textContent = `${title} ${index + 1}`;
-        const input = document.createElement('input');
-        input.type = 'text';
-        input.value = part;
-        input.addEventListener('input', () => {
-          if (this.shape === 'list') this.rows[index] = input.value;
-          else this.rows[index][column] = input.value;
-          if (preview) this.preview(preview, input.value);
-          this.changed();
-        });
-        label.append(caption, input);
-        inputs.append(label);
+      const row = this.createRow(value, index);
+      this.list.append(row);
+    });
+
+    this.attachDragHandlers();
+  }
+
+  createRow(value, index) {
+    const row = document.createElement('div');
+    row.className = 'structured-row';
+    row.draggable = true;
+    row.dataset.index = index;
+
+    const inputs = document.createElement('div');
+    inputs.className = 'structured-inputs';
+
+    if (this.images) {
+      const preview = document.createElement('img');
+      preview.alt = `Screenshot ${index + 1}`;
+      preview.className = 'structured-preview';
+      preview.loading = 'lazy';
+      preview.referrerPolicy = 'no-referrer';
+      this.preview(preview, value);
+      row.append(preview);
+    }
+
+    const values = this.shape === 'list' ? [value] : value;
+    values.forEach((part, column) => {
+      const label = document.createElement('label');
+      label.className = 'structured-label';
+      const caption = document.createElement('span');
+      const title = this.shape === 'list' ? (this.images ? 'Image path' : 'Item') : column === 1 ? 'Value' : this.shape === 'object' ? 'Key' : 'Label';
+      caption.textContent = `${title} ${index + 1}`;
+      const input = document.createElement('input');
+      input.type = 'text';
+      input.value = part;
+      input.addEventListener('input', () => {
+        if (this.shape === 'list') this.rows[index] = input.value;
+        else this.rows[index][column] = input.value;
+        if (this.images) {
+          const img = row.querySelector('.structured-preview');
+          if (img) this.preview(img, input.value);
+        }
+        this.changed();
       });
-      row.append(inputs);
-      const actions = document.createElement('div');
-      actions.className = 'structured-actions';
-      for (const [text, direction] of [['Up', -1], ['Down', 1], ['Remove', 0]]) {
-        const button = document.createElement('button');
-        button.type = 'button';
-        button.className = 'btn-sm';
-        button.textContent = text;
-        button.setAttribute('aria-label', direction ? `Move item ${index + 1} ${text.toLowerCase()}` : `Remove item ${index + 1}`);
-        const target = index + direction;
-        button.disabled = direction !== 0 && (target < 0 || target >= this.rows.length);
-        button.addEventListener('click', () => {
-          if (direction) [this.rows[index], this.rows[target]] = [this.rows[target], this.rows[index]];
-          else this.rows.splice(index, 1);
+      label.append(caption, input);
+      inputs.append(label);
+    });
+
+    row.append(inputs);
+    row.append(this.createActions(index));
+
+    return row;
+  }
+
+  createActions(index) {
+    const actions = document.createElement('div');
+    actions.className = 'structured-actions';
+
+    for (const [text, direction, word] of [['↑', -1, 'up'], ['↓', 1, 'down'], ['✕', 0, 'remove']]) {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'btn-sm';
+      button.textContent = text;
+      button.setAttribute('aria-label', direction ? `Move item ${index + 1} ${word}` : `Remove item ${index + 1}`);
+      const target = index + direction;
+      button.disabled = direction !== 0 && (target < 0 || target >= this.rows.length);
+
+      button.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (direction) {
+          [this.rows[index], this.rows[target]] = [this.rows[target], this.rows[index]];
+        } else {
+          this.rows.splice(index, 1);
+        }
+        this.changed();
+        this.render();
+        if (direction !== 0) this.list.children[target]?.focus();
+      });
+      actions.append(button);
+    }
+
+    return actions;
+  }
+
+  attachDragHandlers() {
+    this.list.querySelectorAll('.structured-row').forEach((row, index) => {
+      row.addEventListener('dragstart', (e) => {
+        this.dragState = index;
+        e.dataTransfer.effectAllowed = 'move';
+        e.dataTransfer.setData('text/plain', index);
+        row.classList.add('dragging');
+      });
+
+      row.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+      });
+
+      row.addEventListener('drop', (e) => {
+        e.preventDefault();
+        const dropIndex = parseInt(e.dataTransfer.getData('text/plain'), 10);
+        if (!isNaN(dropIndex) && dropIndex !== index) {
+          [this.rows[dropIndex], this.rows[index]] = [this.rows[index], this.rows[dropIndex]];
           this.changed();
           this.render();
-          const next = this.list.children[Math.min(target, this.rows.length - 1)];
-          (next?.querySelector('input') || this.root.querySelector('[data-add]')).focus();
-        });
-        actions.append(button);
-      }
-      row.append(actions);
-      this.list.append(row);
+        }
+        this.dragState = null;
+      });
+
+      row.addEventListener('dragend', () => {
+        row.classList.remove('dragging');
+        this.dragState = null;
+      });
+
+      row.setAttribute('tabindex', '0');
+      row.setAttribute('role', 'listitem');
+      row.setAttribute('aria-grabbed', 'false');
     });
   }
 
