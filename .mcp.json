@@ -1,5 +1,22 @@
 {
   "mcpServers": {
+    "portfolio": {
+      "command": "node",
+      "args": ["site/scripts/portfolio-mcp.mjs"],
+      "env": {
+        "CMS_API_BASE": "https://hasanabbassorathiya.tech/api",
+        "CMS_ADMIN_EMAIL": "admin@hasanabbassorathiya.tech"
+      },
+      "description": "Unified Portfolio MCP - All site operations: CMS content, media, CRM, build tools, file system. Use cms_auth_login for interactive auth or set CMS_API_TOKEN/CMS_API_CSRF for token auth."
+    },
+    "portfolio-cms": {
+      "command": "node",
+      "args": ["site/scripts/cms-mcp.mjs"],
+      "env": {
+        "CMS_API_BASE": "https://hasanabbassorathiya.tech/api"
+      },
+      "description": "Portfolio CMS API MCP server for content management, media, and CRM operations. Use cms_auth_login for interactive auth or set CMS_API_TOKEN/CMS_API_CSRF for token auth."
+    },
     "playwright": {
       "command": "npx",
       "args": [
@@ -7,7 +24,7 @@
         "--extension"
       ],
       "env": {
-        "PLAYWRIGHT_MCP_EXTENSION_TOKEN": "TkwfjZcL2ELeY5DklVK9NqBL4E0eY_BBwOjhXvzqeUE"
+        "PLAYWRIGHT_MCP_EXTENSION_TOKEN": "3uZJc7DXxpmY0Tmltjy6RNFV7QXCWmU5JRscL1j11BE"
       }
     },
     "claude-flow": {

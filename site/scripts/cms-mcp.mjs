@@ -17,10 +17,16 @@ class ApiError extends Error {
 }
 
 function config() {
-  const base = (process.env.CMS_API_BASE ?? '').replace(/\/$/, '');
-  const token = process.env.CMS_API_TOKEN ?? '';
-  const csrf = process.env.CMS_API_CSRF ?? '';
-  if (!base || !token) throw new Error('CMS_API_BASE and CMS_API_TOKEN must be set');
+  // Allow config from env vars OR from session/login
+  // Initialize apiBase from env on first call
+  if (apiBase === null && process.env.CMS_API_BASE) {
+    apiBase = process.env.CMS_API_BASE.replace(/\/$/, '');
+  }
+  const base = process.env.CMS_API_BASE?.replace(/\/$/, '') ?? apiBase ?? '';
+  const token = process.env.CMS_API_TOKEN ?? sessionToken ?? '';
+  const csrf = process.env.CMS_API_CSRF ?? sessionCsrf ?? '';
+  if (!base) throw new Error('CMS_API_BASE must be set (via env or cms_auth_login)');
+  if (!token) throw new Error('CMS_API_TOKEN or cms_auth_login required');
   const url = new URL(base);
   if (!['http:', 'https:'].includes(url.protocol)) throw new Error('CMS_API_BASE must be http(s)');
   return { base, token, csrf };
@@ -56,12 +62,62 @@ const obj = (properties, required = []) => ({ type: 'object', properties, requir
 const str = { type: 'string' };
 const int = { type: 'integer' };
 
+// Session storage for dynamic auth (token/csrf from login, or scoped token)
+let sessionToken = null;
+let sessionCsrf = null;
+let apiBase = null;
+
 const TOOLS = [
   {
-    name: 'cms_content_schema',
-    description: 'Return the field schema for a CMS entity (apps, clients, posts, projects, experiences, skills, testimonials, profile). Profile returns typed key/value fields.',
-    inputSchema: obj({ entity: str }, ['entity']),
-    handler: ({ entity }) => api('crud.php', { query: { entity, schema: '1' } }),
+    name: 'cms_auth_login',
+    description: 'Log in to the CMS admin API using email/password. Returns token, csrf, and expires_in for session use. After login, token/csrf are used for subsequent write operations until session expiry (7 days).',
+    inputSchema: obj({ email: str, password: str }, ['email', 'password']),
+    handler: async ({ email, password }) => {
+      const cfg = config();
+      const url = new URL(`auth.php?action=login`, cfg.base);
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+      const text = await res.text();
+      let data;
+      try { data = JSON.parse(text); } catch { data = text; }
+      if (!res.ok) throw new ApiError(res.status, data);
+      sessionToken = data.token;
+      sessionCsrf = data.csrf;
+      return data;
+    },
+  },
+  {
+    name: 'cms_session_clear',
+    description: 'Clear the current session token and CSRF. After calling this, cms_auth_login must be called again to perform write operations.',
+    inputSchema: obj({}),
+    handler: () => {
+      sessionToken = null;
+      sessionCsrf = null;
+      return { cleared: true };
+    },
+  },
+  {
+    name: 'cms_admin_info',
+    description: 'Return information about available CMS entities, their fields, and the current session status. Useful for understanding the data model before querying.',
+    inputSchema: obj({}),
+    handler: () => {
+      const entities = ['apps', 'clients', 'posts', 'projects', 'experiences', 'skills', 'testimonials', 'profile'];
+      return {
+        entities,
+        session: {
+          hasToken: !!sessionToken,
+          hasCsrf: !!sessionCsrf,
+          apiBase: apiBase,
+        },
+        auth: {
+          requiresLogin: !process.env.CMS_API_TOKEN,
+          loginEndpoint: 'cms_auth_login',
+        },
+      };
+    },
   },
   {
     name: 'cms_content_list',
@@ -218,7 +274,18 @@ async function handle(msg) {
         protocolVersion,
         capabilities: { tools: { listChanged: false } },
         serverInfo: SERVER_INFO,
-        instructions: 'Tools wrap the portfolio CMS HTTP API. Writes require CMS_API_CSRF alongside CMS_API_TOKEN.',
+        instructions: `Portfolio CMS API MCP server.
+
+Authentication: Set CMS_API_BASE (required) and CMS_API_TOKEN + CMS_API_CSRF for token auth, OR use cms_auth_login(email, password) to log in. Session tokens expire after 7 days.
+
+Available tools:
+- cms_auth_login: Log in with email/password
+- cms_session_clear: Clear current session
+- cms_admin_info: Get info about entities and session status
+- cms_content_*: CRUD operations for apps, clients, posts, profiles, etc.
+- cms_media_*: Media library operations
+- cms_crm_*: CRM operations (enquiries, subscribers, settings)
+`,
       },
     });
     return;
