@@ -140,28 +140,62 @@ with it. The reel's burned-in denominator is `1,063` (render-date snapshot, 2026
 post copy uses the live read `1,072` (2026-11-13). `21 apps` is the live CMS count measured 2026-11-03
 (`api/index.php?entity=apps` → 21 rows); `hasan.md` §5 still lists 15 and needs reconciling first.
 
-**Week 1 · master reel · LinkedIn** — SCHEDULED 2026-11-13 for **Sat 2026-11-14, 9:00 AM** (native
-scheduler, `master-16x9.mp4` attached). Follow-up framing (b) since the text launch went out 2 weeks
-ago; Duas line uses the live 1,072 read.
+**Week 1 · master reel · LinkedIn** — REWRITTEN 2026-11-14 with the marketing-psychology
+checklist applied; replaces the copy
+scheduled 2026-11-13 for Sat 9:00 AM (edit the scheduled post before it fires). Psychology mapping:
+information-gap hook before LinkedIn's "see more" fold; authority bias through checkable receipts
+(Play listing, pub.dev, credential ID — each opens in a new tab); social proof always carrying its
+denominator; contrast (logo PDF → receipts system); reciprocity (essays and package given first, ask
+second); pratfall (the GDE admission earns trust); peak-end (strongest receipt, then one CTA); Hick's
+law (one link, one action); narrow unity ("teams shipping Flutter or AI into regulated industries" —
+a domain, never a manufactured tribe). Still honoured: no scarcity, no fake urgency, no AI-slop
+adjectives, no number outside `hasan.md` §5.
 
-> I shared the site two weeks ago — here's the 45-second reel and the receipts behind it.
+> A portfolio you can't check is just a PDF with better fonts.
 >
-> 7+ years of shipping products people keep.
+> So I rebuilt mine as a system where every claim opens in a new tab:
 >
-> Good2Go Loans — 50,000+ users across New Zealand, fintech where the audit trail is the feature.
-> Nakheel Marinas — 15K+ downloads in the first month.
-> Duas and Aamal — 5.0 on Google Play, 1,072 ratings, live on both stores.
+> - Good2Go Loans — 50,000+ users in New Zealand, lending where the audit trail is the feature
+> - Nakheel Marinas — 15,000+ downloads in its first month
+> - Duas and Aamal — 5.0 across 1,072 Google Play ratings, live on both stores
+> - stoolap_flutter — v2.0.1 on pub.dev, the package I kept rebuilding for every client
+> - LangChain Academy — Introduction to LangChain certificate, verifiable by ID
 >
-> No case studies about work I did not do. The receipts are in the link.
+> 7+ years across fintech, mobility and community apps. 21 app profiles. 9 essays from production.
+>
+> I build AI systems and Flutter apps people keep using. I'm not a Google Developer Expert yet — this site is the work I'm putting in to earn it.
+>
+> The reel is here; the receipts are behind it:
 > https://hasanabbassorathiya.tech
 
-**Week 1 · master reel · X** (one idea, one link)
+**Week 1 · master reel · LinkedIn Featured** — add the reel post to Featured in the §5 order of
+[LINKEDIN.md](LINKEDIN.md): site, then `stoolap_flutter` on pub.dev, then the RAG essay, then apps,
+then résumé. The reel entry keeps working after the feed moves on; that is its job (mere exposure —
+the recruiter meets the same receipts twice).
 
-> 45 seconds, no voiceover, no stock footage — just the listings, the numbers and the commits. 21 apps, 9 essays, one site: https://hasanabbassorathiya.tech
+**Week 1 · master reel · YouTube** — `master-16x9.mp4` as a normal (not Short) upload. Silent with
+burned-in captions, so the description carries the links.
 
-**Week 1 · GitHub profile README** (16:9, muted)
+- Title: `I build AI systems and Flutter apps people keep using — 7+ years of receipts (portfolio reel)`
+- Description:
+  > A portfolio you can check. 20 seconds, no voiceover, no stock footage — the listings, the numbers and the commits.
+  >
+  > - Good2Go Loans — 50,000+ users in New Zealand
+  > - Nakheel Marinas — 15,000+ first-month downloads
+  > - Duas and Aamal — 5.0 across 1,072 Google Play ratings
+  > - stoolap_flutter — v2.0.1 on pub.dev
+  >
+  > Site: https://hasanabbassorathiya.tech · Résumé: /resume · Apps: /apps · Essays: /blog
+- Tags: `flutter, ai engineer, portfolio, mobile development, rag, langchain, dubai`
 
-> 7+ years of shipped Flutter, iOS and Android — the reel, then the receipts.
+**Week 1 · master reel · X** (one idea, one link — handle `@hasansorathiya` confirmed by the owner 2026-11-14)
+
+> Every claim on my portfolio opens in a new tab: a 50,000+ user lending app, a 5.0★ prayer app with 1,072 ratings, a package on pub.dev. 7+ years, receipts not adjectives: https://hasanabbassorathiya.tech
+
+**Week 1 · GitHub profile README** (16:9, muted; the FlowCV→`/resume` repoint already shipped in
+`hasanabbassorathiya/hasanabbassorathiya` commit `1c1ad35` — this adds the reel line)
+
+> 7+ years of shipped Flutter, iOS and Android — and the AI systems behind the product. Watch the reel, then check the receipts: https://hasanabbassorathiya.tech
 
 **Week 2 · `clip-duas` · Reels / Shorts**
 
