@@ -1,7 +1,8 @@
 <?php
 declare(strict_types=1);
-// Newsletter signup: POST {email, source, website} and GET ?unsubscribe=<token>
-// Deliberately no double opt-in: the only thing stored is an address the reader typed.
+// Signup intake: POST {email, source, website, name?, whatsapp?, consent?}.
+// Community signups carry name/optional WhatsApp and require consent:true.
+// GET ?unsubscribe=<token> deletes the row. No double opt-in: only typed data is stored.
 require __DIR__ . '/bootstrap.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
@@ -57,6 +58,22 @@ if (trim((string)($b['website'] ?? '')) !== '') json_out(['ok' => true]);
 $email = strtolower(trim((string)($b['email'] ?? '')));
 $source = substr(preg_replace('/[^a-z0-9:-]/', '', strtolower((string)($b['source'] ?? 'site'))) ?: 'site', 0, 40);
 
+$name = trim(preg_replace('/[\x00-\x1F\x7F]/u', '', (string)($b['name'] ?? '')));
+if (mb_strlen($name) > 120) json_out(['error' => 'name too long (max 120 characters)'], 422);
+
+$whatsapp = trim((string)($b['whatsapp'] ?? ''));
+if ($whatsapp !== '') {
+    $whatsapp = preg_replace('/[\s().-]/', '', $whatsapp);
+    if (!preg_match('/^\+?[1-9][0-9]{6,14}$/', $whatsapp)) {
+        json_out(['error' => 'valid WhatsApp number required (digits, optional leading +)'], 422);
+    }
+}
+
+$consent = ($b['consent'] ?? null) === true;
+if (($name !== '' || $whatsapp !== '') && !$consent) {
+    json_out(['error' => 'consent required to store a name or WhatsApp number'], 422);
+}
+
 if ($email === '' || strlen($email) > 190 || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
     json_out(['error' => 'valid email required'], 422);
 }
@@ -70,8 +87,44 @@ $st = $pdo->prepare('SELECT COUNT(*) FROM subscribers WHERE ip_hash = ? AND crea
 $st->execute([$ipHash]);
 if ((int)$st->fetchColumn() >= 5) json_out(['ok' => true]);
 
-$pdo->prepare('INSERT INTO subscribers (email, source, ip_hash, unsub_token) VALUES (?,?,?,?)
-               ON DUPLICATE KEY UPDATE source = VALUES(source)')
-    ->execute([$email, $source, $ipHash, bin2hex(random_bytes(16))]);
+$pdo->prepare('INSERT INTO subscribers (email, name, whatsapp, source, consent_at, consent_version, ip_hash, unsub_token)
+               VALUES (?,?,?,?,?,?,?,?)
+               ON DUPLICATE KEY UPDATE
+                 source = VALUES(source),
+                 name = IF(VALUES(name) = \'\', name, VALUES(name)),
+                 whatsapp = IF(VALUES(whatsapp) = \'\', whatsapp, VALUES(whatsapp)),
+                 consent_at = COALESCE(VALUES(consent_at), consent_at),
+                 consent_version = IF(VALUES(consent_version) = \'\', consent_version, VALUES(consent_version))')
+    ->execute([
+        $email, $name, $whatsapp, $source,
+        $consent ? date('Y-m-d H:i:s') : null,
+        $consent ? 'community-v1' : '',
+        $ipHash, bin2hex(random_bytes(16)),
+    ]);
+
+// Autopilot: mirror the address into the Brevo list when configured. Best-effort —
+// the local row is the source of truth and a Brevo outage must not fail the signup.
+$mailSecret = __DIR__ . '/mail-secret.php';
+if (is_file($mailSecret)) {
+    $mail = require $mailSecret;
+    if (is_array($mail) && !empty($mail['brevo_key']) && !empty($mail['brevo_list'])) {
+        $ch = curl_init('https://api.brevo.com/v3/contacts');
+        curl_setopt_array($ch, [
+            CURLOPT_POST => true,
+            CURLOPT_POSTFIELDS => json_encode([
+                'email' => $email,
+                'listIds' => [(int)$mail['brevo_list']],
+                'updateEnabled' => true,
+            ]),
+            CURLOPT_HTTPHEADER => ['api-key: ' . $mail['brevo_key'], 'Content-Type: application/json'],
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_TIMEOUT => 3,
+        ]);
+        $resp = curl_exec($ch);
+        $code = (int)curl_getinfo($ch, CURLINFO_RESPONSE_CODE);
+        curl_close($ch);
+        if ($resp === false || $code >= 400) error_log('subscribe: brevo sync failed (' . $code . ')');
+    }
+}
 
 json_out(['ok' => true], 201);

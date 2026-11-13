@@ -306,6 +306,28 @@ SUB_ID=$(printf '%s' "$SUB_LIST" | php -r '$d=json_decode(stream_get_contents(ST
 SUB_DEL=$(curl -s -o /dev/null -w '%{http_code}' -X DELETE "${WRITE_H[@]}" "$BASE/api/crm.php?resource=subscribers&id=$SUB_ID")
 [ "$SUB_DEL" = "200" ] || fail "crm subscriber delete returned $SUB_DEL"
 
+# ---- Community signup: name + optional WhatsApp + consent ----
+COMM='{"name":"Community Person","email":"community@example.test","whatsapp":"+971 50 123 4567","source":"community","consent":true,"website":""}'
+COMM_CODE=$(curl -s -o /dev/null -w '%{http_code}' -X POST -H 'Content-Type: application/json' --data "$COMM" "$BASE/api/subscribe.php")
+[ "$COMM_CODE" = "201" ] || fail "community signup returned $COMM_CODE"
+dbsql "SELECT name FROM subscribers WHERE email='community@example.test'" | grep -q 'Community Person' || fail "community name not stored"
+dbsql "SELECT whatsapp FROM subscribers WHERE email='community@example.test'" | grep -q '+971501234567' || fail "whatsapp not normalized to E.164"
+[ "$(dbsql "SELECT consent_at IS NOT NULL FROM subscribers WHERE email='community@example.test'")" = "1" ] || fail "consent_at not stored"
+[ "$(dbsql "SELECT consent_version FROM subscribers WHERE email='community@example.test'")" = "community-v1" ] || fail "consent_version not stored"
+NOCONSENT_CODE=$(curl -s -o /dev/null -w '%{http_code}' -X POST -H 'Content-Type: application/json' --data '{"name":"No Consent","email":"noconsent@example.test","source":"community","website":""}' "$BASE/api/subscribe.php")
+[ "$NOCONSENT_CODE" = "422" ] || fail "name without consent returned $NOCONSENT_CODE (expected 422)"
+BADWA_CODE=$(curl -s -o /dev/null -w '%{http_code}' -X POST -H 'Content-Type: application/json' --data '{"email":"badwa@example.test","whatsapp":"not-a-number","consent":true,"website":""}' "$BASE/api/subscribe.php")
+[ "$BADWA_CODE" = "422" ] || fail "invalid whatsapp returned $BADWA_CODE (expected 422)"
+COMM_UP='{"email":"community@example.test","name":"Renamed Person","source":"community","consent":true,"website":""}'
+COMM_UP_CODE=$(curl -s -o /dev/null -w '%{http_code}' -X POST -H 'Content-Type: application/json' --data "$COMM_UP" "$BASE/api/subscribe.php")
+[ "$COMM_UP_CODE" = "201" ] || fail "community upsert returned $COMM_UP_CODE"
+dbsql "SELECT name FROM subscribers WHERE email='community@example.test'" | grep -q 'Renamed Person' || fail "upsert did not update name"
+dbsql "SELECT whatsapp FROM subscribers WHERE email='community@example.test'" | grep -q '+971501234567' || fail "upsert wiped whatsapp"
+COMM_LIST=$(curl -s "${AUTH_H[@]}" "$BASE/api/crm.php?resource=subscribers")
+grep -q 'Renamed Person' <<<"$COMM_LIST" || fail "crm subscribers list missing name"
+grep -q '+971501234567' <<<"$COMM_LIST" || fail "crm subscribers list missing whatsapp"
+echo "PASS: community signup — name/WhatsApp/consent stored, validation, upsert, CRM surface"
+
 # ---- CRM API: settings ----
 SET_GET=$(curl -s "${AUTH_H[@]}" "$BASE/api/crm.php?resource=settings")
 grep -q -- '"ga4_id"' <<<"$SET_GET" || fail "crm settings get missing ga4_id"

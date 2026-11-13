@@ -128,7 +128,11 @@ CREATE TABLE IF NOT EXISTS posts (
 CREATE TABLE IF NOT EXISTS subscribers (
   id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   email VARCHAR(190) NOT NULL UNIQUE,
-  source VARCHAR(40) DEFAULT '',                  -- blog-index | post:<slug> | home-writing
+  name VARCHAR(120) NOT NULL DEFAULT '',
+  whatsapp VARCHAR(32) NOT NULL DEFAULT '',
+  source VARCHAR(40) DEFAULT '',                  -- blog-index | post:<slug> | home-writing | community
+  consent_at DATETIME NULL,
+  consent_version VARCHAR(32) NOT NULL DEFAULT '',
   ip_hash CHAR(64) DEFAULT '',                    -- sha256(ip + pepper); never the raw IP
   unsub_token CHAR(32) NOT NULL UNIQUE,           -- emailed unsubscribe link
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

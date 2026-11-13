@@ -102,19 +102,19 @@ Also builds AI systems: LLM applications, RAG pipelines, agents, and automation 
 
 | Metric | Value | Source |
 |--------|-------|--------|
-| Years experience | 6+ | Owner-confirmed; earlier route Jan 2019 |
+| Years experience | 7+ | Owner decision 2026-11-12; earliest role Jan 2019 |
 | App profiles | 21 | Live CMS `api/index.php?entity=apps` → 21 rows, measured 2026-11-03; 18 carry a store or source link. §6 enumerates 17 of them — BlankSpace, WallMaster and Business Mind exist on the site only |
 | Good2Go Loans users | 50,000+ | Client outcome, New Zealand |
 | Conversion lift | ~25% | Masaar re-architecture |
 | First-month downloads | 15K+ | Nakheel Marinas |
 | GitHub contributions (12 mo) | 565 | github.com/hasanabbassorathiya |
 | Public repos | 52 | GitHub API |
-| Duas and Aamal rating | 5.0 (1,063 reviews) | Google Play JSON-LD read live 2026-11-03 (was 4.9 / 1,058 in this table; the site card still shows the old pair) |
+| Duas and Aamal rating | 5.0 (1,072 reviews) | Google Play JSON-LD read live 2026-11-13 (1,063 on 2026-11-03; 4.9 / 1,058 before that) |
 
 ## 6. Apps
 
 ### Own apps (published under Hasan's developer account)
-1. **Duas and Aamal** — iOS `id6478907381` · 5.0★ (1,063 Play reviews, read live 2026-11-03) · Education · 357.6 MB · iOS 15+
+1. **Duas and Aamal** — iOS `id6478907381` · 5.0★ (1,072 Play reviews, read live 2026-11-13) · Education · 357.6 MB · iOS 15+
    - Quran with Gujarati translation, duas, aamal, ziyarats, prayer times, tasbih, qibla.
    - Languages: English, Urdu, Gujarati, Swahili, Persian. TV experience, widgets, prayer notifications, offline mode, bookmarks.
    - Links: https://apps.apple.com/ae/app/duas-and-aamal/id6478907381 · https://play.google.com/store/apps/details?id=app.duasandaamal.com

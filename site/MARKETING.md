@@ -123,7 +123,10 @@ Weeks 2–5 exist so the streak, not a single launch spike, is what registers.
 ## 5. Measurement
 
 - **Inbound** — the enquiry form's source field, the opportunities table, and `/resume` + `/services`
-  visits. First-party analytics only; GA4 measurement ID is still an owner-blocked input.
+  visits. First-party beacon plus GA4 (measurement ID `G-6W9FY8CEE5`, live via CMS settings). Both
+  sinks are consent-gated: a cookie banner asks before anything loads, and DNT/GPC declines by
+  default. The banner went live with the 2026-11-12 consent build (owner-approved) and is verified
+  in production: no beacon or GA4 before consent, GA4 boots only after Accept, Decline stays off.
 - **Reach** — per-channel views and profile clicks, recorded by hand in `marketing/<date>/metrics.csv`
   on day 3 and day 14 after each post.
 - **Search** — Google Search Console and Bing Webmaster Tools are verified; sitemap submitted,
@@ -138,6 +141,16 @@ the honest version of a result is the only version that helps the next one.
 
 ## 6. Owner-blocked, unchanged
 
-Publishing to any account · the live deploy of `/brand`, the press kit, and the schema/footer edits
-still unshipped · X, Discord, Reddit, Dev.to, Product Hunt handles · Cal.com URL · GA4 · referral
-URLs · mail credentials. Nothing here invents any of them.
+Publishing to any account (every post needs its own approval) · X, Discord, Reddit, Dev.to,
+Product Hunt handles · referral URLs · mail credentials. Nothing here invents any of them.
+
+**Resolved since 2026-11-03:** GA4 is live (`G-6W9FY8CEE5` via CMS) and the Cal.com booking URL is
+set (`https://cal.com/hasanabbassorathiya`). GitHub profile (README, pins, metadata) and LinkedIn
+profile (headline, About, location, website) are published. The consent build (cookie banner,
+AI-first headline, corrected Instrument Serif) deployed to the live docroot on 2026-11-12 with
+owner approval; `api/config.php` was preserved byte-for-byte and a pre-deploy backup is kept on-box.
+
+**Resolved — the experience figure.** The owner chose **"7+ years"** everywhere. The master and
+consulting reels were re-rendered with "7+ years" captions (2026-11-12), the site's `profile.js`
+and the live CMS `profile.experience_years` both read `7`, and the LinkedIn/GitHub profiles say 7+.
+One figure across profile + reel + site; the launch post can ship against it.

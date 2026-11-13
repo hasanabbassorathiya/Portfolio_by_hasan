@@ -134,17 +134,23 @@ where and when each file goes out is in [MARKETING.md](MARKETING.md). Silent wit
 captions, so the first line here is the only thing a muted viewer reads before the video starts.
 
 Every number below is from `hasan.md` §5, the live CMS, or re-read at the render's `assets` gate.
-Never "7 years", never a `100K+` aggregate, never a star rating on screen unless its denominator is
-with it and the denominator is `1,063`. `21 apps` is the live CMS count measured 2026-11-03
+The years figure is **7+** everywhere per the owner's 2026-11-12 decision (profiles, site, reel).
+Never a `100K+` aggregate, never a star rating on screen unless its denominator is
+with it. The reel's burned-in denominator is `1,063` (render-date snapshot, 2026-11-03);
+post copy uses the live read `1,072` (2026-11-13). `21 apps` is the live CMS count measured 2026-11-03
 (`api/index.php?entity=apps` → 21 rows); `hasan.md` §5 still lists 15 and needs reconciling first.
 
-**Week 1 · master reel · LinkedIn**
+**Week 1 · master reel · LinkedIn** — SCHEDULED 2026-11-13 for **Sat 2026-11-14, 9:00 AM** (native
+scheduler, `master-16x9.mp4` attached). Follow-up framing (b) since the text launch went out 2 weeks
+ago; Duas line uses the live 1,072 read.
 
-> Six years of shipping products people keep.
+> I shared the site two weeks ago — here's the 45-second reel and the receipts behind it.
+>
+> 7+ years of shipping products people keep.
 >
 > Good2Go Loans — 50,000+ users across New Zealand, fintech where the audit trail is the feature.
 > Nakheel Marinas — 15K+ downloads in the first month.
-> Duas and Aamal — 5.0 on Google Play, 1,063 ratings, live on both stores.
+> Duas and Aamal — 5.0 on Google Play, 1,072 ratings, live on both stores.
 >
 > No case studies about work I did not do. The receipts are in the link.
 > https://hasanabbassorathiya.tech
@@ -155,11 +161,11 @@ with it and the denominator is `1,063`. `21 apps` is the live CMS count measured
 
 **Week 1 · GitHub profile README** (16:9, muted)
 
-> Six years of shipped Flutter, iOS and Android — the reel, then the receipts.
+> 7+ years of shipped Flutter, iOS and Android — the reel, then the receipts.
 
 **Week 2 · `clip-duas` · Reels / Shorts**
 
-> 5.0★ across 1,063 Play ratings: Quran with Gujarati translation, prayer times, widgets, offline mode — built Gujarati-first. https://hasanabbassorathiya.tech/apps
+> 5.0★ across 1,072 Play ratings: Quran with Gujarati translation, prayer times, widgets, offline mode — built Gujarati-first. https://hasanabbassorathiya.tech/apps
 
 **Week 3 · `clip-bulbvpn`**
 

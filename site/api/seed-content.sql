@@ -10,7 +10,7 @@ ON DUPLICATE KEY UPDATE `name` = VALUES(`name`), `kicker` = VALUES(`kicker`), `t
 
 
 INSERT INTO `apps` (`slug`, `name`, `tagline`, `role`, `year`, `platforms`, `genre`, `icon`, `screenshots`, `rating_value`, `rating_count`, `stack`, `links`, `summary`, `features`, `story`, `metrics`, `published`, `sort_order`) VALUES
-  ('duas-and-aamal', 'Duas and Aamal', 'A daily companion for duas, aamal, and prayer — built Gujarati-first.', 'Creator · Flutter developer', '2023 — present', '["iOS","Android"]', 'Education', '/media/apps/duas-and-aamal/icon.webp', '["/media/apps/duas-and-aamal/shot1.webp","/media/apps/duas-and-aamal/shot2.webp"]', 4.9, 1058, '["Flutter","Dart","Firebase","Offline-first","5 languages","Android TV"]', '{"ios":"https://apps.apple.com/ae/app/duas-and-aamal/id6478907381","android":"https://play.google.com/store/apps/details?id=app.duasandaamal.com"}', 'A complete Quran companion app: Quran with Gujarati translation, duas, aamal, ziyarats, Jafari prayer times with moon-sighting adjustment, tasbih, qibla, widgets, and offline content in five languages.', '["Quran with Gujarati translation and Arabic text","Duas, aamal, and ziyarats with offline access","Jafari prayer times with moon-sighting adjustment","Tasbih counter, Qibla direction, home-screen widgets","English, Urdu, Gujarati, Swahili, and Persian","Prayer notifications, bookmarks, and an Android TV layout"]', 'Most religious apps treat Gujarati as a translation afterthought. I built Duas and Aamal around the opposite assumption: Gujarati-speaking families should get a first-class experience, with Arabic text rendered correctly and prayer times calculated properly rather than approximated. The content pipeline runs through a small custom CMS (duas-crm), so updates ship without an app release. Five languages, offline access, and a 4.9-star rating on Google Play came from listening to the community that uses it daily.', '[["4.9★","Google Play rating"],["1,058","Play reviews"],["5","Languages"],["Offline","Full content access"]]', 1, 0),
+  ('duas-and-aamal', 'Duas and Aamal', 'A daily companion for duas, aamal, and prayer — built Gujarati-first.', 'Creator · Flutter developer', '2023 — present', '["iOS","Android"]', 'Education', '/media/apps/duas-and-aamal/icon.webp', '["/media/apps/duas-and-aamal/shot1.webp","/media/apps/duas-and-aamal/shot2.webp"]', 5, 1072, '["Flutter","Dart","Firebase","Offline-first","5 languages","Android TV"]', '{"ios":"https://apps.apple.com/ae/app/duas-and-aamal/id6478907381","android":"https://play.google.com/store/apps/details?id=app.duasandaamal.com"}', 'A complete Quran companion app: Quran with Gujarati translation, duas, aamal, ziyarats, Jafari prayer times with moon-sighting adjustment, tasbih, qibla, widgets, and offline content in five languages.', '["Quran with Gujarati translation and Arabic text","Duas, aamal, and ziyarats with offline access","Jafari prayer times with moon-sighting adjustment","Tasbih counter, Qibla direction, home-screen widgets","English, Urdu, Gujarati, Swahili, and Persian","Prayer notifications, bookmarks, and an Android TV layout"]', 'Most religious apps treat Gujarati as a translation afterthought. I built Duas and Aamal around the opposite assumption: Gujarati-speaking families should get a first-class experience, with Arabic text rendered correctly and prayer times calculated properly rather than approximated. The content pipeline runs through a small custom CMS (duas-crm), so updates ship without an app release. Five languages, offline access, and a 5.0-star rating on Google Play came from listening to the community that uses it daily.', '[["5.0★","Google Play rating"],["1,072","Play reviews"],["5","Languages"],["Offline","Full content access"]]', 1, 0),
   ('carvan-e-hind', 'Carvan-e-Hind', 'The community platform for Carvan-e-Hind Trust — events, media, and members.', 'Flutter developer & maintainer', '2024 — 2026', '["iOS","Android"]', 'Social Networking', '/media/apps/carvan-e-hind/icon.webp', '["/media/apps/carvan-e-hind/shot1.webp","/media/apps/carvan-e-hind/shot2.webp"]', 5, 4, '["Flutter","REST APIs","Firebase","Push notifications"]', '{"ios":"https://apps.apple.com/in/app/carvan-e-hind/id6745079091"}', 'A community app for the Dawoodi Bohra community: announcements, events, media, and member engagement in one place, built and maintained end to end in Flutter.', '["Event discovery and community announcements","Media library with offline-friendly downloads","Member directory and engagement flows","Push notifications for time-sensitive updates","Android and iOS releases from a single codebase"]', 'Community apps live or die on trust: the content has to be current, the notifications have to be relevant, and the app has to work on the phones people actually carry. I rebuilt the delivery around a predictable release train, moved content operations to a structured pipeline, and kept the UI simple enough for first-time smartphone users. The result is a 5-star rated app that the trust actually uses.', '[["5.0★","App Store rating"],["2","Platforms"],["Single","Flutter codebase"]]', 1, 1),
   ('lumio-tv', 'Lumio TV', 'An IPTV player that behaves well on phones, tablets, and Android TV.', 'Lead developer', '2024', '["iOS","Android","Web","Android TV"]', 'Entertainment', '/media/apps/lumio-tv/icon.webp', '["/media/apps/lumio-tv/shot1.webp","/media/apps/lumio-tv/shot2.webp"]', NULL, NULL, '["Flutter","M3U","Xtream Codes","EPG","Android TV"]', '{"ios":"https://apps.apple.com/us/app/lumio-tv-iptv-player/id6766064122","android":"https://play.google.com/store/apps/details?id=app.lumio_iptv.com","web":"https://lumiotv.web.app/"}', 'A multi-provider IPTV client with M3U and Xtream support, live EPG, channel management, and resilient playback across mobile, web, and Android TV.', '["M3U playlists and Xtream Codes providers","Live EPG guide with channel metadata","Favorites, recents, and channel search","Android TV focus navigation and remote support","Resilient stream recovery and error states","Shared Flutter core across iOS, Android, and web"]', 'IPTV is a hostile environment: providers change formats, streams stall, and users expect television-grade reliability. I built Lumio TV around a tolerant parser, explicit playback states, and a remote-first TV interface, then reused the same core for mobile and web. The interesting engineering was not the player — it was making failure legible so users know whether the network, the provider, or the stream is the problem.', '[["4","Platforms"],["M3U + Xtream","Provider formats"],["TV-first","Interaction model"]]', 1, 2),
   ('14-stars', '14 Stars', 'An all-in-one Islamic app for Quran, Hadith, Nauhas, and daily practice.', 'Flutter developer (contributed)', '2023', '["iOS"]', 'Education', '/media/apps/14-stars/icon.webp', '["/media/apps/14-stars/shot1.webp","/media/apps/14-stars/shot2.webp"]', 4.8, 12, '["Flutter","Audio playback","Calendar","Offline content"]', '{"ios":"https://apps.apple.com/ae/app/14-stars/id1526359119"}', 'A comprehensive Islamic companion covering Quran, Hadith, Nauhas, Manqabats, Ziyarats, a calendar, Namaz timings, and Qibla direction.', '["Quran, Hadith, Nauhas, and Manqabats","Ziyarats and religious calendar","Namaz timings and Qibla direction","Audio playback and offline reading","Long-term maintenance across iOS releases"]', '14 Stars is a mature codebase with a large content surface and years of accumulated behavior. My contribution focused on stabilizing playback, improving content navigation, and keeping releases healthy across iOS versions. Working on a widely used app with an established audience is a different discipline from greenfield work: every change has to respect habits people already have.', '[["4.8★","App Store rating"],["iOS","Platform"],["Long-term","Maintenance"]]', 1, 3),
@@ -35,6 +35,221 @@ ON DUPLICATE KEY UPDATE `name` = VALUES(`name`), `tagline` = VALUES(`tagline`), 
 
 
 INSERT INTO `posts` (`slug`, `title`, `dek`, `post_date`, `category`, `tags`, `minutes`, `body`, `published`) VALUES
+  ('run-bonsai-2-27b-locally', 'Run a 27B model on your laptop: Bonsai 2, locally', 'Prism ML’s ternary-quantized Bonsai 2 squeezes a 27.8B model into about 6 GB. The exact local setup — which quant to pick, the llama.cpp fork you need, and the commands that actually run it.', '2026-11-13', 'Local LLM', '["Local LLM","AI","Tutorial"]', 4, 'Every few months a model lands that makes "run it locally" stop being a joke. Bonsai 2 is one of them. Prism ML released a ternary-quantized 27.8B model that fits in roughly 6 GB, which means a recent laptop — not a server, not a cloud bill — can drive a model in the same weight class as the ones you pay an API for.
+
+I build mobile and AI products for a living, and the question I keep getting is "can we run this on-device, or at least on a machine we control?" This post is the concrete answer for Bonsai 2: which file to download, the one gotcha that makes most setups fail, and the commands that actually run it.
+
+## What Bonsai 2 actually is
+
+Per [Prism ML''s launch note](https://prismml.com/news/prismml-launches-bonsai-2-27b) and the [model card](https://huggingface.co/prism-ml/Ternary-Bonsai-2-27B-gguf), the facts worth knowing:
+
+- It is a 27.8B-parameter multimodal model derived from Qwen3.8-27B, with a hybrid attention architecture.
+- The trick is ternary quantization — weights stored at roughly 1.75 to 2.25 bits instead of 16. Prism ML reports an aggregate benchmark score of 83.9, retaining about 98.2% of the base model''s performance. Those are their numbers, not mine; treat them as a claim to verify on your own tasks.
+- Context length is inherited from the base model: 262K tokens, though what you can actually use depends on your hardware.
+- License is Apache 2.0, so commercial use is fine.
+
+The headline is the size-to-capability ratio. A dense 27B at FP16 is around 54 GB and does not fit on a laptop. The ternary build is under 6 GB.
+
+## Pick the right quant (this is the gotcha)
+
+The model card ships several variants, and they are not interchangeable:
+
+| Variant | Size | Runs on |
+|---------|------|---------|
+| PTQ1_0 | 5.95 GB | Prism ML''s llama.cpp fork only |
+| PQ2_0 | 7.21 GB | Prism ML''s llama.cpp fork only |
+| Q2_0 | 7.63 GB | Stock llama.cpp b11556 or newer |
+| F16 | 53.8 GB | Full precision, not for laptops |
+
+Here is the part that burns people: the smallest files (PTQ1_0 and PQ2_0) use ternary kernels that **stock llama.cpp will reject as an unknown type**. If you grab the 5.95 GB file and run it with a normal build, it will not load. You have two clean paths:
+
+1. Use the Prism ML fork for the smallest, fastest quants.
+2. Use the Q2_0 file with a recent stock llama.cpp (b11556+, which added the needed activation support). Older stock builds produce garbage output, so do not skip the version check.
+
+If you just want it working with the least friction, Q2_0 on a current stock build is the safe choice. If you want the smallest footprint, use the fork.
+
+## Path A: the Prism ML fork (smallest footprint)
+
+Build the fork with the ternary kernels. On macOS, Metal is the default, so drop the CUDA flag:
+
+```bash
+git clone https://github.com/PrismML-Eng/llama.cpp && cd llama.cpp
+cmake -B build -DGGML_CUDA=ON && cmake --build build -j
+# on macOS: cmake -B build && cmake --build build -j
+```
+
+Download the quant you want, then run it:
+
+```bash
+hf download prism-ml/Ternary-Bonsai-2-27B-gguf Ternary-Bonsai-2-27B-PQ2_0.gguf --local-dir .
+
+./bin/llama-cli -m Ternary-Bonsai-2-27B-PQ2_0.gguf \\
+    -ngl 99 -fa on -c 32768 \\
+    --temp 1.0 --top-p 0.95 --top-k 20 --min-p 0.05 \\
+    -p "Explain quantum computing in simple terms." -n 16384
+```
+
+The flags that matter: `-ngl 99` offloads every layer to the GPU, `-fa on` enables flash attention, `-c 32768` sets a 32K context (raise it if you have the memory), and `-n 16384` leaves room for the model''s thinking traces. The model card recommends `--min-p 0.05` for better instruction following.
+
+## Path B: stock llama.cpp (least friction)
+
+If you would rather not build a fork, take the Q2_0 file and a current stock build:
+
+```bash
+hf download prism-ml/Ternary-Bonsai-2-27B-gguf Ternary-Bonsai-2-27B-Q2_0.gguf --local-dir .
+
+llama-cli -m Ternary-Bonsai-2-27B-Q2_0.gguf \\
+    -ngl 99 -fa on -c 32768 \\
+    --temp 1.0 --top-p 0.95 --top-k 20 --min-p 0.05 \\
+    -p "Summarize the trade-offs of ternary quantization." -n 16384
+```
+
+## Path C: Ollama or LM Studio
+
+If you live in a GUI, both can pull it straight from Hugging Face:
+
+```bash
+ollama run hf.co/prism-ml/Ternary-Bonsai-2-27B-gguf:F16
+```
+
+LM Studio uses the protocol link `lmstudio://open_from_hf?model=prism-ml/Ternary-Bonsai-2-27B-gguf`. Note the Ollama example pulls F16, which is the 54 GB file — fine on a big machine, but pick a smaller quant if you are on a laptop.
+
+## What to expect on real hardware
+
+The model card lists roughly 130 tokens/second on an RTX 5090, about 28 on an Apple M5 Pro and 47 on an M5 Max, and around 30 on an L4. Prism ML''s launch note quotes up to 143 tokens/second on the 5090. Again, these are reported figures — your throughput will depend on quant, context length, and how much fits in memory. The practical floor is about 6 GB of RAM or VRAM to load the smallest build.
+
+If you want image input, there is an optional Q8_0 vision tower (a 0.63 GB mmproj file) that you load only when you need it.
+
+## Why this matters for the work I do
+
+The reason I care about a model like this is not the benchmark. It is the deployment shape. A 27B-class model that runs on hardware you control changes three things: latency stops being a network round-trip, sensitive data never leaves the device, and the marginal cost of a query goes to zero. For a mobile product, that is the difference between "AI feature we rent" and "AI feature we own."
+
+Ternary quantization is the technique to watch. If a 9x size reduction really holds ~98% of quality across tasks, the on-device ceiling moves a lot. Verify it on your own workload before you bet a feature on it — but the direction is unmistakable.
+
+If you are weighing on-device versus API for a product and want a second opinion on the trade-offs, [send me the details](mailto:hasanabbassorathiya12@gmail.com?subject=Local%20LLM). I have shipped enough of both to know where each one breaks.', 1),
+  ('qwen4-max-preview-what-changes', 'Qwen4-Max is in preview: what actually changes for builders', 'Alibaba opened Qwen4-Max-Preview on Nov 11 — the first Qwen4 model, aimed at coding and agentic work, with a reported 1M-token context. What is confirmed, what is only reported, and how to evaluate it.', '2026-11-13', 'AI', '["AI","LLM","Qwen"]', 3, 'On November 11, Alibaba opened a preview of Qwen4-Max — the first model of the Qwen4 generation anyone can actually use. If you build AI features, the interesting part is not the launch headline. It is the shape of the thing: a flagship aimed squarely at coding and agentic work, with a reported million-token context window, available only through a limited preview.
+
+I have been moving my own work from Flutter toward AI engineering, so I read releases like this through one lens: what does it change for someone shipping a feature next quarter? Here is what is confirmed, what is only reported, and how I would evaluate it.
+
+## What Alibaba has actually said
+
+It is worth separating the official claims from the spec-sheet gossip, because a lot of the coverage blends them.
+
+Alibaba''s official positioning, as reported in launch coverage, is qualitative: "deeper knowledge," "richer world understanding," and "stronger coding and agentic capabilities." Notably, **no official benchmarks, context-window figure, or output limits were published for the preview.** That is a real gap, and it matters — a preview without published numbers is an invitation to test, not to trust.
+
+The concrete figures circulating come from API aggregators and trackers, not from an Alibaba spec sheet:
+
+- A **1M-token context window**, reported by API providers like [AIHubMix](https://aihubmix.com/blog/qwen4-max-preview-api-1m-context-max-tokens-change-nov-25-cutoff) and tracked on [LLM Stats](https://llm-stats.com/models/qwen4-max-preview).
+- A change to the `max_tokens` behavior versus the previous generation.
+- Multimodal input.
+- A preview window of roughly **November 11–25, 2026**, accessed through Alibaba''s Token Plan, with no pay-as-you-go option during the preview.
+
+Treat the 1M figure as reported, not guaranteed, until you see it in the API you are actually calling.
+
+## Why the context window is the story
+
+If the million-token context holds up in practice, it changes a design decision I have written about before: how much retrieval you need. A large enough window lets you hand the model whole codebases, long documents, or multi-file diffs instead of carefully chunked snippets. That does not make retrieval disappear — stuffing a million tokens is slow and expensive, and relevance still beats volume — but it shifts the default. Tasks that used to require a RAG pipeline become "paste the whole thing and ask."
+
+For agentic coding specifically, a big window plus stronger tool use is the combination that matters. An agent that can hold an entire repository in context and act on it is a different tool from one that sees eight retrieved chunks.
+
+## How I would evaluate it before switching
+
+A preview is exactly the time to build a small, honest evaluation, not to migrate production. My checklist:
+
+1. **Run your real tasks.** Take 20–30 prompts from your actual workload — the code you refactor, the documents you summarize — and compare Qwen4-Max against whatever you use today. Vendor benchmarks do not know your domain.
+2. **Verify the context claim.** Feed a genuinely long input and check whether quality holds at the far end, not just whether the API accepts it. Accepting a million tokens and using them well are different things.
+3. **Measure latency and cost per task.** A bigger window can mean slower time-to-first-token. For an interactive feature, that is often the deciding factor.
+4. **Check the access model.** Token-Plan-only, time-boxed access is fine for evaluation but is not a foundation to ship on. Know what happens on November 25.
+
+## The honest take
+
+Qwen4-Max-Preview looks like a serious step for coding and agent work, and the reported context window is the kind of capability that reshapes architecture decisions. But it is a preview with unpublished official specs, a short access window, and numbers that currently come from third parties. That is a reason to test it this week, not a reason to rewrite your stack.
+
+The broader signal is the one I keep coming back to: the frontier is moving toward long-context, agentic models, and the gap between "demo" and "dependable" is still closed by evaluation, not by launch posts.
+
+If you are deciding whether a long-context model changes your retrieval design and want a second opinion, [send me the details](mailto:hasanabbassorathiya12@gmail.com?subject=Qwen4%20evaluation). I am running these evaluations myself and happy to compare notes.', 1),
+  ('microsoft-365-outage-dependency-lessons', 'What the Microsoft 365 outage teaches about single-vendor dependency', 'On Nov 12–13, Outlook, Teams, Word and Excel went down worldwide — servers, not a cyberattack. If your product leans on one cloud, here is the resilience checklist I keep coming back to.', '2026-11-13', 'Reliability', '["Reliability","Architecture","Build in public"]', 4, 'On November 12 and into November 13, a large slice of the working world lost access to Outlook, Teams, Word and Excel. Reporting from the [Guardian](https://www.theguardian.com/technology/2026/nov/13/microsoft-outage-outlook-teams-word-excel-reports), [DW](https://www.dw.com/en/microsoft-works-to-restore-outlook-and-teams-after-global-outage/a-79935611) and [ABC](https://www.abc.net.au/news/2026-11-13/microsoft-outlook-outage/107380958) describes businesses, schools and government offices unable to send mail or join meetings. Microsoft''s own account, as relayed in that coverage, is that a significant number of its servers became unavailable and failed automated checks — and that it ruled out a cyberattack.
+
+I am not writing this to pile on. I am writing it because I have shipped products that lean on exactly these services, and an outage like this is the cheapest possible reminder of a lesson that is expensive to learn in production: **a dependency you do not control is a failure mode you do not control.**
+
+## What actually happened, briefly
+
+The confirmed shape, from the reporting above:
+
+- Microsoft 365 services — Outlook, Teams, Word, Excel — were disrupted across multiple regions, starting November 12 and continuing into November 13.
+- Microsoft attributed it to servers becoming unavailable, not an attack.
+- Early fixes did not fully restore service, which is why it dragged on rather than resolving in minutes.
+
+That last point is the one engineers should sit with. A failure that is detected quickly but *fixed slowly* is its own category of problem, and it is the one that hurts most, because every downstream system sits in a degraded state for hours.
+
+## The lesson is not "avoid the cloud"
+
+The lazy takeaway is "don''t depend on Microsoft." That is not realistic — these tools are embedded in how organizations work, and ripping them out is not a resilience strategy. The real lesson is about how your own product behaves when a dependency it cannot control goes down.
+
+Here is the checklist I keep coming back to, and that this outage re-validated:
+
+### Degrade, don''t cascade
+
+When a downstream service fails, your product should lose a feature, not its life. If auth, mail, or a document store is unreachable, the rest of the app should keep working. That means timeouts on every external call, circuit breakers so you stop hammering a dead service, and a UI that says "this is temporarily unavailable" instead of spinning forever or crashing.
+
+### Cache what you can, and say how old it is
+
+A lot of outage pain is read-path pain. If your product reads from a service, a stale-but-labeled cache turns a hard outage into a soft one. The key is honesty: show the data and show its age, so a user knows they are looking at yesterday''s snapshot rather than assuming it is live.
+
+### Make the dependency visible
+
+If your product depends on a third party, surface that dependency''s status somewhere a human can find it. A status link, a banner, or a clear error message beats a support queue full of "is it just me?" During this outage, the teams that communicated "this is a Microsoft-side issue, here is their status page" looked competent; the ones that went silent looked broken.
+
+### Decide, in advance, what truly needs a fallback
+
+Not every dependency deserves a second provider. The discipline is triaging: which ones, if they fail, stop the business? For those, you either build a fallback or you accept the risk explicitly and write it down. For everything else, graceful degradation is enough. Multi-vendor everything is a cost, not a virtue.
+
+## Why this is a mobile and AI problem too
+
+The products I build are mobile-first, and mobile makes this worse in one specific way: the device is often offline or on a flaky network *before* any cloud outage happens. So the habits above — local caches, optimistic UI, honest error states — are not outage-only features. They are the baseline for a mobile app that feels reliable. An outage just removes the illusion that the network is always there.
+
+For AI features the same logic applies with higher stakes. If your feature calls a hosted model and that provider has a bad day, do you have a smaller local fallback, a queued retry, or at least a clean "try again shortly"? The rise of capable local models — I wrote about running a 27B model on a laptop recently — makes a local fallback more realistic than it used to be.
+
+## The takeaway
+
+You cannot prevent a hyperscaler outage, and you should not try. What you can do is make sure that when it happens, your product bends instead of breaks, tells the user the truth, and recovers without a human babysitting it. That is not glamorous work. It is the difference between a product people trust and one they abandon the first time a dependency sneezes.
+
+If you are auditing your own product''s failure paths and want a second pair of eyes on the dependency map, [send me the details](mailto:hasanabbassorathiya12@gmail.com?subject=Resilience%20review). This is the kind of review that pays for itself the first time something upstream goes down.', 1),
+  ('nvidia-ceo-transition-what-it-means', 'Nvidia’s CEO transition: what we know, and what builders should watch', 'Jensen Huang resigned as Nvidia CEO on Nov 12, with Colette Kress interim. The confirmed timeline, what is still unexplained, and how to think about vendor risk if your stack runs on CUDA.', '2026-11-13', 'AI', '["AI","Industry","Nvidia"]', 3, 'On November 12, Nvidia''s board announced that Jensen Huang has resigned as President and Chief Executive Officer, with Colette Kress named interim CEO. That is a matter of public record from [Nvidia''s own newsroom](https://nvidianews.nvidia.com/news/nvidia-announces-ceo-transition), corroborated by [CNBC''s live coverage](https://www.cnbc.com/2026/11/12/nvidia-jensen-huang-ceo-live-updates.html). Huang co-founded the company 33 years ago and built it into the center of the AI hardware world. A change at the top of that company is worth understanding carefully — and separating what is confirmed from what is speculation.
+
+I build on the AI stack, so my interest here is practical: what does a leadership change at the company that supplies the accelerators actually mean for people shipping products? But first, the facts, because this story has been noisy.
+
+## What is confirmed
+
+The sequence, from Nvidia''s own statements:
+
+- **November 8:** Nvidia''s board said it was initiating an independent investigation after reports that Huang had been the target of a foreign intelligence effort. In that statement, Huang said he fully supported the review and was not stepping down.
+- **November 10:** A further statement from the independent members of the board.
+- **November 12:** The board announced Huang''s resignation and Kress''s interim appointment.
+
+Two things deserve emphasis. First, the resignation release itself gives no reason and does not reference the investigation. Second, the November 8 statement explicitly said Huang was not stepping down at that time. So the honest reading is that the situation moved quickly over four days, and the company has not publicly connected the resignation to the earlier investigation.
+
+## What is not confirmed
+
+It would be easy — and wrong — to draw a straight line from the investigation to the resignation. Nvidia has not made that link, and I am not going to invent one. The cause of the resignation, the longer-term succession plan, and any strategic shift are all, as of this writing, unannounced. Anything beyond that is speculation, and speculation about a living person and an active investigation is not something I will dress up as analysis.
+
+That restraint is not me being timid. It is the same discipline I try to apply to engineering claims: state what you can source, label what you cannot, and do not fill the gap with a confident story.
+
+## What builders should actually watch
+
+Set the drama aside. If your product runs on CUDA, rents GPU capacity, or depends on Nvidia''s roadmap, the useful questions are about continuity, not personalities:
+
+1. **Roadmap continuity.** The AI industry has planned around Nvidia''s hardware and software cadence for years. Watch whether the announced roadmap — accelerators, networking, the CUDA ecosystem — stays on track under interim leadership. A company this size has momentum and a deep bench; a single transition rarely stops that overnight.
+2. **Ecosystem lock-in is the real exposure.** The risk for most builders is not who is CEO. It is that so much of the stack assumes one vendor. This is a good moment to ask how portable your workloads are: could you run on alternative accelerators or a cloud''s own silicon if you had to? You do not need to act on it today, but you should know the answer.
+3. **Supply and pricing, not headlines.** For anyone renting GPUs, the practical signals are availability and price. Leadership news moves markets in the short term; what changes your costs is capacity and demand. Watch those, not the ticker.
+
+## The takeaway
+
+A founder-CEO stepping down after three decades is a significant event, and it is reasonable to pay attention. But the confirmed facts are narrow: a resignation, an interim successor, and a preceding investigation that the company has not linked to the departure. Everything else is noise until Nvidia says otherwise.
+
+For builders, the durable lesson is the one that outlasts any single news cycle: know how dependent your stack is on one vendor, and keep that dependency a decision rather than an accident.
+
+If you are thinking through accelerator portability or GPU cost exposure for a product and want a second opinion, [send me the details](mailto:hasanabbassorathiya12@gmail.com?subject=AI%20stack%20risk). I would rather reason about it from the architecture than from the headlines.', 1),
   ('portfolio-as-a-system', 'Why I rebuilt my portfolio as a system, not a page', 'One canonical profile, content as data, prerendered metadata, and audits that gate a deploy — the boring structure that keeps a portfolio true as it grows.', '2026-10-28', 'Build in public', '["Build in public","Web","Architecture"]', 6, 'Most portfolios are pages. They get designed once, shipped, and then quietly rot: the resume link dies, a new app never gets added, the copy on the site drifts from the copy on LinkedIn. I know because mine did. The rebuild I just finished treats the portfolio as a system instead — one canonical source, generated outputs, and checks that fail loudly when something drifts.
 
 This is the structure, and why each part earns its place.
@@ -1045,12 +1260,12 @@ ON DUPLICATE KEY UPDATE `sort_order` = VALUES(`sort_order`);
 INSERT INTO `profile` (`k`, `v`) VALUES
   ('name', 'Hasan Abbas Sorathiya'),
   ('role', 'Senior Software & AI Engineer'),
-  ('headline', 'I build Flutter apps and AI systems people keep using.'),
+  ('headline', 'I build AI systems and Flutter apps people keep using.'),
   ('kicker', 'Senior mobile & AI engineer · Dubai'),
   ('availability', 'Available for new work'),
   ('availability_detail', 'Immediate · remote-friendly'),
   ('open_to', 'Open to senior roles · consulting · collaborations'),
-  ('experience_years', '6'),
+  ('experience_years', '7'),
   ('sub', 'Senior mobile and AI engineer in Dubai. {{years}} years across fintech, mobility, hospitality, and community products — Flutter as my primary stack, iOS and Android delivery, and the AI systems behind the product. {{apps}} shipped products, {{public_links}} of them public store listings or open source you can open right now.'),
   ('caption', 'iOS · Android · Flutter · AI'),
   ('location', 'Dubai, UAE'),

@@ -9,7 +9,7 @@ export const apps = [
     genre: 'Education',
     icon: '/media/apps/duas-and-aamal/icon.webp',
     screenshots: ['/media/apps/duas-and-aamal/shot1.webp', '/media/apps/duas-and-aamal/shot2.webp'],
-    rating: { value: 4.9, count: 1058, source: 'Google Play', noun: 'reviews' },
+    rating: { value: 5.0, count: 1072, source: 'Google Play', noun: 'reviews' },
     stack: ['Flutter', 'Dart', 'Firebase', 'Offline-first', '5 languages', 'Android TV'],
     links: {
       ios: 'https://apps.apple.com/ae/app/duas-and-aamal/id6478907381',
@@ -26,7 +26,7 @@ export const apps = [
       'Prayer notifications, bookmarks, and an Android TV layout',
     ],
     story:
-      'Most religious apps treat Gujarati as a translation afterthought. I built Duas and Aamal around the opposite assumption: Gujarati-speaking families should get a first-class experience, with Arabic text rendered correctly and prayer times calculated properly rather than approximated. The content pipeline runs through a small custom CMS (duas-crm), so updates ship without an app release. Five languages, offline access, and a 4.9-star rating on Google Play came from listening to the community that uses it daily.',
+      'Most religious apps treat Gujarati as a translation afterthought. I built Duas and Aamal around the opposite assumption: Gujarati-speaking families should get a first-class experience, with Arabic text rendered correctly and prayer times calculated properly rather than approximated. The content pipeline runs through a small custom CMS (duas-crm), so updates ship without an app release. Five languages, offline access, and a 5.0-star rating on Google Play came from listening to the community that uses it daily.',
     decisions: [
       {
         title: 'Gujarati-first content model, not a translation layer',
@@ -51,8 +51,8 @@ export const apps = [
       },
     ],
     metrics: [
-      ['4.9★', 'Google Play rating'],
-      ['1,058', 'Play reviews'],
+      ['5.0★', 'Google Play rating'],
+      ['1,072', 'Play reviews'],
       ['5', 'Languages'],
       ['Offline', 'Full content access'],
     ],

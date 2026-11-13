@@ -16,7 +16,7 @@ try {
         header('Location: subscribers.php?deleted=1');
         exit;
     }
-    $rows = db()->query('SELECT id, email, source, created_at, unsub_token FROM subscribers ORDER BY created_at DESC, id DESC')->fetchAll();
+    $rows = db()->query('SELECT id, email, name, whatsapp, source, consent_at, created_at, unsub_token FROM subscribers ORDER BY created_at DESC, id DESC')->fetchAll();
     $week = (int) db()->query('SELECT COUNT(*) FROM subscribers WHERE created_at > NOW() - INTERVAL 7 DAY')->fetchColumn();
 } catch (Throwable $e) {
     $error = 'The subscribers table is missing. Import api/schema.sql in phpMyAdmin, then reload.';
@@ -46,15 +46,17 @@ $base = $proto . '://' . $host;
       <span class="muted" id="copied" aria-live="polite"></span>
     </div>
     <table class="data-table">
-      <thead><tr><th>Email</th><th>Source</th><th>Joined</th><th>Unsubscribe link</th><th></th></tr></thead>
+      <thead><tr><th>Email</th><th>Name</th><th>WhatsApp</th><th>Source</th><th>Joined</th><th>Unsubscribe link</th><th></th></tr></thead>
       <tbody>
         <?php if (count($rows) === 0): ?>
-          <tr><td colspan="5"><em>No subscribers yet. The signup forms go live with the next deploy.</em></td></tr>
+          <tr><td colspan="7"><em>No subscribers yet. The signup forms go live with the next deploy.</em></td></tr>
         <?php endif; ?>
         <?php foreach ($rows as $r): ?>
           <?php $unsub = $base . '/api/subscribe.php?unsubscribe=' . $r['unsub_token']; ?>
           <tr>
             <td><?= htmlspecialchars($r['email']) ?></td>
+            <td><?= htmlspecialchars($r['name'] !== '' ? $r['name'] : '—') ?></td>
+            <td><?= htmlspecialchars($r['whatsapp'] !== '' ? $r['whatsapp'] : '—') ?></td>
             <td><?= htmlspecialchars($r['source'] !== '' ? $r['source'] : '—') ?></td>
             <td><?= htmlspecialchars(date('M j, Y', strtotime($r['created_at']))) ?></td>
             <td><button type="button" class="btn-sm copy-unsub" data-url="<?= htmlspecialchars($unsub) ?>">Copy link</button></td>
@@ -75,6 +77,8 @@ $base = $proto . '://' . $host;
 <script>
 const ROWS = <?= json_encode(array_map(static fn($r) => [
     'email' => $r['email'],
+    'name' => $r['name'],
+    'whatsapp' => $r['whatsapp'],
     'source' => $r['source'],
     'joined' => $r['created_at'],
 ], $rows), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
@@ -91,7 +95,7 @@ document.getElementById('copy-all')?.addEventListener('click', async () => {
 
 document.getElementById('csv')?.addEventListener('click', () => {
   const cell = (v) => '"' + String(v).replace(/"/g, '""') + '"';
-  const csv = ['email,source,joined', ...ROWS.map((r) => [r.email, r.source, r.joined].map(cell).join(','))].join('\n');
+  const csv = ['email,name,whatsapp,source,joined', ...ROWS.map((r) => [r.email, r.name, r.whatsapp, r.source, r.joined].map(cell).join(','))].join('\n');
   const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
   const a = document.createElement('a');
   a.href = url;

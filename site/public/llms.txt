@@ -1,6 +1,6 @@
 # Hasan Abbas Sorathiya
 
-> Senior mobile & AI engineer in Dubai. Six-plus years shipping mobile products: Flutter and Dart across iOS and Android delivery, plus AI integration, automation and the backend work behind them.
+> Senior mobile & AI engineer in Dubai. Seven-plus years shipping mobile products: Flutter and Dart across iOS and Android delivery, plus AI integration, automation and the backend work behind them.
 
 Canonical site: https://hasanabbassorathiya.tech
 Contact: hasanabbassorathiya12@gmail.com
@@ -20,8 +20,8 @@ Availability: open to senior roles, consulting and product collaborations.
 - 21 app profiles across iOS, Android, web and TV, covering personal products, client work, and publishing contributions.
 - Good2Go Loans: 50,000+ users in New Zealand.
 - Nakheel Marinas: 15,000+ first-month downloads.
-- Duas and Aamal: 4.9 on Google Play with 1,058 reviews at the last check.
-- Six-plus years of professional mobile engineering; BSc IT, University of Mumbai, 2019.
+- Duas and Aamal: 5.0 on Google Play with 1,072 reviews at the last check.
+- Seven-plus years of professional mobile engineering; BSc IT, University of Mumbai, 2019.
 - Metrics are limited to figures with an owner-verified source; no testimonials are invented.
 
 ## Published and open source

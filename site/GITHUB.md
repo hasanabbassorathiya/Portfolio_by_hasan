@@ -1,17 +1,17 @@
 # GitHub profile plan — Hasan Abbas Sorathiya
 
-Updated: 2026-11-03. The profile README, account metadata, and selected public repository metadata are published through `gh`. GitHub's available GraphQL schema does not expose a pinned-repository mutation for this token, so pin ordering remains a one-time profile UI step.
+Updated: 2026-11-12. The profile README, account metadata, selected public repository metadata, and the five pinned repositories are published. Pins were set through the profile "Customize your pins" form (`set_pinned_items`), which preserves submission order; verified live in the order below.
 
 ## 1. Profile README
 
-Published in the repository named `hasanabbassorathiya` by `gh api` commit [`f40f1b7`](https://github.com/hasanabbassorathiya/hasanabbassorathiya/commit/f40f1b791fc6cb4ee55461af2a549ca1ce0f003c). The live README uses the supplied FlowCV résumé as its résumé link and keeps client code and private repository names out of the profile.
+Published in the repository named `hasanabbassorathiya` by `gh api` commit [`f40f1b7`](https://github.com/hasanabbassorathiya/hasanabbassorathiya/commit/f40f1b791fc6cb4ee55461af2a549ca1ce0f003c). The résumé link was repointed from FlowCV to `https://hasanabbassorathiya.tech/resume` in commit [`1c1ad35`](https://github.com/hasanabbassorathiya/hasanabbassorathiya/commit/1c1ad35cfc406b7a08c229dce5eb78c1b49d1a71). The README keeps client code and private repository names out of the profile.
 
 ```markdown
 See the live [profile README](https://github.com/hasanabbassorathiya/hasanabbassorathiya#readme) for the published copy.
 ```
 
 Rules for this README:
-- Keep the numbers to the verified set: 21 app profiles, 50,000+ Good2Go users, 15,000+ Nakheel first-month downloads, 4.9 Play rating. Do not use a cross-client user total.
+- Keep the numbers to the verified set: 21 app profiles, 50,000+ Good2Go users, 15,000+ Nakheel first-month downloads, 5.0 Play rating. Do not use a cross-client user total.
 - Do not add star counts, download badges or "trusted by" logos.
 - Do not list client names that are not already published on the site.
 
@@ -57,9 +57,9 @@ For each pinned repository, in the About panel:
 ## 6. Owner checklist
 
 1. **Done:** publish §1 in the `hasanabbassorathiya` profile repo.
-2. Pin the five repositories from §2 in order through the GitHub profile UI.
+2. **Done:** pinned the five repositories from §2 in order (stoolap-flutter, wp-mcp-server, bridge-ai-agent, duas-crm, lumio_iptv); verified live on the profile.
 3. **Done:** apply the descriptions, homepages and topics from §3 through `gh repo edit`.
 4. **Done:** confirm the bio, location and website in §4 through `gh api`.
-5. Recheck every pinned link returns 200 and the README renders without broken images.
+5. **Done:** every pinned link returns 200 and the README renders without broken images (checked 2026-11-12).
 
-This file records a draft only. The profile will not be reported as updated until the owner publishes it.
+The profile is published. Remaining owner-only step: none for GitHub; feed-post distribution is tracked separately and still needs per-post approval.

@@ -100,7 +100,7 @@ export const resume = {
       role: 'Creator · Flutter developer',
       detail: 'Quran, duas, aamal, ziyarats, Jafari prayer times. iOS and Android, five languages, offline.',
       href: 'https://play.google.com/store/apps/details?id=app.duasandaamal.com',
-      note: '4.9★ Google Play · 1,058 reviews',
+      note: '5.0★ Google Play · 1,072 reviews',
     },
     {
       name: 'Lumio TV',

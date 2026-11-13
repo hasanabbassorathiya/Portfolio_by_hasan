@@ -3,7 +3,7 @@ import { writeFile } from 'node:fs/promises';
 import { chromium } from 'playwright-core';
 
 const base = process.env.SITE_APACHE_URL || 'http://127.0.0.1:8099';
-const out = new URL('../evidence/2026-11-07/hydration.json', import.meta.url).pathname;
+const out = new URL('../evidence/2026-11-12/hydration.json', import.meta.url).pathname;
 const routes = [
   '/',
   '/services',

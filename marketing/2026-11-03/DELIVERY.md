@@ -11,15 +11,15 @@ anywhere — every `publish_log` entry is `exported`, and the last entry on each
 
 | File | Aspect | Duration | Size | Source project |
 |---|---|---|---|---|
-| `master-16x9.mp4` | 1920x1080 | 45.000s | 1.0 MB | hs-master-reel |
-| `master-1x1.mp4` | 1080x1080 | 45.000s | 724 KB | hs-master-reel (centre crop, safe column verified) |
-| `master-9x16.mp4` | 1080x1920 | 45.000s | 1.1 MB | hs-master-reel (native re-layout) |
+| `master-16x9.mp4` | 1920x1080 | 45.000s | 1.1 MB | hs-master-reel (re-rendered 2026-11-12, 7+ hook) |
+| `master-1x1.mp4` | 1080x1080 | 45.000s | 801 KB | hs-master-reel (centre crop of the 2026-11-12 render, safe column verified) |
+| `master-9x16.mp4` | 1080x1920 | 45.000s | 1.1 MB | hs-master-reel (native re-layout, re-rendered 2026-11-12) |
 | `clip-duas.mp4` | 1080x1920 | 15.06s | 1.1 MB | hs-app-clips |
 | `clip-bulbvpn.mp4` | 1080x1920 | 14.06s | 1.0 MB | hs-app-clips |
 | `clip-blankspace.mp4` | 1080x1920 | 13.06s | 1.0 MB | hs-app-clips |
 | `clip-stoolap.mp4` | 1080x1920 | 15.06s | 1.2 MB | hs-app-clips |
-| `consulting-1x1.mp4` | 1080x1080 | 20.000s | 588 KB | hs-consulting-cut |
-| `consulting-9x16.mp4` | 1080x1920 | 20.000s | 708 KB | hs-consulting-cut |
+| `consulting-1x1.mp4` | 1080x1080 | 20.000s | 600 KB | hs-consulting-cut (re-rendered 2026-11-12, 7+ markets beat) |
+| `consulting-9x16.mp4` | 1080x1920 | 20.000s | 724 KB | hs-consulting-cut (re-rendered 2026-11-12) |
 
 Every one h264 at 30fps, silent, captions composited as type. Total ~8.4 MB.
 
@@ -76,6 +76,36 @@ reports 0 errors and contrast 14/14.
   re-checked at 0 errors — not hand-arranged shot by shot.
 - **Nothing was posted, deployed or uploaded.** The site's own `/apps` card still displays the stale
   4.9 (1,058); correcting CMS data is a repo-and-deploy action outside this run.
+
+## 2026-11-12 re-render — 7+ years and the serif fix
+
+Owner override 2026-11-12: the experience figure is **7+** everywhere (profiles, site, reel).
+Source texts were edited first (`hs-master-reel` hook in `index.html` + `vertical/index.html`,
+`hs-consulting-cut` markets beat in `square/` + `vertical/` and `stages.py`), then all four
+authored workspaces were re-rendered with `HyperFramesCompose` `render_existing` (quality gate
+re-run, 0 errors) and the 1:1 master re-cropped (`crop=1080:1080:420:0`). The four app clips
+carry no years text and were not re-rendered.
+
+Also fixed here: the reel asset copies of `InstrumentSerif-Italic.woff2` still held the upright
+outlines (the site's font files had been swapped at the root on 2026-11-12). Both projects'
+`assets/fonts/InstrumentSerif-Italic.woff2` now sha256 `0ee028dd…`, matching the site; the italic
+"keep." in the hook renders as true italic.
+
+Verified after render: ffprobe on all five files (h264, 30fps, 1350 frames / 45.000s masters,
+600 frames / 20.000s consulting); QA frames read by eye — `renders/qa/t3.png` and
+`master-9x16-hook.png` show "7+ years of shipping products people keep.", `consulting-1x1-c3.png`
+and `consulting-9x16-c3.png` show "7+ years. Three markets."; 15-frame contact sheet regenerated.
+Stage checkpoints re-committed for both projects (assets/edit/compose/publish gates honoured).
+The six-years renders are preserved in each project's `renders/pre-7plus/`.
+
+Reproduce:
+
+```bash
+cd /Users/macbookm1pro/tools/OpenMontage
+/Users/macbookm1pro/tools/OpenMontage/.venv/bin/python \
+  /Users/macbookm1pro/StudioProjects/portfolio/marketing/2026-11-03/rerender-7plus.py
+# backup → 4 renders → crop → probes → QA frames → copy to out/
+```
 
 ## Re-running it
 

@@ -7,9 +7,49 @@ import startup from './posts/flutter-startup-time.md?raw';
 import localization from './posts/localization-4-6-star-app.md?raw';
 import gde from './posts/from-shipping-apps-to-gde.md?raw';
 import leadership from './posts/leading-mobile-delivery-ev.md?raw';
+import bonsai from './posts/run-bonsai-2-27b-locally.md?raw';
+import qwen4 from './posts/qwen4-max-preview-what-changes.md?raw';
+import msOutage from './posts/microsoft-365-outage-dependency-lessons.md?raw';
+import nvidia from './posts/nvidia-ceo-transition-what-it-means.md?raw';
 import { readingTime, plainText } from '../lib/markdown';
 
 const raw = [
+  {
+    slug: 'run-bonsai-2-27b-locally',
+    title: 'Run a 27B model on your laptop: Bonsai 2, locally',
+    dek: 'Prism ML’s ternary-quantized Bonsai 2 squeezes a 27.8B model into about 6 GB. The exact local setup — which quant to pick, the llama.cpp fork you need, and the commands that actually run it.',
+    category: 'Local LLM',
+    date: '2026-11-13',
+    tags: ['Local LLM', 'AI', 'Tutorial'],
+    body: bonsai,
+  },
+  {
+    slug: 'qwen4-max-preview-what-changes',
+    title: 'Qwen4-Max is in preview: what actually changes for builders',
+    dek: 'Alibaba opened Qwen4-Max-Preview on Nov 11 — the first Qwen4 model, aimed at coding and agentic work, with a reported 1M-token context. What is confirmed, what is only reported, and how to evaluate it.',
+    category: 'AI',
+    date: '2026-11-13',
+    tags: ['AI', 'LLM', 'Qwen'],
+    body: qwen4,
+  },
+  {
+    slug: 'microsoft-365-outage-dependency-lessons',
+    title: 'What the Microsoft 365 outage teaches about single-vendor dependency',
+    dek: 'On Nov 12–13, Outlook, Teams, Word and Excel went down worldwide — servers, not a cyberattack. If your product leans on one cloud, here is the resilience checklist I keep coming back to.',
+    category: 'Reliability',
+    date: '2026-11-13',
+    tags: ['Reliability', 'Architecture', 'Build in public'],
+    body: msOutage,
+  },
+  {
+    slug: 'nvidia-ceo-transition-what-it-means',
+    title: 'Nvidia’s CEO transition: what we know, and what builders should watch',
+    dek: 'Jensen Huang resigned as Nvidia CEO on Nov 12, with Colette Kress interim. The confirmed timeline, what is still unexplained, and how to think about vendor risk if your stack runs on CUDA.',
+    category: 'AI',
+    date: '2026-11-13',
+    tags: ['AI', 'Industry', 'Nvidia'],
+    body: nvidia,
+  },
   {
     slug: 'portfolio-as-a-system',
     title: 'Why I rebuilt my portfolio as a system, not a page',

@@ -1,33 +1,35 @@
 # LinkedIn profile draft — Hasan Abbas Sorathiya
 
-Updated: 2026-10-29. A draft for the owner to apply. Nothing here has been published to LinkedIn, and no claim goes beyond `hasan.md` or the live site. The launch posts and essay cross-posts live in `SOCIAL.md`; this file covers the profile itself.
+Updated: 2026-11-12 (second pass). The profile is published and now **AI-first** per the owner's pivot to AI Software Engineer / FDE roles: headline and About rewritten through the owner's logged-in session and verified live; the banner (§7) is live; the owner added the LangChain Academy certification themselves (Introduction to LangChain - Python, ID 6k7ynqplb8, issued 2026-11-12, expires 2028-11-11, credential URL on the entry). The About names that course as **certified** and the remaining LCAE prerequisites plus the Udemy AI Engineer Core Track as **in progress** — never claim them completed. Experience entries, skills and Featured from §3–§5 remain owner-only follow-ups. No claim goes beyond `hasan.md` or the live site. The launch posts and essay cross-posts live in `SOCIAL.md`; this file covers the profile itself.
 
 ## 1. Headline
 
-`Senior Software & AI Engineer · Flutter Specialist · RAG & Agents`
+Published 2026-11-12 (AI-first pivot):
 
-Alternatives if the first reads too broad:
-- `Senior Flutter Engineer · Mobile Lead · AI Integration & Automation`
-- `Mobile Engineering Lead · Flutter · AI Systems people keep using`
+`AI Software Engineer · Forward Deployed Engineer · RAG & Agents · Flutter`
+
+Previous (superseded): `Senior Software & AI Engineer · Flutter Specialist · RAG & Agents`
 
 ## 2. About
 
+Published 2026-11-12, AI-first rewrite. The LangChain course is named as certified (certificate 6k7ynqplb8, verified live at academy.langchain.com/certificates/6k7ynqplb8); everything else in the training sentence is in progress.
+
 ```text
-I'm a Dubai-based software engineer who builds mobile products and the AI systems behind them.
+I'm a Dubai-based engineer building AI systems that hold up after the demo — and the mobile products they ship inside.
 
-For six-plus years I've worked across fintech, e-commerce, mobility and community apps, leading Flutter delivery end to end: architecture, release management and production support. Twenty-one app profiles across iOS, Android, web and TV, including Good2Go Loans (50,000+ users in New Zealand) and Nakheel Marinas (15,000+ first-month downloads). Most recently I led mobile engineering at Chalhoub Group for EVLAB, an electric mobility platform.
+For 7+ years I've delivered across fintech, e-commerce, mobility and community apps: RAG pipelines with retrieval and citations, agents and MCP servers, n8n automation, and the Flutter/iOS/Android delivery around them. Twenty-one app profiles, including Good2Go Loans (50,000+ users in New Zealand) and Nakheel Marinas (15,000+ first-month downloads). Most recently I led mobile engineering at Chalhoub Group for EVLAB, an electric mobility platform.
 
-Alongside mobile, I build AI systems that hold up after the demo: RAG pipelines with retrieval and citations, agents and MCP servers, and n8n automation that removes repetitive work. I care about the unglamorous parts — evaluation, failure states, cost and reliability.
+I care about the unglamorous parts of AI — evaluation, failure states, cost and reliability — and I'm formalising the agent side now: certified in LangChain Academy's Introduction to LangChain – Python, working through the remaining LCAE prerequisites (Deep Agents, LangSmith) toward the LangChain Certified Agent Engineer credential, alongside Udemy's AI Engineer Core Track (LLM engineering, RAG, QLoRA, agents).
 
 What I do:
-• Flutter and mobile product engineering — architecture, delivery, releases
-• AI integration and business automation — RAG, agents, MCP, n8n
-• Full-stack and API work where it serves the product
+• AI engineering — RAG, agents, MCP, evaluation, automation
+• Forward-deployed delivery — from architecture to production support
+• Flutter and mobile product engineering — iOS, Android, releases
 • App audits, performance reviews and technical consulting
 
 I write production notes at hasanabbassorathiya.tech/blog and maintain stoolap_flutter, a pure-Rust embedded SQL package for Flutter, on pub.dev.
 
-Open to senior Flutter, mobile lead and AI engineering roles, plus consulting engagements.
+Open to AI software engineer and forward-deployed roles, plus consulting engagements.
 hasanabbassorathiya12@gmail.com · hasanabbassorathiya.tech
 ```
 
@@ -83,16 +85,16 @@ If LinkedIn Services is available on the profile, list only what the site alread
 
 Do not promise response times, prices or availability guarantees.
 
-## 7. Banner specification
+## 7. Banner specification (live 2026-11-12)
 
-- Size: 1584 × 396 px, exported at 2× (3168 × 792) for sharpness.
-- Ground: Bone & Ink cream `#F3EFE6`; ink text `#16130F`; one cobalt accent `#1D3CFF`; rust `#A33F1C` only for a single italic word.
-- Left-aligned type, generous margins, no stock imagery.
-- Line 1 (Instrument Serif, ~64 px): `I build Flutter apps and AI systems`
-- Line 2 (Instrument Serif italic, cobalt): `people keep using.`
-- Line 3 (Geist Mono, small caps, letter-spaced): `SENIOR SOFTWARE & AI ENGINEER · DUBAI`
-- Bottom right (Geist Mono, small): `hasanabbassorathiya.tech`
-- Keep the lower-left area visually quiet; LinkedIn overlays the profile photo there on mobile.
+Generated by `scripts/linkedin-cover.mjs` → `public/media/brand/linkedin-cover.png`, uploaded through the owner's session and verified live.
+
+- Size: 1584 × 396 logical, exported at 2× (3168 × 792).
+- Ground: paper `#F3EFE6`; ink text `#16130F`; cobalt `#1D3CFF` on "AI systems"; rust `#A33F1C` italic on "people keep using."
+- Brand block: HS monogram + `Hasan Abbas Sorathiya` (Geist 600) over `SENIOR AI SOFTWARE ENGINEER · FDE · DUBAI` (Geist Mono, letter-spaced).
+- Headline, **one line** (Instrument Serif, 64 px): `I build AI systems and Flutter apps people keep using.` — one line is mandatory: LinkedIn's avatar overlays the bottom-left ~45% of the banner on desktop, and a two-line headline lost its second line under the photo.
+- Footer: `hasanabbassorathiya.tech` (Geist Mono) with a cobalt dot.
+- Regenerate with `node scripts/linkedin-cover.mjs`; the Instrument Serif files in `public/fonts/` were un-swapped on 2026-11-12 (Regular now upright, Italic now italic) — keep names and content aligned.
 
 ## 8. Contact and profile settings
 
@@ -104,11 +106,14 @@ Do not promise response times, prices or availability guarantees.
 
 ## 9. Owner checklist
 
-1. Update headline, About and experience from §1–§3.
+1. **Done:** AI-first headline and About published and verified live (2026-11-12, second pass). Experience entries (§3) still to apply.
 2. Trim the skills list to §4 and reorder it.
 3. Set Featured items in the §5 order.
-4. Apply the banner from §7.
-5. Confirm website, location and open-to-work settings per §8.
-6. Do not publish until the portfolio deploy is approved, so the featured link is current.
+4. **Done:** banner from §7 live (single-line AI-first cover).
+5. **Done:** website (Portfolio) and location confirmed live; open-to-work already set to recruiters-only for AI/full-stack/prompt/lead/senior roles.
+6. **Done:** portfolio is live, so the featured link is current.
+7. **Done (owner):** LangChain Academy certification added — Introduction to LangChain - Python, credential ID 6k7ynqplb8, issued Nov 2026, expires Nov 2028, credential URL attached. Remaining LCAE prerequisites and the Udemy track stay "in progress" everywhere until certified.
 
-This file is a draft record. The profile will not be reported as updated until the owner applies it.
+### Experience-figure note (resolved 2026-11-12)
+
+The owner chose **"7+ years"** everywhere. `src/content/profile.js` now sets `experience_years: 7` (owner override 2026-11-12), the site, the reel and the profiles all read 7+. The old disagreement note is superseded.

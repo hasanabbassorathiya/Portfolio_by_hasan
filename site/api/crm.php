@@ -66,7 +66,7 @@ if ($resource === 'subscribers') {
     if ($method === 'GET') {
         $page = max(1, (int)($_GET['page'] ?? 1));
         $offset = ($page - 1) * 50;
-        $st = $pdo->prepare('SELECT id, email, source, created_at FROM subscribers ORDER BY created_at DESC, id DESC LIMIT 51 OFFSET ?');
+        $st = $pdo->prepare('SELECT id, email, name, whatsapp, source, consent_at, created_at FROM subscribers ORDER BY created_at DESC, id DESC LIMIT 51 OFFSET ?');
         $st->bindValue(1, $offset, PDO::PARAM_INT);
         $st->execute();
         $rows = $st->fetchAll();

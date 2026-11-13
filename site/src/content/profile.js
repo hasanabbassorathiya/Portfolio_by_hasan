@@ -2,13 +2,13 @@
 export const profile = {
   name: 'Hasan Abbas Sorathiya',
   role: 'Senior Software & AI Engineer',
-  headline: 'I build Flutter apps and AI systems people keep using.',
+  headline: 'I build AI systems and Flutter apps people keep using.',
   kicker: 'Senior mobile & AI engineer · Dubai',
   availability: 'Available for new work',
   availability_detail: 'Immediate · remote-friendly',
   open_to: 'Open to senior roles · consulting · collaborations',
-  // Owner-confirmed figure; set explicitly so experience dates cannot round it up.
-  experience_years: 6,
+  // Owner override 2026-11-12: 7+ across profiles, site and reel.
+  experience_years: 7,
   // {{years}}, {{apps}}, {{public_links}}, {{clients}} and {{platforms}} resolve from live CMS data.
   sub:
     'Senior mobile and AI engineer in Dubai. {{years}} years across fintech, mobility, hospitality, ' +

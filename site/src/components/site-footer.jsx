@@ -65,6 +65,13 @@ export function SiteFooter() {
             )}
             <Link to="/brand" className="inline-flex min-h-11 items-center hover:text-band-fg">Brand</Link>
             <Link to="/privacy" className="inline-flex min-h-11 items-center hover:text-band-fg">Privacy</Link>
+            <button
+              type="button"
+              onClick={() => window.dispatchEvent(new Event('hs-consent-open'))}
+              className="inline-flex min-h-11 items-center hover:text-band-fg"
+            >
+              Cookie settings
+            </button>
             <span className="font-mono text-[10px] uppercase tracking-[0.12em]">Elsewhere</span>
             {elsewhere.map(([label, href]) => {
               const external = href.startsWith('http');

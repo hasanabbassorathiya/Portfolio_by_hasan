@@ -9,6 +9,8 @@ import { RouteProvider, useRoute, matchRoute } from './lib/router';
 import { SiteHeader } from './components/site-header';
 import { SiteFooter } from './components/site-footer';
 import { HireEgg } from './components/hire-egg';
+import { ConsentBanner } from './components/consent-banner';
+import { NewsletterPopup } from './components/newsletter-popup';
 import { HomePage } from './pages/home';
 import { NotFoundPage } from './pages/not-found';
 
@@ -108,6 +110,8 @@ function AppBody({ initialPage, initialPath }) {
       </Suspense>
       <SiteFooter />
       <HireEgg />
+      <ConsentBanner />
+      <NewsletterPopup />
     </>
   );
 }

@@ -285,7 +285,7 @@ export function BrandPage() {
         <div className="space-y-5">
           {[
             ['Display and wordmark', 'Geist 600', 'Hasan Abbas Sorathiya', "Geist, 'Helvetica Neue', Helvetica, Arial, sans-serif", 'uppercase, 600, tracking .18em'],
-            ['Body', 'Geist 400', 'Six years shipping real products for iOS and Android.', "Geist, 'Helvetica Neue', Helvetica, Arial, sans-serif", '400, 62–74ch measure, never justified'],
+            ['Body', 'Geist 400', 'Seven years shipping real products for iOS and Android.', "Geist, 'Helvetica Neue', Helvetica, Arial, sans-serif", '400, 62–74ch measure, never justified'],
             ['Labels, data, code', 'Geist Mono 400/600', 'SENIOR SOFTWARE & AI ENGINEER', "'Geist Mono', ui-monospace, Menlo, Consolas, monospace", 'uppercase, tracking .14–.18em'],
             ['Editorial headlines', 'Instrument Serif italic', 'Ink on paper.', "'Instrument Serif', Georgia, 'Times New Roman', serif", 'normal weight, tracking −0.025em'],
           ].map(([role, face, sample, stack, spec]) => (

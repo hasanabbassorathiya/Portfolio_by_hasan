@@ -1,12 +1,14 @@
-// Analytics bootstrap. Two sinks, one gate:
-// - first-party beacon → /api/track.php (always on unless DNT/GPC)
+// Analytics bootstrap. Two sinks, one consent gate:
+// - first-party beacon → /api/track.php
 // - GA4 → deferred gtag, only when an ID is configured (build env or CMS settings)
+// Neither loads until the visitor accepts analytics; DNT/GPC declines by default.
 // Nothing here may compete with LCP: GA loads on idle, the beacon is fire-and-forget.
 const GA_ID = import.meta.env.VITE_GA4_ID;
 const TRACK_URL = '/api/track.php';
 const SESSION_KEY = 'hs-session';
+const CONSENT_KEY = 'hs-consent';
 
-let ready = false;
+let booted = false;
 let gaReady = false;
 let fpReady = false;
 let session = '';
@@ -15,9 +17,26 @@ let enteredAt = 0;
 let utm = {};
 let hiddenSent = false;
 
-function blockedByConsent() {
+function privacySignal() {
   if (typeof navigator === 'undefined') return true;
   return navigator.doNotTrack === '1' || window.doNotTrack === '1' || navigator.globalPrivacyControl === true;
+}
+
+function readConsent() {
+  try {
+    const value = localStorage.getItem(CONSENT_KEY);
+    if (value === 'granted' || value === 'denied') return value;
+  } catch {
+    // storage unavailable (private mode / blocked); fall through to the signal
+  }
+  return null;
+}
+
+// An explicit stored choice wins; otherwise DNT/GPC declines and everyone else is undecided.
+function effectiveConsent() {
+  const stored = readConsent();
+  if (stored) return stored;
+  return privacySignal() ? 'denied' : null;
 }
 
 function randomId() {
@@ -59,7 +78,7 @@ function externalReferrer() {
 }
 
 function sendEvent(event, props = {}) {
-  if (!fpReady) return;
+  if (!fpReady || effectiveConsent() !== 'granted') return;
   const payload = JSON.stringify({
     event,
     path: lastPath,
@@ -118,9 +137,9 @@ async function loadSettings() {
 }
 
 export function initAnalytics() {
-  if (ready || typeof window === 'undefined') return;
-  ready = true;
-  if (blockedByConsent()) return;
+  if (booted || typeof window === 'undefined') return;
+  if (effectiveConsent() !== 'granted') return;
+  booted = true;
 
   fpReady = true;
   session = sessionId();
@@ -145,9 +164,27 @@ export function initAnalytics() {
   loadSettings().then((settings) => bootGa(settings.ga4_id || GA_ID));
 }
 
+// 'granted' | 'denied' | null (undecided). The banner shows only when null.
+export function getConsentState() {
+  if (typeof window === 'undefined') return 'denied';
+  return effectiveConsent();
+}
+
+export function setConsent(choice) {
+  if (typeof window === 'undefined') return;
+  const value = choice === 'granted' ? 'granted' : 'denied';
+  try {
+    localStorage.setItem(CONSENT_KEY, value);
+  } catch {
+    // storage unavailable; the choice still applies for this page view
+  }
+  if (value === 'granted') initAnalytics();
+  window.dispatchEvent(new CustomEvent('hs-consent-change', { detail: value }));
+}
+
 export function track(event, params = {}) {
   if (typeof window === 'undefined') return;
-  if (gaReady) window.gtag('event', event, params);
+  if (gaReady && effectiveConsent() === 'granted') window.gtag('event', event, params);
   sendEvent(event, params);
 }
 
@@ -160,7 +197,7 @@ export function trackPageView(path) {
   }
   lastPath = path;
   enteredAt = Date.now();
-  if (gaReady) {
+  if (gaReady && effectiveConsent() === 'granted') {
     window.gtag('event', 'page_view', {
       page_path: path,
       page_location: `${window.location.origin}${path}`,

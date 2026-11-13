@@ -143,7 +143,7 @@ Nothing ships to a frame until it passes here. This is the step that catches the
 
 | Claim | Canonical source | Verify at render time |
 |---|---|---|
-| **6+ years** shipping | `hasan.md` §5, owner-confirmed, earlier route Jan 2019 | none — never "7", never "seven" |
+| **7+ years** shipping | owner override 2026-11-12 — profiles, site and reel aligned to 7+ | none — the figure is 7+ everywhere |
 | Good2Go Loans **50,000+ users**, New Zealand | `hasan.md` §5 (client outcome) | stays; attributed as a client outcome, not personal users |
 | Nakheel Marinas **15K+ first-month downloads** | `hasan.md` §5 | stays |
 | Duas and Aamal **5.0★ · 1,063 Play ratings** | live Play JSON-LD, read 2026-11-03. The CMS row and `hasan.md` §5 both said 4.9 / 1,058 — **the gate caught the drift and the script was corrected before any frame rendered** | `chrome-headless-shell --dump-dom` on the listing, then parse `ratingValue` / `ratingCount` |
@@ -175,7 +175,7 @@ A (master reel) first. Its captures are B's source material and C's asset pool �
 
 Beats (45s):
 ```
-00–06  Six years of shipping products people keep.        [display type on paper, no imagery]
+00–06  7+ years of shipping products people keep.       [display type on paper, no imagery]
 06–16  Good2Go Loans — 50,000+ users across New Zealand.  [case-study capture]
 16–26  Nakheel Marinas — 15K+ downloads in month one.     [capture + mono data label]
 26–36  Duas and Aamal — 5.0★, 1,063 Play ratings.         [real listing; signature device beat]

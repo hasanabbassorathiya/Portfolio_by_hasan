@@ -1,6 +1,5 @@
-import React from 'react';
-import { profile } from '../content/profile';
-import { trackCommunity, trackCta } from '../lib/analytics';
+import React, { useId, useState } from 'react';
+import { trackCommunity, trackCta, trackSubscribe } from '../lib/analytics';
 import { SITE_NAME, SITE_URL, useSeo } from '../lib/seo';
 import { useSettings } from '../lib/settings';
 import { Arrow, ArrowBadge, Check, Kicker } from '../sections/ref-ui';
@@ -36,11 +35,142 @@ const audience = [
   'Indie founders maintaining an app after launch',
 ];
 
+const inputClass =
+  'w-full rounded-lg border border-[var(--border)] bg-canvas px-4 py-3 text-sm text-text placeholder:text-text-muted focus:border-accent focus:outline-none disabled:opacity-60';
+
+function SignupForm() {
+  const id = useId();
+  const [form, setForm] = useState({ name: '', email: '', whatsapp: '' });
+  const [consent, setConsent] = useState(false);
+  const [trap, setTrap] = useState('');
+  const [state, setState] = useState('idle');
+  const set = (key) => (event) => setForm((f) => ({ ...f, [key]: event.target.value }));
+
+  const submit = async (event) => {
+    event.preventDefault();
+    if (state === 'sending') return;
+    setState('sending');
+    try {
+      const res = await fetch('/api/subscribe.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...form, source: 'community', consent, website: trap }),
+      });
+      if (!res.ok) throw new Error(String(res.status));
+      setState('done');
+      trackSubscribe('community');
+      trackCta('community-signup', 'community-page');
+    } catch {
+      setState('error');
+    }
+  };
+
+  if (state === 'done') {
+    return (
+      <p role="status" className="rounded-[1.4rem] border border-ink/10 bg-surface p-6 text-sm leading-[1.7] text-text">
+        You&apos;re on the list. The next community note lands in your inbox — one click
+        unsubscribes, and your details are deleted with it.
+      </p>
+    );
+  }
+
+  return (
+    <form onSubmit={submit} className="rounded-[1.4rem] border border-ink/10 bg-surface p-6 md:p-7">
+      <div className="grid gap-4 sm:grid-cols-2">
+        <div>
+          <label htmlFor={`${id}-name`} className="mb-1.5 block text-xs font-medium text-text">Name</label>
+          <input
+            id={`${id}-name`}
+            type="text"
+            required
+            maxLength={120}
+            autoComplete="name"
+            placeholder="Your name"
+            value={form.name}
+            onChange={set('name')}
+            disabled={state === 'sending'}
+            className={inputClass}
+          />
+        </div>
+        <div>
+          <label htmlFor={`${id}-email`} className="mb-1.5 block text-xs font-medium text-text">Email</label>
+          <input
+            id={`${id}-email`}
+            type="email"
+            required
+            autoComplete="email"
+            inputMode="email"
+            placeholder="you@example.com"
+            value={form.email}
+            onChange={set('email')}
+            disabled={state === 'sending'}
+            className={inputClass}
+          />
+        </div>
+      </div>
+      <div className="mt-4">
+        <label htmlFor={`${id}-whatsapp`} className="mb-1.5 block text-xs font-medium text-text">
+          WhatsApp <span className="font-normal text-text-muted">(optional)</span>
+        </label>
+        <input
+          id={`${id}-whatsapp`}
+          type="tel"
+          autoComplete="tel"
+          inputMode="tel"
+          placeholder="+971 50 123 4567"
+          value={form.whatsapp}
+          onChange={set('whatsapp')}
+          disabled={state === 'sending'}
+          className={inputClass}
+        />
+      </div>
+      <div className="mt-4 flex items-start gap-2.5">
+        <input
+          id={`${id}-consent`}
+          type="checkbox"
+          required
+          checked={consent}
+          onChange={(event) => setConsent(event.target.checked)}
+          disabled={state === 'sending'}
+          className="mt-0.5 h-4 w-4 shrink-0 accent-[#1d3cff]"
+        />
+        <label htmlFor={`${id}-consent`} className="text-xs leading-[1.6] text-text-muted">
+          I agree to receive community emails and to the{' '}
+          <a href="/privacy" className="text-text underline decoration-accent/50 underline-offset-4">privacy policy</a>.
+          WhatsApp is only used if you ask for a quicker reply.
+        </label>
+      </div>
+      <div style={{ position: 'absolute', left: '-9999px', width: 1, height: 1, overflow: 'hidden' }} aria-hidden="true">
+        <label htmlFor={`${id}-website`}>Website</label>
+        <input
+          id={`${id}-website`}
+          name="website"
+          tabIndex={-1}
+          autoComplete="off"
+          value={trap}
+          onChange={(event) => setTrap(event.target.value)}
+        />
+      </div>
+      <button
+        type="submit"
+        disabled={state === 'sending'}
+        className="mt-5 inline-flex min-h-11 items-center rounded-full bg-accent-solid px-6 py-2.5 text-sm font-medium text-on-accent transition-colors hover:bg-accent-solid/90 disabled:opacity-60"
+      >
+        {state === 'sending' ? 'Joining…' : 'Join the list'}
+      </button>
+      {state === 'error' && (
+        <p role="alert" className="mt-3 text-xs leading-[1.6] text-text-muted">
+          Something went wrong. Please try again in a moment.
+        </p>
+      )}
+    </form>
+  );
+}
+
 export function CommunityPage() {
   const settings = useSettings();
   const invite = (settings.discord_invite || '').trim();
   const open = settings.community_enabled !== '0';
-  const email = settings.contact_email || profile.email;
   const canJoin = open && invite !== '';
 
   useSeo({
@@ -58,8 +188,6 @@ export function CommunityPage() {
       isPartOf: { '@type': 'WebSite', url: SITE_URL },
     },
   });
-
-  const mailHref = `mailto:${email}?subject=${encodeURIComponent('Community invite')}`;
 
   return (
     <main className="pt-28 md:pt-32">
@@ -92,11 +220,11 @@ export function CommunityPage() {
                 </a>
               ) : (
                 <a
-                  href={mailHref}
-                  onClick={() => trackCta('community-email', 'community-hero')}
+                  href="#signup"
+                  onClick={() => trackCta('community-signup', 'community-hero')}
                   className="group inline-flex min-h-11 items-center rounded-full bg-accent-solid py-2.5 pl-5 pr-2.5 text-sm font-medium text-on-accent transition-colors hover:bg-accent-solid/90"
                 >
-                  Ask for an invite
+                  Join the list
                   <ArrowBadge tone="dark" />
                 </a>
               )}
@@ -108,8 +236,8 @@ export function CommunityPage() {
             {!canJoin && (
               <p className="mt-4 max-w-[52ch] text-xs leading-relaxed text-text-muted">
                 {open
-                  ? 'The invite link is being set up. Email me and you will get it first.'
-                  : 'The room is opening soon. Email me to be added when doors open.'}
+                  ? 'The Discord invite is being set up. Join the list below and you will get it first.'
+                  : 'The room is opening soon. Join the list below to be added when doors open.'}
               </p>
             )}
           </div>
@@ -167,6 +295,26 @@ export function CommunityPage() {
         </div>
       </section>
 
+      <section id="signup" aria-labelledby="signup-title" className="mx-auto max-w-[1180px] px-5 pb-16 md:pb-24 scroll-mt-28">
+        <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
+          <div>
+            <Kicker>Stay in the loop</Kicker>
+            <h2 id="signup-title" className="mt-5 max-w-[16ch] font-serif text-[clamp(2.3rem,4.6vw,3.8rem)] leading-[1.02] tracking-[-0.015em] text-text">
+              Get the notes, <em className="italic text-hl-a">first.</em>
+            </h2>
+            <p className="mt-5 max-w-[46ch] text-sm leading-[1.75] text-text-muted">
+              One email when a teardown, an app or a community note ships. Your name and
+              optional WhatsApp stay in my private database — used to reply, never sold,
+              never spammed.
+            </p>
+            <p className="mt-4 max-w-[46ch] text-sm leading-[1.75] text-text-muted">
+              Unsubscribe anytime; the link in every email deletes your details for good.
+            </p>
+          </div>
+          <SignupForm />
+        </div>
+      </section>
+
       <section aria-labelledby="who-title" className="border-t border-band-fg/15 bg-band">
         <div className="mx-auto grid max-w-[1180px] gap-10 px-5 py-16 md:py-24 lg:grid-cols-[1fr_1fr] lg:gap-16">
           <div>
@@ -184,19 +332,6 @@ export function CommunityPage() {
                 </li>
               ))}
             </ul>
-            <div className="mt-8 border-t border-band-fg/15 pt-6">
-              <p className="text-sm leading-[1.7] text-band-fg/70">
-                Questions, not sales pitches. If you are unsure whether it fits, ask before joining.
-              </p>
-              <a
-                href={mailHref}
-                onClick={() => trackCta('community-email', 'community-footer')}
-                className="mt-4 inline-flex min-h-11 items-center gap-2 text-sm font-medium text-band-fg rule-link"
-              >
-                Email {email}
-                <Arrow />
-              </a>
-            </div>
           </div>
         </div>
       </section>
