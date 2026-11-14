@@ -237,6 +237,19 @@ the file pick. Caption to paste:
 
 **UTM for every link in this section** — `?utm_source=<channel>&utm_medium=video&utm_campaign=receipts-2026-q4&utm_content=<master|duas|bulbvpn|blankspace|stoolap|consulting>`.
 
+## Platform state (verified 2026-11-15, owner's Chrome)
+| Platform | State | Next move |
+| --- | --- | --- |
+| LinkedIn | Profile, Featured (§5 order) and the week-1 reel post live | — |
+| X | `@hasansorathiya` live, week-1 post `2121673169467580557` | — |
+| GitHub | Profile README + reel asset published (`ed53619b`, `58a37a9`) | — |
+| Instagram | `@hasanabbassorathiya` signed in; week-2 `clip-duas` ready (1080×1920, 15 s) | Owner file-pick in the open "Create new post" modal, then paste the week-2 caption |
+| YouTube | Channel `UCSGwYKSUJb7sX4-BI12WB_Q` signed in; "Upload videos" dialog open | Owner file-pick of `master-16x9.mp4`, then title/description/tags below |
+| Medium | Publication `hasanabbassorathiya.medium.com` is live but dormant — one post, 2022-04-28 | Owner sign-in (browser is signed out), then cross-post an essay with the canonical link |
+| Discord | `Mobile Builders` server created and connected; session expired ("Please log in again") | Owner sign-in, then Server Settings → Onboarding → switch on the rules screen |
+| Dev.to / Reddit / Product Hunt | No owner account yet | Owner creates the account; no handle is guessed |
+| Brevo | Key enabled, calls rejected with `401 — unrecognised IP address 163.123.193.8` | Owner adds the live server's egress IP to the authorised-IP list |
+
 **Still blocked, still not invented:** the X handle is `@hasansorathiya` and the week-1 post is live;
 the Discord server is created and connected. Reddit, Dev.to and Product Hunt still need the owner's
 real accounts — no handle is guessed, and nothing is scheduled there until they exist. The YouTube
