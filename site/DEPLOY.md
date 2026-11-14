@@ -68,10 +68,13 @@ which a `vite preview` cannot reproduce. Brand art therefore lives under `media/
 ## Fastest path — File Manager (no SSH)
 `site/deploy-public_html.zip` is built from `dist/` **plus `site/.htaccess`** and contains no
 `api/` or `admin/` files, so the live PHP panel and `config.php` are untouched. Current bundle
-(2026-11-02, incl. the `/brand` press page and brand art): 215 entries (10,202,689 bytes / 9,964 KB
-uncompressed; 8,391,206 bytes / 8.0 MB zip), SHA-256 `9e0df2c93d7d87cb08eae4672cd638c16272f71140aa33deebf2d5cd932b3e3b`.
-Because the zip is static-only, the newsletter forms need the two PHP files and one table
-described under **Newsletter** below; until those exist they fall back to a mailto message.
+(2026-11-15, incl. the newsletter popup, the community form, the X profile link and the AI-first
+headline): 234 entries (12,108,854 bytes uncompressed; 10,109,878 bytes / 9.6 MB zip), SHA-256
+`49430c4d9df65030d7e2239ff75e8050f86d8929a03f20a1886a056c5a59f98f`.
+The entry chunk is `dist/assets/index-Dn_v-0mG.js` (427,826 bytes, one script tag in `index.html`).
+Because the zip is static-only, the newsletter and community forms need the PHP files and one
+migration described under **Community + Discord autopilot (2026-11-15)** below; until those exist
+they fall back to a mailto message.
 1. hPanel → **Files → File Manager** → open `public_html`.
 2. **Upload** `deploy-public_html.zip`, then right-click → **Extract** → overwrite existing files.
 3. Delete the zip afterwards, then hard-refresh. `/blog`, `/blog/<slug>`, `/apps`, and
@@ -132,6 +135,35 @@ Server-side, Discord was set to Community with a verified-email verification lev
 filtering for all members, `#rules` as the rules channel, and join notices routed to
 `#announcements`. Community Onboarding (the rules screen) still has to be switched on in
 Server Settings → Onboarding.
+
+## Community + Discord autopilot (2026-11-15)
+The community form stores name, email and an optional WhatsApp number; the newsletter popup asks
+for an email only; every signed social-feed post is mirrored into the Discord `#announcements`
+channel. Deploy order (approval-gated, static bundle first is fine but the form needs step 2–4):
+1. Back up `public_html/api/` and `public_html/` on the box before changing anything.
+2. Import `api/migrate-2026-11-13-community.sql` via phpMyAdmin — it adds `name`, `whatsapp`,
+   `consent_at` and `consent_version` to `subscribers`. Additive, nullable and safe to re-run.
+3. Upload `site/deploy-api-2026-11-15.zip` into `public_html/api/` (6 files: `subscribe.php`,
+   `crm.php`, `social.php`, `social-lib.php`, `discord-lib.php`, `discord-publish.php`;
+   SHA-256 `e09300426ca0a0a4805d170fb800279c467b7cbacffc224e40b0a47da1943820`). It holds no
+   `config.php`, no SQL, no `.htaccess` and no secret file, so the live `config.php` is never
+   overwritten.
+4. Upload the three gitignored secret files one by one through File Manager — never into git and
+   never into a zip — and keep them mode 600: `api/discord-secret.php` (the Discord webhook),
+   `api/social-secret.php` (`SOCIAL_WEBHOOK_SECRET`), `api/mail-secret.php` (Brevo key and list
+   id). `api/discord-secret.php` must never be committed.
+5. Upload `site/deploy-public_html.zip` into `public_html/` and extract with overwrite (see
+   **Fastest path** above). It carries the newsletter popup, the community form and the X
+   profile link; `api/` and `admin/` are not in it, so the panel and `config.php` stay untouched.
+6. Verify over HTTPS: `POST /api/subscribe.php` with `{"email":"…","source":"popup"}` answers
+   201; a community signup with `name`, `whatsapp` and `consent:true` answers 201 and shows up in
+   `/admin/subscribers.php` with the name and WhatsApp columns; `GET /api/discord-publish.php`
+   answers 405 and one signed POST publishes a test note; `/community` shows the form without the
+   old "Email me and you will get it first" copy; `/` shows the newsletter popup roughly 45 s
+   after the consent banner is settled.
+The email leg only mirrors to Brevo when the calling IP is on Brevo's authorised-IP list
+(`app.brevo.com/security/authorised_ips`) — add the live server's egress IP. Without it the local
+`subscribers` row is still stored and the failed mirror is only written to the PHP error log.
 
 ## Newsletter (email capture)
 Signup forms on the home Writing section, `/blog`, and every essay post to `/api/subscribe.php`
