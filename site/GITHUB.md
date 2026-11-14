@@ -1,10 +1,10 @@
 # GitHub profile plan — Hasan Abbas Sorathiya
 
-Updated: 2026-11-12. The profile README, account metadata, selected public repository metadata, and the five pinned repositories are published. Pins were set through the profile "Customize your pins" form (`set_pinned_items`), which preserves submission order; verified live in the order below.
+Updated: 2026-11-14. The profile README, account metadata, selected public repository metadata, and the five pinned repositories are published. Pins were set through the profile "Customize your pins" form (`set_pinned_items`), which preserves submission order; verified live in the order below.
 
 ## 1. Profile README
 
-Published in the repository named `hasanabbassorathiya` by `gh api` commit [`f40f1b7`](https://github.com/hasanabbassorathiya/hasanabbassorathiya/commit/f40f1b791fc6cb4ee55461af2a549ca1ce0f003c). The résumé link was repointed from FlowCV to `https://hasanabbassorathiya.tech/resume` in commit [`1c1ad35`](https://github.com/hasanabbassorathiya/hasanabbassorathiya/commit/1c1ad35cfc406b7a08c229dce5eb78c1b49d1a71). The README keeps client code and private repository names out of the profile.
+Published in the repository named `hasanabbassorathiya` by `gh api` commit [`f40f1b7`](https://github.com/hasanabbassorathiya/hasanabbassorathiya/commit/f40f1b791fc6cb4ee55461af2a549ca1ce0f003c). The résumé link was repointed from FlowCV to `https://hasanabbassorathiya.tech/resume` in commit [`1c1ad35`](https://github.com/hasanabbassorathiya/hasanabbassorathiya/commit/1c1ad35cfc406b7a08c229dce5eb78c1b49d1a71). The reel asset and its README section shipped 2026-11-14 in commits [`ed53619`](https://github.com/hasanabbassorathiya/hasanabbassorathiya/commit/ed53619b2d29c723c9262481967d2616b5c2cc8c) and [`58a37a9`](https://github.com/hasanabbassorathiya/hasanabbassorathiya/commit/58a37a94d3dded1293564f8a524623cf72b74b7c) — `assets/portfolio-reel.mp4` (1,096,703 bytes) uploaded through the Git Data API because the REST Contents API refuses files over 1 MB, and the second commit replaces a `<video>` tag that GitHub's markdown sanitizer stripped (it renders an empty paragraph) with a link to the raw asset. The README keeps client code and private repository names out of the profile.
 
 ```markdown
 See the live [profile README](https://github.com/hasanabbassorathiya/hasanabbassorathiya#readme) for the published copy.

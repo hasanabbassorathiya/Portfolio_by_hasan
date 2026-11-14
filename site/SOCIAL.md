@@ -141,8 +141,9 @@ post copy uses the live read `1,072` (2026-11-13). `21 apps` is the live CMS cou
 (`api/index.php?entity=apps` → 21 rows); `hasan.md` §5 still lists 15 and needs reconciling first.
 
 **Week 1 · master reel · LinkedIn** — REWRITTEN 2026-11-14 with the marketing-psychology
-checklist applied; replaces the copy
-scheduled 2026-11-13 for Sat 9:00 AM (edit the scheduled post before it fires). Psychology mapping:
+checklist applied. The post went live 2026-11-14 09:00 Dubai with the earlier copy; it was then
+edited in place to the copy below (LinkedIn marks it "Edited"), reel still attached, impressions
+preserved. Psychology mapping:
 information-gap hook before LinkedIn's "see more" fold; authority bias through checkable receipts
 (Play listing, pub.dev, credential ID — each opens in a new tab); social proof always carrying its
 denominator; contrast (logo PDF → receipts system); reciprocity (essays and package given first, ask
@@ -168,13 +169,20 @@ adjectives, no number outside `hasan.md` §5.
 > The reel is here; the receipts are behind it:
 > https://hasanabbassorathiya.tech
 
-**Week 1 · master reel · LinkedIn Featured** — add the reel post to Featured in the §5 order of
-[LINKEDIN.md](LINKEDIN.md): site, then `stoolap_flutter` on pub.dev, then the RAG essay, then apps,
-then résumé. The reel entry keeps working after the feed moves on; that is its job (mere exposure —
-the recruiter meets the same receipts twice).
+**Week 1 · master reel · LinkedIn Featured** — DONE 2026-11-14. The reel post is featured
+("Feature on top of my profile") and the §5 order of [LINKEDIN.md](LINKEDIN.md) is live and
+verified: site, then `stoolap_flutter` on pub.dev, then the RAG essay, then apps, then résumé,
+with the reel post directly below them. LinkedIn prepends newly added Featured entries and offers
+no reorder control, so the order was set by re-adding the links in reverse. The reel entry keeps
+working after the feed moves on; that is its job (mere exposure — the recruiter meets the same
+receipts twice).
 
-**Week 1 · master reel · YouTube** — `master-16x9.mp4` as a normal (not Short) upload. Silent with
-burned-in captions, so the description carries the links.
+**Week 1 · master reel · YouTube** — OWNER ACTION, not published. `master-16x9.mp4` as a normal
+(not Short) upload. Silent with burned-in captions, so the description carries the links. The
+channel (UCSGwYKSUJb7sX4-BI12WB_Q, "HASAN ABBAS SORATHIYA") is signed in on the owner's Chrome,
+but the Qoder Browser Connector requires the owner to confirm the file upload in the extension;
+every programmatic path was refused with `{"code":-32000,"message":"Not allowed"}`. File to pick:
+`marketing/2026-11-03/out/master-16x9.mp4` (1,096,703 bytes, 45 s, 1920×1080, h264, no audio).
 
 - Title: `I build AI systems and Flutter apps people keep using — 7+ years of receipts (portfolio reel)`
 - Description:
@@ -188,12 +196,16 @@ burned-in captions, so the description carries the links.
   > Site: https://hasanabbassorathiya.tech · Résumé: /resume · Apps: /apps · Essays: /blog
 - Tags: `flutter, ai engineer, portfolio, mobile development, rag, langchain, dubai`
 
-**Week 1 · master reel · X** (one idea, one link — handle `@hasansorathiya` confirmed by the owner 2026-11-14)
+**Week 1 · master reel · X** — PUBLISHED 2026-11-14 (one idea, one link — handle `@hasansorathiya`
+confirmed by the owner 2026-11-14). Status `2121673169467580557`; the link carries
+`utm_source=x&utm_medium=video&utm_campaign=receipts-2026-q4&utm_content=master`.
 
 > Every claim on my portfolio opens in a new tab: a 50,000+ user lending app, a 5.0★ prayer app with 1,072 ratings, a package on pub.dev. 7+ years, receipts not adjectives: https://hasanabbassorathiya.tech
 
-**Week 1 · GitHub profile README** (16:9, muted; the FlowCV→`/resume` repoint already shipped in
-`hasanabbassorathiya/hasanabbassorathiya` commit `1c1ad35` — this adds the reel line)
+**Week 1 · GitHub profile README** — PUBLISHED 2026-11-14 (16:9, muted; the FlowCV→`/resume`
+repoint already shipped in `hasanabbassorathiya/hasanabbassorathiya` commit `1c1ad35`; the reel
+line and asset shipped in `ed53619b` and `58a37a9` — the second commit replaces a `<video>` tag
+that GitHub's markdown sanitizer stripped)
 
 > 7+ years of shipped Flutter, iOS and Android — and the AI systems behind the product. Watch the reel, then check the receipts: https://hasanabbassorathiya.tech
 
@@ -220,5 +232,8 @@ burned-in captions, so the description carries the links.
 
 **UTM for every link in this section** — `?utm_source=<channel>&utm_medium=video&utm_campaign=receipts-2026-q4&utm_content=<master|duas|bulbvpn|blankspace|stoolap|consulting>`.
 
-**Still blocked, still not invented:** X, Discord, Reddit, Dev.to and Product Hunt posting requires
-the owner's actual handles. Nothing in this sequence is scheduled there until they exist.
+**Still blocked, still not invented:** the X handle is `@hasansorathiya` and the week-1 post is live;
+the Discord server is created and connected. Reddit, Dev.to and Product Hunt still need the owner's
+real accounts — no handle is guessed, and nothing is scheduled there until they exist. The YouTube
+upload needs the owner's file-pick in the Browser Connector; the Brevo key for the community email
+leg is still missing.
