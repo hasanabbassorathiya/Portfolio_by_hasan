@@ -70,8 +70,11 @@ which a `vite preview` cannot reproduce. Brand art therefore lives under `media/
 `api/` or `admin/` files, so the live PHP panel and `config.php` are untouched. Current bundle
 (2026-11-15, incl. the newsletter popup, the community form, the X profile link and the AI-first
 headline): 234 entries (12,101,339 bytes uncompressed; 10,109,110 bytes / 9.6 MB zip), SHA-256
-`64d97f76a5429db2c730c1d22e9a5ed3b9873eac33a79302a3e9b66afc3fc3f5`.
+`a709e06dee685bd06636eb37fce7882275bacb0d1d216283e8fc53f00d2b1060`.
 The entry chunk is `dist/assets/index-DfC9bXv-.js` (427,791 bytes, one script tag in `index.html`).
+The zip stores file mtimes, so re-zipping identical content produces a different hash — check the
+entry chunk name, not only the SHA, when comparing bundles. Build **after** `node --test`:
+`prerender.test.mjs` leaves an unminified 685 kB `dist/assets/index-*.js` behind.
 Because the zip is static-only, the newsletter and community forms need the PHP files and one
 migration described under **Community + Discord autopilot (2026-11-15)** below; until those exist
 they fall back to a mailto message.
