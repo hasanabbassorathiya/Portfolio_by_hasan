@@ -21,6 +21,7 @@ export const profile = {
   email: 'hasanabbassorathiya12@gmail.com',
   linkedin: 'https://www.linkedin.com/in/hasanabbassorathiya/',
   github: 'https://github.com/hasanabbassorathiya',
+  x: 'https://x.com/hasansorathiya',
   youtube: 'https://www.youtube.com/channel/UCSGwYKSUJb7sX4-BI12WB_Q',
   instagram: 'https://www.instagram.com/hasanabbassorathiya/',
   medium: 'https://hasanabbassorathiya.medium.com/',

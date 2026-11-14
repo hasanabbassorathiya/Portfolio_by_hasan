@@ -13,6 +13,7 @@ export function SiteFooter() {
 
   const elsewhere = [
     ['Résumé', '/resume'],
+    ['X', profile.x],
     ['YouTube', profile.youtube],
     ['Instagram', profile.instagram],
     ['Medium', profile.medium],

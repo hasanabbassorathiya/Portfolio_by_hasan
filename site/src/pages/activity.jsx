@@ -37,6 +37,7 @@ export function ActivityPage() {
   const channels = [
     ['LinkedIn', profile.linkedin],
     ['GitHub', profile.github],
+    ['X', profile.x],
     ['Instagram', profile.instagram],
     ['Medium', profile.medium],
     ['YouTube', profile.youtube],
