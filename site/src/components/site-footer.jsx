@@ -27,7 +27,6 @@ export function SiteFooter() {
     ['Tailwind CSS', 'https://tailwindcss.com'],
     ['PHP', 'https://www.php.net'],
     ['MySQL', 'https://www.mysql.com'],
-    ['Directus', 'https://directus.io'],
   ];
 
   return (

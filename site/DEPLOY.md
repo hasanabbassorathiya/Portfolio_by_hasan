@@ -69,9 +69,9 @@ which a `vite preview` cannot reproduce. Brand art therefore lives under `media/
 `site/deploy-public_html.zip` is built from `dist/` **plus `site/.htaccess`** and contains no
 `api/` or `admin/` files, so the live PHP panel and `config.php` are untouched. Current bundle
 (2026-11-15, incl. the newsletter popup, the community form, the X profile link and the AI-first
-headline): 234 entries (12,108,854 bytes uncompressed; 10,109,878 bytes / 9.6 MB zip), SHA-256
-`49430c4d9df65030d7e2239ff75e8050f86d8929a03f20a1886a056c5a59f98f`.
-The entry chunk is `dist/assets/index-Dn_v-0mG.js` (427,826 bytes, one script tag in `index.html`).
+headline): 234 entries (12,101,339 bytes uncompressed; 10,109,110 bytes / 9.6 MB zip), SHA-256
+`64d97f76a5429db2c730c1d22e9a5ed3b9873eac33a79302a3e9b66afc3fc3f5`.
+The entry chunk is `dist/assets/index-DfC9bXv-.js` (427,791 bytes, one script tag in `index.html`).
 Because the zip is static-only, the newsletter and community forms need the PHP files and one
 migration described under **Community + Discord autopilot (2026-11-15)** below; until those exist
 they fall back to a mailto message.

@@ -1,5 +1,10 @@
 # Directus admin for the portfolio
 
+> **Retired 2026-11-15.** The PHP panel (`site/admin/`) and the site MCP are the supported admin
+> path; `cms.hasanabbassorathiya.tech` answers `503` and is no longer part of the live site. The
+> Hostinger Node web app still has to be deleted by the owner to release the plan's Node
+> allocation. This file is kept for the runbook history only — do not re-deploy it.
+
 Directus 12.5.0 attached to the **existing** MySQL content tables. It replaces the broken
 hand-written admin (`site/admin/`) with a mature Studio UI. The public React site keeps reading
 through the PHP API (`/api/index.php`); Directus only writes to the same database, so nothing on
