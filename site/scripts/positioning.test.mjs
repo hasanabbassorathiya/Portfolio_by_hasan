@@ -12,7 +12,7 @@ const read = (p) => readFile(path.join(root, p), 'utf8').catch((error) => {
   throw error;
 });
 
-const HEADLINE = 'I build Flutter apps and AI systems people keep using.';
+const HEADLINE = 'I build AI systems and Flutter apps people keep using.';
 
 // Retired lines: each promised a floor ("does not break") instead of an outcome.
 const RETIRED = [
