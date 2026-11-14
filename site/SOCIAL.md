@@ -209,9 +209,14 @@ that GitHub's markdown sanitizer stripped)
 
 > 7+ years of shipped Flutter, iOS and Android — and the AI systems behind the product. Watch the reel, then check the receipts: https://hasanabbassorathiya.tech
 
-**Week 2 · `clip-duas` · Reels / Shorts**
+**Week 2 · `clip-duas` · Reels / Shorts** — prepared 2026-11-15, not published. `clip-duas.mp4`
+is 1080×1920, 15 s, and the Instagram account `@hasanabbassorathiya` is signed in on the owner's
+Chrome. The Qoder Browser Connector refuses every programmatic file transfer with
+`{"code":-32000,"message":"Not allowed"}` — reproduced with a 3 KB PNG, so it is a blanket upload
+policy, not a file-size limit. The "Create new post" modal is left open in the owner's browser for
+the file pick. Caption to paste:
 
-> 5.0★ across 1,072 Play ratings: Quran with Gujarati translation, prayer times, widgets, offline mode — built Gujarati-first. https://hasanabbassorathiya.tech/apps
+> 5.0★ across 1,072 Play ratings: Quran with Gujarati translation, prayer times, widgets, offline mode — built Gujarati-first. https://hasanabbassorathiya.tech/apps?utm_source=instagram&utm_medium=video&utm_campaign=receipts-2026-q4&utm_content=duas
 
 **Week 3 · `clip-bulbvpn`**
 
@@ -235,5 +240,8 @@ that GitHub's markdown sanitizer stripped)
 **Still blocked, still not invented:** the X handle is `@hasansorathiya` and the week-1 post is live;
 the Discord server is created and connected. Reddit, Dev.to and Product Hunt still need the owner's
 real accounts — no handle is guessed, and nothing is scheduled there until they exist. The YouTube
-upload needs the owner's file-pick in the Browser Connector; the Brevo key for the community email
-leg is still missing.
+and Instagram uploads need the owner's file-pick in the Browser Connector — the connector refuses
+programmatic uploads outright, and both upload surfaces are left open in the owner's browser. The
+Brevo key for the community email leg exists and is enabled, but Brevo rejects calls from
+unrecognised IPs (`401 — unrecognised IP address 163.123.193.8`), so the live server's egress IP
+still has to be added to Brevo's authorised-IP list before the mirror can send.
