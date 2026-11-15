@@ -33,9 +33,10 @@ Cover frames come from the same compositions — no separate thumbnail shoot.
 comment and the post body, then add it to the profile's Featured section, where it keeps working
 after the feed moves on. The consulting cut goes on the Services page section, not the feed.
 
-**GitHub** — profile README, 16:9, autoplay-muted loop, one line under it. The README currently
-links a FlowCV resume URL instead of this site's own `/resume`; fix that in the same pass
-(otherwise the video and the CV disagree about who you are).
+**GitHub** — profile README, 16:9, autoplay-muted loop, one line under it. The README's "Resume"
+link now points at this site's own `/resume`, not FlowCV — done in profile-repo commit `1c1ad35`,
+verified 2026-11-15 (the reel embedded above it is the re-made 24-second master, `ca65548`,
+byte-identical to `brag-output-2026-11-14-004922/brag.mp4`).
 
 **YouTube** — the master reel as a normal video with the full caption as description; each 9:16
 clip as a Short. Shorts carry a link to the channel's own site.

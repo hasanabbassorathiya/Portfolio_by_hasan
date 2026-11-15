@@ -177,7 +177,9 @@ no reorder control, so the order was set by re-adding the links in reverse. The 
 working after the feed moves on; that is its job (mere exposure — the recruiter meets the same
 receipts twice).
 
-**Week 1 · master reel · YouTube** — PUBLISHED 2026-11-15 21:39 UTC. Uploaded and published
+**Week 1 · master reel · YouTube** — PUBLISHED 2026-11-15 (live `publishDate`/`uploadDate`
+`2026-11-15T09:39:12-08:00` = 17:39 UTC, verified 2026-11-15 by re-fetching the watch page).
+Uploaded and published
 through the Playwright MCP browser, which carries the owner's own signed-in YouTube session
 (verified before upload: the channel page showed the owner-only "Manage videos" and
 "Customize channel" affordances, the channel `og:image` matched the signed-in account avatar,
