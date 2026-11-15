@@ -28,6 +28,10 @@ $fields = [
     'instagram_url' => ['label' => 'Instagram', 'group' => 'social', 'type' => 'url'],
     'play_dev_url' => ['label' => 'Google Play dev page', 'group' => 'social', 'type' => 'url'],
     'appstore_dev_url' => ['label' => 'App Store dev page', 'group' => 'social', 'type' => 'url'],
+    'rate_audit' => ['label' => 'Audit rate', 'group' => 'rates', 'type' => 'text', 'placeholder' => 'From AED X,XXX per audit', 'help' => 'Shown on /services when set.'],
+    'rate_sprint' => ['label' => 'Build sprint rate', 'group' => 'rates', 'type' => 'text', 'placeholder' => 'AED X,XXX per two-week block', 'help' => 'Shown on /services when set.'],
+    'rate_retainer' => ['label' => 'Retainer rate', 'group' => 'rates', 'type' => 'text', 'placeholder' => 'AED X,XXX per month', 'help' => 'Shown on /services when set.'],
+    'rate_note' => ['label' => 'Rate note', 'group' => 'rates', 'type' => 'text', 'placeholder' => 'How you quote — e.g. quoted per scope, 50% upfront', 'help' => 'One line under the rate cards.'],
 ];
 
 $groups = [
@@ -37,6 +41,7 @@ $groups = [
     'community' => 'Community',
     'social' => 'Social profiles',
     'site' => 'Site',
+    'rates' => 'Engagement rates',
 ];
 
 $values = [];

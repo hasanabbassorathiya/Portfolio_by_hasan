@@ -19,6 +19,10 @@ function settings_fields(): array
         'instagram_url' => ['type' => 'url'],
         'play_dev_url' => ['type' => 'url'],
         'appstore_dev_url' => ['type' => 'url'],
+        'rate_audit' => ['type' => 'text'],
+        'rate_sprint' => ['type' => 'text'],
+        'rate_retainer' => ['type' => 'text'],
+        'rate_note' => ['type' => 'text'],
     ];
 }
 

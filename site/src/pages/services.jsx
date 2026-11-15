@@ -1,6 +1,7 @@
 import React from 'react';
 import { services } from '../content/services';
 import { Link } from '../lib/router';
+import { useSettings } from '../lib/settings';
 import { personJsonLd, SITE_NAME, useSeo } from '../lib/seo';
 import { Arrow, ArrowBadge, Check, Kicker } from '../sections/ref-ui';
 
@@ -32,6 +33,100 @@ export function ServiceEnquiry({
             Scope, deliverables and commercial terms are agreed before work begins. No fixed timeline or outcome is implied by these service descriptions.
           </p>
         </div>
+      </div>
+    </section>
+  );
+}
+
+const rateCards = [
+  {
+    key: 'rate_audit',
+    index: '01',
+    tag: 'Audit',
+    title: 'Audit',
+    scope: 'One question, one written answer.',
+    points: [
+      'An existing app reviewed across architecture, state and data layers',
+      'A findings report with priorities and the evidence behind them',
+      'A walkthrough call for your team',
+    ],
+    boundary: 'Investigation only — no code ships from an audit.',
+  },
+  {
+    key: 'rate_sprint',
+    index: '02',
+    tag: 'Build sprint',
+    title: 'Build sprint',
+    scope: 'Two-week blocks against a scope agreed in writing.',
+    points: [
+      'Deliverables defined and agreed before the block starts',
+      'Working code, tested on real devices',
+      'A demo at the end of every block',
+    ],
+    boundary: 'Delivery blocks, not a fixed calendar outcome. Each block is re-agreed at its end.',
+  },
+  {
+    key: 'rate_retainer',
+    index: '03',
+    tag: 'Retained advisory',
+    title: 'Retained advisory',
+    scope: 'Ongoing senior cover for a team that already ships.',
+    points: [
+      'Reviews and pairing on your mobile and AI work',
+      'Release and store compliance support',
+      'Priority async access',
+    ],
+    boundary: 'Senior cover, not full-time employment.',
+  },
+];
+
+function CommercialTerms() {
+  const settings = useSettings();
+  const note = (settings.rate_note || '').trim();
+  return (
+    <section aria-labelledby="commercial-terms-title" className="border-t border-ink/15">
+      <div className="mx-auto max-w-[1180px] px-5 py-16 md:py-24">
+        <div className="grid gap-7 lg:grid-cols-[1.15fr_0.85fr] lg:items-end lg:gap-16">
+          <div>
+            <Kicker>Commercial terms</Kicker>
+            <h2 id="commercial-terms-title" className="mt-5 max-w-[18ch] font-serif text-[clamp(2.2rem,4.5vw,3.8rem)] leading-[1.05] tracking-[-0.015em] text-text">
+              Three ways in. The number follows <em className="italic text-hl-a">the scope.</em>
+            </h2>
+          </div>
+          <p className="max-w-[54ch] text-[16px] leading-[1.8] text-text-muted">
+            Nothing on this page is a fixed package. The first step is agreeing the boundary of the work in writing; the rate follows that boundary, not a list written before reading your brief.
+          </p>
+        </div>
+        <div className="mt-12 grid gap-px border border-ink/10 bg-ink/10 md:mt-16 md:grid-cols-3">
+          {rateCards.map((card) => {
+            const rate = (settings[card.key] || '').trim();
+            return (
+              <article key={card.key} className="flex flex-col bg-surface p-6 md:p-7">
+                <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-text-muted">{card.index} · {card.tag}</p>
+                <h3 className="mt-4 font-serif text-[clamp(1.5rem,2.4vw,1.9rem)] leading-[1.1] tracking-[-0.01em] text-text">{card.title}</h3>
+                <p className="mt-3 text-[15px] leading-[1.7] text-text">{card.scope}</p>
+                <ul className="mt-6 flex flex-col gap-3">
+                  {card.points.map((point) => (
+                    <li key={point} className="flex gap-2.5 text-[13px] leading-[1.6] text-text/80">
+                      <span className="text-current [&_svg]:text-current"><Check /></span>
+                      {point}
+                    </li>
+                  ))}
+                </ul>
+                <p className="mt-6 border-t border-ink/10 pt-4 text-xs leading-relaxed text-text-muted">{card.boundary}</p>
+                <div className="mt-auto pt-6">
+                  <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-text-muted">{rate ? 'Indicative rate' : 'Rate'}</p>
+                  <p className={`mt-2 font-mono text-sm tracking-[0.02em] ${rate ? 'text-text' : 'text-text-muted'}`}>
+                    {rate || 'Quoted per scope'}
+                  </p>
+                </div>
+              </article>
+            );
+          })}
+        </div>
+        <p className="mt-8 max-w-[78ch] text-sm leading-[1.75] text-text-muted">
+          {note || 'Written scope, deliverables and payment terms are agreed before any work begins.'}
+        </p>
       </div>
     </section>
   );
@@ -96,6 +191,7 @@ export function ServicesPage() {
           Not sure where your project fits? A product can need more than one of these. The brief comes first; the service boundary follows the problem, not the other way around.
         </p>
       </section>
+      <CommercialTerms />
       <ServiceEnquiry />
     </main>
   );
