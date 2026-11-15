@@ -372,14 +372,30 @@ Or use cPanel **Git™ Version Control**: push this repo to GitHub, pull on serv
 `cd ~/portfolio/site && npm ci && npm run build && rsync...` (Node available on most Hostinger Node tiers).
 
 ## Post-deploy verification (LAUNCH_CHECKLIST.md)
-- [ ] `https://hasanabbassorathiya.tech` loads, force-HTTPS works
-- [ ] `/api/index.php?entity=profile` and `?entity=clients` return JSON
-- [ ] `/work` and `/work/evlab` load with the case-study shell (view source shows the right title/OG)
-- [ ] Admin login via `/admin` works (token calls to crud.php)
+Verified live over SSH + Playwright on 2026-11-15 (after the rate-card deploy):
+- [x] `https://hasanabbassorathiya.tech` loads, force-HTTPS works (homepage `/` → 200)
+- [x] All 53 sitemap URLs → 200; `apps`, `clients`, `posts`, `projects`, `profile`, `experience`,
+      `skills`, `activity`, `settings` entities all return JSON 200
+- [x] `/work/evlab`, `/blog/<slug>`, `/apps/<slug>`, `/services` prerendered shells carry the right
+      `<title>` + `og:title`/`og:description` in view source
+- [x] `/community` hydrates the Discord CTA (`https://discord.gg/yy4NTZ3C6D`) from settings; the
+      newsletter fallback is only the prerendered shell state and disappears after hydration
+- [x] `/services` Commercial terms section: three cards render "Quoted per scope" on desktop and
+      stacked at 390 px with no horizontal overflow
+- [x] Signup guards on `/api/subscribe.php`: bare email → 201 by design; name without consent → 422
+      `consent_required`; bad WhatsApp → 422; honeypot → `ok` with no row
+- [x] A consented test signup (name + email + consent) landed with `consent_at` +
+      `consent_version=community-v1`, was deleted afterwards (subscribers left at their prior count)
+- [x] Enquiry guards on `/api/enquiries.php`: no consent → 422, bad type → 422, bad requestId → 422,
+      foreign Origin → 403, honeypot field set → 422 `invalid_submission`
+- [x] A valid test enquiry returned a 32-hex reference, queued `owner` + `ack` outbox rows, and was
+      deleted with its outbox rows (enquiries and enquiry_outbox back to 0)
+- [ ] Admin login via `/admin` works (token calls to crud.php) — `/admin/` → 200 but no admin session
+      available to the agent; owner logs in to confirm
 - [ ] `/admin/analytics.php` renders; opening the site in a normal browser adds one visitor and one
       `/` pageview; a bot user-agent and an admin session add nothing
-- [ ] `/admin/settings.php` saves; `/api/index.php?entity=settings` reflects the same values
-- [ ] `/community` shows the Discord CTA, or the newsletter fallback while the invite is blank
+- [ ] `/admin/settings.php` saves; `/api/index.php?entity=settings` reflects the same values —
+      the four rate keys are whitelisted on live, so this is where the owner fills the rates
 - [ ] IndexNow: "Submit sitemap" reports HTTP 200/202 and `/<key>.txt` resolves over HTTPS
 - [ ] Upload an image from `admin/edit.php`; the file lands in `/media/uploads/<folder>/` and the
       editor shows the thumbnail
