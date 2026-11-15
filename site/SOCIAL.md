@@ -402,3 +402,13 @@ Same body as the Medium draft above, with this closing block instead:
 - Instagram reel `marketing/2026-11-03/out/clip-duas.mp4` — same owner file-pick gate; "Create new post" modal is open in the owner's browser.
 - Medium sign-in — email magic link or password; nothing is pasted or entered by the agent.
 - Dev.to / Reddit / Product Hunt account creation — no handle is guessed; nothing is scheduled until the accounts exist.
+- Brevo welcome automation (automation id 1, "Welcome message"): trigger = contact added to list "Mobile Builders Community" (#2), delay 1 hour, email step uses template #1. The template editor detaches the browser debugger on every interaction, so the copy below could not be pasted in; also Brevo blocks sending automation emails until the owner completes https://account.brevo.com/profile/. Copy for the owner to paste manually once unblocked:
+  - Heading: "Hey FIRSTNAME, you're in."
+  - Para 1: "You're in. This list gets one email when I publish something new: production notes from shipping Flutter apps and the AI systems behind them, plus the operations that keep them honest."
+  - Para 2: "If you want a second opinion on an architecture, a release, or a RAG pipeline, reply to this email. I read them, and I answer the ones that come with enough detail."
+  - Buttons: "Read the essays" → https://hasanabbassorathiya.tech/blog ; "Join the community" → https://hasanabbassorathiya.tech/community
+  - Footer address: "Dubai, United Arab Emirates"
+  - Footer legal: "You've received this email because you joined the Mobile Builders community."
+  - Subject: "You're in — welcome to the Mobile Builders community"
+  - Preview text: to be added
+  Remaining clicks after pasting: Confirm step 3, save, Activate (still cannot send until the Brevo profile is completed).
