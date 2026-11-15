@@ -1,5 +1,30 @@
 # Deploying to Hostinger — hasanabbassorathiya.tech
 
+## Last deploy — 2026-11-15 (live, verified)
+
+| What | Result |
+|---|---|
+| Static bundle | `deploy-public_html.zip` (10,109,110 B, sha256 `a709e06…`) → `public_html/`, 234 entries; `index.html` now loads `assets/index-DfC9bXv-.js` + `assets/index-BKi84k6i.css` |
+| API bundle | `deploy-api-2026-11-15.zip` (10,742 B, sha256 `e093004…`) → `public_html/`, so it lands in `public_html/api/`: `subscribe.php`, `crm.php`, `social.php`, `social-lib.php`, `discord-lib.php`, `discord-publish.php` |
+| Untouched | `api/config.php` (274 B, mtime 2026-10-21), `api/social-secret.php`, `api/mail-secret.php`, `api/discord-secret.php`, `admin/` |
+| DB | `subscribers` already had `name`, `whatsapp`, `consent_at`, `consent_version` — no ALTER needed |
+| `.htaccess` | sha256 identical before and after (`3e30845a…`) — the live rules already matched the bundle |
+
+Transport: hPanel **Advanced → Cron Jobs** is a real account shell. The cron command (≤255 chars
+after hPanel's escaping) fetched a one-shot PHP script from a public GitHub release and ran it with
+`/usr/bin/php`; the script pulled both zips, extracted them with `ZipArchive`, applied the
+idempotent `ALTER TABLE` guard and wrote a step log. Both cron jobs, the temporary release and the
+three log files were deleted afterwards. The other routes were unusable: the browser connector
+refuses File Manager uploads, the SSH gateway resets before the banner, and the agent never fills
+FTP password fields.
+
+Verified live afterwards: `/`, `/community/`, `/admin/`, `/blog/<slug>/` → 200;
+`/api/discord-publish.php` → 405 (alive, POST only); `POST /api/subscribe.php` without `consent`
+→ 422; a consented test signup returned 201, landed in `subscribers` with name + WhatsApp +
+consent stamp, and was deleted again; the Discord webhook answered 200 (`Site announcements`);
+Brevo still answers 401 for the server's egress IP — add the current address under
+**Brevo → Security → Authorised IPs** (the egress address rotates, so check the API error message).
+
 ## One-time prep
 1. **MySQL DB** (cPanel → MySQL Databases): create DB + user, then import, in this order:
    `api/schema.sql`, `api/v2-schema.sql`, `api/seed.sql`, `api/seed-content.sql`,

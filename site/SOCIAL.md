@@ -177,24 +177,30 @@ no reorder control, so the order was set by re-adding the links in reverse. The 
 working after the feed moves on; that is its job (mere exposure — the recruiter meets the same
 receipts twice).
 
-**Week 1 · master reel · YouTube** — OWNER ACTION, not published. `master-16x9.mp4` as a normal
-(not Short) upload. Silent with burned-in captions, so the description carries the links. The
-channel (UCSGwYKSUJb7sX4-BI12WB_Q, "HASAN ABBAS SORATHIYA") is signed in on the owner's Chrome,
+**Week 1 · master reel · YouTube** — OWNER ACTION, not published. Re-rendered 2026-11-15
+(`brag-output-2026-11-14-004922/brag.mp4`) as a normal (not Short) upload: 23.8 s, 1920×1080,
+714 frames, 5,213,047 bytes, h264, no audio — silent with burned-in text, so the description
+carries the links. Frame 0 is the settled end card (the poster is baked in), so the auto-thumbnail
+is the strongest beat; upload `brag.jpg` (1920×1080) as the custom thumbnail anyway.
+The channel (UCSGwYKSUJb7sX4-BI12WB_Q, "HASAN ABBAS SORATHIYA") is signed in on the owner's Chrome,
 but the Qoder Browser Connector requires the owner to confirm the file upload in the extension;
 every programmatic path was refused with `{"code":-32000,"message":"Not allowed"}`. File to pick:
-`marketing/2026-11-03/out/master-16x9.mp4` (1,096,703 bytes, 45 s, 1920×1080, h264, no audio).
+`brag-output-2026-11-14-004922/brag.mp4`.
 
 - Title: `I build AI systems and Flutter apps people keep using — 7+ years of receipts (portfolio reel)`
 - Description:
-  > A portfolio you can check. 20 seconds, no voiceover, no stock footage — the listings, the numbers and the commits.
+  > A portfolio you can check. 24 seconds, no voiceover, no stock footage — the listings, the numbers and the commits.
   >
-  > - Good2Go Loans — 50,000+ users in New Zealand
-  > - Nakheel Marinas — 15,000+ first-month downloads
-  > - Duas and Aamal — 5.0 across 1,072 Google Play ratings
+  > - Duas and Aamal — 5.0★ across 1,072 Google Play reviews
+  > - Good2Go Loans — 50K+ users in New Zealand
+  > - Nakheel Marinas — 15K+ first-month downloads
   > - stoolap_flutter — v2.0.1 on pub.dev
+  > - 21 app profiles on the site
   >
   > Site: https://hasanabbassorathiya.tech · Résumé: /resume · Apps: /apps · Essays: /blog
 - Tags: `flutter, ai engineer, portfolio, mobile development, rag, langchain, dubai`
+- Format variants from the same render (owner-executed): `brag-1080x1080.mp4` (1:1, X feed) and
+  `brag-1080x1920.mp4` (9:16, Reels / Shorts — text kept inside the TikTok/Reels/Shorts safe bands).
 
 **Week 1 · master reel · X** — PUBLISHED 2026-11-14 (one idea, one link — handle `@hasansorathiya`
 confirmed by the owner 2026-11-14). Status `2121673169467580557`; the link carries
