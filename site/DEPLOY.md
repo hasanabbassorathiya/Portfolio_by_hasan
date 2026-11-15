@@ -401,6 +401,8 @@ Verified live over SSH + Playwright on 2026-11-15 (after the rate-card deploy):
       editor shows the thumbnail
 - [ ] `admin/subscribers.php` loads; a test signup appears there and its unsubscribe link removes it
 - [ ] `admin/enquiries.php` loads; a test enquiry returns a 32-hex reference and appears in the list
-- [ ] `php site/scripts/enquiry-worker.php` dry run exits `dry_run_complete`; one `--send` reaches the owner inbox
+- [x] `enquiry-worker.php` dry run exits `dry_run_complete` (run over SSH on 2026-11-15 with the
+      script staged outside the docroot via a symlinked `api/`; staging removed afterwards). The
+      `--send` leg is owner-run: it needs `ENQUIRY_OWNER_EMAIL`/`ENQUIRY_FROM_EMAIL` and sends real mail
 - [ ] GA4 DebugView shows `section_view` / `cta_click` / `enquiry_submit` / `newsletter_signup` events; register `category` and `type` as event-scoped custom dimensions to split project from recruitment enquiries
 - [ ] Search Console: submit `sitemap.xml`
