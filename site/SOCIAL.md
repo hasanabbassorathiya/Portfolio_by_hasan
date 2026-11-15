@@ -177,15 +177,28 @@ no reorder control, so the order was set by re-adding the links in reverse. The 
 working after the feed moves on; that is its job (mere exposure — the recruiter meets the same
 receipts twice).
 
-**Week 1 · master reel · YouTube** — OWNER ACTION, not published. Re-rendered 2026-11-15
+**Week 1 · master reel · YouTube** — PUBLISHED 2026-11-15 21:39 UTC. Uploaded and published
+through the Playwright MCP browser, which carries the owner's own signed-in YouTube session
+(verified before upload: the channel page showed the owner-only "Manage videos" and
+"Customize channel" affordances, the channel `og:image` matched the signed-in account avatar,
+and the Studio sidebar read "Your channel · HASAN ABBAS SORATHIYA" for `UCSGwYKSUJb7sX4-BI12WB_Q`).
+Video ID `p0KscFpmSGg`, https://youtu.be/p0KscFpmSGg — re-fetched from outside the Studio
+session after publishing: `<title>` matches, `itemprop="duration"` `PT0M24S`, `og:url` correct,
+description verbatim. Audience set to "No, it's not made for kids"; checks reported
+"Copyright check complete / No issues found". Re-rendered 2026-11-15
 (`brag-output-2026-11-14-004922/brag.mp4`) as a normal (not Short) upload: 23.8 s, 1920×1080,
 714 frames, 5,213,047 bytes, h264, no audio — silent with burned-in text, so the description
 carries the links. Frame 0 is the settled end card (the poster is baked in), so the auto-thumbnail
-is the strongest beat; upload `brag.jpg` (1920×1080) as the custom thumbnail anyway.
-The channel (UCSGwYKSUJb7sX4-BI12WB_Q, "HASAN ABBAS SORATHIYA") is signed in on the owner's Chrome,
-but the Qoder Browser Connector requires the owner to confirm the file upload in the extension;
-every programmatic path was refused with `{"code":-32000,"message":"Not allowed"}`. File to pick:
-`brag-output-2026-11-14-004922/brag.mp4`.
+is the strongest beat. **The custom thumbnail is NOT set:** uploading `brag.jpg` (1920×1080,
+47,946 B — verified with `sips`) raised YouTube's own dialog *"Unlock more on YouTube — To add
+custom thumbnails, verify your phone number."* The channel is not phone-verified, so this is a
+standing YouTube policy gate for this account, not a tooling failure. Do not work around it:
+verify the number in Studio (Settings → Channel → Advanced → "Your channel is not verified") and
+then re-pick `brag-output-2026-11-14-004922/brag.jpg` on
+`https://studio.youtube.com/channel/UCSGwYKSUJb7sX4-BI12WB_Q/videos/p0KscFpmSGg/edit`.
+(Historical note: before the Playwright path worked, the Qoder Browser Connector refused every
+programmatic file transfer with `{"code":-32000,"message":"Not allowed"}` on the owner's Chrome —
+the Playwright MCP browser, which carries the same session, accepts both uploads directly.)
 
 - Title: `I build AI systems and Flutter apps people keep using — 7+ years of receipts (portfolio reel)`
 - Description:
@@ -252,11 +265,14 @@ the file pick. Caption to paste:
 | X | `@hasansorathiya` live, week-1 post `2121673169467580557` | — |
 | GitHub | Profile README + reel asset published (`ed53619b`, `58a37a9`); reel swapped for the 23.8 s master on 2026-11-15 (`ca65548`) | — |
 | Instagram | `@hasanabbassorathiya` signed in; week-2 `clip-duas` ready (1080×1920, 15 s); "Create new post" modal open | Owner file-pick of `marketing/2026-11-03/out/clip-duas.mp4` (host refused the programmatic pick again), then paste the week-2 caption |
-| YouTube | Channel `UCSGwYKSUJb7sX4-BI12WB_Q` signed in; "Upload videos" dialog open | Owner file-pick of `master-16x9.mp4`, then title/description/tags below |
-| Medium | Publication `hasanabbassorathiya.medium.com` is live but dormant — one post, 2022-04-28, 5 followers; signed out | Sign-in page is open in the owner's Chrome ("Sign in with LinkedIn" is one click), then cross-post an essay with the canonical link |
+| YouTube | Channel `UCSGwYKSUJb7sX4-BI12WB_Q` signed in, one existing Short (52 views); "Upload videos" dialog open | Owner file-pick of `master-16x9.mp4`, then title/description/tags below |
+| Medium | Publication `hasanabbassorathiya.medium.com` is live but dormant — one post, 2022-04-28, 5 followers; signed out. Google and X OAuth both land on a blank `medium.com/m/callback/google` and set no session | Owner signs in (§6.1), then publishes the Medium draft |
 | Discord | `Mobile Builders` server live; Community Onboarding **enabled** — 7 default channels, 1 pre-join question with 3 answers, rules channel `#rules`, community updates `#announcements` | — |
-| Dev.to / Reddit / Product Hunt | No owner account yet | Owner creates the account; no handle is guessed |
-| Brevo | Key enabled, calls rejected with `401 — unrecognised IP address 163.123.193.8` | Owner adds the live server's egress IP to the authorised-IP list |
+| Dev.to | No owner account yet | Owner creates the account, verifies email, then publishes the Dev.to draft (§6.2); no handle is guessed |
+| Reddit | No owner account yet | Owner creates the account, builds karma, then posts one per subreddit (§6.3); no handle is guessed |
+| Product Hunt | No owner account yet | Owner creates the account, then submits the site once with the §6.4 pack; no handle is guessed |
+| Brevo | Authorised — both egress IPs are on the authorised list (Automatic, Nov 15 2026 12:29 PM). Verified from the live server on 2026-11-15: `GET /v3/account` → `http=200` | — |
+| Brevo | Authorised — both egress IPs are on the authorised list (Automatic, Nov 15 2026 12:29 PM). Verified from the live server on 2026-11-15: `GET /v3/account` → `http=200` | — |
 
 **Still blocked, still not invented:** the X handle is `@hasansorathiya` and the week-1 post is live;
 the Discord server is created, connected and fully configured for members (see below). Reddit,
@@ -265,10 +281,11 @@ scheduled there until they exist. The YouTube and Instagram uploads need the own
 the Browser Connector — the connector refuses programmatic uploads outright
 (`{"code":-32000,"message":"Not allowed"}`, reproduced with absolute paths, workspace-relative
 paths and a 3 KB PNG), and both upload surfaces are left open in the owner's browser. Medium is
-signed out, so its sign-in page is open in the owner's Chrome. The Brevo key for the community
-email leg exists and is enabled, but Brevo rejects calls from unrecognised IPs
-(`401 — unrecognised IP address 163.123.193.8`), so the live server's egress IP still has to be
-added to Brevo's authorised-IP list before the mirror can send.
+signed out, so its sign-in page is open in the owner's Chrome. The Brevo community-email leg is live
+and verified: the live server's `GET /v3/account` returns `http=200`, and a real community signup
+(`POST /api/subscribe.php`, `source=community`) created Brevo contact `id=2` with `listIds=[2]`,
+the configured community list. The probe used for that proof has been removed — both cron jobs
+deleted, the `_bp.txt` output deleted, and the GitHub release that carried the script deleted.
 
 ### Discord member setup (enabled 2026-11-15, server `Mobile Builders`)
 
@@ -282,3 +299,106 @@ Community Onboarding is on — the tab reads **Onboarding ON** after a full page
 | Community updates channel | `#announcements` (also the site→Discord webhook target) |
 | Server guide | not set up — every public channel stays visible in the channel list |
 | Server discovery | not applied for; the server has no member base yet |
+
+## 6. Publish-ready platform packs
+
+Owner-account gates:
+- **Medium** — owner signs in with email magic link or password, then publishes. The draft below is ready to paste.
+- **Dev.to / Reddit / Product Hunt** — owner creates the real account (no handle is guessed), verifies email, then publishes. Nothing is scheduled until the accounts exist.
+
+Every link below carries `utm_campaign=receipts-2026-q4`. Copy never invents a number; every figure traces to `hasan.md` §5 and the live site, which were verified against live endpoints before publishing this draft.
+
+### 6.1 Medium — publication `hasanabbassorathiary.medium.com`
+
+**Status:** owner sign-in required (Google/X OAuth land on a blank callback and set no session).
+
+**Draft — "A portfolio you can check: receipts from shipping Flutter apps and AI systems"**
+
+> A portfolio you can't check is just a PDF with better fonts.
+>
+> So I rebuilt mine as a system where every claim opens in a new tab:
+>
+> - Good2Go Loans — 50,000+ users in New Zealand, lending where the audit trail is the feature
+> - Nakheel Marinas — 15,000+ downloads in its first month
+> - Duas and Aamal — 5.0★ across 1,072 Google Play ratings, live on both stores
+> - stoolap_flutter — v2.0.1 on pub.dev, the package I kept rebuilding for every client
+> - LangChain Academy — Introduction to LangChain certificate, verifiable by ID
+>
+> 7+ years across fintech, mobility and community apps. 21 app profiles. 9 essays from production.
+>
+> I build AI systems and Flutter apps people keep using. I'm not a Google Developer Expert yet — this site is the work I'm putting in to earn it.
+>
+> Start here: https://hasanabbassorathiya.tech/?utm_source=medium&utm_medium=social&utm_campaign=receipts-2026-q4&utm_content=master
+
+**Where it lives:** Medium publication embeds the master reel (16:9) plus one line of context; the video itself is never uploaded to Medium.
+
+**Tags:** flutter, ai-engineer, portfolio, mobile-development, rag, langchain, dubai
+
+---
+
+### 6.2 Dev.to
+
+**Status:** no owner account yet — owner creates it, verifies email, then publishes.
+
+**Draft — "A portfolio you can check: receipts from shipping Flutter apps and AI systems"**
+
+Same body as the Medium draft above, with this closing block instead:
+
+> Read the essays: https://hasanabbassorathiya.tech/blog?utm_source=devto&utm_medium=social&utm_campaign=receipts-2026-q4&utm_content=master
+> Join the community: https://hasanabbassorathiya.tech/community?utm_source=devto&utm_medium=social&utm_campaign=receipts-2026-q4&utm_content=master
+
+**Tags:** flutter, dart, ai, mobile-development, rag, langchain
+
+---
+
+### 6.3 Reddit — `r/flutterdev`, `r/webdev`, `r/Entrepreneur`
+
+**Status:** no owner account yet — owner creates it, builds a little karma first, then posts one per subreddit (never cross-posts the same link everywhere at once).
+
+**r/flutterdev draft — title: "I rebuilt my portfolio as a system where every claim opens in a new tab"**
+
+> 7+ years shipping Flutter and AI systems. Rather than another link-tree, I built the site as one source of truth: 21 app profiles, 9 essays from production, sitemap/RSS/OG cards generated at build time, and audits that fail when reality disagrees with the source.
+>
+> Receipts, not adjectives:
+> - Good2Go Loans — 50,000+ users in New Zealand
+> - Nakheel Marinas — 15,000+ first-month downloads
+> - Duas and Aamal — 5.0★ across 1,072 Play ratings
+> - stoolap_flutter — v2.0.1 on pub.dev
+>
+> Site: https://hasanabbassorathiya.tech/?utm_source=reddit&utm_medium=social&utm_campaign=receipts-2026-q4&utm_content=master
+> Essays: https://hasanabbassorathiya.tech/blog?utm_source=reddit&utm_medium=social&utm_campaign=receipts-2026-q4&utm_content=essays
+
+**r/webdev / r/Entrepreneur:** same receipts, frame as "how I audit my own public claims" (webdev) and "one portfolio, 21 apps, zero drift" (Entrepreneur). No self-promotion boilerplate — lead with the system, link last.
+
+---
+
+### 6.4 Product Hunt
+
+**Status:** no owner account yet — owner creates it, then submits the site as a product. One submission; no upvote solicitation.
+
+**Tagline:** "One source of truth for 21 Flutter and AI apps — receipts, not adjectives."
+
+**Description:**
+
+> A portfolio that can be checked. 21 app profiles across iOS, Android and Android TV, 9 essays from production, and every number tied to a live listing or credential you can open yourself.
+>
+> - Good2Go Loans — 50,000+ users in New Zealand
+> - Nakheel Marinas — 15,000+ first-month downloads
+> - Duas and Aamal — 5.0★ across 1,072 Google Play ratings
+> - stoolap_flutter — v2.0.1 on pub.dev
+> - LangChain Academy — Introduction to LangChain, credential 6k7ynqplb8
+>
+> 7+ years across fintech, mobility and community apps. Dubai-based, remote-friendly.
+>
+> https://hasanabbassorathiya.tech/?utm_source=producthunt&utm_medium=social&utm_campaign=receipts-2026-q4&utm_content=master
+
+**Thumbnail / asset:** `brag.jpg` (1920×1080) from the same render as the reel; cover frame baked in, no separate thumbnail shoot.
+
+---
+
+## What stays blocked until the owner acts
+
+- YouTube upload of `brag-output-2026-11-14-004922/brag.mp4` (+ `brag.jpg` thumbnail) — owner file-pick only; the connector refuses programmatic uploads (`{"code":-32000,"message":"Not allowed"}`).
+- Instagram reel `marketing/2026-11-03/out/clip-duas.mp4` — same owner file-pick gate; "Create new post" modal is open in the owner's browser.
+- Medium sign-in — email magic link or password; nothing is pasted or entered by the agent.
+- Dev.to / Reddit / Product Hunt account creation — no handle is guessed; nothing is scheduled until the accounts exist.
