@@ -4,8 +4,9 @@
 
 | What | Result |
 |---|---|
-| Static bundle | `deploy-public_html.zip` (10,109,110 B, sha256 `a709e06…`) → `public_html/`, 234 entries; `index.html` now loads `assets/index-DfC9bXv-.js` + `assets/index-BKi84k6i.css` |
+| Static bundle | `deploy-public_html.zip` (10,110,917 B, sha256 `9da3eb84…`) → `public_html/`, 234 entries (12,112,052 B uncompressed); `index.html` now loads `assets/index-DbjQeB4N.js` + `assets/index-x8Bvu4ht.css` |
 | API bundle | `deploy-api-2026-11-15.zip` (10,742 B, sha256 `e093004…`) → `public_html/`, so it lands in `public_html/api/`: `subscribe.php`, `crm.php`, `social.php`, `social-lib.php`, `discord-lib.php`, `discord-publish.php` |
+| Rate-card bundle | `deploy-api-2026-11-15-ratecard.zip` (5,714 B, sha256 `e6376b73…`) → `public_html/`, overwriting `api/settings-validate.php` (2,529 B) and `admin/settings.php` (12,465 B) with the four `rate_*` keys |
 | Untouched | `api/config.php` (274 B, mtime 2026-10-21), `api/social-secret.php`, `api/mail-secret.php`, `api/discord-secret.php`, `admin/` |
 | DB | `subscribers` already had `name`, `whatsapp`, `consent_at`, `consent_version` — no ALTER needed |
 | `.htaccess` | sha256 identical before and after (`3e30845a…`) — the live rules already matched the bundle |
@@ -196,6 +197,52 @@ channel. Deploy order (approval-gated, static bundle first is fine but the form 
 The email leg only mirrors to Brevo when the calling IP is on Brevo's authorised-IP list
 (`app.brevo.com/security/authorised_ips`) — add the live server's egress IP. Without it the local
 `subscribers` row is still stored and the failed mirror is only written to the PHP error log.
+
+## Consulting rate card (2026-11-15) — live, verified
+
+`/services` gained a **Commercial terms** section: three engagement shapes (Audit, Build sprint,
+Retained advisory) whose rate lines read the public `settings` keys `rate_audit`, `rate_sprint`,
+`rate_retainer` and `rate_note`. A blank key renders “Quoted per scope”, so no number ever ships
+unset; the owner fills the values in Admin → Settings → Engagement rates. Both bundles were
+deployed on 2026-11-15 through the cron-shell transport:
+
+1. `deploy-api-2026-11-15-ratecard.zip` (5,714 B, sha256 `e6376b7343c269cf2e7b8228353e9de9596c5285206b0d66c2aedabae67750c2`,
+   2 files) carries the `api/` + `admin/` prefixes; it lands in `public_html/` and updates
+   `api/settings-validate.php` (whitelists the four rate keys for the admin/API save path) and
+   `admin/settings.php` (adds the Engagement rates group). No `config.php`, no secrets, no SQL.
+2. `deploy-public_html.zip` (10,110,917 B, sha256 `9da3eb843e1bca6ef501522ba34a92761fde0d1d51031e58ab1b50f377890e9f`,
+   234 entries / 12,112,052 B uncompressed) is the static rebuild: entry chunk
+   `assets/index-DbjQeB4N.js` (427,791 B, one module script), lazy chunk
+   `assets/services-DvtwBWYS.js` (8,896 B), `services.html` with the prerendered fallback text,
+   and `.htaccess` (unchanged since the first 2026-11-15 deploy).
+
+Transport (the only route that works): hPanel **Advanced → Cron Jobs** runs a real account shell.
+The zips and a one-shot PHP script were published as assets of a temporary GitHub release; the
+cron command fetched the script with `rm -f /tmp/d.php && curl -fsSL -o /tmp/d3.php <asset-url>
+&& /usr/bin/php /tmp/d3.php`, and the script pulled both zips, extracted them with `ZipArchive`
+and wrote a step log to `public_html/_deploy_report.txt`. After verification the cron jobs, the
+release and every log file were deleted again.
+
+Cron-command traps found the hard way:
+- `copy()` returns `false` without an error when the target already exists, so a stale script
+  keeps running — `rm -f` the path first and write to a **fresh** filename.
+- A command that starts with `cd <dir> && …` never executes the rest of the chain; use absolute
+  paths instead.
+- `ZipArchive::extractTo()` returned `false` even though every file landed; treat it as a hint,
+  not a verdict, and verify the served files.
+
+Verified live afterwards: `/services/` → 200 and renders “Commercial terms” with the three
+engagement shapes and three “Quoted per scope” lines (headless Chromium against the live host);
+`assets/index-DbjQeB4N.js` served with sha256 `db732889…`, identical to the local build;
+`api/settings-validate.php` contains `rate_audit` and `admin/settings.php` contains
+`rate_retainer`; `.htaccess` sha256 identical before and after (`3e30845a…`); `api/config.php`
+(274 B) and the three secret files untouched; all 201 servable bundle files answer 200;
+`_deploy_report.txt`, `_deploy_status.txt`, `_deploy_done.txt` and the probe files → 404; no cron
+job left on the account. The rates stay blank until the owner fills them in Admin → Settings.
+
+One edge-cache note: 53 media files (icons, OG cards, client logos, `hasan.png`) are still served
+from the hcdn edge cache with the bytes they had before the deploy, while the files on disk now
+match the bundle. The edge copy refreshes when its cache entry expires.
 
 ## Newsletter (email capture)
 Signup forms on the home Writing section, `/blog`, and every essay post to `/api/subscribe.php`

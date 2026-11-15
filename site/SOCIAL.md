@@ -211,7 +211,9 @@ confirmed by the owner 2026-11-14). Status `2121673169467580557`; the link carri
 **Week 1 · GitHub profile README** — PUBLISHED 2026-11-14 (16:9, muted; the FlowCV→`/resume`
 repoint already shipped in `hasanabbassorathiya/hasanabbassorathiya` commit `1c1ad35`; the reel
 line and asset shipped in `ed53619b` and `58a37a9` — the second commit replaces a `<video>` tag
-that GitHub's markdown sanitizer stripped)
+that GitHub's markdown sanitizer stripped). Reel swapped 2026-11-15 (`ca65548`): the re-rendered
+23.8 s 1920×1080 master replaces the old 45-second cut at the same
+`assets/portfolio-reel.mp4` path and the link label now reads 24 seconds.
 
 > 7+ years of shipped Flutter, iOS and Android — and the AI systems behind the product. Watch the reel, then check the receipts: https://hasanabbassorathiya.tech
 
@@ -248,7 +250,7 @@ the file pick. Caption to paste:
 | --- | --- | --- |
 | LinkedIn | Profile, Featured (§5 order) and the week-1 reel post live | — |
 | X | `@hasansorathiya` live, week-1 post `2121673169467580557` | — |
-| GitHub | Profile README + reel asset published (`ed53619b`, `58a37a9`) | — |
+| GitHub | Profile README + reel asset published (`ed53619b`, `58a37a9`); reel swapped for the 23.8 s master on 2026-11-15 (`ca65548`) | — |
 | Instagram | `@hasanabbassorathiya` signed in; week-2 `clip-duas` ready (1080×1920, 15 s); "Create new post" modal open | Owner file-pick of `marketing/2026-11-03/out/clip-duas.mp4` (host refused the programmatic pick again), then paste the week-2 caption |
 | YouTube | Channel `UCSGwYKSUJb7sX4-BI12WB_Q` signed in; "Upload videos" dialog open | Owner file-pick of `master-16x9.mp4`, then title/description/tags below |
 | Medium | Publication `hasanabbassorathiya.medium.com` is live but dormant — one post, 2022-04-28, 5 followers; signed out | Sign-in page is open in the owner's Chrome ("Sign in with LinkedIn" is one click), then cross-post an essay with the canonical link |
