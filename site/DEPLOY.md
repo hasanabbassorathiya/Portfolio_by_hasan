@@ -7,7 +7,7 @@
 | Static bundle | `deploy-public_html.zip` (10,110,917 B, sha256 `9da3eb84…`) → `public_html/`, 234 entries (12,112,052 B uncompressed); `index.html` now loads `assets/index-DbjQeB4N.js` + `assets/index-x8Bvu4ht.css` |
 | API bundle | `deploy-api-2026-11-15.zip` (10,742 B, sha256 `e093004…`) → `public_html/`, so it lands in `public_html/api/`: `subscribe.php`, `crm.php`, `social.php`, `social-lib.php`, `discord-lib.php`, `discord-publish.php` |
 | Rate-card bundle | `deploy-api-2026-11-15-ratecard.zip` (5,714 B, sha256 `e6376b73…`) → `public_html/`, overwriting `api/settings-validate.php` (2,529 B) and `admin/settings.php` (12,465 B) with the four `rate_*` keys |
-| Untouched | `api/config.php` (274 B, mtime 2026-10-21), `api/social-secret.php`, `api/mail-secret.php`, `api/discord-secret.php`, `admin/` |
+| Untouched | `api/config.php` (274 B, mtime 2026-10-21, **now mode 600**), `api/social-secret.php`, `api/mail-secret.php`, `api/discord-secret.php`, `admin/` |
 | DB | `subscribers` already had `name`, `whatsapp`, `consent_at`, `consent_version` — no ALTER needed |
 | `.htaccess` | sha256 identical before and after (`3e30845a…`) — the live rules already matched the bundle |
 
@@ -15,9 +15,17 @@ Transport: hPanel **Advanced → Cron Jobs** is a real account shell. The cron c
 after hPanel's escaping) fetched a one-shot PHP script from a public GitHub release and ran it with
 `/usr/bin/php`; the script pulled both zips, extracted them with `ZipArchive`, applied the
 idempotent `ALTER TABLE` guard and wrote a step log. Both cron jobs, the temporary release and the
-three log files were deleted afterwards. The other routes were unusable: the browser connector
-refuses File Manager uploads, the SSH gateway resets before the banner, and the agent never fills
-FTP password fields.
+three log files were deleted afterwards. At the time the other routes were unusable: the browser
+connector refused File Manager uploads, the SSH key had been purged server-side
+(`Permission denied (publickey,password)` on port 65002; port 22 is filtered), and the agent never
+fills FTP password fields.
+
+**Update 2026-11-15 (later):** the owner re-added the deploy key in hPanel → Advanced → SSH
+(`qoder-deploy-2026-11-15`), restoring the fastest transport. The same two bundles were
+re-extracted over SSH — `scp` into `~/qoder-deploy/`, `unzip -o` into `public_html/` — idempotent
+and byte-identical (server-side sha256 matched the local zips). `api/config.php` verified
+byte-identical before and after (`9d58c13f…`, 274 B) and hardened **644 → 600**; `php -l` clean on
+both PHP files. SSH is now the standard deploy path again.
 
 Verified live afterwards: `/`, `/community/`, `/admin/`, `/blog/<slug>/` → 200;
 `/api/discord-publish.php` → 405 (alive, POST only); `POST /api/subscribe.php` without `consent`
@@ -204,7 +212,8 @@ The email leg only mirrors to Brevo when the calling IP is on Brevo's authorised
 Retained advisory) whose rate lines read the public `settings` keys `rate_audit`, `rate_sprint`,
 `rate_retainer` and `rate_note`. A blank key renders “Quoted per scope”, so no number ever ships
 unset; the owner fills the values in Admin → Settings → Engagement rates. Both bundles were
-deployed on 2026-11-15 through the cron-shell transport:
+deployed on 2026-11-15 through the cron-shell transport (and re-applied identically over SSH
+after the owner restored the key — see the top section):
 
 1. `deploy-api-2026-11-15-ratecard.zip` (5,714 B, sha256 `e6376b7343c269cf2e7b8228353e9de9596c5285206b0d66c2aedabae67750c2`,
    2 files) carries the `api/` + `admin/` prefixes; it lands in `public_html/` and updates
@@ -239,6 +248,14 @@ engagement shapes and three “Quoted per scope” lines (headless Chromium agai
 (274 B) and the three secret files untouched; all 201 servable bundle files answer 200;
 `_deploy_report.txt`, `_deploy_status.txt`, `_deploy_done.txt` and the probe files → 404; no cron
 job left on the account. The rates stay blank until the owner fills them in Admin → Settings.
+
+Re-verified over SSH on 2026-11-15 after the key was restored: the `settings` table holds **15 rows
+and no `rate_*` rows**, the public API returns the same 10 keys with no rate data, and a clean
+browser context renders three "Quoted per scope" cards — so nothing invented ever reached the
+live page. Verification trap worth remembering: a stale Playwright route interception from the
+local filled-state fixture can make `/api/index.php?entity=settings` answer with fixture prices
+(`content-length: 217`, no server headers) in a long-lived browser context. Close the page and
+re-open before trusting what the in-page API returns; the DB probe over SSH is the ground truth.
 
 One edge-cache note: 53 media files (icons, OG cards, client logos, `hasan.png`) are still served
 from the hcdn edge cache with the bytes they had before the deploy, while the files on disk now
