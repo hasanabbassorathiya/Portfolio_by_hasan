@@ -136,8 +136,10 @@ out of the static bundle, and `api/discord-secret.php` must never be committed.
 
 Server-side, Discord was set to Community with a verified-email verification level, content
 filtering for all members, `#rules` as the rules channel, and join notices routed to
-`#announcements`. Community Onboarding (the rules screen) still has to be switched on in
-Server Settings → Onboarding.
+`#announcements`. Community Onboarding is **enabled** (2026-11-15, verified after a reload: the
+settings tab reads "Onboarding ON", all 7 public text channels are defaults, and the pre-join
+question "What do you want to do in this community?" routes answers to `#showcase`, `#teardowns`
+and `#leads`).
 
 ## Community + Discord autopilot (2026-11-15)
 The community form stores name, email and an optional WhatsApp number; the newsletter popup asks
@@ -146,11 +148,13 @@ channel. Deploy order (approval-gated, static bundle first is fine but the form 
 1. Back up `public_html/api/` and `public_html/` on the box before changing anything.
 2. Import `api/migrate-2026-11-13-community.sql` via phpMyAdmin — it adds `name`, `whatsapp`,
    `consent_at` and `consent_version` to `subscribers`. Additive, nullable and safe to re-run.
-3. Upload `site/deploy-api-2026-11-15.zip` into `public_html/api/` (6 files: `subscribe.php`,
-   `crm.php`, `social.php`, `social-lib.php`, `discord-lib.php`, `discord-publish.php`;
-   SHA-256 `e09300426ca0a0a4805d170fb800279c467b7cbacffc224e40b0a47da1943820`). It holds no
-   `config.php`, no SQL, no `.htaccess` and no secret file, so the live `config.php` is never
-   overwritten.
+3. Upload `site/deploy-api-2026-11-15.zip` into `public_html/` and extract it there — the archive
+   already carries the `api/` prefix, so extracting into `public_html/` writes
+   `public_html/api/*.php`. Extracting it *inside* `public_html/api/` would nest the files one
+   level too deep. It holds 6 files (`subscribe.php`, `crm.php`, `social.php`, `social-lib.php`,
+   `discord-lib.php`, `discord-publish.php`; SHA-256
+   `e09300426ca0a0a4805d170fb800279c467b7cbacffc224e40b0a47da1943820`), no `config.php`, no SQL,
+   no `.htaccess` and no secret file, so the live `config.php` is never overwritten.
 4. Upload the three gitignored secret files one by one through File Manager — never into git and
    never into a zip — and keep them mode 600: `api/discord-secret.php` (the Discord webhook),
    `api/social-secret.php` (`SOCIAL_WEBHOOK_SECRET`), `api/mail-secret.php` (Brevo key and list
