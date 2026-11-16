@@ -198,6 +198,14 @@ standing YouTube policy gate for this account, not a tooling failure. Do not wor
 verify the number in Studio (Settings → Channel → Advanced → "Your channel is not verified") and
 then re-pick `brag-output-2026-11-14-004922/brag.jpg` on
 `https://studio.youtube.com/channel/UCSGwYKSUJb7sX4-BI12WB_Q/videos/p0KscFpmSGg/edit`.
+(Status 2026-11-16: the owner submitted the verification and YouTube returned **"ID in review —
+this usually takes 24 hours"**, so the thumbnail is still pending, not blocked on us. Re-probed
+the same day: Studio's deep `/edit` route returns a client-side *"Oops, something went wrong."*
+and its content list redirects to `/video/p0KscFpmSGg/comments`, so Studio could not confirm the
+verification state either way — do not treat that as evidence. The public watch page still serves
+the auto-generated frame and `publishDate` is still `2026-11-15T09:39:12-08:00` = 17:39 UTC. The
+retry is: once the review clears, open the edit page, upload `brag.jpg`, save, then confirm on the
+public watch page that `i.ytimg.com/vi/p0KscFpmSGg/maxresdefault.jpg` changed.)
 (Historical note: before the Playwright path worked, the Qoder Browser Connector refused every
 programmatic file transfer with `{"code":-32000,"message":"Not allowed"}` on the owner's Chrome —
 the Playwright MCP browser, which carries the same session, accepts both uploads directly.)
