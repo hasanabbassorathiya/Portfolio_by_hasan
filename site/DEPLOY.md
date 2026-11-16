@@ -1,6 +1,38 @@
 # Deploying to Hostinger — hasanabbassorathiya.tech
 
-## Last deploy — 2026-11-15 (live, verified)
+## Last deploy — 2026-11-16 (live, verified)
+
+| What | Result |
+|---|---|
+| Static bundle | `deploy-public_html.zip` (10,114,290 B, sha256 `20762fbdc9a89cd2ca67c2b647ed71335870b7ea0f8f95fb81d43881c571bebe`) → `~/domains/hasanabbassorathiya.tech/public_html/`, 167 entries inflated, 0 errors; `services.html` now loads `assets/index-Cnrqi8B3.js` (427,793 B) |
+| Change shipped | `ServiceEnquiry` on `/services` **and all six service detail pages** now renders the Cal.com booking link (`Prefer a call? Book a time ↗`, `target=_blank rel=noreferrer`, `trackCta('booking','service-enquiry')`) via the shared `BOOKING_URL` gate in `src/lib/seo.js`; source commit `a87dbc1` |
+| `.htaccess` | 3,827 → 4,225 B: adds the `Content-Security-Policy` header from commit `a35093f` (the only diff); live header confirmed |
+| Untouched | `api/config.php` (274 B, mode 600, sha256 `9d58c13ff56472f15f381856ccb2f2d4ae84291b8753cdc71354162d7438b697` — verified identical before and after), `api/` (29 entries), `admin/` (12 entries), `api/social-secret.php`, `api/mail-secret.php`, `api/discord-secret.php` |
+| Rollback | `~/tmp/deploy-2026-11-16/public_html-predeploy.tgz` (11,601,011 B) |
+
+**Read this before any deploy: `~/public_html` is a symlink to a DIFFERENT domain.** It resolves to
+`/home/u124239009/domains/discovermahdi.org/public_html`. The real document root for this site is
+`~/domains/hasanabbassorathiya.tech/public_html/`. `ls ~/public_html` happily shows you files and
+`unzip -o … ~/public_html/` would overwrite the *other* site — note that
+`~/domains/discovermahdi.org/public_html_polluted_2026-11-12T11-31-35-532Z/` exists, i.e. exactly
+that mistake has already happened once. Always `cd $(realpath ~/public_html)` is **wrong** for this
+project; use `~/domains/hasanabbassorathiya.tech/public_html` explicitly. Also note `find
+~/public_html …` returns nothing when the argument is a symlink — always pass a trailing slash or
+the realpath, otherwise an empty result looks like "no such file".
+
+Transport: SSH (owner-approved 2026-11-16). Key `~/.ssh/hostinger_qoder`, host `89.116.133.175`
+port `65002`, user `u124239009` — `scp` the zip into `~/qoder-deploy/`, sha256 it on-box, then
+`unzip -o` into the docroot above. Uploaded hash matched the local zip byte-for-byte.
+
+Verified live afterwards: `/`, `/apps`, `/apps/evlab`, `/work`, `/work/nakheel-marinas`, `/services`,
+all six `/services/<slug>`, `/blog`, `/blog/shipping-ai-features-flutter-trust`, `/resources`,
+`/community`, `/activity`, `/resume`, `/brand`, `/privacy`, `/sitemap.xml` (53 URLs), `/rss.xml`
+(13 items) and `/llms.txt` → 200; `/api/index.php?entity=apps` and `?entity=posts` → 200; `/admin/`
+→ 200; `/api/discord-publish.php` → 405 (alive, POST only); `/api/subscribe.php` → 200. Controls:
+unknown route → 404, unknown asset → 404. Rendered in a real browser: `/services` shows the booking
+anchor inside the `service-enquiry-title` section, exactly one instance, `_blank rel=noreferrer`.
+
+## Previous deploy — 2026-11-15 (live, verified)
 
 | What | Result |
 |---|---|
@@ -22,7 +54,8 @@ fills FTP password fields.
 
 **Update 2026-11-15 (later):** the owner re-added the deploy key in hPanel → Advanced → SSH
 (`qoder-deploy-2026-11-15`), restoring the fastest transport. The same two bundles were
-re-extracted over SSH — `scp` into `~/qoder-deploy/`, `unzip -o` into `public_html/` — idempotent
+re-extracted over SSH — `scp` into `~/qoder-deploy/`, `unzip -o` into
+`~/domains/hasanabbassorathiya.tech/public_html/` — idempotent
 and byte-identical (server-side sha256 matched the local zips). `api/config.php` verified
 byte-identical before and after (`9d58c13f…`, 274 B) and hardened **644 → 600**; `php -l` clean on
 both PHP files. SSH is now the standard deploy path again.
