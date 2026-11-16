@@ -43,7 +43,7 @@ Observed from public homepages on 2026-10-29. Third-party figures are their own 
 |---|---|---|---|
 | Positioning | Google Developer Expert · product builder | AI-assisted solo agency; senior Android/Flutter | Senior mobile + AI + full-stack engineer, Dubai |
 | Primary conversion | Social links; no visible form in fetched HTML | Contact form + email, repeated CTAs | Durable enquiry form + direct email + sticky CTA |
-| Proof | Bio and public profile; metadata claims reach | Logos, nine case cards, two testimonials, metrics | 21 app profiles, 3 case studies, 9 essays, store links |
+| Proof | Bio and public profile; metadata claims reach | Logos, nine case cards, two testimonials, metrics | 21 app profiles, 3 case studies, 13 essays, store links |
 | Services | Not itemised on the homepage | Three engagement models + rescue audit | Six scoped services with boundaries and evidence |
 | Process | Not visible | Weekly demos, written scope | Explicit four-step process per service |
 | Content engine | Essays (external) | Medium articles | Nine first-party essays + RSS |
@@ -63,7 +63,7 @@ Observed from public homepages on 2026-10-29. Third-party figures are their own 
   /services/ui-ux-product-design
 /apps                 21 app profiles
 /work                 3 client case studies
-/blog                 9 essays + RSS
+/blog                 13 essays + RSS (measured 2026-11-16: 13 files in `src/content/posts/`, 13 `/blog/*` URLs in the live sitemap)
 /resources            Featured pub.dev package, code, reading, working together
 /resume               Résumé (web) + download of the generated A4 PDF
 /privacy              What the site stores from enquiries and newsletter sign-ups

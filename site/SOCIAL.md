@@ -202,6 +202,27 @@ then re-pick `brag-output-2026-11-14-004922/brag.jpg` on
 programmatic file transfer with `{"code":-32000,"message":"Not allowed"}` on the owner's Chrome —
 the Playwright MCP browser, which carries the same session, accepts both uploads directly.)
 
+**YouTube · first comment** — POSTED 2026-11-16 from the owner's own account (verified on a fresh
+page load, not an optimistic insert): `Site: https://hasanabbassorathiya.tech — résumé, 21 app
+profiles, 13 essays.` It is the only comment on the video, so it sits at the top. It is **not
+pinned** — the comment's ⋮ → Pin action was clicked four times from the Playwright browser and the
+badge never survived a reload (YouTube renders several stale copies of the menu items and the JS
+click never reaches the live handler). Manual path if the badge is wanted: hover the comment → ⋮ →
+**Pin**. Every fact in it was measured first: the site serves 200, `/apps` carries 21 app detail
+URLs in the sitemap, and `site/src/content/posts/` holds 13 essays.
+
+**Handles verified real 2026-11-16** (each checked in a real browser, because curl gets a bot
+block, not proof of life):
+
+- Medium — `https://hasanabbassorathiya.medium.com/` resolves to "HASAN ABBAS SORATHIYA – Medium",
+  bio "Senior Software Engineer", one published article. Live on the site, so the link is sound.
+  curl returns 403; that is Medium's bot block, not a dead profile.
+- Instagram — `https://www.instagram.com/hasanabbassorathiya/` resolves to the owner's own account
+  (3,829 followers, bio "Man on mission - to live the best life possible come what may.", with
+  `hasanabbassorathiya.tech` listed in the bio). The profile is **private with 2 posts**, so the
+  "Elsewhere" link on the site currently shows a visitor nothing. Two clean fixes, owner's pick:
+  make the profile public, or drop the link until there is something to see.
+
 - Title: `I build AI systems and Flutter apps people keep using — 7+ years of receipts (portfolio reel)`
 - Description:
   > A portfolio you can check. 24 seconds, no voiceover, no stock footage — the listings, the numbers and the commits.
