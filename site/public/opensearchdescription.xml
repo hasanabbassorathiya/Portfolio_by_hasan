@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/">
+  <ShortName>Hasan Abbas Sorathiya</ShortName>
+  <Description>Search Hasan Abbas Sorathiya's portfolio — Flutter apps, AI essays, case studies</Description>
+  <InputEncoding>UTF-8</InputEncoding>
+  <Image width="16" height="16" type="image/svg+xml">/favicon.svg</Image>
+  <Url type="text/html" template="https://hasanabbassorathiya.tech/?q={searchTerms}"/>
+  <Url type="application/opensearchdescription+xml" rel="self" template="https://hasanabbassorathiya.tech/opensearchdescription.xml"/>
+</OpenSearchDescription>

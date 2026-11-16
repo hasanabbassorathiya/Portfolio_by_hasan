@@ -96,9 +96,17 @@ try {
   }
 
   // /404 and /activity are intentionally noindex and stay out of the sitemap.
-  const sitemapEntries = routes.filter(({ route }) => route !== '/404' && route !== '/activity').map(({ route, date }) =>
-    `<url><loc>${SITE_URL}${route}</loc>${date ? `<lastmod>${escapeHtml(date)}</lastmod>` : ''}</url>`);
-  await writeFile(path.join(dist, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${sitemapEntries.join('\n')}\n</urlset>\n`);
+  const imageFor = (route) => {
+    if (route.startsWith('/blog/')) return `${SITE_URL}/og/${route.slice(6)}.png`;
+    if (route === '/blog') return `${SITE_URL}/og/blog.png`;
+    return `${SITE_URL}/og.png`;
+  };
+  const sitemapEntries = routes.filter(({ route }) => route !== '/404' && route !== '/activity').map(({ route, date }) => {
+    const lastmod = date ? `<lastmod>${escapeHtml(date)}</lastmod>` : '';
+    const image = imageFor(route);
+    return `<url><loc>${SITE_URL}${route}</loc>${lastmod}<image:image><image:loc>${escapeHtml(image)}</image:loc></image:image></url>`;
+  });
+  await writeFile(path.join(dist, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">\n${sitemapEntries.join('\n')}\n</urlset>\n`);
   console.log(`sitemap.xml (${sitemapEntries.length} urls)`);
 
   const rfc822 = (date) => new Date(`${date}T00:00:00Z`).toUTCString();
