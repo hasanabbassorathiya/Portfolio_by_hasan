@@ -2,7 +2,8 @@ import React from 'react';
 import { services } from '../content/services';
 import { Link } from '../lib/router';
 import { useSettings } from '../lib/settings';
-import { personJsonLd, SITE_NAME, useSeo } from '../lib/seo';
+import { trackCta } from '../lib/analytics';
+import { BOOKING_URL, personJsonLd, SITE_NAME, useSeo } from '../lib/seo';
 import { Arrow, ArrowBadge, Check, Kicker } from '../sections/ref-ui';
 
 export function ServiceEnquiry({
@@ -28,6 +29,17 @@ export function ServiceEnquiry({
             <a href={`${personJsonLd.email}?subject=${encodeURIComponent(subject)}`} className="group inline-flex min-h-11 items-center gap-2 text-sm text-text underline decoration-ink/25 underline-offset-4 hover:decoration-current">
               Email Hasan directly <Arrow />
             </a>
+            {BOOKING_URL && (
+              <a
+                href={BOOKING_URL}
+                target="_blank"
+                rel="noreferrer"
+                onClick={() => trackCta('booking', 'service-enquiry')}
+                className="group inline-flex min-h-11 items-center font-mono text-[10px] uppercase tracking-[0.16em] text-text-muted underline-offset-4 transition-colors hover:text-text hover:underline"
+              >
+                Prefer a call? Book a time ↗
+              </a>
+            )}
           </div>
           <p className="mt-5 text-xs leading-relaxed text-text-muted">
             Scope, deliverables and commercial terms are agreed before work begins. No fixed timeline or outcome is implied by these service descriptions.

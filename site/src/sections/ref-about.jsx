@@ -3,12 +3,8 @@ import { Link } from '../lib/router';
 import { useClients, usePosts, useProfile } from '../lib/live-content';
 import { useSiteMetrics } from '../lib/site-metrics';
 import { trackCta, trackEnquiry, trackOutbound, trackResume } from '../lib/analytics';
+import { BOOKING_URL } from '../lib/seo';
 import { Arrow, ArrowBadge, Kicker, SectionHead } from './ref-ui';
-
-// Build-time only: without VITE_CAL_URL the booking link is absent from the bundle and the DOM.
-const bookingUrl = /^https:\/\/\S+$/.test(import.meta.env.VITE_CAL_URL || '')
-  ? import.meta.env.VITE_CAL_URL
-  : null;
 
 const tools = [
   { label: 'Mobile', items: ['Flutter', 'Dart', 'Riverpod', 'BLoC', 'Firebase', 'Android TV'] },
@@ -370,9 +366,9 @@ export function Contact() {
             >
               Email me <span aria-hidden="true" className="ml-5 text-xl">↗</span>
             </a>
-            {bookingUrl && (
+            {BOOKING_URL && (
               <a
-                href={bookingUrl}
+                href={BOOKING_URL}
                 target="_blank"
                 rel="noreferrer"
                 onClick={() => trackCta('booking', 'contact')}

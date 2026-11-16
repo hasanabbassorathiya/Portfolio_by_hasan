@@ -3,6 +3,11 @@ import { createContext, useContext } from 'react';
 export const SeoContext = createContext(null);
 export const SITE_URL = 'https://hasanabbassorathiya.tech';
 export const SITE_NAME = 'Hasan Abbas Sorathiya';
+
+// Build-time only: without VITE_CAL_URL the booking link is absent from the bundle and the DOM.
+export const BOOKING_URL = /^https:\/\/\S+$/.test(import.meta.env.VITE_CAL_URL || '')
+  ? import.meta.env.VITE_CAL_URL
+  : null;
 const DEFAULT_TITLE = 'Hasan Abbas Sorathiya · Senior Software & AI Engineer';
 const DEFAULT_DESCRIPTION =
   'Senior mobile & AI engineer in Dubai. Seven-plus years shipping Flutter, iOS and Android products, backend and API integrations, plus RAG and AI agents — apps and systems people keep using.';
