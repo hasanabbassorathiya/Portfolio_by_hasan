@@ -14,6 +14,14 @@
   [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
 </div>
 
+<div align="center">
+  <p align="center">
+    <a href="https://hasanabbassorathiya.tech">Live site</a> &nbsp;·&nbsp;
+    <a href="https://hasanabbassorathiya.tech/resume">Résumé</a> &nbsp;·&nbsp;
+    <a href="https://github.com/hasanabbassorathiya/hasanabbassorathiya">Profile</a>
+  </p>
+</div>
+
 <br />
 
 ## ✨ Features
